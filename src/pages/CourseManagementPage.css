@@ -1,0 +1,215 @@
+/* أساسيات */
+.course-management-page {
+  padding: 20px;
+  font-family: "Roboto", sans-serif;
+  max-width: 1200px; /* تعيين عرض أقصى للصفحة */
+  margin: auto; /* مركزة الصفحة */
+}
+
+.course-management-header {
+  background-color: #f4f4f4;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.course-management-header h1 {
+  margin: 0;
+  font-size: 2rem; /* استخدم وحدة rem للحصول على استجابة أفضل */
+  color: #333;
+}
+
+/* التصميم الأساسي */
+.content {
+  display: flex;
+  justify-content: space-between; /* توزيع العناصر بالتساوي بين الحواف */
+  flex-wrap: nowrap; /* منع الانتقال إلى سطر جديد */
+  gap: 20px; /* مسافة بين الأقسام */
+}
+
+.courses-section,
+.users-section,
+.details-section {
+  flex: 1 1 30%; /* استخدم flexbox لتوزيع الأقسام */
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0; /* إزالة المسافة الخارجية بين العناصر */
+}
+
+/* تحسين التوافق مع الأجهزة الكبيرة */
+@media (max-width: 1200px) {
+  .courses-section,
+  .users-section,
+  .details-section {
+    flex: 1 1 32%; /* تعديل العرض لجعل الأقسام تناسب الشاشات الصغيرة */
+  }
+}
+
+/* تحسين التوافق مع الأجهزة الصغيرة */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column; /* ترتيب العناصر عموديًا على الشاشات الصغيرة */
+  }
+
+  .courses-section,
+  .users-section,
+  .details-section {
+    width: 100%; /* استخدام العرض الكامل على الشاشات الصغيرة */
+  }
+}
+
+/* تصميم قائمة الكورسات */
+.course-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.course-list li {
+  border-radius: 28px;
+  margin: auto;
+  background-color: #333333a6;
+  padding: 20px; /* تقليل الحشوة لتحسين الاستجابة */
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  font-size: 1rem; /* استخدم وحدة rem */
+  text-align: center;
+  transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
+}
+
+.course-list li.selected {
+  background-color: #f0f8ff;
+  font-weight: bold;
+}
+
+/* تصميم قائمة المستخدمين */
+.user-list {
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-list li {
+  border-bottom: 1px solid #ddd;
+  display: flex; /* استخدام flexbox لسهولة التوزيع */
+  align-items: center;
+  padding: 10px 0; /* إضافة حشوة للعناصر */
+}
+
+/* تصميم التفاصيل */
+.course-details {
+  margin-top: 20px;
+}
+
+.enrolled-users-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.enrolled-users-list li {
+  padding: 5px 0;
+}
+
+/* أزرار إدارة المستخدمين */
+.user-actions {
+  margin-top: 20px;
+}
+
+.user-actions button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #dfe6ec;
+  color: #fff;
+  font-size: 1rem; /* استخدم وحدة rem */
+  cursor: pointer;
+  transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
+}
+
+.user-actions button:hover {
+  background-color: #0056b3;
+}
+
+/* تصميم الـ checkbox ليكون دائري */
+input[type="checkbox"] {
+  appearance: none; /* إزالة التنسيق الافتراضي */
+  -webkit-appearance: none; /* إزالة التنسيق الافتراضي على متصفحات Webkit */
+  background-color: #fff;
+  border: 2px solid #007bff; /* لون الحدود */
+  border-radius: 50%; /* جعلها دائرية */
+  width: 20px; /* عرض الـ checkbox */
+  height: 20px; /* ارتفاع الـ checkbox */
+  position: relative;
+  cursor: pointer;
+  outline: none;
+}
+
+/* تصميم الـ checkbox عند التحديد */
+input[type="checkbox"]:checked {
+  border-color: #007bff; /* لون الحدود عند التحديد */
+  background-color: #fff; /* لون الخلفية عند التحديد */
+}
+
+/* إضافة نقطة زرقاء داخل الـ checkbox */
+input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px; /* عرض النقطة */
+  height: 8px; /* ارتفاع النقطة */
+  background: #007bff; /* لون النقطة الزرقاء */
+  border-radius: 50%; /* جعلها دائرية */
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* جعل النقطة مرئية عند التحديد */
+input[type="checkbox"]:checked::after {
+  opacity: 1;
+}
+
+/* تحسين تصميم قائمة المستخدمين */
+.user-list input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* تحسين تصميم قائمة المستخدمين المسجلين */
+.enrolled-users-list input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* تصميم شريط البحث */
+.search-bar {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem; /* استخدم وحدة rem */
+  outline: none;
+}
+
+.search-bar input[type="text"]::placeholder {
+  color: #888;
+}
+
+.search-bar input[type="text"]:focus {
+  border: 2px solid #007bff;
+}

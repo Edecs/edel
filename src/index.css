@@ -1,0 +1,14 @@
+/* إخفاء الـ sidebar على صفحة تسجيل الدخول */
+body.login-page .offcanvas {
+  display: none;
+  background-color:#094d50 ;
+}
+
+/* تخصيص الـ sidebar ليظهر عند الحاجة */
+.offcanvas {
+  display: none; /* إخفاء بشكل افتراضي */
+}
+
+.offcanvas.show {
+  display: block; /* عرض عند التبديل */
+}

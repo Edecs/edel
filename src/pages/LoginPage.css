@@ -1,0 +1,126 @@
+/* Update as needed to ensure no sidebar impact on login page */
+
+.login-container {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-image: url('../photos/edecs HQ 1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column; /* لجعل الـ navbar والفورم عموديين */
+}
+
+.navbar {
+  width: 100%;
+  padding: 10px 20px;
+  
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  position: fixed; /* جعل شريط التنقل ثابتًا */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* التأكد من أنه يظهر فوق العناصر الأخرى */
+}
+
+.navbar-logo {
+  height: 40px;
+}
+
+.login-page {
+  width: 400px;
+  margin-top: 20px; /* مسافة صغيرة من شريط التنقل */
+  padding: 40px;
+  border: 1px solid #c5c5c5;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.login-page h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.error {
+  color: #dc3545;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.login-page form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-page input[type="email"],
+.login-page input[type="password"],
+.login-page button {
+  width: 100%; /* تأكد من أن كل عناصر الإدخال تأخذ عرضًا كاملًا */
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.login-page input[type="email"]:focus,
+.login-page input[type="password"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+
+.login-page button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 12px;
+  font-size: 16px;
+}
+
+.login-page button:hover {
+  background-color: #0056b3;
+}
+
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  padding-bottom: 3px;
+  top: 40%;
+  right: 7px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 14px;
+  color: #007bff;
+}
+
+
+label {
+  font-size: 14px;
+  color: #333;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}

@@ -1,0 +1,83 @@
+.navbar {
+  background-color: #094D50; /* اللون الأساسي للـ Navbar */
+  padding: 7px 20px; /* المسافة حول محتوى الـ Navbar */
+  position: fixed; /* لتثبيت الـ Navbar في أعلى الصفحة */
+  top: 0; /* وضعه في أعلى الصفحة */
+  width: calc(100% - 300px); /* عرض Navbar بدون التأثير على Sidebar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف للـ Navbar */
+  box-sizing: border-box; /* يشمل الـ padding و border ضمن العرض الكلي */
+  display: flex; /* لعرض العناصر بشكل أفقي */
+  align-items: center; /* لتوسيط العناصر عموديًا */
+  justify-content: flex-start; /* لجعل العناصر تبدأ من اليسار */
+  z-index: 1000; /* لضمان ظهور شريط التنقل فوق العناصر الأخرى */
+  height: 60px; /* تحديد ارتفاع الـ Navbar */
+  overflow: hidden; /* منع التمرير الخارجي */
+}
+
+/* تصميم الشعار في الـ Navbar */
+.navbar-logo {
+  display: flex; /* لعرض الشعار بشكل أفقي */
+  align-items: center; /* لتوسيط الشعار عموديًا */
+}
+
+/* هنا نستخدم margin-left: auto لترحيل الأيقونات ناحية اليمين */
+.navbar-buttons {
+  
+  display: flex; /* لعرض الأزرار بشكل أفقي */
+  align-items: center; /* لتوسيط الأزرار عموديًا */
+  list-style: none; /* إزالة نقاط القائمة */
+  margin-left: auto; /* لترحيل الأزرار إلى الناحية اليمنى */
+  padding-left: 20px; /* إزالة الحشو الافتراضي */
+}
+
+.navbar-buttons li {
+  margin-left: 20px; /* المسافة بين الأزرار */
+}
+
+.navbar-link {
+/* تصميم الأزرار في الـ Navbar */
+  background-color: #094D50; /* لون الخلفية الأساسي للزر */
+  color: #fff; /* لون النص للزر */
+  border: none; /* إزالة الحدود */
+  padding: 10px 20px; /* إضافة مساحة حول النص */
+  border-radius: 4px; /* حواف دائرية للزر */
+  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
+  transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
+}
+.navbar-link:hover {
+  background-color: #0b5e5e; /* تغيير لون الخلفية عند hover */
+
+}
+/* تصميم الأزرار في الـ Navbar */
+.navbar-buttons button {
+  background-color: #094D50; /* لون الخلفية الأساسي للزر */
+  color: #fff; /* لون النص للزر */
+  border: none; /* إزالة الحدود */
+  padding: 10px 20px; /* إضافة مساحة حول النص */
+  border-radius: 4px; /* حواف دائرية للزر */
+  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
+  transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
+}
+
+.navbar-buttons button:hover {
+  background-color: #0b5e5e; /* تغيير لون الخلفية عند hover */
+}
+
+.navbar-icon {
+  height: 24px; /* حجم الأيقونات */
+  width: 24px; /* حجم الأيقونات */
+}
+.notification-button {
+  position: relative;
+}
+
+.notification-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}

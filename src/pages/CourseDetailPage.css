@@ -1,0 +1,49 @@
+.course-detail-container {
+  padding: 20px;
+  font-family: "Roboto", sans-serif;
+}
+
+.course-detail-content {
+  margin: 20px auto;
+  max-width: 800px;
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.course-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.sub-course-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sub-course-item {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.sub-course-item a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.sub-course-item a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.no-sub-courses {
+  color: #555;
+}
