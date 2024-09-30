@@ -1,97 +1,81 @@
-/* src/pages/WelcomePage.css */
-
 body {
   font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .container {
   border-radius: 30px;
-  margin: 50px 20px;
+  margin: 2rem auto;
   text-align: left;
-  /* محاذاة النصوص إلى أقصى اليسار */
   width: 100%;
-  /* تأكد من أن الحاوية تأخذ كامل العرض */
+  max-width: 1800px; /* تعيين عرض أقصى للحاوية */
+  padding: 1rem;
   box-sizing: border-box;
-  /* التأكد من أن الحاوية تأخذ عرضها الكامل بما في ذلك الحشو */
 }
 
-h1,
-h2 {
+h1, h2 {
   margin: 0;
-  /* إزالة المسافة العليا والسفلية */
   padding: 0;
-  /* إزالة المسافة الداخلية */
   text-align: left;
-  /* محاذاة النصوص إلى أقصى اليسار */
 }
 
 h1 {
-  margin-bottom: 40px;
-  /* إضافة مسافة أسفل العنوان */
-
-  padding-top: 60px;
-  /* ضبط المسافة العليا لعنوان h1 */
+  margin-bottom: 2rem;
+  padding-top: 3rem;
+  font-size: 2rem; /* حجم خط نسبي */
 }
 
 h2 {
-  padding-top: 80px;
-  /* ضبط المسافة العليا لعنوان h2 */
-  margin-bottom: 20px;
-  /* إضافة مسافة أسفل العنوان */
+  padding-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 .course-container {
   display: flex;
   flex-direction: row;
-  /* عرض العناصر في صف */
   gap: 1rem;
   overflow-x: auto;
-  /* لتمكين التمرير الأفقي إذا لم يكن هناك مساحة كافية */
   overflow-y: hidden;
-  /* إخفاء التمرير العمودي */
   justify-content: flex-start;
-  /* محاذاة العناصر إلى اليسار */
-  /* Adjust for header height if necessary */
   box-sizing: border-box;
+  padding: 1rem;
 }
 
 .task-card {
-  background-color: #ffffff; /* لون خلفية البطاقة */
-  padding: 20px;
-  border-radius: 10px; /* تقليل زاوية الحواف */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* زيادة الظل */
-  transition: transform 0.3s, box-shadow 0.3s; /* إضافة انتقال للظل */
-  cursor: pointer; /* تغيير شكل المؤشر عند المرور */
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
 .task-card:hover {
-  transform: translateY(-3px); /* رفع البطاقة عند المرور */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* زيادة الظل عند المرور */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .task-card p {
   margin: 10px 0;
-  color: #333; /* لون النص */
-  font-size: 1.1rem; /* حجم النص */
-}
-
-.task-card strong {
-  font-weight: bold;
+  color: #333;
+  font-size: 1rem; /* حجم خط نسبي */
 }
 
 .task-card img {
   max-width: 100%;
-  border-radius: 8px; /* تقليل زاوية حواف الصورة */
-  margin-bottom: 10px; /* إضافة مسافة أسفل الصورة */
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .course-card {
   border-radius: 28px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 440px;
-  /* عرض ثابت للبطاقات */
-  height: 221px;
-  /* ارتفاع ثابت للبطاقات */
+  width: 100%;
+  max-width: 440px;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -99,13 +83,11 @@ h2 {
   text-align: center;
   color: #333;
   font-size: 1rem;
-  /* حجم الخط */
   font-weight: bold;
   position: relative;
   overflow: hidden;
   text-decoration: none;
   flex-shrink: 0;
-  /* منع البطاقات من الانكماش */
 }
 
 .course-card:hover {
@@ -115,17 +97,17 @@ h2 {
 .course-card img {
   border-radius: 28px;
   width: 100%;
-  height: 150px;
-  /* ارتفاع ثابت للصورة */
+  height: auto;
   object-fit: cover;
 }
 
 .course-card h3 {
-  padding-top: 17px;
+  padding-top: 1rem;
   margin: 0;
-  /* إزالة المسافة العليا والسفلية */
+  font-size: 1.2rem;
   width: 100%;
 }
+
 .modal {
   display: flex;
   justify-content: center;
@@ -136,15 +118,15 @@ h2 {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* خلفية معتمة */
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .modal-content {
   background-color: white;
-  padding: 20px;
+  padding: 1rem;
   border-radius: 10px;
   width: 90%;
-  max-width: 600px; /* عرض أقصى للنافذة */
+  max-width: 600px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -152,4 +134,62 @@ h2 {
   cursor: pointer;
   float: right;
   font-size: 1.5rem;
+}
+
+/* استعلامات الوسائط للشاشات الصغيرة */
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+    padding: 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    padding-top: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    padding-top: 1rem;
+  }
+
+  .task-card {
+    padding: 1rem;
+  }
+
+  .course-card {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* استعلامات الوسائط للهواتف المحمولة */
+@media (max-width: 480px) {
+  .container {
+    margin: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+    padding-top: 1rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  .task-card {
+    padding: 0.5rem;
+  }
+
+  .course-card {
+    width: 100%;
+    height: auto;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
 }
