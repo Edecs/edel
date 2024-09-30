@@ -1,0 +1,25 @@
+.signup-page {
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
+}
+
+input[type="email"],
+input[type="password"] {
+  display: block;
+  margin: 10px 0;
+}
+
+button {
+  margin: 10px 0;
+}

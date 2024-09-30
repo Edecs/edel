@@ -1,0 +1,12 @@
+.upload-image {
+    margin-top: 10px;
+  }
+  
+  .upload-image input[type="file"] {
+    display: block;
+  }
+  
+  .upload-image button {
+    margin-top: 10px;
+  }
+  
