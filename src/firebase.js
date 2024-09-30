@@ -6,14 +6,14 @@ import { getStorage } from "firebase/storage";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA2sikiw2_wYZ0jE5v62dj021Gu33b78eM",
-  authDomain: "new-e-learning-edecs.firebaseapp.com",
-  databaseURL: "https://new-e-learning-edecs-default-rtdb.firebaseio.com",
-  projectId: "new-e-learning-edecs",
-  storageBucket: "new-e-learning-edecs.appspot.com",
-  messagingSenderId: "82033132236",
-  appId: "1:82033132236:web:30aa4a6ef16e8251077869",
-  measurementId: "G-CEZJRLPSW9",
+  apiKey: "AIzaSyAVBZM-PPlw7RQIZNfSbjXlmyR-yMjof8A",
+  authDomain: "edecs-elearning.firebaseapp.com",
+  databaseURL: "https://edecs-elearning-default-rtdb.firebaseio.com",
+  projectId: "edecs-elearning",
+  storageBucket: "edecs-elearning.appspot.com",
+  messagingSenderId: "489244446050",
+  appId: "1:489244446050:web:4fc23cb4c80db04a5af03b",
+  measurementId: "G-HVRLR3CN70"
 };
 
 // Initialize Firebase
