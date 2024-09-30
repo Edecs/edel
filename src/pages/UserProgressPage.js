@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { getDatabase, ref, get } from "firebase/database";
 import * as XLSX from "xlsx";
-import "./UserProgressPage.css";
+import "./UserProgressPage.scss";
 
 function UserProgressPage() {
   const [users, setUsers] = useState([]);
@@ -23,12 +23,10 @@ function UserProgressPage() {
         const usersData = snapshot.val();
         const usersList = Object.entries(usersData).map(([id, data]) => ({
           id,
-          email: data.email,
-          role: data.role,
+          email: data.email || "Unknown",
+          role: data.role || "Not available",
         }));
         setUsers(usersList);
-      } else {
-        throw new Error("No data found at the path 'users'");
       }
     } catch (error) {
       setError(`Failed to fetch users. Error: ${error.message}`);
@@ -42,15 +40,14 @@ function UserProgressPage() {
       if (snapshot.exists()) {
         const tasksData = snapshot.val();
         const tasksList = Object.entries(tasksData).map(([id, data]) => ({
+          id, // إضافة معرف للمهام
           assignedEmails: data.assignedEmails || [],
-          createdBy: data.createdBy,
-          createdAt: data.createdAt,
-          dropboxLink: data.dropboxLink,
-          message: data.message,
+          createdBy: data.createdBy || "Unknown",
+          createdAt: data.createdAt || "Not available",
+          dropboxLink: data.dropboxLink || "Not available",
+          message: data.message || "No message",
         }));
         setArchivedTasks(tasksList);
-      } else {
-        throw new Error("No data found at the path 'archivedTasks'");
       }
     } catch (error) {
       setError(`Failed to fetch archived tasks. Error: ${error.message}`);
@@ -63,18 +60,20 @@ function UserProgressPage() {
       const snapshot = await get(notificationsRef);
       if (snapshot.exists()) {
         const notificationsData = snapshot.val();
-        const notificationsList = Object.entries(notificationsData).map(([id, data]) => ({
-          id,
-          message: data.message || "No Message",
-          createdAt: data.createdAt || "N/A",
-          createdBy: data.createdBy || "N/A",
-          dropboxLink: data.dropboxLink || "N/A",
-          assignedEmails: Array.isArray(data.assignedEmails) ? data.assignedEmails : [],
-          isRead: data.isRead || false
-        }));
+        const notificationsList = Object.entries(notificationsData).map(
+          ([id, data]) => ({
+            id,
+            message: data.message || "No message",
+            createdAt: data.createdAt || "Not available",
+            createdBy: data.createdBy || "Not available",
+            dropboxLink: data.dropboxLink || "Not available",
+            assignedEmails: Array.isArray(data.assignedEmails)
+              ? data.assignedEmails
+              : [],
+            isRead: data.isRead || false,
+          })
+        );
         setNotifications(notificationsList);
-      } else {
-        throw new Error("No data found at the path 'notifications'");
       }
     } catch (error) {
       setError(`Failed to fetch notifications. Error: ${error.message}`);
@@ -87,22 +86,33 @@ function UserProgressPage() {
       const snapshot = await get(coursesRef);
       if (snapshot.exists()) {
         const coursesData = snapshot.val();
-        const mainCoursesList = Object.entries(coursesData).map(([id, data]) => ({
-          id,
-          name: data.name,
-          thumbnail: data.thumbnail,
-          subCourses: data.subCourses || [],
-          questions: data.questions || [],
-          videos: data.videos || []
-        }));
-        console.log("Courses Data:", mainCoursesList);
+        const mainCoursesList = Object.entries(coursesData).map(
+          ([id, data]) => ({
+            id,
+            name: data.name || "Not available",
+            thumbnail: Array.isArray(data.thumbnail) ? data.thumbnail : [],
+            subCourses: Object.entries(data.subCourses || {}).map(
+              ([subId, subData]) => ({
+                id: subId,
+                name: subData.name || "Not available",
+                images: subData.images || [],
+                pdfs: Array.isArray(subData.pdfs) ? subData.pdfs : [],
+                questions: Array.isArray(subData.questions)
+                  ? subData.questions
+                  : [],
+                answers: Object.values(subData.answers || {}).map(
+                  (answer) => answer.text || "Not available"
+                ),
+                videos: Array.isArray(subData.videos) ? subData.videos : [],
+              })
+            ),
+            questions: Array.isArray(data.questions) ? data.questions : [],
+            videos: Array.isArray(data.videos) ? data.videos : [],
+          })
+        );
         setCourses(mainCoursesList);
-      } else {
-        console.error("No data found at the path 'courses/mainCourses'");
-        setError("No data found at the path 'courses/mainCourses'");
       }
     } catch (error) {
-      console.error("Error fetching courses:", error.message);
       setError(`Failed to fetch courses. Error: ${error.message}`);
     }
   }, [database]);
@@ -114,21 +124,22 @@ function UserProgressPage() {
       if (snapshot.exists()) {
         const submissionsData = snapshot.val();
         const submissionsList = Object.entries(submissionsData).flatMap(
-          ([userId, courses]) => 
+          ([userId, courses]) =>
             Object.entries(courses).map(([courseId, submission]) => ({
               email: submission.email || "Unknown",
               courseId: courseId,
-              endTime: submission.endTime || "Not Completed",
-              percentageSuccess: submission.percentageSuccess || "N/A",
-              startTime: submission.startTime || "N/A",
-              totalTime: submission.totalTime || "N/A",
-              userAnswers: submission.userAnswers ? submission.userAnswers.join(", ") : "N/A",
+              endTime: submission.endTime || "Not completed",
+              percentageSuccess:
+                submission.percentageSuccess || "Not available",
+              startTime: submission.startTime || "Not available",
+              totalTime: submission.totalTime || "Not available",
+              userAnswers: submission.userAnswers
+                ? submission.userAnswers.join(", ")
+                : "Not available",
               userId: userId,
             }))
         );
         setSubmissions(submissionsList);
-      } else {
-        throw new Error("No data found at the path 'submissions'");
       }
     } catch (error) {
       setError(`Failed to fetch submissions. Error: ${error.message}`);
@@ -173,37 +184,48 @@ function UserProgressPage() {
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, usersSheet, "Users");
-    XLSX.utils.book_append_sheet(workbook, archivedTasksSheet, "Archived Tasks");
+    XLSX.utils.book_append_sheet(
+      workbook,
+      archivedTasksSheet,
+      "Archived Tasks"
+    );
     XLSX.utils.book_append_sheet(workbook, notificationsSheet, "Notifications");
     XLSX.utils.book_append_sheet(workbook, coursesSheet, "Courses");
     XLSX.utils.book_append_sheet(workbook, submissionsSheet, "Submissions");
 
-    XLSX.writeFile(workbook, "UserProgressData.xlsx");
+    XLSX.writeFile(workbook, "User_Progress_Data.xlsx");
   };
 
-  const filteredUsers = users.filter(user =>
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.role.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter(
+    (user) =>
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredArchivedTasks = archivedTasks.filter(task =>
-    task.assignedEmails.join(", ").toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.createdBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.message.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredArchivedTasks = archivedTasks.filter(
+    (task) =>
+      task.assignedEmails
+        .join(", ")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      task.createdBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.message.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredNotifications = notifications.filter(notification =>
-    notification.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    notification.createdBy.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredNotifications = notifications.filter(
+    (notification) =>
+      notification.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      notification.createdBy.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredCourses = courses.filter(course =>
+  const filteredCourses = courses.filter((course) =>
     course.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredSubmissions = submissions.filter(submission => 
-    submission.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    submission.courseId.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredSubmissions = submissions.filter(
+    (submission) =>
+      submission.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      submission.courseId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) return <div>Loading...</div>;
@@ -214,174 +236,157 @@ function UserProgressPage() {
       <h1>User Progress Page</h1>
       <button onClick={exportToExcel}>Export to Excel</button>
 
-      <div>
-        <h2>Users</h2>
-        <input
-          type="text"
-          placeholder="Search Users"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Email</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <input
+        type="text"
+        placeholder="Search across all data"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       <div>
-        <h2>Archived Tasks</h2>
-        <input
-          type="text"
-          placeholder="Search Archived Tasks"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <table>
-          <thead>
-            <tr>
-              <th>Assigned Emails</th>
-              <th>Created By</th>
-              <th>Created At</th>
-              <th>Dropbox Link</th>
-              <th>Message</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredArchivedTasks.map((task, index) => (
-              <tr key={index}>
-                <td>{task.assignedEmails.join(", ")}</td>
-                <td>{task.createdBy}</td>
-                <td>{task.createdAt}</td>
-                <td>{task.dropboxLink}</td>
-                <td>{task.message}</td>
+        <details>
+          <summary>Users</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Role</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.email}</td>
+                  <td>{user.role}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
 
-      <div>
-        <h2>Notifications</h2>
-        <input
-          type="text"
-          placeholder="Search Notifications"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Message</th>
-              <th>Created At</th>
-              <th>Created By</th>
-              <th>Dropbox Link</th>
-              <th>Assigned Emails</th>
-              <th>Is Read</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredNotifications.map((notification) => (
-              <tr key={notification.id}>
-                <td>{notification.id}</td>
-                <td>{notification.message}</td>
-                <td>{notification.createdAt}</td>
-                <td>{notification.createdBy}</td>
-                <td>{notification.dropboxLink}</td>
-                <td>{notification.assignedEmails.join(", ")}</td>
-                <td>{notification.isRead ? "Yes" : "No"}</td>
+        <details>
+          <summary>Archived Tasks</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th> {/* إضافة عمود المعرف */}
+                <th>Assigned Emails</th>
+                <th>Created By</th>
+                <th>Created At</th>
+                <th>Dropbox Link</th>
+                <th>Message</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {filteredArchivedTasks.map((task) => (
+                <tr key={task.id}>
+                  <td>{task.id}</td> {/* إضافة معرف للمهام */}
+                  <td>{task.assignedEmails.join(", ")}</td>
+                  <td>{task.createdBy}</td>
+                  <td>{task.createdAt}</td>
+                  <td>{task.dropboxLink}</td>
+                  <td>{task.message}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
 
-      <div>
-        <h2>Courses</h2>
-        <input
-          type="text"
-          placeholder="Search Courses"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Thumbnail</th>
-              <th>Sub Courses</th>
-              <th>Questions</th>
-              <th>Videos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCourses.map((course) => (
-              <tr key={course.id}>
-                <td>{course.id}</td>
-                <td>{course.name}</td>
-                <td>
-                  <img src={course.thumbnail} alt={course.name} style={{ width: "50px" }} />
-                </td>
-                <td>{course.subCourses.length}</td>
-                <td>{course.questions.length}</td>
-                <td>{course.videos.length}</td>
+        <details>
+          <summary>Notifications</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Message</th>
+                <th>Created At</th>
+                <th>Created By</th>
+                <th>Dropbox Link</th>
+                <th>Assigned Emails</th>
+                <th>Is Read</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {filteredNotifications.map((notification) => (
+                <tr key={notification.id}>
+                  <td>{notification.id}</td>
+                  <td>{notification.message}</td>
+                  <td>{notification.createdAt}</td>
+                  <td>{notification.createdBy}</td>
+                  <td>{notification.dropboxLink}</td>
+                  <td>{notification.assignedEmails.join(", ")}</td>
+                  <td>{notification.isRead ? "Yes" : "No"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
 
-      <div>
-        <h2>Submissions</h2>
-        <input
-          type="text"
-          placeholder="Search Submissions"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <table>
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Course ID</th>
-              <th>End Time</th>
-              <th>Percentage Success</th>
-              <th>Start Time</th>
-              <th>Total Time</th>
-              <th>User Answers</th>
-              <th>User ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredSubmissions.map((submission, index) => (
-              <tr key={index}>
-                <td>{submission.email}</td>
-                <td>{submission.courseId}</td>
-                <td>{submission.endTime}</td>
-                <td>{submission.percentageSuccess}</td>
-                <td>{submission.startTime}</td>
-                <td>{submission.totalTime}</td>
-                <td>{submission.userAnswers}</td>
-                <td>{submission.userId}</td>
+        <details>
+          <summary>Courses</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Thumbnail</th>
+                <th>SubCourses</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredCourses.map((course) => (
+                <tr key={course.id}>
+                  <td>{course.id}</td>
+                  <td>{course.name}</td>
+                  <td>
+                    {course.thumbnail.length > 0
+                      ? course.thumbnail.join(", ")
+                      : "No thumbnails"}
+                  </td>
+                  <td>
+                    {course.subCourses.length > 0
+                      ? course.subCourses.map((sub) => sub.name).join(", ")
+                      : "No subcourses"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
+
+        <details>
+          <summary>Submissions</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Course ID</th>
+                <th>End Time</th>
+                <th>Percentage Success</th>
+                <th>Start Time</th>
+                <th>Total Time</th>
+                <th>User Answers</th>
+                <th>User ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredSubmissions.map((submission) => (
+                <tr key={submission.userId + submission.courseId}>
+                  <td>{submission.email}</td>
+                  <td>{submission.courseId}</td>
+                  <td>{submission.endTime}</td>
+                  <td>{submission.percentageSuccess}</td>
+                  <td>{submission.startTime}</td>
+                  <td>{submission.totalTime}</td>
+                  <td>{submission.userAnswers}</td>
+                  <td>{submission.userId}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
       </div>
     </div>
   );
