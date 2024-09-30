@@ -1,5 +1,4 @@
-/* Update as needed to ensure no sidebar impact on login page */
-
+/* تصميم الصفحة الرئيسية للتسجيل */
 .login-container {
   margin: 0;
   padding: 0;
@@ -12,41 +11,46 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  flex-direction: column; /* لجعل الـ navbar والفورم عموديين */
+  min-height: 100vh; /* استخدام min-height لضمان احتواء الشاشة */
+  flex-direction: column;
+  box-sizing: border-box; /* لتجنب تداخل الحواف مع المربع */
 }
 
+/* تصميم الشريط العلوي */
 .navbar {
   width: 100%;
   padding: 10px 20px;
-  
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
-  position: fixed; /* جعل شريط التنقل ثابتًا */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000; /* التأكد من أنه يظهر فوق العناصر الأخرى */
+  z-index: 1000;
+  background-color: #094d50; /* لضمان وضوح الشريط العلوي */
 }
 
 .navbar-logo {
   height: 40px;
 }
 
+/* تصميم صندوق تسجيل الدخول */
 .login-page {
-  width: 400px;
-  margin-top: 20px; /* مسافة صغيرة من شريط التنقل */
-  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 15vh;
+  padding: 20px;
   border: 1px solid #c5c5c5;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
+  box-sizing: border-box; /* لضمان توازن العناصر داخل المربع */
 }
 
 .login-page h2 {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   color: #333;
   font-size: 24px;
   font-weight: 600;
@@ -54,24 +58,27 @@
 
 .error {
   color: #dc3545;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 14px;
 }
 
 .login-page form {
   display: flex;
   flex-direction: column;
+  gap: 10px; /* لضبط المسافات بين الحقول */
 }
 
+/* المدخلات */
 .login-page input[type="email"],
 .login-page input[type="password"],
 .login-page button {
-  width: 100%; /* تأكد من أن كل عناصر الإدخال تأخذ عرضًا كاملًا */
+  width: 100%;
   padding: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 .login-page input[type="email"]:focus,
@@ -80,7 +87,6 @@
   outline: none;
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
 }
-
 
 .login-page button {
   background-color: #007bff;
@@ -96,6 +102,7 @@
   background-color: #0056b3;
 }
 
+/* حاوية كلمة المرور */
 .password-container {
   position: relative;
 }
@@ -106,15 +113,13 @@
 
 .password-toggle {
   position: absolute;
-  padding-bottom: 3px;
-  top: 40%;
+  top: 50%;
   right: 7px;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 14px;
   color: #007bff;
 }
-
 
 label {
   font-size: 14px;
@@ -123,4 +128,27 @@ label {
 
 input[type="checkbox"] {
   margin-right: 10px;
+}
+
+/* استعلامات الوسائط لتصغير الشاشة */
+@media (max-width: 900px) {
+  .login-page {
+    width: 100%;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-page {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .login-page h2 {
+    font-size: 20px;
+  }
+
+  .login-page button {
+    font-size: 14px;
+  }
 }
