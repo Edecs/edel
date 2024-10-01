@@ -40,7 +40,7 @@
 .sidebar ul li {
   border-radius: 28px;
   padding: 1.5vh 0; /* الحشو العلوي والسفلي */
-  margin-bottom: 20px; /* إضافة مسافة بين الأزرار بمقدار 5px */
+  margin-bottom: 12px; /* إضافة مسافة بين الأزرار بمقدار 5px */
   transition: background-color 0.3s ease, transform 0.2s ease,
     box-shadow 0.3s ease;
   display: flex;
@@ -70,8 +70,8 @@
 }
 
 .sidebar ul li a .sidebar-icon {
-  width: 2vw; /* تقليل حجم الأيقونات إلى 2% من عرض الشاشة */
-  height: 2vw; /* تقليل ارتفاع الأيقونات إلى 2% من عرض الشاشة */
+  width: 1.75vw; /* تقليل حجم الأيقونات إلى 2% من عرض الشاشة */
+  height: 1.75vw; /* تقليل ارتفاع الأيقونات إلى 2% من عرض الشاشة */
   fill: #000000; /* لون الأيقونات */
   transition: fill 0.3s ease;
 }
@@ -82,7 +82,7 @@
   padding: 10px; /* زيادة الحشوة لجعله أكثر راحة */
   background-color: #ce1100; /* لون خلفية الزر */
   border: none;
-  border-radius: 28px; /* نفس شكل الأزرار الأخرى */
+  border-radius: 18px; /* نفس شكل الأزرار الأخرى */
   transition: background-color 0.3s ease, transform 0.2s ease,
     box-shadow 0.3s ease; /* إضافة تأثير الظل */
   align-items: center;
@@ -94,8 +94,8 @@
 }
 
 .sidebar .logout-button .sidebar-icon {
-  width: 2vw; /* تقليل حجم الأيقونات إلى 3% من عرض الشاشة */
-  height: 3vw; /* تقليل ارتفاع الأيقونات إلى 3% من عرض الشاشة */
+  width: 1.5vw; /* تقليل حجم الأيقونات إلى 3% من عرض الشاشة */
+  height: 4vw; /* تقليل ارتفاع الأيقونات إلى 3% من عرض الشاشة */
   margin-right: 5px; /* تقليل المسافة بين الأيقونة والنص */
 }
 
@@ -129,7 +129,7 @@
 
   .sidebar .logout-button {
     font-size: 0.7rem; /* تقليل حجم الخط */
-    padding: 5px; /* تقليل الحشو */
+    padding: 4px; /* تقليل الحشو */
   }
 
   .sidebar ul li a .sidebar-icon {
