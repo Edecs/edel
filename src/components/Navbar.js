@@ -49,14 +49,18 @@ const Navbar = ({ onSidebarToggle }) => {
               notificationsData
             ).filter(
               (notification) =>
-                !notification.isRead && notification.createdBy === email
+                !notification.isRead &&
+                notification.createdBy === email &&
+                notification.message.includes("created")
             );
 
             const unreadReceivedNotifications = Object.values(
               notificationsData
             ).filter(
               (notification) =>
-                !notification.isRead && notification.assignedEmail === email
+                !notification.isRead &&
+                notification.assignedEmail === email &&
+                notification.message.includes("assigned")
             );
 
             setUnreadCountSender(unreadSentNotifications.length);
