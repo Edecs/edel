@@ -4,12 +4,13 @@ import { ReactComponent as Logo } from "../photos/edecs logo white.svg";
 import { ReactComponent as HomeIcon } from "../photos/home-svgrepo-com.svg";
 import { ReactComponent as NotificationsIcon } from "../photos/notifications-svgrepo-com (1).svg";
 import { ReactComponent as LogoutIcon } from "../photos/logout-2-svgrepo-com.svg";
+import { ReactComponent as DotsIcon } from "../photos/dots-icon.svg"; // تأكد من اسم الملف ومكانه
 import NotificationPopup from "./NotificationPopup";
 import { useAuth } from "../context/AuthContext";
 import { ref, get } from "firebase/database";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import "./Navbar.css";
+import "./Navbar.css"; // تأكد من استيراد ملف CSS
 
 const Navbar = ({ onSidebarToggle }) => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -97,8 +98,9 @@ const Navbar = ({ onSidebarToggle }) => {
   return (
     <nav className="navbar">
       <button className="menu-btn" onClick={onSidebarToggle}>
-        ☰
+        <DotsIcon className="navbar-icon custom-icon" />
       </button>
+
       <Logo className="navbar-logo" />
       <div className="navbar-buttons">
         <Link to="/welcome" className="navbar-link">
@@ -111,7 +113,7 @@ const Navbar = ({ onSidebarToggle }) => {
         >
           <NotificationsIcon className="navbar-icon" />
           {totalUnreadCount > 0 && (
-            <span className="notification-count">{` ${totalUnreadCount}`}</span>
+            <span className="notification-count">{totalUnreadCount}</span>
           )}
         </button>
 
