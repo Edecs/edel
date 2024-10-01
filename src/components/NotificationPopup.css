@@ -15,16 +15,16 @@
 }
 .notification-popup .close-button {
   position: absolute;
-  top: 10px;
-  right: 10px; /* زيادة المسافة قليلاً لجعل الزر في الزاوية */
-  background: #e63946; /* لون خلفية الزر */
-  color: white; /* لون النص */
+  top: -18px;
+  right: 0px; /* زيادة المسافة قليلاً لجعل الزر في الزاوية */
+  background: #c28400; /* لون خلفية الزر */
+  color: rgb(255, 255, 255); /* لون النص */
   border: none; /* لا حدود */
-  border-radius: 50%; /* شكل دائري */
-  width: 30px; /* حجم الزر */
+  border-radius: 75%; /* شكل دائري */
+  width: 20px; /* حجم الزر */
   height: 30px; /* ارتفاع الزر */
   cursor: pointer; /* تغيير المؤشر إلى يد عند التحويم */
-  font-size: 16px; /* حجم الخط */
+  font-size: 12px; /* حجم الخط */
   text-align: center; /* محاذاة النص في المركز */
   display: flex; /* استخدام flexbox */
   justify-content: center; /* محاذاة النص في المركز */
