@@ -9,7 +9,7 @@ $border-color: #ced4da; // لون الحدود
 
 // إعدادات عامة
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0px;
   line-height: 1.5; // تحسين التباعد بين النصوص
@@ -18,9 +18,10 @@ body {
 // عنوان الصفحة
 h1 {
   color: $text-color;
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 2.5em; // زيادة حجم الخط
+  padding-left: 5px;
+  text-align: left;
+  margin-bottom: 15px;
+  font-size: 2em; // زيادة حجم الخط
 }
 
 // زر تصدير إلى Excel
@@ -31,7 +32,9 @@ button {
   padding: 14px 24px; // زيادة padding
   border-radius: 8px; // جعل الزوايا أكثر نعومة
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s; 
+  transition:
+    background-color 0.3s,
+    transform 0.2s;
   margin: 20px 0;
   font-size: 1.1em; // زيادة حجم الخط
 
@@ -52,12 +55,14 @@ input[type="text"] {
   margin-bottom: 20px;
   border: 1px solid $border-color;
   border-radius: 5px;
-  font-size: 1em; 
-  transition: border-color 0.3s, box-shadow 0.3s; // إضافة انتقال للظل
+  font-size: 1em;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s; // إضافة انتقال للظل
 
   &:focus {
-    border-color: $primary-color; 
-    outline: none; 
+    border-color: $primary-color;
+    outline: none;
     box-shadow: 0 0 8px $primary-color; // تأثير ظل أكثر وضوحًا عند التركيز
   }
 }
@@ -66,7 +71,7 @@ input[type="text"] {
 details {
   background: $white;
   border-radius: 5px;
-  box-shadow: 0 4px 8px $shadow; 
+  box-shadow: 0 4px 8px $shadow;
   margin-bottom: 20px;
   padding: 15px; // زيادة padding داخل details
 
@@ -89,19 +94,20 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
-  box-shadow: 0 2px 5px $shadow; 
+  box-shadow: 0 2px 5px $shadow;
 
-  th, td {
+  th,
+  td {
     padding: 12px;
     border: 1px solid $border-color;
     text-align: left;
-    font-size: 1em; 
+    font-size: 1em;
   }
 
   th {
     background-color: $primary-color;
     color: $white;
-    text-transform: uppercase; 
+    text-transform: uppercase;
     letter-spacing: 1px; // إضافة تباعد بين الحروف
   }
 
