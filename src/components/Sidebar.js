@@ -6,7 +6,7 @@ import { ReactComponent as CoursesIcon } from "../photos/add.svg";
 import { ReactComponent as ProgressIcon } from "../photos/address-book.svg";
 import { ReactComponent as AdminIcon } from "../photos/user-add-outlined.svg";
 import { ReactComponent as LogoutIcon } from "../photos/logout-24-svgrepo-com.svg";
-import { ReactComponent as AddTaskIcon } from "../photos/add-task-list-svgrepo-com (1).svg";
+import { ReactComponent as AddTaskIcon } from "../photos/add task.svgrepo-com (1).svg";
 import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-com.svg"; // تأكد من إضافة أيقونة مناسبة للأرشيف
 import "./Sidebar.css";
 
