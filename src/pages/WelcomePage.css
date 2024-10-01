@@ -14,6 +14,7 @@ body {
   max-width: 1800px; /* تعيين عرض أقصى للحاوية */
   padding: 1rem;
   box-sizing: border-box;
+  margin-bottom: 20px;
 }
 
 h1, h2 {
@@ -25,7 +26,7 @@ h1, h2 {
 h1 {
   margin-bottom: 2rem;
   padding-top: 3rem;
-  font-size: 2rem; /* حجم خط نسبي */
+  font-size: 0.5rem; /* حجم خط نسبي */
 }
 
 h2 {
@@ -43,6 +44,7 @@ h2 {
   justify-content: flex-start;
   box-sizing: border-box;
   padding: 1rem;
+  margin-bottom: 30px;
 }
 
 .task-card {
@@ -72,6 +74,7 @@ h2 {
 }
 
 .course-card {
+  margin-bottom: 30px;
   border-radius: 28px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -145,7 +148,7 @@ h2 {
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size:0.8rem;
     padding-top: 1.5rem;
   }
 
@@ -172,13 +175,13 @@ h2 {
   }
 
   h1 {
-    font-size: 1.2rem;
+    font-size: 0.5rem;
     padding-top: 4rem;
   }
 
   h2 {
     font-size: 1rem;
-    padding-top: 2.5rem;
+    padding-top: 2rem;
   }
 
   .task-card {
