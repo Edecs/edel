@@ -1,19 +1,21 @@
 /* CoursePage.css */
 
 .course-page {
+
   font-family: Arial, sans-serif;
-  padding: 20px;
+  padding:80px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 60 auto;
   background-color: #f9f9f9; /* لون الخلفية */
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* تأثير الظل */
 }
 
 h1 {
+  padding-top: 60px;
   font-size: 20px;
   margin-bottom: 20px;
-  text-align: center;
+  text-align: left;
   color: #333;
 }
 
