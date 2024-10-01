@@ -11,7 +11,7 @@
 }
 
 h1 {
-  font-size: 32px;
+  font-size: 20px;
   margin-bottom: 20px;
   text-align: center;
   color: #333;
@@ -28,8 +28,8 @@ h2 {
 select,
 input[type="text"],
 input[type="file"] {
-  padding: 10px;
-  margin: 10px 0;
+  padding: 8px;
+  margin: 8px 0;
   font-size: 16px;
   width: 100%; /* توسيع الحقول */
   border: 1px solid #ddd;
