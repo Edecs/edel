@@ -1,83 +1,81 @@
-.navbar {
-  background-color: #094D50; /* اللون الأساسي للـ Navbar */
-  padding: 7px 20px; /* المسافة حول محتوى الـ Navbar */
-  position: fixed; /* لتثبيت الـ Navbar في أعلى الصفحة */
-  top: 0; /* وضعه في أعلى الصفحة */
-  width: calc(100% - 300px); /* عرض Navbar بدون التأثير على Sidebar */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف للـ Navbar */
-  box-sizing: border-box; /* يشمل الـ padding و border ضمن العرض الكلي */
-  display: flex; /* لعرض العناصر بشكل أفقي */
-  align-items: center; /* لتوسيط العناصر عموديًا */
-  justify-content: flex-start; /* لجعل العناصر تبدأ من اليسار */
-  z-index: 1000; /* لضمان ظهور شريط التنقل فوق العناصر الأخرى */
-  height: 60px; /* تحديد ارتفاع الـ Navbar */
-  overflow: hidden; /* منع التمرير الخارجي */
-}
+/* src/components/NotificationPopup.css */
 
-/* تصميم الشعار في الـ Navbar */
-.navbar-logo {
-  display: flex; /* لعرض الشعار بشكل أفقي */
-  align-items: center; /* لتوسيط الشعار عموديًا */
+.notification-popup {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  width: 320px; /* زيادة العرض قليلاً */
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px; /* زوايا أكثر نعومة */
+  padding: 20px; /* زيادة المساحة الداخلية */
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
-
-/* هنا نستخدم margin-left: auto لترحيل الأيقونات ناحية اليمين */
-.navbar-buttons {
-  
-  display: flex; /* لعرض الأزرار بشكل أفقي */
-  align-items: center; /* لتوسيط الأزرار عموديًا */
-  list-style: none; /* إزالة نقاط القائمة */
-  margin-left: auto; /* لترحيل الأزرار إلى الناحية اليمنى */
-  padding-left: 20px; /* إزالة الحشو الافتراضي */
-}
-
-.navbar-buttons li {
-  margin-left: 20px; /* المسافة بين الأزرار */
-}
-
-.navbar-link {
-/* تصميم الأزرار في الـ Navbar */
-  background-color: #094D50; /* لون الخلفية الأساسي للزر */
-  color: #fff; /* لون النص للزر */
-  border: none; /* إزالة الحدود */
-  padding: 10px 20px; /* إضافة مساحة حول النص */
-  border-radius: 4px; /* حواف دائرية للزر */
-  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
-  transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
-}
-.navbar-link:hover {
-  background-color: #0b5e5e; /* تغيير لون الخلفية عند hover */
-
-}
-/* تصميم الأزرار في الـ Navbar */
-.navbar-buttons button {
-  background-color: #094D50; /* لون الخلفية الأساسي للزر */
-  color: #fff; /* لون النص للزر */
-  border: none; /* إزالة الحدود */
-  padding: 10px 20px; /* إضافة مساحة حول النص */
-  border-radius: 4px; /* حواف دائرية للزر */
-  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
-  transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
-}
-
-.navbar-buttons button:hover {
-  background-color: #0b5e5e; /* تغيير لون الخلفية عند hover */
-}
-
-.navbar-icon {
-  height: 24px; /* حجم الأيقونات */
-  width: 24px; /* حجم الأيقونات */
-}
-.notification-button {
-  position: relative;
-}
-
-.notification-count {
+.notification-popup .close-button {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: red;
+  top: -18px;
+  right: 0px; /* زيادة المسافة قليلاً لجعل الزر في الزاوية */
+  background: #ffffff; /* لون خلفية الزر */
+  color: rgb(0, 0, 0); /* لون النص */
+  border: none; /* لا حدود */
+  border-radius: 75%; /* شكل دائري */
+  width: 20px; /* حجم الزر */
+  height: 30px; /* ارتفاع الزر */
+  cursor: pointer; /* تغيير المؤشر إلى يد عند التحويم */
+  font-size: 12px; /* حجم الخط */
+  text-align: center; /* محاذاة النص في المركز */
+  display: flex; /* استخدام flexbox */
+  justify-content: center; /* محاذاة النص في المركز */
+  align-items: center; /* محاذاة النص عموديًا */
+  transition: background 0.3s; /* تأثير انتقال لتغيير الخلفية */
+}
+
+.notification-popup .close-button:hover {
+  background: #ffffff; /* تغيير اللون عند التحويم */
+}
+
+.notifications-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.notification-item {
+  border-bottom: 1px solid #ddd;
+  padding: 12px; /* زيادة padding */
+  display: flex;
+  align-items: center; /* محاذاة العناصر في الوسط */
+  background-color: #f9f9f9; /* خلفية رمادية خفيفة لكل إشعار */
+  border-radius: 5px; /* زوايا دائرية لكل إشعار */
+  margin-bottom: 10px; /* إضافة مسافة بين الإشعارات */
+}
+
+.notification-item img {
+  max-width: 50px;
+  border-radius: 5px;
+  margin-right: 15px; /* إضافة مسافة بين الصورة والنص */
+}
+
+.notification-item p {
+  flex-grow: 1;
+  margin: 0;
+  font-size: 14px; /* حجم الخط */
+  color: #333; /* لون النص */
+}
+
+.mark-as-read-button {
+  background-color: #4caf50;
   color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
+  border: none;
+  padding: 5px 8px; /* تقليل padding */
+  border-radius: 5px; /* زوايا دائرية */
+  cursor: pointer;
   font-size: 12px;
+  transition: background 0.2s;
+}
+
+.mark-as-read-button:hover {
+  background-color: #45a049;
 }
