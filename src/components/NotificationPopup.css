@@ -17,8 +17,8 @@
   position: absolute;
   top: -18px;
   right: 0px; /* زيادة المسافة قليلاً لجعل الزر في الزاوية */
-  background: #c28400; /* لون خلفية الزر */
-  color: rgb(255, 255, 255); /* لون النص */
+  background: #ffffff; /* لون خلفية الزر */
+  color: rgb(0, 0, 0); /* لون النص */
   border: none; /* لا حدود */
   border-radius: 75%; /* شكل دائري */
   width: 20px; /* حجم الزر */
@@ -33,7 +33,7 @@
 }
 
 .notification-popup .close-button:hover {
-  background: #d62839; /* تغيير اللون عند التحويم */
+  background: #ffffff; /* تغيير اللون عند التحويم */
 }
 
 .notifications-list {
