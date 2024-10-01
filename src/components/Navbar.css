@@ -1,81 +1,111 @@
-/* src/components/NotificationPopup.css */
-
-.notification-popup {
-  position: fixed;
-  top: 60px;
-  right: 20px;
-  width: 320px; /* زيادة العرض قليلاً */
-  background: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 10px; /* زوايا أكثر نعومة */
-  padding: 20px; /* زيادة المساحة الداخلية */
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  transition: all 0.3s ease;
-}
-.notification-popup .close-button {
-  position: absolute;
-  top: -18px;
-  right: 0px; /* زيادة المسافة قليلاً لجعل الزر في الزاوية */
-  background: #ffffff; /* لون خلفية الزر */
-  color: rgb(0, 0, 0); /* لون النص */
-  border: none; /* لا حدود */
-  border-radius: 75%; /* شكل دائري */
-  width: 20px; /* حجم الزر */
-  height: 30px; /* ارتفاع الزر */
-  cursor: pointer; /* تغيير المؤشر إلى يد عند التحويم */
-  font-size: 12px; /* حجم الخط */
-  text-align: center; /* محاذاة النص في المركز */
-  display: flex; /* استخدام flexbox */
-  justify-content: center; /* محاذاة النص في المركز */
-  align-items: center; /* محاذاة النص عموديًا */
-  transition: background 0.3s; /* تأثير انتقال لتغيير الخلفية */
+.navbar {
+  background-color: #094d50; /* اللون الأساسي للـ Navbar */
+  padding: 7px 20px; /* المسافة حول محتوى الـ Navbar */
+  position: fixed; /* لتثبيت الـ Navbar في أعلى الصفحة */
+  top: 0; /* وضعه في أعلى الصفحة */
+  width: calc(100% - 300px); /* عرض Navbar بدون التأثير على Sidebar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف للـ Navbar */
+  box-sizing: border-box; /* يشمل الـ padding و border ضمن العرض الكلي */
+  display: flex; /* لعرض العناصر بشكل أفقي */
+  align-items: center; /* لتوسيط العناصر عموديًا */
+  justify-content: flex-start; /* لجعل العناصر تبدأ من اليسار */
+  z-index: 1000; /* لضمان ظهور شريط التنقل فوق العناصر الأخرى */
+  height: 60px; /* تحديد ارتفاع الـ Navbar */
+  overflow: hidden; /* منع التمرير الخارجي */
 }
 
-.notification-popup .close-button:hover {
-  background: #ffffff; /* تغيير اللون عند التحويم */
+/* تصميم الشعار في الـ Navbar */
+.navbar-logo {
+  display: flex; /* لعرض الشعار بشكل أفقي */
+  align-items: center; /* لتوسيط الشعار عموديًا */
 }
 
-.notifications-list {
-  max-height: 400px;
-  overflow-y: auto;
-  margin-top: 10px;
+/* هنا نستخدم margin-left: auto لترحيل الأيقونات ناحية اليمين */
+.navbar-buttons {
+  display: flex; /* لعرض الأزرار بشكل أفقي */
+  align-items: center; /* لتوسيع الأزرار عموديًا */
+  list-style: none; /* إزالة نقاط القائمة */
+  margin-left: auto; /* لترحيل الأزرار إلى الناحية اليمنى */
+  padding-left: 0px; /* إزالة الحشو الافتراضي */
 }
 
-.notification-item {
-  border-bottom: 1px solid #ddd;
-  padding: 12px; /* زيادة padding */
-  display: flex;
-  align-items: center; /* محاذاة العناصر في الوسط */
-  background-color: #f9f9f9; /* خلفية رمادية خفيفة لكل إشعار */
-  border-radius: 5px; /* زوايا دائرية لكل إشعار */
-  margin-bottom: 10px; /* إضافة مسافة بين الإشعارات */
+.navbar-buttons li {
+  margin-left: 20px; /* المسافة بين الأزرار */
 }
 
-.notification-item img {
-  max-width: 50px;
-  border-radius: 5px;
-  margin-right: 15px; /* إضافة مسافة بين الصورة والنص */
+.navbar-link {
+  background-color: #094d50; /* لون الخلفية الأساسي للزر */
+  color: #fff; /* لون النص للزر */
+  border: none; /* إزالة الحدود */
+  padding: 10px 20px; /* إضافة مساحة حول النص */
+  border-radius: 4px; /* حواف دائرية للزر */
+  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
+  transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
 }
 
-.notification-item p {
-  flex-grow: 1;
-  margin: 0;
-  font-size: 14px; /* حجم الخط */
-  color: #333; /* لون النص */
+.navbar-link:hover {
+  background-color: #0b5e5e; /* تغيير لون الخلفية عند hover */
 }
 
-.mark-as-read-button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 5px 8px; /* تقليل padding */
-  border-radius: 5px; /* زوايا دائرية */
-  cursor: pointer;
-  font-size: 12px;
-  transition: background 0.2s;
+.navbar-buttons button {
+  background-color: #094D50; /* لون الخلفية الأساسي للزر */
+  color: #fff; /* لون النص للزر */
+  border: none; /* إزالة الحدود */
+  padding: 10px; /* إضافة مساحة حول النص */
+  border-radius: 4px; /* حواف دائرية للزر */
+  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
+  transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
+  display: flex; /* لجعل الأيقونة والنص يظهران بشكل أفقي */
+  align-items: center; /* لتوسيع الأزرار عموديًا */
 }
 
-.mark-as-read-button:hover {
-  background-color: #45a049;
+/* تأثير hover على الأزرار */
+.navbar-buttons button:hover {
+  background-color: #0b5e5e; /* تغيير لون الخلفية عند hover */
 }
+
+.navbar-icon {
+  width: 24px; /* ضبط حجم الأيقونة لتتناسب مع حجم الزر */
+  height: 24px; /* ضبط حجم الأيقونة لتتناسب مع حجم الزر */
+}
+
+.custom-icon {
+  width: 24px;  /* عرض الأيقونة */
+  height: 24px; /* ارتفاع الأيقونة */
+}
+
+.notification-button {
+  position: relative; /* وضع نسبي لتمكين تحديد الموقع للعدّاد */
+}
+
+.notification-count {
+  position: absolute; /* وضع العدّاد في موقع محدد */
+  top: -5px; /* المسافة من الأعلى */
+  right: -5px; /* المسافة من اليمين */
+  background-color: red; /* لون الخلفية للعدّاد */
+  color: white; /* لون النص للعدّاد */
+  border-radius: 50%; /* جعل العدّاد دائري */
+  padding: 2px 6px; /* إضافة مساحة حول النص */
+  font-size: 12px; /* حجم الخط للعدّاد */
+}
+.menu-btn {
+  background-color: transparent; /* خلفية شفافة */
+  border: none; /* إزالة الحدود */
+  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
+  padding: 5px; /* إضافة مسافة داخلية */
+  display: flex; /* لعرض الأيقونة بشكل أفقي */
+  align-items: center; /* لتوسيط الأيقونة عموديًا */
+  width: 40px; /* تحديد عرض الزر */
+  height: 40px; /* تحديد ارتفاع الزر */
+}
+
+.menu-btn .navbar-icon {
+  width:800px; /* ضبط عرض الأيقونة حسب التصميم المطلوب */
+  height:800px; /* ضبط ارتفاع الأيقونة حسب التصميم المطلوب */
+}
+
+.menu-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* لون الخلفية عند hover */
+  border-radius: 4px; /* حواف دائرية عند hover */
+}
+
