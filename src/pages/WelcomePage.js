@@ -186,23 +186,26 @@ const WelcomePage = () => {
       ) : tasks.length > 0 ? (
         <div className="task-container">
           {tasks.map((task) => (
-            <div key={task.id} className="task-card">
-              <p>{task.message}</p>
-              <p>
-                Assigned to:{" "}
-                {task.assignedEmails && task.assignedEmails.length > 0
-                  ? task.assignedEmails.join(", ")
-                  : "No one assigned"}
-              </p>
-              <p>Created by: {task.createdBy}</p>
-              <p>Date: {new Date(task.createdAt).toLocaleString()}</p>
-              <button onClick={() => openTaskModal(task)}>View Task</button>
-              {/* إضافة شرط للتحقق مما إذا كان المستخدم هو من أنشأ المهمة */}
-              {task.createdBy === currentUserEmail && (
-                <button onClick={() => endTask(task.id)}>End Task</button>
-              )}
-            </div>
-          ))}
+  <div key={task.id} className="task-card">
+    <p>{task.message}</p>
+    {/* عرض "Assigned to" فقط للشخص الذي أنشأ المهمة */}
+    {task.createdBy === currentUserEmail && (
+      <p>
+        Assigned to:{" "}
+        {task.assignedEmails && task.assignedEmails.length > 0
+          ? task.assignedEmails.join(", ")
+          : "No one assigned"}
+      </p>
+    )}
+    <p>Created by: {task.createdBy}</p>
+    <p>Date: {new Date(task.createdAt).toLocaleString()}</p>
+    <button onClick={() => openTaskModal(task)}>View Task</button>
+    {task.createdBy === currentUserEmail && (
+      <button onClick={() => endTask(task.id)}>End Task</button>
+    )}
+  </div>
+))}
+
         </div>
       ) : (
         <p>No Tasks Available</p>
