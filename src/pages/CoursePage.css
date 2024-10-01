@@ -20,8 +20,8 @@ h1 {
 h2 {
   font-size: 24px;
   margin-bottom: 15px;
-  color: #4a90e2; /* لون أزرق للعناوين */
-  border-bottom: 2px solid #4a90e2;
+  color:#094d50; /* لون أزرق للعناوين */
+  border-bottom: 2px solid #094d50;
   padding-bottom: 5px;
 }
 
@@ -41,7 +41,7 @@ button {
   padding: 10px 20px;
   margin: 10px 0;
   font-size: 16px;
-  background-color: #4a90e2; /* خلفية زرقاء */
+  background-color: #094d50; /* خلفية زرقاء */
   color: white;
   border: none;
   border-radius: 4px;
@@ -85,9 +85,9 @@ li {
 
 .pdf-list a {
   text-decoration: none;
-  color: #4a90e2;
+  color:#094d50;
   font-size: 16px;
-  border-bottom: 1px solid #4a90e2;
+  border-bottom: 1px solid #094d50;
   transition: color 0.3s ease;
 }
 
