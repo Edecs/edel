@@ -7,7 +7,7 @@ import "./AddTaskPage.css";
 const AddTaskPage = () => {
   const [dropboxLink, setDropboxLink] = useState(""); // Dropbox link instead of file
   const [message, setMessage] = useState("");
-  const [assignedEmails, setAssignedEmails] = useState([]);
+  const [assignedEmails, setAssignedEmails] = useState([]); // Keep track of selected users
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
@@ -56,10 +56,9 @@ const AddTaskPage = () => {
       return;
     }
 
+    // Make the Dropbox link optional
     if (!dropboxLink) {
-      setError("Please provide a valid Dropbox link.");
-      setLoading(false);
-      return;
+      setError("Dropbox link is optional. Proceeding without it.");
     }
 
     try {
@@ -68,7 +67,7 @@ const AddTaskPage = () => {
 
       await set(newTaskRef, {
         message,
-        dropboxLink, // Storing the Dropbox link
+        dropboxLink: dropboxLink || null, // Store as null if not provided
         assignedEmails,
         createdBy: user.email,
         createdAt: new Date().toISOString(),
@@ -80,7 +79,7 @@ const AddTaskPage = () => {
         const newNotificationRef = push(notificationsRef);
         await set(newNotificationRef, {
           message: `New task assigned to you: ${message}`,
-          dropboxLink,
+          dropboxLink: dropboxLink || null, // Include link if provided
           assignedEmail: email,
           createdBy: user.email,
           createdAt: new Date().toISOString(),
@@ -91,7 +90,7 @@ const AddTaskPage = () => {
       const newCreatorNotificationRef = push(notificationsRef);
       await set(newCreatorNotificationRef, {
         message: `You have created a new task: ${message}`,
-        dropboxLink,
+        dropboxLink: dropboxLink || null, // Include link if provided
         assignedEmails: assignedEmails.join(", "),
         createdBy: user.email,
         createdAt: new Date().toISOString(),
@@ -101,7 +100,7 @@ const AddTaskPage = () => {
       setSuccess("Task added successfully!");
       setDropboxLink("");
       setMessage("");
-      setAssignedEmails([]);
+      // Keep the assigned emails as they are
     } catch (error) {
       setError("Error adding task: " + error.message);
     } finally {
@@ -131,7 +130,6 @@ const AddTaskPage = () => {
             value={dropboxLink}
             onChange={(e) => setDropboxLink(e.target.value)}
             placeholder="Paste Dropbox file link"
-            required
           />
         </div>
         <div>
@@ -165,25 +163,45 @@ const AddTaskPage = () => {
         </div>
         <div>
           <label>Select Users to Assign:</label>
-          <ul>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
-                <li key={user.email}>
-                  <input
-                    type="checkbox"
-                    id={user.email}
-                    checked={assignedEmails.includes(user.email)}
-                    onChange={() => handleUserSelect(user.email)}
-                  />
-                  <label htmlFor={user.email}>
-                    {user.email} - {user.department}
-                  </label>
-                </li>
-              ))
+          {searchTerm || searchDepartment ? ( // Show users only if there is a search term
+            filteredUsers.length > 0 ? (
+              <ul>
+                {filteredUsers.map((user) => (
+                  <li key={user.email}>
+                    <input
+                      type="checkbox"
+                      id={user.email}
+                      checked={assignedEmails.includes(user.email)} // Keep checked if assigned
+                      onChange={() => handleUserSelect(user.email)}
+                    />
+                    <label htmlFor={user.email}>
+                      {user.email} - {user.department}
+                    </label>
+                  </li>
+                ))}
+              </ul>
             ) : (
-              <li>No users found.</li>
-            )}
-          </ul>
+              <p>No users found.</p>
+            )
+          ) : null} {/* Do not show anything if there is no search term */}
+
+          {/* Display the selected users */}
+          {assignedEmails.length > 0 && (
+            <div>
+              <h3>Assigned Users:</h3>
+              <ul>
+                {assignedEmails.map((email) => {
+                  const user = allUsers.find((u) => u.email === email);
+                  return (
+                    <li key={email}>
+                      {user.email} - {user.department}
+                      <button onClick={() => handleUserSelect(email)}>Remove</button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </div>
         <button type="submit" disabled={loading}>
           {loading ? "Adding..." : "Add Task"}
