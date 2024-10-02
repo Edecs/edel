@@ -22,7 +22,9 @@ function CoursePage() {
   const [editAnswerIndex, setEditAnswerIndex] = useState(null);
   const [error, setError] = useState("");
   const [media, setMedia] = useState({ images: [], videos: [], pdfs: [] });
-  const [newMediaLink, setNewMediaLink] = useState("");
+  const [newImageLink, setNewImageLink] = useState("");
+  const [newVideoLink, setNewVideoLink] = useState("");
+  const [newPdfLink, setNewPdfLink] = useState("");
   const [newCourseName, setNewCourseName] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
 
@@ -48,7 +50,10 @@ function CoursePage() {
   // Load sub-courses
   useEffect(() => {
     if (selectedCourse) {
-      const subCoursesRef = ref(db, `courses/mainCourses/${selectedCourse}/subCourses`);
+      const subCoursesRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses`
+      );
       const unsubscribe = onValue(subCoursesRef, (snapshot) => {
         const subCoursesData = snapshot.val();
         const subCoursesArray = subCoursesData
@@ -68,10 +73,22 @@ function CoursePage() {
   // Load questions and media
   useEffect(() => {
     if (selectedCourse && selectedSubCourse) {
-      const questionsRef = ref(db, `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`);
-      const imagesRef = ref(db, `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/images`);
-      const videosRef = ref(db, `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/videos`);
-      const pdfsRef = ref(db, `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/pdfs`);
+      const questionsRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`
+      );
+      const imagesRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/images`
+      );
+      const videosRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/videos`
+      );
+      const pdfsRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/pdfs`
+      );
 
       const unsubscribeQuestions = onValue(questionsRef, (snapshot) => {
         const questionsData = snapshot.val();
@@ -111,36 +128,33 @@ function CoursePage() {
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
-  // Add media from Dropbox link
-  const handleAddMediaFromLink = () => {
-    if (!newMediaLink.trim()) {
+  const handleAddMedia = (type, link) => {
+    if (!link.trim()) {
       setError("The media link cannot be empty");
       return;
     }
 
-    let mediaType = "";
-    if (
-      newMediaLink.endsWith(".jpg") ||
-      newMediaLink.endsWith(".jpeg") ||
-      newMediaLink.endsWith(".png") ||
-      newMediaLink.includes("dropbox.com/scl")
-    ) {
-      mediaType = "images";
-    } else if (newMediaLink.endsWith(".mp4")) {
-      mediaType = "videos";
-    } else if (newMediaLink.endsWith(".pdf")) {
-      mediaType = "pdfs";
-    } else {
-      setError("Unsupported media link format");
-      return;
-    }
-
-    const mediaRef = ref(db, `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${mediaType}`);
+    const mediaRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${type}`
+    );
     const newMediaRef = push(mediaRef);
-    set(newMediaRef, newMediaLink)
+    set(newMediaRef, link)
       .then(() => {
-        setNewMediaLink("");
         setError("");
+        switch (type) {
+          case "images":
+            setNewImageLink("");
+            break;
+          case "videos":
+            setNewVideoLink("");
+            break;
+          case "pdfs":
+            setNewPdfLink("");
+            break;
+          default:
+            break;
+        }
       })
       .catch((error) => setError("Failed to save media URL: " + error.message));
   };
@@ -236,7 +250,10 @@ function CoursePage() {
       return;
     }
 
-    const questionsRef = ref(db, `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`);
+    const questionsRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`
+    );
 
     remove(questionsRef)
       .then(() => {
@@ -250,9 +267,13 @@ function CoursePage() {
             setQuestions([]);
             setError("");
           })
-          .catch((error) => setError("Failed to save questions: " + error.message));
+          .catch((error) =>
+            setError("Failed to save questions: " + error.message)
+          );
       })
-      .catch((error) => setError("Failed to delete existing questions: " + error.message));
+      .catch((error) =>
+        setError("Failed to delete existing questions: " + error.message)
+      );
   };
 
   return (
@@ -260,8 +281,11 @@ function CoursePage() {
       <h1>Course Management</h1>
       <div className="course-selection">
         <h2>Main Courses</h2>
-        <select onChange={(e) => setSelectedCourse(e.target.value)} value={selectedCourse}>
-          <option value="">Select Main Course</option>
+        <select
+          onChange={(e) => setSelectedCourse(e.target.value)}
+          value={selectedCourse}
+        >
+          <option value="">Select a course</option>
           {mainCourses.map((course) => (
             <option key={course.id} value={course.id}>
               {course.name}
@@ -269,125 +293,127 @@ function CoursePage() {
           ))}
         </select>
 
-        {selectedCourse && (
-          <>
-            <h2>Sub Courses</h2>
-            <select onChange={(e) => setSelectedSubCourse(e.target.value)} value={selectedSubCourse}>
-              <option value="">Select Sub Course</option>
-              {subCourses.map((subCourse) => (
-                <option key={subCourse.id} value={subCourse.id}>
-                  {subCourse.name}
-                </option>
-              ))}
-            </select>
-          </>
-        )}
+        <h2>Sub-Courses</h2>
+        <select
+          onChange={(e) => setSelectedSubCourse(e.target.value)}
+          value={selectedSubCourse}
+        >
+          <option value="">Select a sub-course</option>
+          {subCourses.map((subCourse) => (
+            <option key={subCourse.id} value={subCourse.id}>
+              {subCourse.name}
+            </option>
+          ))}
+        </select>
       </div>
 
-      {selectedCourse && selectedSubCourse && (
-        <div className="media-management">
-          <h2>Media Management</h2>
-          <input
-            type="text"
-            value={newMediaLink}
-            onChange={(e) => setNewMediaLink(e.target.value)}
-            placeholder="Enter media link (image/video/pdf)"
-          />
-          <button onClick={handleAddMediaFromLink}>Add Media</button>
-          {error && <p className="error">{error}</p>}
-          <div className="media-display">
-            <h3>Images</h3>
-            <div className="media-list">
-  {media.images.map((image, index) => (
-    <img
-      key={index}
-      src={image}
-      alt={`Course ${index}`}
-      className="media-item"
-      onError={(e) => {
-        e.target.onerror = null; // Prevent looping
-        e.target.src = "path/to/default-image.jpg"; // Use a default image
-      }}
-    />
-  ))}
-</div>
-
-
-            <h3>Videos</h3>
-            <div className="media-list">
-              {media.videos.map((video, index) => (
-                <video key={index} controls className="media-item">
-                  <source src={video} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              ))}
-            </div>
-
-            <h3>PDFs</h3>
-            <div className="media-list">
-              {media.pdfs.map((pdf, index) => (
-                <iframe key={index} src={pdf} title={`PDF ${index}`} className="media-item"></iframe>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="question-management">
-        <h2>Question Management</h2>
+      <div className="media-inputs">
+        <h2>Add Media</h2>
         <input
           type="text"
+          placeholder="Image Link"
+          value={newImageLink}
+          onChange={(e) => setNewImageLink(e.target.value)}
+        />
+        <button onClick={() => handleAddMedia("images", newImageLink)}>
+          Add Image
+        </button>
+
+        <input
+          type="text"
+          placeholder="Video Link"
+          value={newVideoLink}
+          onChange={(e) => setNewVideoLink(e.target.value)}
+        />
+        <button onClick={() => handleAddMedia("videos", newVideoLink)}>
+          Add Video
+        </button>
+
+        <input
+          type="text"
+          placeholder="PDF Link"
+          value={newPdfLink}
+          onChange={(e) => setNewPdfLink(e.target.value)}
+        />
+        <button onClick={() => handleAddMedia("pdfs", newPdfLink)}>
+          Add PDF
+        </button>
+
+        {error && <p className="error">{error}</p>}
+      </div>
+
+      <div className="questions-section">
+        <h2>Add Question</h2>
+        <input
+          type="text"
+          placeholder="Question"
           value={newQuestion}
           onChange={(e) => setNewQuestion(e.target.value)}
-          placeholder="Enter a new question"
         />
-        <button onClick={handleAddOrEditQuestion}>
-          {editQuestionIndex !== null ? "Update Question" : "Add Question"}
-        </button>
-        {error && <p className="error">{error}</p>}
-        <div className="answers-management">
-          {answers.map((answer, index) => (
-            <div key={index} className="answer-item">
-              <input
-                type="text"
-                value={answer.text}
-                onChange={(e) => {
-                  const updatedAnswers = [...answers];
-                  updatedAnswers[index].text = e.target.value;
-                  setAnswers(updatedAnswers);
-                }}
-                placeholder="Enter answer"
-              />
-              <input
-                type="checkbox"
-                checked={answer.correct}
-                onChange={() => handleCorrectAnswerChange(index)}
-              />
-              <button onClick={() => handleEditAnswer(index)}>Edit</button>
-            </div>
-          ))}
-          <input
-            type="text"
-            value={newAnswerText}
-            onChange={(e) => setNewAnswerText(e.target.value)}
-            placeholder="Enter answer text"
-          />
-          <button onClick={handleAddOrUpdateAnswer}>
-            {editAnswerIndex !== null ? "Update Answer" : "Add Answer"}
-          </button>
-        </div>
+        <button onClick={handleAddOrEditQuestion}>Add/Edit Question</button>
+
+        {questions.map((question, index) => (
+          <div key={index}>
+            <p>{question.text}</p>
+            <button onClick={() => handleEditQuestionIndex(index)}>Edit</button>
+            <button onClick={() => handleDeleteQuestion(index)}>Delete</button>
+          </div>
+        ))}
+
+        <h2>Add Answer</h2>
+        <input
+          type="text"
+          placeholder="Answer"
+          value={newAnswerText}
+          onChange={(e) => setNewAnswerText(e.target.value)}
+        />
+        <button onClick={handleAddOrUpdateAnswer}>Add/Update Answer</button>
+
+        {answers.map((answer, index) => (
+          <div key={index}>
+            <input
+              type="checkbox"
+              checked={answer.correct}
+              onChange={() => handleCorrectAnswerChange(index)}
+            />
+            {answer.text}
+            <button onClick={() => handleEditAnswer(index)}>Edit</button>
+          </div>
+        ))}
 
         <button onClick={handleSaveQuestions}>Save Questions</button>
+      </div>
 
-        <div className="question-list">
-          {questions.map((question, index) => (
-            <div key={index} className="question-item">
-              <p>{question.text}</p>
-              <button onClick={() => handleEditQuestionIndex(index)}>Edit</button>
-              <button onClick={() => handleDeleteQuestion(index)}>Delete</button>
-            </div>
-          ))}
-        </div>
+      <div className="media-display">
+        <h2>Media</h2>
+        <h3>Images</h3>
+        {media.images.map((image, index) => (
+          <img key={index} src={image} alt={`Image ${index}`} />
+        ))}
+
+        <h3>Videos</h3>
+        {media.videos.map((video, index) => (
+          <iframe
+            key={index}
+            width="560"
+            height="315"
+            src={video}
+            title={`Video ${index}`}
+            frameBorder="0"
+            allowFullScreen
+          />
+        ))}
+
+        <h3>PDFs</h3>
+        {media.pdfs.map((pdf, index) => (
+          <iframe
+            key={index}
+            src={pdf}
+            width="100%"
+            height="600"
+            title={`PDF ${index}`}
+          />
+        ))}
       </div>
     </div>
   );
