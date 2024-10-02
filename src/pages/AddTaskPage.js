@@ -111,10 +111,13 @@ const AddTaskPage = () => {
   const filteredUsers = allUsers.filter((user) => {
     const email = user.email ? user.email.toLowerCase() : "";
     const department = user.department ? user.department.toLowerCase() : "";
+    const name = user.name ? user.name.toLowerCase() : ""; // إضافة الاسم
 
     return (
-      email.includes(searchTerm.toLowerCase()) &&
-      department.includes(searchDepartment.toLowerCase())
+      (email.includes(searchTerm.toLowerCase()) || // البحث بالبريد الإلكتروني
+      name.includes(searchTerm.toLowerCase())) && // البحث بالاسم
+      department.includes(searchDepartment.toLowerCase()) &&
+      !assignedEmails.includes(user.email) // استثناء المستخدمين المعينين
     );
   });
 
@@ -141,31 +144,35 @@ const AddTaskPage = () => {
             required
           ></textarea>
         </div>
-        <div>
-          <label htmlFor="search">Search by Email:</label>
-          <input
-            type="text"
-            id="search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by email"
-          />
+      
+        <div className="search-container">
+          <div className="search-field">
+            <label htmlFor="search">Search by Email or Name:</label>
+            <input
+              type="text"
+              id="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by email or name"
+            />
+          </div>
+          <div className="search-field">
+            <label htmlFor="searchDepartment">Search by Department:</label>
+            <input
+              type="text"
+              id="searchDepartment"
+              value={searchDepartment}
+              onChange={(e) => setSearchDepartment(e.target.value)}
+              placeholder="Search by department"
+            />
+          </div>
         </div>
+
         <div>
-          <label htmlFor="searchDepartment">Search by Department:</label>
-          <input
-            type="text"
-            id="searchDepartment"
-            value={searchDepartment}
-            onChange={(e) => setSearchDepartment(e.target.value)}
-            placeholder="Search by department"
-          />
-        </div>
-        <div>
-          <label>Select Users to Assign:</label>
           {searchTerm || searchDepartment ? ( // Show users only if there is a search term
             filteredUsers.length > 0 ? (
               <ul>
+                <label>Select Users to Assign:</label>
                 {filteredUsers.map((user) => (
                   <li key={user.email}>
                     <input
@@ -175,7 +182,7 @@ const AddTaskPage = () => {
                       onChange={() => handleUserSelect(user.email)}
                     />
                     <label htmlFor={user.email}>
-                      {user.email} - {user.department}
+                      {user.name} 
                     </label>
                   </li>
                 ))}
@@ -194,7 +201,7 @@ const AddTaskPage = () => {
                   const user = allUsers.find((u) => u.email === email);
                   return (
                     <li key={email}>
-                      {user.email} - {user.department}
+                      {user.name} 
                       <button onClick={() => handleUserSelect(email)}>Remove</button>
                     </li>
                   );
