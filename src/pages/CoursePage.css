@@ -1,28 +1,27 @@
 /* CoursePage.css */
 
 .course-page {
-
   font-family: Arial, sans-serif;
-  padding:80px;
+  padding: 40px;
   max-width: 1200px;
-  margin: 60 auto;
+  margin: 60px auto;
   background-color: #f9f9f9; /* لون الخلفية */
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* تأثير الظل */
 }
 
 h1 {
-  padding-top: 80px;
-  font-size: 20px;
+  padding-top: 20px;
+  font-size: 26px; /* حجم الخط */
   margin-bottom: 20px;
   text-align: left;
   color: #333;
 }
 
 h2 {
-  font-size: 24px;
+  font-size: 22px; /* حجم الخط */
   margin-bottom: 15px;
-  color:#094d50; /* لون أزرق للعناوين */
+  color: #094d50; /* لون أزرق للعناوين */
   border-bottom: 2px solid #094d50;
   padding-bottom: 5px;
 }
@@ -30,7 +29,7 @@ h2 {
 select,
 input[type="text"],
 input[type="file"] {
-  padding: 8px;
+  padding: 10px; /* زيادة padding */
   margin: 8px 0;
   font-size: 16px;
   width: 100%; /* توسيع الحقول */
@@ -69,30 +68,62 @@ li {
   margin-top: 10px;
 }
 
-.media-gallery img {
-  max-width: 100px;
-  border-radius: 8px;
+.media-display {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.media-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.media-item {
+  flex: 1 0 200px; /* زيادة الحجم الافتراضي */
+  border-radius: 8px; /* تحسين الشكل */
+  overflow: hidden; /* قص العناصر الزائدة */
+}
+
+.media-item img {
+  width: 100%; /* عرض الصورة بالكامل */
+  height: auto; /* الحفاظ على نسبة العرض إلى الارتفاع */
   transition: transform 0.3s ease;
 }
 
-.media-gallery img:hover {
-  transform: scale(1.1);
+.media-item img:hover {
+  transform: scale(1.05); /* تكبير الصورة عند التمرير */
 }
 
-.video-list video {
-  width: 100%;
-  max-width: 320px;
-  border-radius: 8px;
+.media-item video {
+  width: 100%; /* عرض الفيديو بالكامل */
+  height: auto; /* الحفاظ على نسبة العرض إلى الارتفاع */
+}
+.media-item iframe {
+  width: 100%; /* عرض الـ PDF بالكامل */
+  height: 600px; /* ارتفاع مناسب للـ PDF */
+  border: none; /* إزالة الحدود إذا كنت ترغب في ذلك */
 }
 
-.pdf-list a {
-  text-decoration: none;
-  color:#094d50;
-  font-size: 16px;
-  border-bottom: 1px solid #094d50;
-  transition: color 0.3s ease;
+
+.question-management {
+  margin-top: 30px; /* إضافة مسافة بين الأقسام */
 }
 
-.pdf-list a:hover {
-  color: #357ab8;
+.question-item,
+.answer-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fff; /* خلفية بيضاء للعنصر */
+}
+
+.question-item p {
+  margin: 0; /* إزالة المسافات */
+}
+
+.answers-management {
+  margin-top: 15px;
 }
