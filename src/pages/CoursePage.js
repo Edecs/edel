@@ -293,7 +293,7 @@ function CoursePage() {
           ))}
         </select>
 
-        <h2>Sub-Courses</h2>
+        <h2>Sub Courses</h2>
         <select
           onChange={(e) => setSelectedSubCourse(e.target.value)}
           value={selectedSubCourse}
@@ -307,11 +307,11 @@ function CoursePage() {
         </select>
       </div>
 
-      <div className="media-inputs">
+      <div className="media-section">
         <h2>Add Media</h2>
         <input
           type="text"
-          placeholder="Image Link"
+          placeholder="Image URL"
           value={newImageLink}
           onChange={(e) => setNewImageLink(e.target.value)}
         />
@@ -321,7 +321,7 @@ function CoursePage() {
 
         <input
           type="text"
-          placeholder="Video Link"
+          placeholder="Video URL"
           value={newVideoLink}
           onChange={(e) => setNewVideoLink(e.target.value)}
         />
@@ -331,7 +331,7 @@ function CoursePage() {
 
         <input
           type="text"
-          placeholder="PDF Link"
+          placeholder="PDF URL"
           value={newPdfLink}
           onChange={(e) => setNewPdfLink(e.target.value)}
         />
@@ -339,80 +339,105 @@ function CoursePage() {
           Add PDF
         </button>
 
-        {error && <p className="error">{error}</p>}
-      </div>
-
-      <div className="questions-section">
-        <h2>Add Question</h2>
-        <input
-          type="text"
-          placeholder="Question"
-          value={newQuestion}
-          onChange={(e) => setNewQuestion(e.target.value)}
-        />
-        <button onClick={handleAddOrEditQuestion}>Add/Edit Question</button>
-
-        {questions.map((question, index) => (
-          <div key={index}>
-            <p>{question.text}</p>
-            <button onClick={() => handleEditQuestionIndex(index)}>Edit</button>
-            <button onClick={() => handleDeleteQuestion(index)}>Delete</button>
-          </div>
-        ))}
-
-        <h2>Add Answer</h2>
-        <input
-          type="text"
-          placeholder="Answer"
-          value={newAnswerText}
-          onChange={(e) => setNewAnswerText(e.target.value)}
-        />
-        <button onClick={handleAddOrUpdateAnswer}>Add/Update Answer</button>
-
-        {answers.map((answer, index) => (
-          <div key={index}>
-            <input
-              type="checkbox"
-              checked={answer.correct}
-              onChange={() => handleCorrectAnswerChange(index)}
-            />
-            {answer.text}
-            <button onClick={() => handleEditAnswer(index)}>Edit</button>
-          </div>
-        ))}
-
-        <button onClick={handleSaveQuestions}>Save Questions</button>
+        {error && <div className="error">{error}</div>}
       </div>
 
       <div className="media-display">
-        <h2>Media</h2>
+        <h2>Media Display</h2>
         <h3>Images</h3>
         {media.images.map((image, index) => (
-          <img key={index} src={image} alt={`Image ${index}`} />
+          <img key={index} src={image} alt={`Image ${index + 1}`} />
         ))}
 
         <h3>Videos</h3>
         {media.videos.map((video, index) => (
-          <iframe
-            key={index}
-            width="560"
-            height="315"
-            src={video}
-            title={`Video ${index}`}
-            frameBorder="0"
-            allowFullScreen
-          />
+          <video key={index} controls width="500">
+            <source src={video.replace("dl=0", "dl=1")} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         ))}
 
         <h3>PDFs</h3>
         {media.pdfs.map((pdf, index) => (
-          <iframe
-            key={index}
-            src={pdf}
-            width="100%"
-            height="600"
-            title={`PDF ${index}`}
-          />
+          <a key={index} href={pdf} target="_blank" rel="noopener noreferrer">
+            PDF {index + 1}
+          </a>
+        ))}
+      </div>
+
+      <div className="question-section">
+        <h2>Add Question</h2>
+        <input
+          type="text"
+          placeholder="New Question"
+          value={newQuestion}
+          onChange={(e) => setNewQuestion(e.target.value)}
+        />
+        <button onClick={handleAddOrEditQuestion}>
+          {editQuestionIndex !== null ? "Edit Question" : "Add Question"}
+        </button>
+
+        <h3>Answers</h3>
+        {answers.map((answer, index) => (
+          <div key={index}>
+            <input
+              type="text"
+              placeholder="Answer"
+              value={answer.text}
+              onChange={(e) => {
+                const updatedAnswers = [...answers];
+                updatedAnswers[index].text = e.target.value;
+                setAnswers(updatedAnswers);
+              }}
+            />
+            <label>
+              <input
+                type="checkbox"
+                checked={answer.correct}
+                onChange={() => handleCorrectAnswerChange(index)}
+              />
+              Correct
+            </label>
+            <button onClick={() => handleEditAnswer(index)}>Edit</button>
+            <button
+              onClick={() => setAnswers(answers.filter((_, i) => i !== index))}
+            >
+              Delete
+            </button>
+          </div>
+        ))}
+        <input
+          type="text"
+          placeholder="New Answer"
+          value={newAnswerText}
+          onChange={(e) => setNewAnswerText(e.target.value)}
+        />
+        <button onClick={handleAddOrUpdateAnswer}>
+          {editAnswerIndex !== null ? "Edit Answer" : "Add Answer"}
+        </button>
+
+        {error && <div className="error">{error}</div>}
+      </div>
+
+      <button onClick={handleSaveQuestions}>Save Questions</button>
+
+      <div className="questions-display">
+        <h2>Questions</h2>
+        {questions.map((question, index) => (
+          <div key={index}>
+            <h3>{question.text}</h3>
+            <ul>
+              {question.answers.map((answer, answerIndex) => (
+                <li key={answerIndex}>{answer.text}</li>
+              ))}
+            </ul>
+            <button onClick={() => handleEditQuestionIndex(index)}>
+              Edit Question
+            </button>
+            <button onClick={() => handleDeleteQuestion(index)}>
+              Delete Question
+            </button>
+          </div>
         ))}
       </div>
     </div>
