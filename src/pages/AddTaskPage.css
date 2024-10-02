@@ -1,8 +1,7 @@
-/* AddTaskPage.css */
-
 .add-task-container {
-  max-width: 600px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding-top: 60px;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 10px;
@@ -10,11 +9,12 @@
 }
 
 .add-task-container h1 {
-  font-size: 28px;
+  margin-top: 60px;
+  font-size: 25px;
   font-weight: bold;
   margin-bottom: 20px;
   color: #333;
-  text-align: center;
+  text-align: left;
 }
 
 .add-task-container form {
@@ -28,7 +28,7 @@
   margin-bottom: 5px;
 }
 
-.add-task-container input[type="file"],
+.add-task-container input[type="text"],
 .add-task-container input[type="email"],
 .add-task-container textarea {
   padding: 10px;
@@ -41,26 +41,33 @@
   transition: border 0.3s ease;
 }
 
-.add-task-container input[type="file"]:hover,
-.add-task-container input[type="email"]:hover,
-.add-task-container textarea:hover {
-}
-
-.add-task-container input[type="file"]:focus,
-.add-task-container input[type="email"]:focus,
-.add-task-container textarea:focus {
-  outline: none;
-  border-color: #0056b3;
-}
-
 .add-task-container textarea {
   min-height: 120px;
   resize: vertical;
 }
 
+.add-task-container .search-container {
+  display: flex;
+  justify-content: space-between; /* توزيع المساحة بين الحقول */
+  width: 50%; /* تأكد من أن الحاوية تأخذ 100% من عرض الصفحة */
+}
+
+.add-task-container .search-container > div {
+  flex: 1; /* كل عنصر سيأخذ حصة متساوية من المساحة */
+  margin-right: 10px; /* إضافة مسافة بين الحقول */
+}
+
+.add-task-container .search-container > div:last-child {
+  margin-right: 0; /* إزالة المسافة من العنصر الأخير */
+}
+
+.add-task-container .search-container input {
+  width: 100%; /* تأكد من أن الحقول تأخذ 100% من عرضها */
+}
+
 .add-task-container button[type="submit"] {
   padding: 12px 20px;
-  background-color: #007bff;
+  background-color: #094d50;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -70,7 +77,7 @@
 }
 
 .add-task-container button[type="submit"]:hover {
-  background-color: #0056b3;
+  background-color: #118288;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -104,4 +111,18 @@
   .add-task-container button[type="submit"] {
     font-size: 14px;
   }
+}
+.add-task-container .search-container {
+  display: flex;
+  justify-content: space-between; /* توزيع المساحة بين الحقول */
+  width: 100%; /* تأكد من أن الحاوية تأخذ 100% من عرض الصفحة */
+}
+
+.add-task-container .search-field {
+  flex: 0 0 48%; /* كل حقل يأخذ 48% من العرض مع ترك مسافة بسيطة */
+  margin-right: 2%; /* إضافة مسافة بين الحقول */
+}
+
+.add-task-container .search-field:last-child {
+  margin-right: 0; /* إزالة المسافة من العنصر الأخير */
 }
