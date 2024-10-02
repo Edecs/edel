@@ -40,7 +40,7 @@ function UserProgressPage() {
       if (snapshot.exists()) {
         const tasksData = snapshot.val();
         const tasksList = Object.entries(tasksData).map(([id, data]) => ({
-          id, // إضافة معرف للمهام
+          id,
           assignedEmails: data.assignedEmails || [],
           createdBy: data.createdBy || "Unknown",
           createdAt: data.createdAt || "Not available",
@@ -90,24 +90,7 @@ function UserProgressPage() {
           ([id, data]) => ({
             id,
             name: data.name || "Not available",
-            thumbnail: Array.isArray(data.thumbnail) ? data.thumbnail : [],
-            subCourses: Object.entries(data.subCourses || {}).map(
-              ([subId, subData]) => ({
-                id: subId,
-                name: subData.name || "Not available",
-                images: subData.images || [],
-                pdfs: Array.isArray(subData.pdfs) ? subData.pdfs : [],
-                questions: Array.isArray(subData.questions)
-                  ? subData.questions
-                  : [],
-                answers: Object.values(subData.answers || {}).map(
-                  (answer) => answer.text || "Not available"
-                ),
-                videos: Array.isArray(subData.videos) ? subData.videos : [],
-              })
-            ),
-            questions: Array.isArray(data.questions) ? data.questions : [],
-            videos: Array.isArray(data.videos) ? data.videos : [],
+            thumbnail: data.thumbnail || "",
           })
         );
         setCourses(mainCoursesList);
@@ -184,11 +167,7 @@ function UserProgressPage() {
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, usersSheet, "Users");
-    XLSX.utils.book_append_sheet(
-      workbook,
-      archivedTasksSheet,
-      "Archived Tasks"
-    );
+    XLSX.utils.book_append_sheet(workbook, archivedTasksSheet, "Archived Tasks");
     XLSX.utils.book_append_sheet(workbook, notificationsSheet, "Notifications");
     XLSX.utils.book_append_sheet(workbook, coursesSheet, "Courses");
     XLSX.utils.book_append_sheet(workbook, submissionsSheet, "Submissions");
@@ -286,7 +265,11 @@ function UserProgressPage() {
                   <td>{task.assignedEmails.join(", ")}</td>
                   <td>{task.createdBy}</td>
                   <td>{task.createdAt}</td>
-                  <td>{task.dropboxLink}</td>
+                  <td>
+                    <a href={task.dropboxLink} target="_blank" rel="noopener noreferrer">
+                      Open
+                    </a>
+                  </td>
                   <td>{task.message}</td>
                 </tr>
               ))}
@@ -299,7 +282,7 @@ function UserProgressPage() {
           <table>
             <thead>
               <tr>
-                <th>ID</th>
+                <th>ID</th> {/* إضافة عمود المعرف */}
                 <th>Message</th>
                 <th>Created At</th>
                 <th>Created By</th>
@@ -311,11 +294,15 @@ function UserProgressPage() {
             <tbody>
               {filteredNotifications.map((notification) => (
                 <tr key={notification.id}>
-                  <td>{notification.id}</td>
+                  <td>{notification.id}</td> {/* إضافة معرف للإشعارات */}
                   <td>{notification.message}</td>
                   <td>{notification.createdAt}</td>
                   <td>{notification.createdBy}</td>
-                  <td>{notification.dropboxLink}</td>
+                  <td>
+                    <a href={notification.dropboxLink} target="_blank" rel="noopener noreferrer">
+                      Open
+                    </a>
+                  </td>
                   <td>{notification.assignedEmails.join(", ")}</td>
                   <td>{notification.isRead ? "Yes" : "No"}</td>
                 </tr>
@@ -329,26 +316,18 @@ function UserProgressPage() {
           <table>
             <thead>
               <tr>
-                <th>ID</th>
+                <th>ID</th> {/* إضافة عمود المعرف */}
                 <th>Name</th>
                 <th>Thumbnail</th>
-                <th>SubCourses</th>
               </tr>
             </thead>
             <tbody>
               {filteredCourses.map((course) => (
                 <tr key={course.id}>
-                  <td>{course.id}</td>
+                  <td>{course.id}</td> {/* إضافة معرف للدورات */}
                   <td>{course.name}</td>
                   <td>
-                    {course.thumbnail.length > 0
-                      ? course.thumbnail.join(", ")
-                      : "No thumbnails"}
-                  </td>
-                  <td>
-                    {course.subCourses.length > 0
-                      ? course.subCourses.map((sub) => sub.name).join(", ")
-                      : "No subcourses"}
+                    <img src={course.thumbnail} alt={course.name} width="50" />
                   </td>
                 </tr>
               ))}
@@ -363,12 +342,11 @@ function UserProgressPage() {
               <tr>
                 <th>Email</th>
                 <th>Course ID</th>
-                <th>End Time</th>
-                <th>Percentage Success</th>
                 <th>Start Time</th>
+                <th>End Time</th>
                 <th>Total Time</th>
+                <th>Percentage Success</th>
                 <th>User Answers</th>
-                <th>User ID</th>
               </tr>
             </thead>
             <tbody>
@@ -376,12 +354,11 @@ function UserProgressPage() {
                 <tr key={submission.userId + submission.courseId}>
                   <td>{submission.email}</td>
                   <td>{submission.courseId}</td>
-                  <td>{submission.endTime}</td>
-                  <td>{submission.percentageSuccess}</td>
                   <td>{submission.startTime}</td>
+                  <td>{submission.endTime}</td>
                   <td>{submission.totalTime}</td>
+                  <td>{submission.percentageSuccess}</td>
                   <td>{submission.userAnswers}</td>
-                  <td>{submission.userId}</td>
                 </tr>
               ))}
             </tbody>
