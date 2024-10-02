@@ -115,7 +115,7 @@ const AddTaskPage = () => {
 
     return (
       (email.includes(searchTerm.toLowerCase()) || // البحث بالبريد الإلكتروني
-      name.includes(searchTerm.toLowerCase())) && // البحث بالاسم
+        name.includes(searchTerm.toLowerCase())) && // البحث بالاسم
       department.includes(searchDepartment.toLowerCase()) &&
       !assignedEmails.includes(user.email) // استثناء المستخدمين المعينين
     );
@@ -137,14 +137,15 @@ const AddTaskPage = () => {
         </div>
         <div>
           <label htmlFor="message">Message:</label>
-          <textarea
+          <input
+            type="text"
             id="message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             required
-          ></textarea>
+          />
         </div>
-      
+
         <div className="search-container">
           <div className="search-field">
             <label htmlFor="search">Search by Email or Name:</label>
@@ -181,17 +182,15 @@ const AddTaskPage = () => {
                       checked={assignedEmails.includes(user.email)} // Keep checked if assigned
                       onChange={() => handleUserSelect(user.email)}
                     />
-                    <label htmlFor={user.email}>
-                      {user.name} 
-                    </label>
+                    <label htmlFor={user.email}>{user.name}</label>
                   </li>
                 ))}
               </ul>
             ) : (
               <p>No users found.</p>
             )
-          ) : null} {/* Do not show anything if there is no search term */}
-
+          ) : null}{" "}
+          {/* Do not show anything if there is no search term */}
           {/* Display the selected users */}
           {assignedEmails.length > 0 && (
             <div>
@@ -201,8 +200,13 @@ const AddTaskPage = () => {
                   const user = allUsers.find((u) => u.email === email);
                   return (
                     <li key={email}>
-                      {user.name} 
-                      <button onClick={() => handleUserSelect(email)}>Remove</button>
+                      {user.name}
+                      <button
+                        className="remove-button"
+                        onClick={() => handleUserSelect(email)}
+                      >
+                        x
+                      </button>
                     </li>
                   );
                 })}
