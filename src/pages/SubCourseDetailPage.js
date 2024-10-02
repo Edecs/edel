@@ -23,7 +23,6 @@ const SubCourseDetailPage = () => {
   const mediaRef = useRef(null);
 
   useEffect(() => {
-    // تعيين وقت البدء عند فتح الشاشة
     setStartTime(new Date());
 
     const fetchSubCourseDetails = async () => {
@@ -101,8 +100,8 @@ const SubCourseDetailPage = () => {
   };
 
   const handleSubmit = async () => {
-    let endTime = new Date(); // استخدام let لتحديث وقت النهاية
-    const totalTime = (endTime - startTime) / 1000; // حساب الوقت الكلي
+    let endTime = new Date();
+    const totalTime = (endTime - startTime) / 1000;
 
     let correctCount = 0;
 
@@ -171,7 +170,7 @@ const SubCourseDetailPage = () => {
     if (link.includes("dropbox.com")) {
       return link
         .replace("www.dropbox.com", "dl.dropboxusercontent.com")
-        .replace("?dl=0", "");
+        .replace("?dl=1", ""); // تغيير هنا لتجنب التنزيل
     }
     return link;
   };
@@ -196,28 +195,30 @@ const SubCourseDetailPage = () => {
                 title="PDF Document"
                 frameBorder="0"
                 style={{ width: "100%", height: "900px" }}
-                sandbox="allow-same-origin allow-scripts" // يمنع التنزيل
+                sandbox="allow-same-origin allow-scripts"
                 allow="fullscreen"
               ></iframe>
             )}
             {subCourse.videos?.[currentMediaKey] && (
-              <div className="video-container">
-                <iframe
-                  ref={mediaRef}
+              <video controls style={{ width: "100%", height: "900px" }}>
+                <source
                   src={convertDropboxLink(subCourse.videos[currentMediaKey])}
-                  width="100%"
-                  height="500px"
-                  frameBorder="0"
-                  allowFullScreen
-                  title="Dropbox Replay Video"
-                ></iframe>
-              </div>
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
             )}
           </div>
         )}
 
         <div className="media-navigation">
-          <button onClick={handlePrevMedia} disabled={currentMediaIndex === 0}>
+          <button
+            onClick={handlePrevMedia}
+            disabled={currentMediaIndex === 0}
+            style={{
+              display: currentMediaIndex > 0 ? "inline-block" : "none",
+            }}
+          >
             Previous Media
           </button>
           <button
@@ -235,9 +236,13 @@ const SubCourseDetailPage = () => {
             <button
               onClick={handlePrevQuestion}
               disabled={currentQuestionIndex === 0}
+              style={{
+                display: currentQuestionIndex > 0 ? "inline-block" : "none",
+              }}
             >
               Previous Question
             </button>
+
             <button
               onClick={handleNextQuestion}
               disabled={currentQuestionIndex === totalQuestions - 1}
@@ -275,11 +280,8 @@ const SubCourseDetailPage = () => {
           <h3>Submission Result</h3>
           <p>Email: {submissionResult.email}</p>
           <p>Course ID: {submissionResult.courseId}</p>
-          <p>Start Time: {submissionResult.startTime}</p>
-          <p>End Time: {submissionResult.endTime}</p>
           <p>Total Time: {submissionResult.totalTime} seconds</p>
-          <p>Success Rate: {submissionResult.percentageSuccess}%</p>
-          <p>User Answers: {JSON.stringify(submissionResult.userAnswers)}</p>
+          <p>Success Percentage: {submissionResult.percentageSuccess}%</p>
         </div>
       )}
     </div>
