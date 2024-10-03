@@ -17,8 +17,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #094d50;
-  color: #fff;
+  color: #000;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -29,7 +28,7 @@
 .course-management-header h1 {
   margin: 0;
   font-size: 1rem; /* استخدم وحدة rem للحصول على استجابة أفضل */
-  color: #ffffff;
+  color: #000;
 }
 
 /* التصميم الأساسي */
