@@ -5,7 +5,14 @@
   max-width: 1200px; /* تعيين عرض أقصى للصفحة */
   margin: auto; /* مركزة الصفحة */
 }
-
+.user-list1,
+.user-details {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  max-width: 100%;
+}
 .course-management-header {
   background-color: #f4f4f4;
   padding: 20px;
@@ -16,7 +23,7 @@
 
 .course-management-header h1 {
   margin: 0;
-  font-size: 2rem; /* استخدم وحدة rem للحصول على استجابة أفضل */
+  font-size: 1rem; /* استخدم وحدة rem للحصول على استجابة أفضل */
   color: #333;
 }
 
@@ -45,7 +52,7 @@
   .courses-section,
   .users-section,
   .details-section {
-    flex: 1 1 32%; /* تعديل العرض لجعل الأقسام تناسب الشاشات الصغيرة */
+    flex: 1 1 100%; /* تعديل العرض لجعل الأقسام تناسب الشاشات الصغيرة */
   }
 }
 
@@ -90,8 +97,6 @@
 .user-list {
   width: 100%;
   list-style-type: none;
-  padding: 0;
-  margin: 0;
 }
 
 .user-list li {
@@ -134,15 +139,15 @@
 }
 
 .user-actions button:hover {
-  background-color: #0056b3;
+  background-color: #094d50;
 }
 
 /* تصميم الـ checkbox ليكون دائري */
 input[type="checkbox"] {
+  padding-top: 8px;
   appearance: none; /* إزالة التنسيق الافتراضي */
-  -webkit-appearance: none; /* إزالة التنسيق الافتراضي على متصفحات Webkit */
   background-color: #fff;
-  border: 2px solid #007bff; /* لون الحدود */
+  border: 2px solid #094d50; /* لون الحدود */
   border-radius: 50%; /* جعلها دائرية */
   width: 20px; /* عرض الـ checkbox */
   height: 20px; /* ارتفاع الـ checkbox */
@@ -153,7 +158,7 @@ input[type="checkbox"] {
 
 /* تصميم الـ checkbox عند التحديد */
 input[type="checkbox"]:checked {
-  border-color: #007bff; /* لون الحدود عند التحديد */
+  border-color: #094d50; /* لون الحدود عند التحديد */
   background-color: #fff; /* لون الخلفية عند التحديد */
 }
 
@@ -165,7 +170,7 @@ input[type="checkbox"]::after {
   left: 50%;
   width: 8px; /* عرض النقطة */
   height: 8px; /* ارتفاع النقطة */
-  background: #007bff; /* لون النقطة الزرقاء */
+  background: #094d50; /* لون النقطة الزرقاء */
   border-radius: 50%; /* جعلها دائرية */
   transform: translate(-50%, -50%);
   opacity: 0;
@@ -179,11 +184,6 @@ input[type="checkbox"]:checked::after {
 
 /* تحسين تصميم قائمة المستخدمين */
 .user-list input[type="checkbox"] {
-  margin-right: 8px;
-}
-
-/* تحسين تصميم قائمة المستخدمين المسجلين */
-.enrolled-users-list input[type="checkbox"] {
   margin-right: 8px;
 }
 
