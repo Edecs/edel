@@ -1,5 +1,5 @@
 .admin-page {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   color: #333;
   background-color: #f4f4f4;
   padding: 20px;
@@ -16,7 +16,7 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 40px; /* المسافة بين الـ navbar والعناصر التالية */
+  margin-top: 60px; /* المسافة بين الـ navbar والعناصر التالية */
   flex-wrap: wrap; /* لجعل العناصر تلتف بشكل مناسب في الأجهزة الصغيرة */
 }
 
@@ -61,7 +61,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 15px;
-  width: 48%; /* عرض كل قسم بنسبة 48% ليظهروا بجانب بعضهم */
+  width: 45%; /* عرض كل قسم بنسبة 48% ليظهروا بجانب بعضهم */
   max-width: 45%;
 }
 
@@ -155,4 +155,42 @@
 
 .popup-content button {
   margin-top: 15px;
+}
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin-top: 80px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: #007bff;
+}
+
+.search-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
 }
