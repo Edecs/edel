@@ -233,7 +233,7 @@ function CourseManagementPage() {
 
         <div className="users-section">
           <h2>Users</h2>
-          <ul className="user-list">
+          <ul className="user-list1">
             {filteredUsers.map((user) => (
               <li key={user.email}>
                 <label>
@@ -257,7 +257,7 @@ function CourseManagementPage() {
                 Selected Course: {courses[selectedCourse]?.name || "No title"}
               </h2>
               <h3>Enrolled Users</h3>
-              <ul className="enrolled-user-list">
+              <ul className="enrolled-user-list1">
                 {filteredEnrolledUsers.map((user) => (
                   <li key={user.email}>
                     <label>
