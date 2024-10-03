@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"; // لتوجيه المستخدم
 import "./AdminPage.css"; // استيراد التنسيقات
 
 function AdminPage() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]); // لتخزين قائمة المستخدمين
   const [roles, setRoles] = useState({}); // لتخزين قائمة الأدوار
   const [courses, setCourses] = useState({}); // لتخزين قائمة الكورسات
@@ -16,6 +17,7 @@ function AdminPage() {
   const [newUserDepartment, setNewUserDepartment] = useState("Top Management"); // لتحديد قسم المستخدم الجديد
   const [isPopupOpen, setIsPopupOpen] = useState(false); // للتحكم في عرض النافذة المنبثقة
   const [selectedUser, setSelectedUser] = useState(null); // لتحديد المستخدم المختار
+  const [courseSearchQuery, setCourseSearchQuery] = useState(""); // لتخزين استعلام البحث عن الكورسات
 
   const auth = getAuth(); // للحصول على مصادقة Firebase
 
@@ -280,16 +282,26 @@ function AdminPage() {
         </button>
       </header>
       <div className="main-content">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <div className="user-list">
-          {users.map((user) => (
-            <div
-              key={user.email}
-              className="user-item"
-              onClick={() => setSelectedUser(user)}
-            >
-              {user.name}
-            </div>
-          ))}
+          {users
+            .filter((user) =>
+              user.name.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((user) => (
+              <div
+                key={user.email}
+                className="user-item"
+                onClick={() => setSelectedUser(user)}
+              >
+                {user.name}
+              </div>
+            ))}
         </div>
 
         <div className="user-details">
@@ -313,48 +325,71 @@ function AdminPage() {
                 {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
               </p>
 
-              {/* التحكم في الوصول إلى الكورسات */}
               <h3>Course Access</h3>
-              {Object.entries(courses).map(([courseId, course]) => {
-                const hasMainCourseAccess =
-                  !!roles[selectedUser.email.replace(/\./g, ",")]?.courses?.[
-                    courseId
-                  ]?.hasAccess;
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={courseSearchQuery}
+                onChange={(e) => setCourseSearchQuery(e.target.value)}
+              />
+              {Object.entries(courses)
+                .filter(([courseId, course]) => {
+                  // تحقق مما إذا كانت اسم الدورة الرئيسية أو أي من الأسماء الفرعية تحتوي على نص البحث
+                  const isMainCourseMatch = course.name
+                    .toLowerCase()
+                    .includes(courseSearchQuery.toLowerCase());
 
-                // Only display main courses and subcourses if the user has access to the main course
-                if (!hasMainCourseAccess) return null;
+                  const isSubCourseMatch =
+                    course.subCourses &&
+                    Object.values(course.subCourses).some((subCourse) =>
+                      subCourse.name
+                        .toLowerCase()
+                        .includes(courseSearchQuery.toLowerCase())
+                    );
 
-                return (
-                  <div key={courseId}>
-                    <h4>{course.name}</h4>
-                    {course.subCourses &&
-                      Object.entries(course.subCourses).map(
-                        ([subCourseId, subCourse]) => (
-                          <div key={subCourseId}>
-                            <span>
-                              {getSubCourseName(courseId, subCourseId)}
-                            </span>
-                            <input
-                              type="checkbox"
-                              checked={
-                                !!roles[selectedUser.email.replace(/\./g, ",")]
-                                  ?.courses?.[courseId]?.[subCourse.name]
-                                  ?.hasAccess
-                              }
-                              onChange={() =>
-                                handleToggleAccess(
-                                  selectedUser.email,
-                                  courseId,
-                                  subCourse.name
-                                )
-                              }
-                            />
-                          </div>
-                        )
-                      )}
-                  </div>
-                );
-              })}
+                  return isMainCourseMatch || isSubCourseMatch; // أعد الدورة إذا كان هناك تطابق
+                })
+                .map(([courseId, course]) => {
+                  const hasMainCourseAccess =
+                    !!roles[selectedUser.email.replace(/\./g, ",")]?.courses?.[
+                      courseId
+                    ]?.hasAccess;
+
+                  // عرض الكورسات الرئيسية فقط إذا كان لدى المستخدم الوصول
+                  if (!hasMainCourseAccess) return null;
+
+                  return (
+                    <div key={courseId}>
+                      <h4>{course.name}</h4>
+                      {course.subCourses &&
+                        Object.entries(course.subCourses).map(
+                          ([subCourseId, subCourse]) => (
+                            <div key={subCourseId}>
+                              <span>
+                                {getSubCourseName(courseId, subCourseId)}
+                              </span>
+                              <input
+                                type="checkbox"
+                                checked={
+                                  !!roles[
+                                    selectedUser.email.replace(/\./g, ",")
+                                  ]?.courses?.[courseId]?.[subCourse.name]
+                                    ?.hasAccess
+                                }
+                                onChange={() =>
+                                  handleToggleAccess(
+                                    selectedUser.email,
+                                    courseId,
+                                    subCourse.name
+                                  )
+                                }
+                              />
+                            </div>
+                          )
+                        )}
+                    </div>
+                  );
+                })}
             </>
           )}
         </div>
@@ -414,10 +449,10 @@ function AdminPage() {
             <button onClick={() => setIsPopupOpen(false)}>Close</button>
           </div>
         </div>
-      )}{" "}
-      {/* Closing the Popup component */}
+      )}
     </div>
-  ); // Closing the return statement
+  );
+  // Closing the return statement
 }
 
 export default AdminPage;
