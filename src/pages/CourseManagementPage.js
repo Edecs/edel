@@ -28,7 +28,6 @@ function CourseManagementPage() {
       const snapshot = await get(coursesRef);
       if (snapshot.exists()) {
         const coursesData = snapshot.val();
-        console.log("Fetched courses:", coursesData);
         setCourses(coursesData);
       } else {
         console.log("No courses found");
@@ -174,15 +173,22 @@ function CourseManagementPage() {
   };
 
   // فلترة المستخدمين بناءً على نص البحث
-  const filteredUsers = users.filter(
-    (user) =>
-      (user.name &&
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (user.email &&
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (user.department &&
-        user.department.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredUsers = users
+    .filter(
+      (user) =>
+        (user.name &&
+          user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.email &&
+          user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.department &&
+          user.department.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+    .filter((user) => {
+      // التحقق إذا كان المستخدم مسجلاً في الدورة المحددة
+      return !enrolledUsers.some(
+        (enrolledUser) => enrolledUser.email === user.email
+      );
+    });
 
   // فلترة المستخدمين المسجلين بناءً على نص البحث
   const filteredEnrolledUsers = enrolledUsers.filter(
@@ -194,6 +200,10 @@ function CourseManagementPage() {
       (user.department &&
         user.department.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  // تعديل الفلترة بحيث لا يظهر المستخدمون في القائمتين في نفس الوقت
+  const usersToDisplay = selectedCourse ? filteredUsers : [];
+  const enrolledUsersToDisplay = selectedCourse ? filteredEnrolledUsers : [];
 
   return (
     <div className="course-management-page">
@@ -234,7 +244,7 @@ function CourseManagementPage() {
         <div className="users-section">
           <h2>Users</h2>
           <ul className="user-list1">
-            {filteredUsers.map((user) => (
+            {usersToDisplay.map((user) => (
               <li key={user.email}>
                 <label>
                   <input
@@ -258,7 +268,7 @@ function CourseManagementPage() {
               </h2>
               <h3>Enrolled Users</h3>
               <ul className="enrolled-user-list1">
-                {filteredEnrolledUsers.map((user) => (
+                {enrolledUsersToDisplay.map((user) => (
                   <li key={user.email}>
                     <label>
                       <input
@@ -272,11 +282,9 @@ function CourseManagementPage() {
                   </li>
                 ))}
               </ul>
-              <button onClick={handleAddUsersToCourse}>
-                Add Users to Course
-              </button>
+              <button onClick={handleAddUsersToCourse}>Add Users</button>
               <button onClick={handleRemoveUsersFromCourse}>
-                Remove Users from Course
+                Remove Users
               </button>
             </div>
           )}
