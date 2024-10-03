@@ -14,17 +14,22 @@
   max-width: 100%;
 }
 .course-management-header {
-  background-color: #f4f4f4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #094d50;
+  color: #fff;
   padding: 20px;
-  text-align: center;
-  border-bottom: 2px solid #ddd;
-  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 60px;
+  flex-wrap: wrap;
 }
 
 .course-management-header h1 {
   margin: 0;
   font-size: 1rem; /* استخدم وحدة rem للحصول على استجابة أفضل */
-  color: #333;
+  color: #ffffff;
 }
 
 /* التصميم الأساسي */
