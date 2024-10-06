@@ -217,3 +217,26 @@ input[type="checkbox"]:checked::after {
 .search-bar input[type="text"]:focus {
   border: 2px solid #007bff;
 }
+/* أزرار إدارة المستخدمين */
+.actions {
+  display: flex; /* استخدام Flexbox لترتيب الأزرار */
+  justify-content: center; /* توسيط الأزرار أفقياً */
+  margin-top: 45%;
+  margin-bottom: 45%;
+}
+
+.actions button {
+  padding: 10px 20px;
+  margin: 0 10px; /* إضافة مساحة بين الأزرار */
+  border: none;
+  border-radius: 5px;
+  background-color: #094d50;
+  color: #fff;
+  font-size: 1rem; /* استخدم وحدة rem */
+  cursor: pointer;
+  transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
+}
+
+.actions button:hover {
+  background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
+}
