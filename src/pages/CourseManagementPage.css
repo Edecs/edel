@@ -14,7 +14,6 @@
   max-width: 100%;
 }
 .course-management-header {
-  display: flex;
   justify-content: space-between;
   align-items: center;
   color: #000;
@@ -25,9 +24,7 @@
 }
 
 .course-management-header h1 {
-  
-    color: #080404;
-
+  color: #080404;
 }
 
 /* التصميم الأساسي */
@@ -227,11 +224,10 @@ input[type="checkbox"]:checked::after {
   flex-direction: column; /* ترتيب الأزرار عمودياً */
   height: 100%; /* جعل الـ actions تأخذ كامل ارتفاع العمود */
   margin-top: 30%;
-  margin-bottom: 30%; 
+  margin-bottom: 30%;
 }
 
 .actions button {
-
   height: 50px;
   padding: 10px 20px;
   border: none;
