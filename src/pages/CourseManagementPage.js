@@ -259,7 +259,12 @@ function CourseManagementPage() {
             ))}
           </ul>
         </div>
-
+        <div className="actions">
+          <button onClick={handleAddUsersToCourse}>Add Users to Course</button>
+          <button onClick={handleRemoveUsersFromCourse}>
+            Remove Users from Course
+          </button>
+        </div>
         <div className="details-section">
           {selectedCourse && (
             <div className="course-details">
@@ -282,13 +287,11 @@ function CourseManagementPage() {
                   </li>
                 ))}
               </ul>
-              <button onClick={handleAddUsersToCourse}>Add Users</button>
-              <button onClick={handleRemoveUsersFromCourse}>
-                Remove Users
-              </button>
             </div>
           )}
         </div>
+
+      
       </div>
     </div>
   );
