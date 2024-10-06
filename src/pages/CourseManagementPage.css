@@ -27,7 +27,7 @@
 
 .course-management-header h1 {
   margin: 0;
-  font-size: 1rem; /* استخدم وحدة rem للحصول على استجابة أفضل */
+  font-size: 1.2rem; /* تعديل وحدة rem للحصول على استجابة أفضل */
   color: #000;
 }
 
@@ -82,17 +82,20 @@
 
 .course-list li {
   border-radius: 28px;
-  margin: auto;
-  background-color: #333333a6;
-  padding: 20px; /* تقليل الحشوة لتحسين الاستجابة */
+  margin: 10px auto; /* تحسين المحاذاة */
+  background-color: #094d50;
+  color: #f0f8ff;
+  padding: 15px; /* تعديل الحشوة لتحسين الاستجابة */
   border-bottom: 1px solid #ddd;
   cursor: pointer;
-  font-size: 1rem; /* استخدم وحدة rem */
+  font-size: 1rem; /* استخدام وحدة rem */
   text-align: center;
   transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
 }
 
 .course-list li.selected {
+  color: #000000;
+
   background-color: #f0f8ff;
   font-weight: bold;
 }
@@ -137,7 +140,7 @@
   border-radius: 5px;
   background-color: #dfe6ec;
   color: #fff;
-  font-size: 1rem; /* استخدم وحدة rem */
+  font-size: 1rem; /* استخدام وحدة rem */
   cursor: pointer;
   transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
 }
@@ -206,7 +209,7 @@ input[type="checkbox"]:checked::after {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  font-size: 1rem; /* استخدم وحدة rem */
+  font-size: 1rem; /* استخدام وحدة rem */
   outline: none;
 }
 
@@ -217,26 +220,36 @@ input[type="checkbox"]:checked::after {
 .search-bar input[type="text"]:focus {
   border: 2px solid #007bff;
 }
+
 /* أزرار إدارة المستخدمين */
 .actions {
   display: flex; /* استخدام Flexbox لترتيب الأزرار */
   justify-content: center; /* توسيط الأزرار أفقياً */
-  margin-top: 45%;
-  margin-bottom: 45%;
+  align-items: center; /* توسيط الأزرار عمودياً */
+  flex-direction: column; /* ترتيب الأزرار عمودياً */
+  height: 100%; /* جعل الـ actions تأخذ كامل ارتفاع العمود */
+  margin-top: 30%;
+  margin-bottom: 30%; 
 }
 
 .actions button {
+
+  height: 50px;
   padding: 10px 20px;
-  margin: 0 10px; /* إضافة مساحة بين الأزرار */
   border: none;
   border-radius: 5px;
   background-color: #094d50;
   color: #fff;
-  font-size: 1rem; /* استخدم وحدة rem */
+  font-size: 1rem; /* استخدام وحدة rem */
   cursor: pointer;
   transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
 }
 
 .actions button:hover {
-  background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
+  background-color: #12848a; /* تغيير لون الخلفية عند التحويم */
+}
+.actions img {
+  width: 20px; /* عرض الأيقونة */
+  height: 20px; /* ارتفاع الأيقونة */
+  margin-right: 5px; /* إضافة مسافة بين الأيقونة والنص */
 }
