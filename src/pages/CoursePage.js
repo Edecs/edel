@@ -22,9 +22,7 @@ function CoursePage() {
   const [editAnswerIndex, setEditAnswerIndex] = useState(null);
   const [error, setError] = useState("");
   const [media, setMedia] = useState({ images: [], videos: [], pdfs: [] });
-  const [newImageLink, setNewImageLink] = useState("");
-  const [newVideoLink, setNewVideoLink] = useState("");
-  const [newPdfLink, setNewPdfLink] = useState("");
+  const [newMediaLink, setNewMediaLink] = useState("");
   const [newCourseName, setNewCourseName] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
 
@@ -128,33 +126,40 @@ function CoursePage() {
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
-  const handleAddMedia = (type, link) => {
-    if (!link.trim()) {
+  // Add media from Dropbox link
+  const handleAddMediaFromLink = () => {
+    if (!newMediaLink.trim()) {
       setError("The media link cannot be empty");
+      return;
+    }
+
+    let mediaType = "";
+    // Checking for media types based on extensions and Dropbox URLs
+    if (
+      newMediaLink.endsWith(".jpg") ||
+      newMediaLink.endsWith(".jpeg") ||
+      newMediaLink.endsWith(".png") ||
+      newMediaLink.includes("dropbox.com/scl") // Check for Dropbox image links
+    ) {
+      mediaType = "images";
+    } else if (newMediaLink.endsWith(".mp4")) {
+      mediaType = "videos";
+    } else if (newMediaLink.endsWith(".pdf")) {
+      mediaType = "pdfs";
+    } else {
+      setError("Unsupported media link format");
       return;
     }
 
     const mediaRef = ref(
       db,
-      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${type}`
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${mediaType}`
     );
     const newMediaRef = push(mediaRef);
-    set(newMediaRef, link)
+    set(newMediaRef, newMediaLink)
       .then(() => {
+        setNewMediaLink("");
         setError("");
-        switch (type) {
-          case "images":
-            setNewImageLink("");
-            break;
-          case "videos":
-            setNewVideoLink("");
-            break;
-          case "pdfs":
-            setNewPdfLink("");
-            break;
-          default:
-            break;
-        }
       })
       .catch((error) => setError("Failed to save media URL: " + error.message));
   };
@@ -267,178 +272,220 @@ function CoursePage() {
             setQuestions([]);
             setError("");
           })
-          .catch((error) =>
-            setError("Failed to save questions: " + error.message)
-          );
+          .catch((error) => {
+            setError("Failed to save questions: " + error.message);
+          });
+      })
+      .catch((error) => {
+        setError("Failed to clear existing questions: " + error.message);
+      });
+  };
+
+  // Add sub-course
+  const handleAddSubCourse = () => {
+    if (!newSubCourseName.trim()) {
+      setError("The sub-course name cannot be empty");
+      return;
+    }
+
+    const subCoursesRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses`
+    );
+    const newSubCourseRef = push(subCoursesRef);
+    set(newSubCourseRef, { name: newSubCourseName })
+      .then(() => {
+        setNewSubCourseName("");
+        setError("");
       })
       .catch((error) =>
-        setError("Failed to delete existing questions: " + error.message)
+        setError("Failed to save sub-course: " + error.message)
       );
+  };
+
+  // Add main course
+  const handleAddCourse = () => {
+    if (!newCourseName.trim()) {
+      setError("The course name cannot be empty");
+      return;
+    }
+
+    const coursesRef = ref(db, "courses/mainCourses");
+    const newCourseRef = push(coursesRef);
+    set(newCourseRef, { name: newCourseName })
+      .then(() => {
+        setNewCourseName("");
+        setError("");
+      })
+      .catch((error) => setError("Failed to save course: " + error.message));
   };
 
   return (
     <div className="course-page">
-      <h1>Course Management</h1>
-      <div className="course-selection">
-        <h2>Main Courses</h2>
-        <select
-          onChange={(e) => setSelectedCourse(e.target.value)}
-          value={selectedCourse}
-        >
-          <option value="">Select a course</option>
+      <div className="course-selectors">
+        <h2>Select Course</h2>
+        <div className="course-buttons">
           {mainCourses.map((course) => (
-            <option key={course.id} value={course.id}>
+            <button
+              key={course.id}
+              onClick={() => setSelectedCourse(course.id)}
+              className={selectedCourse === course.id ? "selected" : ""}
+            >
               {course.name}
-            </option>
+            </button>
           ))}
-        </select>
+          <h2>Add New Course</h2>
+          <input
+            type="text"
+            placeholder="Enter new course name"
+            value={newCourseName}
+            onChange={(e) => setNewCourseName(e.target.value)}
+          />
+          <button onClick={handleAddCourse}>Add Course</button>
+        </div>
 
-        <h2>Sub Courses</h2>
-        <select
-          onChange={(e) => setSelectedSubCourse(e.target.value)}
-          value={selectedSubCourse}
-        >
-          <option value="">Select a sub-course</option>
+        <h2>Select Sub-Course</h2>
+        <div className="sub-course-buttons">
           {subCourses.map((subCourse) => (
-            <option key={subCourse.id} value={subCourse.id}>
+            <button
+              key={subCourse.id}
+              onClick={() => setSelectedSubCourse(subCourse.id)}
+              className={selectedSubCourse === subCourse.id ? "selected" : ""}
+              disabled={!selectedCourse}
+            >
               {subCourse.name}
-            </option>
+            </button>
           ))}
-        </select>
-      </div>
 
+          <h2>Add New Sub-Course</h2>
+          <input
+            type="text"
+            placeholder="Enter new sub-course name"
+            value={newSubCourseName}
+            onChange={(e) => setNewSubCourseName(e.target.value)}
+            disabled={!selectedCourse}
+          />
+          <button onClick={handleAddSubCourse} disabled={!selectedCourse}>
+            Add Sub-Course
+          </button>
+        </div>
+      </div>
       <div className="media-section">
-        <h2>Add Media</h2>
+        <h2>Media (Images, Videos, PDFs)</h2>
         <input
           type="text"
-          placeholder="Image URL"
-          value={newImageLink}
-          onChange={(e) => setNewImageLink(e.target.value)}
+          placeholder="Enter Dropbox link for media"
+          value={newMediaLink}
+          onChange={(e) => setNewMediaLink(e.target.value)}
+          disabled={!selectedSubCourse}
         />
-        <button onClick={() => handleAddMedia("images", newImageLink)}>
-          Add Image
+        <button onClick={handleAddMediaFromLink} disabled={!selectedSubCourse}>
+          Add Media
         </button>
 
-        <input
-          type="text"
-          placeholder="Video URL"
-          value={newVideoLink}
-          onChange={(e) => setNewVideoLink(e.target.value)}
-        />
-        <button onClick={() => handleAddMedia("videos", newVideoLink)}>
-          Add Video
-        </button>
+        {error && <p className="error-message">{error}</p>}
 
-        <input
-          type="text"
-          placeholder="PDF URL"
-          value={newPdfLink}
-          onChange={(e) => setNewPdfLink(e.target.value)}
-        />
-        <button onClick={() => handleAddMedia("pdfs", newPdfLink)}>
-          Add PDF
-        </button>
+        <div>
+          <h3>Images:</h3>
+          {media.images.map((image, index) => (
+            <div key={index}>
+              <img
+                src={image}
+                alt={`Course media ${index}`} // أو استخدم وصفًا أدق إذا كان متاحًا
+                style={{ width: "100px", height: "auto" }}
+              />
+            </div>
+          ))}
+        </div>
 
-        {error && <div className="error">{error}</div>}
-      </div>
+        <div>
+          <h3>Videos:</h3>
+          {media.videos.map((video, index) => (
+            <div key={index}>
+              <video width="320" height="240" controls>
+                <source src={video} type="video/mp4" />
+              </video>
+            </div>
+          ))}
+        </div>
 
-      <div className="media-display">
-        <h2>Media Display</h2>
-        <h3>Images</h3>
-        {media.images.map((image, index) => (
-          <img key={index} src={image} alt={`Image ${index + 1}`} />
-        ))}
-
-        <h3>Videos</h3>
-        {media.videos.map((video, index) => (
-          <video key={index} controls width="500">
-            <source src={video.replace("dl=0", "dl=1")} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        ))}
-
-        <h3>PDFs</h3>
-        {media.pdfs.map((pdf, index) => (
-          <a key={index} href={pdf} target="_blank" rel="noopener noreferrer">
-            PDF {index + 1}
-          </a>
-        ))}
+        <div>
+          <h3>PDFs:</h3>
+          {media.pdfs.map((pdf, index) => (
+            <div key={index}>
+              <a href={pdf} target="_blank" rel="noopener noreferrer">
+                View PDF {index + 1}
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="question-section">
-        <h2>Add Question</h2>
-        <input
-          type="text"
-          placeholder="New Question"
+        <h2>Add/Edit Questions</h2>
+        <textarea
+          placeholder="Enter new question"
           value={newQuestion}
           onChange={(e) => setNewQuestion(e.target.value)}
+          disabled={!selectedSubCourse}
         />
-        <button onClick={handleAddOrEditQuestion}>
+        <button onClick={handleAddOrEditQuestion} disabled={!selectedSubCourse}>
           {editQuestionIndex !== null ? "Edit Question" : "Add Question"}
         </button>
 
-        <h3>Answers</h3>
-        {answers.map((answer, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              placeholder="Answer"
-              value={answer.text}
-              onChange={(e) => {
-                const updatedAnswers = [...answers];
-                updatedAnswers[index].text = e.target.value;
-                setAnswers(updatedAnswers);
-              }}
-            />
-            <label>
+        <div className="answers-section">
+          <h3>Answers</h3>
+          {answers.map((answer, index) => (
+            <div key={index}>
               <input
                 type="checkbox"
                 checked={answer.correct}
                 onChange={() => handleCorrectAnswerChange(index)}
               />
-              Correct
-            </label>
-            <button onClick={() => handleEditAnswer(index)}>Edit</button>
-            <button
-              onClick={() => setAnswers(answers.filter((_, i) => i !== index))}
-            >
-              Delete
-            </button>
-          </div>
-        ))}
+              <span>{answer.text}</span>
+              <button onClick={() => handleEditAnswer(index)}>Edit</button>
+            </div>
+          ))}
+        </div>
+
         <input
           type="text"
-          placeholder="New Answer"
+          placeholder="Enter new answer"
           value={newAnswerText}
           onChange={(e) => setNewAnswerText(e.target.value)}
+          disabled={!selectedSubCourse}
         />
-        <button onClick={handleAddOrUpdateAnswer}>
-          {editAnswerIndex !== null ? "Edit Answer" : "Add Answer"}
+        <button onClick={handleAddOrUpdateAnswer} disabled={!selectedSubCourse}>
+          {editAnswerIndex !== null ? "Update Answer" : "Add Answer"}
         </button>
 
-        {error && <div className="error">{error}</div>}
-      </div>
+        <div className="questions-list">
+          <h3>Questions List</h3>
+          {questions.map((question, index) => (
+            <div key={index} className="question-item">
+              <h4>{question.text}</h4>
+              <ul>
+                {question.answers.map((answer, i) => (
+                  <li key={i} className="answer-item">
+                    {answer.text} {answer.correct && "(Correct)"}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => handleEditQuestionIndex(index)}>
+                Edit
+              </button>
+              <button onClick={() => handleDeleteQuestion(index)}>
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
 
-      <button onClick={handleSaveQuestions}>Save Questions</button>
+        <button onClick={handleSaveQuestions} disabled={!selectedSubCourse}>
+          Save Questions
+        </button>
 
-      <div className="questions-display">
-        <h2>Questions</h2>
-        {questions.map((question, index) => (
-          <div key={index}>
-            <h3>{question.text}</h3>
-            <ul>
-              {question.answers.map((answer, answerIndex) => (
-                <li key={answerIndex}>{answer.text}</li>
-              ))}
-            </ul>
-            <button onClick={() => handleEditQuestionIndex(index)}>
-              Edit Question
-            </button>
-            <button onClick={() => handleDeleteQuestion(index)}>
-              Delete Question
-            </button>
-          </div>
-        ))}
+        {error && <p className="error-message">{error}</p>}
       </div>
     </div>
   );
