@@ -1,13 +1,19 @@
-/* CoursePage.css */
-
 .course-page {
-  font-family: Arial, sans-serif;
-  padding: 40px;
-  max-width: 1200px;
-  margin: 60px auto;
-  background-color: #f9f9f9; /* لون الخلفية */
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* تأثير الظل */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; /* السماح بالالتفاف إذا كانت الشاشة صغيرة */
+  gap: 20px; /* مسافة بين العناصر */
+}
+
+.course-selectors,
+.media-section,
+.question-section {
+  flex: 1; /* جعل جميع العناصر تأخذ نفس الحجم */
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  min-width: 300px; /* الحد الأدنى من العرض */
 }
 
 h1 {
@@ -100,12 +106,12 @@ li {
   width: 100%; /* عرض الفيديو بالكامل */
   height: auto; /* الحفاظ على نسبة العرض إلى الارتفاع */
 }
+
 .media-item iframe {
   width: 100%; /* عرض الـ PDF بالكامل */
   height: 600px; /* ارتفاع مناسب للـ PDF */
   border: none; /* إزالة الحدود إذا كنت ترغب في ذلك */
 }
-
 
 .question-management {
   margin-top: 30px; /* إضافة مسافة بين الأقسام */
@@ -126,4 +132,53 @@ li {
 
 .answers-management {
   margin-top: 15px;
+}
+
+/* تغيير العرض وتحسين عرض الأقسام */
+.course-selectors,
+.media-section,
+.question-section {
+  width: 30%;
+  flex: 1 1 30%; /* إجبار العناصر على احتلال 30% من العرض المتاح */
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  margin: 0;
+}
+
+.course-buttons,
+.sub-course-buttons {
+  display: flex;
+  flex-direction: column; /* ترتيب الأزرار عموديًا */
+  gap: 10px;
+}
+
+.answers-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* مسافة بين الأجوبة */
+}
+
+.questions-list {
+  display: flex;
+  flex-direction: column; /* لجعل العناصر تظهر بالطول */
+  margin-top: 20px; /* مساحة من الأعلى */
+}
+
+.question-item {
+  margin-bottom: 15px; /* مسافة بين الأسئلة */
+  border: 1px solid #ccc; /* إضافة حدود خفيفة */
+  padding: 10px; /* إضافة مساحة داخل الحدود */
+  border-radius: 5px; /* زوايا مدورة */
+  background-color: #f9f9f9; /* لون خلفية */
+}
+
+.answer-item {
+  margin-left: 20px; /* مسافة من اليسار لإظهار الجواب بشكل واضح */
+}
+
+.error-message {
+  color: red;
+  margin-top: 20px;
 }
