@@ -30,7 +30,7 @@ tr:hover {
 
 /* تحسين زر التصدير */
 button {
-  background-color: #4caf50;
+  background-color: #094d50;
   color: white;
   padding: 10px 20px;
   margin-bottom: 20px;
@@ -40,7 +40,7 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #0e7075;
 }
 
 /* تحسين حقل البحث */
