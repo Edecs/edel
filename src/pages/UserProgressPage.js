@@ -216,6 +216,7 @@ function UserProgressPage() {
 
   return (
     <div>
+      <div className="user-progress-page">
       <h1>User Progress Page</h1>
       <button onClick={exportToExcel}>Export to Excel</button>
 
@@ -365,6 +366,7 @@ function UserProgressPage() {
           </table>
         </details>
       </div>
+    </div>
     </div>
   );
 }
