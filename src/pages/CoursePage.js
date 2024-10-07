@@ -291,43 +291,40 @@ function CoursePage() {
       });
   };
 
-  // Add sub-course
-  const handleAddSubCourse = () => {
+  const handleAddSubCourse = async () => {
     if (!newSubCourseName.trim()) {
       setError("The sub-course name cannot be empty");
       return;
     }
-
-    const subCoursesRef = ref(
-      db,
-      `courses/mainCourses/${selectedCourse}/subCourses`
-    );
+  
+    const subCoursesRef = ref(db, `courses/mainCourses/${selectedCourse}/subCourses`);
     const newSubCourseRef = push(subCoursesRef);
-    set(newSubCourseRef, { name: newSubCourseName })
-      .then(() => {
-        setNewSubCourseName("");
-        setError("");
-      })
-      .catch((error) =>
-        setError("Failed to save sub-course: " + error.message)
-      );
+    try {
+      await set(newSubCourseRef, { name: newSubCourseName });
+      setNewSubCourseName("");
+      setError("");
+    } catch (error) {
+      setError("Failed to save sub-course: " + error.message);
+    }
   };
+  
 
   // Add main course
-  const handleAddCourse = () => {
+  const handleAddCourse = async () => {
     if (!newCourseName.trim()) {
       setError("The course name cannot be empty");
       return;
     }
-
+  
     const coursesRef = ref(db, "courses/mainCourses");
     const newCourseRef = push(coursesRef);
-    set(newCourseRef, { name: newCourseName })
-      .then(() => {
-        setNewCourseName("");
-        setError("");
-      })
-      .catch((error) => setError("Failed to save course: " + error.message));
+    try {
+      await set(newCourseRef, { name: newCourseName });
+      setNewCourseName("");
+      setError("");
+    } catch (error) {
+      setError("Failed to save course: " + error.message);
+    }
   };
 
   return (
@@ -378,9 +375,9 @@ function CoursePage() {
           <button onClick={handleAddSubCourse} disabled={!selectedCourse}>
             Add Sub-Course
           </button>
-          <h2>Select Sub-Course</h2>
 
           <div className="sub-course-buttons">
+            <h2>Select Sub-Course</h2>
             {subCourses.map((subCourse) => (
               <button
                 key={subCourse.id}
@@ -430,7 +427,7 @@ function CoursePage() {
           onChange={(e) => setNewMediaLink(e.target.value)}
           disabled={!selectedSubCourse}
         />
-        <button onClick={handleAddMediaFromLink} disabled={!selectedSubCourse}>
+        <button id="a1" onClick={handleAddMediaFromLink} disabled={!selectedSubCourse}>
           Add Media
         </button>
 
@@ -479,7 +476,7 @@ function CoursePage() {
             onChange={(e) => setNewQuestion(e.target.value)}
             disabled={!selectedSubCourse}
           />
-          <button
+          <button id="a1"
             onClick={handleAddOrEditQuestion}
             disabled={!selectedSubCourse}
           >
