@@ -10,9 +10,13 @@ input.course-page {
   color: #094d50; /* Course page title color */
 }
 
-.course-page h2 {
-  font-size: 20px;
-  margin-bottom: 15px;
+h2 {
+  border-bottom: 2px solid #094d50; /* لون الخط وسمكه */
+  padding-bottom: 8px; /* المسافة بين النص والخط */
+  color: #094d50; /* لون النص */
+  font-size: 24px; /* حجم النص */
+  margin-bottom: 10px; /* مسافة سفلية */
+  transition: color 0.3s ease, border-bottom 0.3s ease; /* تأثير انتقال سلس */
 }
 
 .course-page h3 {
