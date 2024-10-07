@@ -149,3 +149,4 @@
 .sidebar.open + .main-content {
   margin-left: 80px; /* عند فتح الشريط الجانبي، اجعل الهامش 80px */
 }
+ 
