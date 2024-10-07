@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { getDatabase, ref, get } from "firebase/database";
 import * as XLSX from "xlsx";
-import "./UserProgressPage.css"; // استيراد ملف الـCSS المخصص لهذه الصفحة
+import "./UserProgressPage.scss"; // استيراد ملف الـCSS المخصص لهذه الصفحة
 
 function UserProgressPage() {
   const [users, setUsers] = useState([]);
