@@ -1,210 +1,174 @@
 .course-page {
-  margin-top: 60px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.course-selectors,
-.media-section,
-.question-section {
-  flex: 1;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #fff;
-  min-width: 300px;
-}
-
-details {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* تحسين عرض العناوين */
+.course-page h1 {
+  font-size: 24px;
   margin-bottom: 20px;
-  padding: 15px;
 }
 
-summary {
-  color: #fff;
-  width: 100%;
-  padding: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  background-color: #094d50;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-summary:hover {
-  background-color: #0f7f85;
-}
-
-h1 {
-  width: 100%;
-  padding-top: 60px;
-  padding-bottom: 60px;
-  font-size: 26px;
-  margin-bottom: 20px;
-  text-align: left;
-  color: #333;
-}
-
-h2 {
-  font-size: 22px;
+.course-page h2 {
+  font-size: 20px;
   margin-bottom: 15px;
-  color: #094d50;
-  border-bottom: 2px solid #094d50;
-  padding-bottom: 5px;
 }
 
-select,
-input[type="text"],
-input[type="file"] {
-  padding: 10px;
-  margin: 8px 0;
-  font-size: 16px;
-  width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.button.selected {
-  width: 100%;
-  padding: 10px 20px;
-  margin: 10px 0;
-  font-size: 16px;
-  background-color: #094d50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button {
-  width: 100%; /* Set button width to 100% */
-  padding: 10px 20px;
-  margin: 10px 0;
-  font-size: 16px;
-  background-color: #094d50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0e7379;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
+.course-page h3 {
+  font-size: 18px;
   margin-bottom: 10px;
 }
 
-.error {
+.course-page h4 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+/* تصميم المدخلات */
+.course-page input[type="text"],
+.course-page textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.course-page textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+/* تحسين الأزرار */
+.course-page button {
+  background-color: #094d50;
+  color: white;
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.course-page button:hover {
+  background-color: #11878d;
+}
+
+/* تحسين عرض الرسائل الخطأ */
+.course-page .error-message {
   color: red;
+  font-size: 14px;
   margin-top: 10px;
 }
 
-.media-display {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+/* تحسين عرض الأقسام */
+.course-page details {
+  margin-bottom: 20px;
 }
 
-.media-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.media-item {
-  flex: 1 0 200px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.media-item img {
-  width: 100%;
-  height: auto;
-  transition: transform 0.3s ease;
-}
-
-.media-item img:hover {
-  transform: scale(1.05);
-}
-
-.media-item video {
-  width: 100%;
-  height: auto;
-}
-
-.media-item iframe {
-  width: 100%;
-  height: 600px;
-  border: none;
-}
-
-.question-management {
-  margin-top: 30px;
-}
-
-.question-item,
-.answer-item {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
+.course-page summary {
+  font-weight: bold;
+  font-size: 18px;
   margin-bottom: 10px;
-  background-color: #fff;
+  cursor: pointer;
 }
 
-.question-item p {
-  margin: 0;
+.course-page details[open] summary {
+  margin-bottom: 20px;
 }
 
-.answers-management {
-  margin-top: 15px;
+/* تصميم قائمة الكورسات */
+.course-page .course-selectors {
+  margin-bottom: 20px;
 }
 
-.course-buttons,
-.sub-course-buttons {
+.course-page .course-buttons,
+.course-page .sub-course-buttons {
   display: flex;
-  flex-direction: column;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
-.answers-section {
+.course-page .course-buttons button,
+.course-page .sub-course-buttons button {
+  padding: 10px 15px;
+  background-color: #094d50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.course-page .course-buttons button.selected,
+.course-page .sub-course-buttons button.selected {
+  background-color: #094d50;
+}
+
+.course-page .course-buttons button:hover,
+.course-page .sub-course-buttons button:hover {
+  background-color: #117f85;
+}
+
+/* تحسين عرض الوسائط */
+.course-page .media-section {
+  margin-bottom: 20px;
+}
+
+.course-page .media-section img {
+  width: 100px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.course-page .media-section video {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.course-page .media-section a {
+  color: #094d50;
+  text-decoration: none;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.course-page .media-section a:hover {
+  text-decoration: underline;
+}
+
+/* تحسين عرض الأسئلة */
+.course-page .question-section {
+  margin-bottom: 20px;
+}
+
+.course-page .answers-section {
+  margin-top: 10px;
+}
+
+.course-page .answers-section div {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  margin-bottom: 5px;
 }
 
-.questions-list {
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
+.course-page .answers-section span {
+  margin-right: 10px;
 }
 
-.question-item {
+.course-page .question-item {
   margin-bottom: 15px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #f9f9f9;
 }
 
-.answer-item {
-  margin-left: 20px;
+.course-page .question-item ul {
+  padding-left: 20px;
 }
 
-.error-message {
-  color: red;
-  margin-top: 20px;
+.course-page .question-item ul li {
+  list-style-type: disc;
+}
+
+.course-page .question-item button {
+  margin-right: 5px;
 }
