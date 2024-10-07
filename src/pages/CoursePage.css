@@ -53,7 +53,7 @@
 }
 
 .course-page button:hover {
-  background-color: #11878d;
+  background-color: #0e6d72;
 }
 
 /* تحسين عرض الرسائل الخطأ */
@@ -108,7 +108,7 @@
 
 .course-page .course-buttons button:hover,
 .course-page .sub-course-buttons button:hover {
-  background-color: #117f85;
+  background-color: #094d50;
 }
 
 /* تحسين عرض الوسائط */
@@ -161,14 +161,24 @@
   margin-bottom: 15px;
 }
 
-.course-page .question-item ul {
-  padding-left: 20px;
-}
-
 .course-page .question-item ul li {
   list-style-type: disc;
 }
 
 .course-page .question-item button {
   margin-right: 5px;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 20px;
+  border: 1px solid #a1c1e0;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s; /* إضافة انتقال للظل */
+  &:focus {
+    border-color: #0ea1a8;
+    outline: none;
+    box-shadow: 0 0 8px #0ea1a8; /* تأثير ظل أكثر وضوحًا عند التركيز */
+  }
 }
