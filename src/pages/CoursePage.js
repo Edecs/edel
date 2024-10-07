@@ -350,7 +350,7 @@ function CoursePage() {
             placeholder="Enter thumbnail URL (Dropbox link)"
           />
 
-          <button onClick={handleAddCourse}>Add Course</button>
+          <button id="a1" onClick={handleAddCourse}>Add Course</button>
           <h2>courses</h2>
 
           <div className="course-buttons">
@@ -372,7 +372,7 @@ function CoursePage() {
             onChange={(e) => setNewSubCourseName(e.target.value)}
             disabled={!selectedCourse}
           />
-          <button onClick={handleAddSubCourse} disabled={!selectedCourse}>
+          <button  id="a1" onClick={handleAddSubCourse} disabled={!selectedCourse}>
             Add Sub-Course
           </button>
 
