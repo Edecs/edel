@@ -493,7 +493,7 @@ function CoursePage() {
                   onChange={() => handleCorrectAnswerChange(index)}
                 />
                 <span>{answer.text}</span>
-                <button onClick={() => handleEditAnswer(index)}>Edit</button>
+                <button id="a1" onClick={() => handleEditAnswer(index)}>Edit</button>
               </div>
             ))}
           </div>
@@ -505,7 +505,7 @@ function CoursePage() {
             onChange={(e) => setNewAnswerText(e.target.value)}
             disabled={!selectedSubCourse}
           />
-          <button
+          <button id="a1"
             onClick={handleAddOrUpdateAnswer}
             disabled={!selectedSubCourse}
           >
@@ -524,17 +524,17 @@ function CoursePage() {
                     </li>
                   ))}
                 </ul>
-                <button onClick={() => handleEditQuestionIndex(index)}>
+                <button id="a1" onClick={() => handleEditQuestionIndex(index)}>
                   Edit
                 </button>
-                <button onClick={() => handleDeleteQuestion(index)}>
+                <button id="a1" onClick={() => handleDeleteQuestion(index)}>
                   Delete
                 </button>
               </div>
             ))}
           </div>
 
-          <button onClick={handleSaveQuestions} disabled={!selectedSubCourse}>
+          <button id="a1" onClick={handleSaveQuestions} disabled={!selectedSubCourse}>
             Save Questions
           </button>
 
