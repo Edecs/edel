@@ -1,6 +1,6 @@
 /* src/components/Sidebar.css */
 .sidebar {
-  border-radius: 28px;
+  border-radius: 18px;
   position: fixed;
   top: 64px; /* الشريط الجانبي يبدأ أسفل شريط التنقل */
   left: 0;
@@ -39,7 +39,7 @@
 }
 
 .sidebar ul li {
-  border-radius: 28px;
+  border-radius: 18px;
   padding: 12px 0; /* الحشو العلوي والسفلي بالبيكسل */
   margin-bottom: 20px; /* إضافة مسافة بين الأزرار بمقدار 20px */
   transition: background-color 0.3s ease, transform 0.2s ease,
@@ -84,7 +84,7 @@
   padding: 10px; /* زيادة الحشوة لجعله أكثر راحة */
   background-color: #ce1100; /* لون خلفية الزر */
   border: none;
-  border-radius: 28px; /* نفس شكل الأزرار الأخرى */
+  border-radius: 18px; /* نفس شكل الأزرار الأخرى */
   transition: background-color 0.3s ease, transform 0.2s ease,
     box-shadow 0.3s ease; /* إضافة تأثير الظل */
   align-items: center;
