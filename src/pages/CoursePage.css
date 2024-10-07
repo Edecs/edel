@@ -1,4 +1,4 @@
-.course-page {
+input.course-page {
   padding: 20px;
   font-family: Arial, sans-serif;
 }
@@ -7,6 +7,7 @@
 .course-page h1 {
   font-size: 24px;
   margin-bottom: 20px;
+  color: #094d50; /* Course page title color */
 }
 
 .course-page h2 {
@@ -25,7 +26,7 @@
 }
 
 /* Input Fields */
-.course-page input[type="text"],
+input[type="text"],
 .course-page textarea {
   width: 100%;
   padding: 10px;
@@ -42,31 +43,69 @@
 }
 
 /* Input Focus Effect */
-.course-page input[type="text"]:focus,
+input[type="text"]:focus,
 .course-page textarea:focus {
   border-color: #0ea1a8;
   outline: none;
   box-shadow: 0 0 8px #0ea1a8; /* More noticeable shadow effect on focus */
 }
+#a1 {
+  width: auto;
+  background-color: #094d50; /* لون خلفية الزر */
+  padding: 10px 15px; /* مسافة داخلية للزر */
+  text-align: center; /* محاذاة النص في الوسط */
+  text-decoration: none; /* إزالة التسطير */
+  display: inline-block; /* جعل الزر يظهر في صف */
+  font-size: 16px; /* حجم النص */
+  margin: 5px; /* مسافة خارجية */
+  cursor: pointer; /* تغيير المؤشر عند المرور فوق الزر */
+  border-radius: 5px; /* زوايا مستديرة */
+  transition: background-color 0.3s ease; /* تأثير عند تغيير الخلفية */
+}
+
+/* تأثير عند المرور فوق الزر */
+#a1:hover {
+  background-color: #0f777c; /* لون الخلفية عند المرور */
+}
+.button {
+  width: auto; /* أو نسبة مئوية أقل مثل 80% */
+  padding: 10px 20px; /* تعديل القيم حسب الحاجة */
+  margin: 5px; /* إضافة مسافة بين الأزرار */
+  display: inline-block; /* لجعل الأزرار تظهر في صف */
+  focus {
+    border-color: #0ea1a8;
+    outline: none;
+    box-shadow: 0 0 8px #0ea1a8; /* More noticeable shadow effect on focus */
+  }
+}
 
 /* Button Styles */
 .course-page button {
   width: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   background-color: #094d50;
   color: white;
   margin-right: 10px;
-  margin-top: 15px;
+  margin-top: 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s; /* Smooth background color transition */
+  focus {
+    border-color: #0ea1a8;
+    outline: none;
+    box-shadow: 0 0 8px #0ea1a8; /* More noticeable shadow effect on focus */
+  }
 }
 
 .course-page button:hover {
   background-color: #0e6d72;
+  focus {
+    border-color: #0ea1a8;
+    outline: none;
+    box-shadow: 0 0 8px #0ea1a8; /* More noticeable shadow effect on focus */
+  }
 }
 
 /* Error Message Styles */
@@ -82,10 +121,11 @@
 }
 
 .course-page summary {
-  border: #094d50;
+  border: 1px solid #094d50;
   background-color: #094d50;
+  color: white;
   padding: 15px;
-  border-radius: 18px;
+  border-radius: 8px;
   font-weight: bold;
   font-size: 18px;
   margin-bottom: 10px;
@@ -170,33 +210,38 @@
   margin-bottom: 5px;
 }
 
-.course-page .answers-section span {
+.answers-section input[type="checkbox"] {
   margin-right: 10px;
 }
 
+/* Questions List Styles */
+.course-page .questions-list {
+  margin-top: 15px;
+}
+
 .course-page .question-item {
-  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-.course-page .question-item ul li {
-  list-style-type: disc;
+.course-page .question-item h4 {
+  margin: 0;
 }
 
-.course-page .question-item button {
-  width: 100px;
-  margin-right: 5px;
+.course-page .question-item ul {
+  padding-left: 20px;
 }
 
-/* Media Input Fields */
-.course-page .media-input {
-  margin-bottom: 15px;
+.course-page .question-item .answer-item {
+  margin-bottom: 5px;
 }
 
-/* Responsive Adjustments */
+/* Responsive Styles */
 @media (max-width: 768px) {
-  .course-page .course-buttons,
-  .course-page .sub-course-buttons {
-    flex-direction: column;
-    align-items: stretch;
+  .course-page button {
+    width: auto;
   }
 }
