@@ -4,7 +4,6 @@ import "./CourseManagementPage.css";
 import rightArrowIcon from "../photos/right-arrow-svgrepo-com.svg";
 import leftArrowIcon from "../photos/left-arrow-svgrepo-com.svg";
 
-
 const sanitizeEmail = (email) => {
   return email.replace(/[.]/g, ",");
 };
@@ -223,6 +222,39 @@ function CourseManagementPage() {
             )}
           </ul>
         </div>
+        <div className="details-section">
+          {selectedCourse && (
+            <div className="course-details">
+              <h2>Enrolled Users </h2>
+
+              <ul className="enrolled-user-list1">
+                {enrolledUsersToDisplay.map((user) => (
+                  <li key={user.email}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={selectedEnrolledUsers.includes(user.email)}
+                        onChange={() => toggleEnrolledUserSelection(user.email)}
+                      />
+                      {user.name || "No name"} ({user.email || "No email"}) -{" "}
+                      {user.department || "No department"}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="actions">
+          <button onClick={handleRemoveUsersFromCourse}>
+            <img src={rightArrowIcon} alt="Remove Users from Course" />
+          </button>
+
+          <button onClick={handleAddUsersToCourse}>
+            <img src={leftArrowIcon} alt="Add Users to Course" />
+          </button>
+        </div>
 
         <div className="users-section">
           <h2>Users</h2>
@@ -241,45 +273,6 @@ function CourseManagementPage() {
               </li>
             ))}
           </ul>
-        </div>
-
-        <div className="actions">
-  <button onClick={handleAddUsersToCourse}>
-    <img src={rightArrowIcon} alt="Add Users to Course" />
-  </button>
-  <button onClick={handleRemoveUsersFromCourse}>
-    <img src={leftArrowIcon} alt="Remove Users from Course" />
-  </button>
-</div>
-
-
-
-        <div className="details-section">
-          {selectedCourse && (
-            <div className="course-details">
-              <h2>
-                Selected Course: {courses[selectedCourse]?.name || "No title"}
-              </h2>
-              <h3>Enrolled Users</h3>
-              <ul className="enrolled-user-list1">
-                {enrolledUsersToDisplay.map((user) => (
-                  <li key={user.email}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={selectedEnrolledUsers.includes(user.email)}
-                        onChange={() =>
-                          toggleEnrolledUserSelection(user.email)
-                        }
-                      />
-                      {user.name || "No name"} ({user.email || "No email"}) -{" "}
-                      {user.department || "No department"}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
       </div>
     </div>
