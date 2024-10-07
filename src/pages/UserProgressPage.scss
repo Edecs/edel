@@ -32,9 +32,7 @@ button {
   padding: 14px 24px; // زيادة padding
   border-radius: 8px; // جعل الزوايا أكثر نعومة
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    transform 0.2s;
+  transition: background-color 0.3s, transform 0.2s;
   margin: 20px 0;
   font-size: 1.1em; // زيادة حجم الخط
 
@@ -56,9 +54,7 @@ input[type="text"] {
   border: 1px solid $border-color;
   border-radius: 5px;
   font-size: 1em;
-  transition:
-    border-color 0.3s,
-    box-shadow 0.3s; // إضافة انتقال للظل
+  transition: border-color 0.3s, box-shadow 0.3s; // إضافة انتقال للظل
 
   &:focus {
     border-color: $primary-color;
