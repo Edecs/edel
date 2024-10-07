@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { getDatabase, ref, get } from "firebase/database";
 import * as XLSX from "xlsx";
-import "./UserProgressPage.scss";
+import "./UserProgressPage.css"; // استيراد ملف الـCSS المخصص لهذه الصفحة
 
 function UserProgressPage() {
   const [users, setUsers] = useState([]);
@@ -167,7 +167,11 @@ function UserProgressPage() {
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, usersSheet, "Users");
-    XLSX.utils.book_append_sheet(workbook, archivedTasksSheet, "Archived Tasks");
+    XLSX.utils.book_append_sheet(
+      workbook,
+      archivedTasksSheet,
+      "Archived Tasks"
+    );
     XLSX.utils.book_append_sheet(workbook, notificationsSheet, "Notifications");
     XLSX.utils.book_append_sheet(workbook, coursesSheet, "Courses");
     XLSX.utils.book_append_sheet(workbook, submissionsSheet, "Submissions");
@@ -250,7 +254,7 @@ function UserProgressPage() {
           <table>
             <thead>
               <tr>
-                <th>ID</th> {/* إضافة عمود المعرف */}
+                <th>ID</th>
                 <th>Assigned Emails</th>
                 <th>Created By</th>
                 <th>Created At</th>
@@ -261,15 +265,11 @@ function UserProgressPage() {
             <tbody>
               {filteredArchivedTasks.map((task) => (
                 <tr key={task.id}>
-                  <td>{task.id}</td> {/* إضافة معرف للمهام */}
+                  <td>{task.id}</td>
                   <td>{task.assignedEmails.join(", ")}</td>
                   <td>{task.createdBy}</td>
                   <td>{task.createdAt}</td>
-                  <td>
-                    <a href={task.dropboxLink} target="_blank" rel="noopener noreferrer">
-                      Open
-                    </a>
-                  </td>
+                  <td>{task.dropboxLink}</td>
                   <td>{task.message}</td>
                 </tr>
               ))}
@@ -282,7 +282,7 @@ function UserProgressPage() {
           <table>
             <thead>
               <tr>
-                <th>ID</th> {/* إضافة عمود المعرف */}
+                <th>ID</th>
                 <th>Message</th>
                 <th>Created At</th>
                 <th>Created By</th>
@@ -294,15 +294,11 @@ function UserProgressPage() {
             <tbody>
               {filteredNotifications.map((notification) => (
                 <tr key={notification.id}>
-                  <td>{notification.id}</td> {/* إضافة معرف للإشعارات */}
+                  <td>{notification.id}</td>
                   <td>{notification.message}</td>
                   <td>{notification.createdAt}</td>
                   <td>{notification.createdBy}</td>
-                  <td>
-                    <a href={notification.dropboxLink} target="_blank" rel="noopener noreferrer">
-                      Open
-                    </a>
-                  </td>
+                  <td>{notification.dropboxLink}</td>
                   <td>{notification.assignedEmails.join(", ")}</td>
                   <td>{notification.isRead ? "Yes" : "No"}</td>
                 </tr>
@@ -316,7 +312,7 @@ function UserProgressPage() {
           <table>
             <thead>
               <tr>
-                <th>ID</th> {/* إضافة عمود المعرف */}
+                <th>ID</th>
                 <th>Name</th>
                 <th>Thumbnail</th>
               </tr>
@@ -324,10 +320,14 @@ function UserProgressPage() {
             <tbody>
               {filteredCourses.map((course) => (
                 <tr key={course.id}>
-                  <td>{course.id}</td> {/* إضافة معرف للدورات */}
+                  <td>{course.id}</td>
                   <td>{course.name}</td>
                   <td>
-                    <img src={course.thumbnail} alt={course.name} width="50" />
+                    <img
+                      src={course.thumbnail}
+                      alt={course.name}
+                      className="thumbnail"
+                    />
                   </td>
                 </tr>
               ))}
@@ -342,10 +342,10 @@ function UserProgressPage() {
               <tr>
                 <th>Email</th>
                 <th>Course ID</th>
-                <th>Start Time</th>
                 <th>End Time</th>
-                <th>Total Time</th>
                 <th>Percentage Success</th>
+                <th>Start Time</th>
+                <th>Total Time</th>
                 <th>User Answers</th>
               </tr>
             </thead>
@@ -354,10 +354,10 @@ function UserProgressPage() {
                 <tr key={submission.userId + submission.courseId}>
                   <td>{submission.email}</td>
                   <td>{submission.courseId}</td>
-                  <td>{submission.startTime}</td>
                   <td>{submission.endTime}</td>
-                  <td>{submission.totalTime}</td>
                   <td>{submission.percentageSuccess}</td>
+                  <td>{submission.startTime}</td>
+                  <td>{submission.totalTime}</td>
                   <td>{submission.userAnswers}</td>
                 </tr>
               ))}
