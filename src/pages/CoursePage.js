@@ -26,6 +26,7 @@ function CoursePage() {
   const [newCourseName, setNewCourseName] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
+  const [selectedButton, setSelectedButton] = useState(null); // إضافة حالة لتخزين الزر المحدد
 
   const db = getDatabase();
 
@@ -358,8 +359,11 @@ function CoursePage() {
               {mainCourses.map((course) => (
                 <button
                   key={course.id}
-                  onClick={() => setSelectedCourse(course.id)}
-                  className={selectedCourse === course.id ? "selected" : ""}
+                  onClick={() => {
+                    setSelectedCourse(course.id);
+                    setSelectedButton(course.id); // تحديث الزر المحدد
+                  }}
+                  className={selectedButton === course.id ? "selected" : ""} // تطبيق النمط إذا كان الزر هو المحدد
                 >
                   {course.name}
                 </button>
