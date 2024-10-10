@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ref, get } from "firebase/database";
-import { db, auth } from "../firebase"; // تأكد من صحة المسار، واحضر auth أيضاً
+import { db, auth } from "../firebase"; // Ensure the path is correct, and bring in auth as well
 import "./CourseDetailPage.css";
 
 const CourseDetailPage = () => {
@@ -9,36 +9,31 @@ const CourseDetailPage = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userAccess, setUserAccess] = useState({}); // لإدارة صلاحيات المستخدم
-  const [currentUser, setCurrentUser] = useState(null); // لتخزين المستخدم الحالي
+  const [userAccess, setUserAccess] = useState({}); // To manage user permissions
+  const [currentUser, setCurrentUser] = useState(null); // To store current user
 
   const fetchCourseDetails = useCallback(async () => {
     try {
-      const user = auth.currentUser; // الحصول على المستخدم الحالي
+      const user = auth.currentUser; // Get current user
       if (!user) {
         throw new Error("User not authenticated");
       }
-      setCurrentUser(user); // تخزين المستخدم الحالي
+      setCurrentUser(user); // Store current user
 
-      console.log(`Fetching course details for courseId: ${courseId}`); // رسالة تصحيح
       const courseRef = ref(db, `courses/mainCourses/${courseId}`);
-      console.log(`Fetching data from: ${courseRef.toString()}`); // رسالة تصحيح
       const courseSnapshot = await get(courseRef);
 
-      console.log(`Snapshot exists: ${courseSnapshot.exists()}`); // رسالة تصحيح
       if (!courseSnapshot.exists()) {
-        console.log("Course not found in Firebase."); // رسالة تصحيح
         setError("Course not found.");
         setCourse(null);
         return;
       }
 
       const courseData = courseSnapshot.val();
-      console.log("Course data:", courseData); // رسالة تصحيح
       setCourse(courseData);
 
-      // جلب بيانات صلاحيات المستخدم من Firebase
-      const sanitizedEmail = user.email.replace(/\./g, ","); // استبدال النقاط بالفواصل في الإيميل
+      // Fetch user permissions from Firebase
+      const sanitizedEmail = user.email.replace(/\./g, ","); // Replace dots with commas in email
       const userAccessRef = ref(
         db,
         `roles/${sanitizedEmail}/courses/${courseId}`
@@ -78,7 +73,6 @@ const CourseDetailPage = () => {
             <ul className="sub-course-list">
               {Object.entries(course.subCourses).map(
                 ([subCourseId, subCourse]) =>
-                  // تحقق من الصلاحيات قبل عرض الـ subCourse
                   userAccess?.[subCourse.name]?.hasAccess ? (
                     <li key={subCourseId} className="sub-course-item">
                       <Link
