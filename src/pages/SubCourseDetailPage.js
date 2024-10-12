@@ -64,7 +64,6 @@ const SubCourseDetailPage = () => {
     if (subCourse) {
       const mediaKeys = [
         ...Object.keys(subCourse.images || {}),
-        ...Object.keys(subCourse.pdfs || {}),
         ...Object.keys(subCourse.videos || {}),
       ];
       if (currentMediaIndex < mediaKeys.length - 1) {
@@ -151,15 +150,12 @@ const SubCourseDetailPage = () => {
 
   const mediaKeys = [
     ...Object.keys(subCourse.images || {}),
-    ...Object.keys(subCourse.pdfs || {}),
     ...Object.keys(subCourse.videos || {}),
   ];
 
   const currentMediaKey = mediaKeys[currentMediaIndex];
   const currentMedia = currentMediaKey
-    ? subCourse.images?.[currentMediaKey] ||
-      subCourse.pdfs?.[currentMediaKey] ||
-      subCourse.videos?.[currentMediaKey]
+    ? subCourse.images?.[currentMediaKey] || subCourse.videos?.[currentMediaKey]
     : null;
 
   const currentQuestion = subCourse?.questions
@@ -189,16 +185,7 @@ const SubCourseDetailPage = () => {
                 alt="Course Media"
               />
             )}
-            {subCourse.pdfs?.[currentMediaKey] && (
-              <iframe
-                src={convertDropboxLink(subCourse.pdfs[currentMediaKey])}
-                title="PDF Document"
-                frameBorder="0"
-                style={{ width: "100%", height: "900px" }}
-                sandbox="allow-same-origin allow-scripts"
-                allow="fullscreen"
-              ></iframe>
-            )}
+
             {subCourse.videos?.[currentMediaKey] && (
               <video controls style={{ width: "100%", height: "900px" }}>
                 <source
