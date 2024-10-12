@@ -21,7 +21,7 @@ function CoursePage() {
   const [editQuestionIndex, setEditQuestionIndex] = useState(null);
   const [editAnswerIndex, setEditAnswerIndex] = useState(null);
   const [error, setError] = useState("");
-  const [media, setMedia] = useState({ images: [], videos: [], pdfs: [] });
+  const [media, setMedia] = useState({ images: [], videos: [] });
   const [newMediaLink, setNewMediaLink] = useState("");
   const [newCourseName, setNewCourseName] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
@@ -94,10 +94,6 @@ function CoursePage() {
         db,
         `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/videos`
       );
-      const pdfsRef = ref(
-        db,
-        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/pdfs`
-      );
 
       const unsubscribeQuestions = onValue(questionsRef, (snapshot) => {
         const questionsData = snapshot.val();
@@ -121,19 +117,6 @@ function CoursePage() {
         const videosArray = videosData ? Object.values(videosData) : [];
         setMedia((prev) => ({ ...prev, videos: videosArray }));
       });
-
-      const unsubscribePdfs = onValue(pdfsRef, (snapshot) => {
-        const pdfsData = snapshot.val();
-        const pdfsArray = pdfsData ? Object.values(pdfsData) : [];
-        setMedia((prev) => ({ ...prev, pdfs: pdfsArray }));
-      });
-
-      return () => {
-        unsubscribeQuestions();
-        unsubscribeImages();
-        unsubscribeVideos();
-        unsubscribePdfs();
-      };
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
@@ -155,8 +138,6 @@ function CoursePage() {
       mediaType = "images";
     } else if (newMediaLink.endsWith(".mp4")) {
       mediaType = "videos";
-    } else if (newMediaLink.endsWith(".pdf")) {
-      mediaType = "pdfs";
     } else {
       setError("Unsupported media link format");
       return;
@@ -439,7 +420,7 @@ function CoursePage() {
           </div>
 
           <div className="media-and-questions">
-            <h2>Media (Images, Videos, PDFs)</h2>
+            <h2>Media (Images, Videos)</h2>
             <input
               type="text"
               placeholder="Enter Dropbox link for media"
@@ -476,17 +457,6 @@ function CoursePage() {
                     <video width="320" height="240" controls>
                       <source src={video} type="video/mp4" />
                     </video>
-                  </div>
-                ))}
-              </div>
-
-              <div>
-                <h3>PDFs:</h3>
-                {media.pdfs.map((pdf, index) => (
-                  <div key={index}>
-                    <a href={pdf} target="_blank" rel="noopener noreferrer">
-                      View PDF {index + 1}
-                    </a>
                   </div>
                 ))}
               </div>
