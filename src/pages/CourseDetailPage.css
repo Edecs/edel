@@ -1,109 +1,99 @@
+/* General container styling */
 .course-detail-container {
+  max-width: 900px;
+  margin: 40px auto;
   padding: 20px;
+  background-color: #f8f9fa; /* Light background for better readability */
+  border: 1px solid #ddd; /* Light border for separation */
+  border-radius: 8px; /* Rounded corners for a softer look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   font-family: Arial, sans-serif;
 }
 
-/* Title Styles */
-.course-detail-container h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #094d50; /* Course page title color */
-}
-
-.course-detail-container h2 {
-  border-bottom: 2px solid #094d50; /* خط */
-  padding-bottom: 8px; /* المسافة بين النص والخط */
-  color: #094d50; /* لون النص */
-  font-size: 20px; /* حجم النص */
-  margin-bottom: 15px; /* مسافة سفلية */
-  transition: color 0.3s ease, border-bottom 0.3s ease; /* تأثير انتقال سلس */
-}
-
-.course-detail-container h3 {
+/* Loading and error messages styling */
+.course-detail-container p {
+  text-align: center;
   font-size: 18px;
-  margin-bottom: 10px;
+  color: #333;
 }
 
-.course-detail-container h4 {
-  font-size: 16px;
-  margin-bottom: 5px;
-}
-
-/* Input Fields */
-.course-detail-container input[type="text"],
-.course-detail-container textarea {
-  width: 100%;
+.error-message {
+  color: #d9534f; /* Red color for error message */
+  background-color: #f2dede; /* Light red background */
   padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #ebccd1;
   border-radius: 4px;
-  font-size: 16px;
 }
 
-.course-detail-container textarea {
-  height: 100px;
-  resize: vertical;
-}
-
-/* Button Styles */
-.course-detail-container button {
-  background-color: #094d50;
-  color: white;
-  padding: 10px 20px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s; /* Smooth background color transition */
-}
-
-/* Button Hover Effect */
-.course-detail-container button:hover {
-  background-color: #0e6d72;
-}
-
-/* Error Message Styles */
-.course-detail-container .error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-/* Details and Summary Styles */
-.course-detail-container details {
+/* Course title styling */
+.course-title {
+  font-size: 28px;
+  color: #094d50; /* Darker color to make the title stand out */
   margin-bottom: 20px;
+  text-align: center; /* Center the title for a balanced look */
+  border-bottom: 2px solid #0e6d72; /* Accent line under the title */
+  padding-bottom: 10px;
 }
 
-.course-detail-container summary {
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-/* Course and Sub-Course Buttons */
-.course-detail-container .course-selectors {
-  margin-bottom: 20px;
-}
-
-.course-detail-container .sub-course-list {
+/* Sub-course list styling */
+.sub-course-list {
   list-style: none; /* Remove default list styling */
-  padding: 0; /* Remove default padding */
+  padding: 0;
+  margin: 20px 0;
 }
 
-.course-detail-container .sub-course-item {
-  margin-bottom: 10px;
+.sub-course-item {
+  background-color: #ffffff; /* White background for each item */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 10px 0;
+  padding: 15px;
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effect */
+  display: flex;
+  justify-content: space-between; /* Align items properly */
+  align-items: center;
 }
 
-/* No Access Styles */
-.course-detail-container .no-access {
-  color: red; /* Style for denied access */
+.sub-course-item:hover {
+  transform: translateY(-2px); /* Slightly raise the item on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
 }
 
-/* Responsive Styles */
+.sub-course-item a {
+  text-decoration: none; /* Remove underline from links */
+  color: #0e6d72; /* Link color to match the theme */
+  font-weight: bold;
+}
+
+.sub-course-item a:hover {
+  color: #007bff; /* Change color on hover for better UX */
+}
+
+.no-access {
+  background-color: #f9f9f9; /* Greyed out background for no access */
+  color: #999; /* Light grey text */
+  cursor: not-allowed; /* Change cursor to indicate non-clickable */
+}
+
+/* No sub-courses message styling */
+.no-sub-courses {
+  color: #777;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .course-detail-container button {
-    width: auto; /* Button width for small screens */
+  .course-detail-container {
+    padding: 15px;
+  }
+
+  .course-title {
+    font-size: 24px;
+  }
+
+  .sub-course-item {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    text-align: center;
   }
 }
