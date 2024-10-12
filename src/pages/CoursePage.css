@@ -74,10 +74,9 @@ input[type="text"]:focus,
 
 /* Button Focus Effect */
 .course-page button:focus,
-#a1:focus {
-  border-color: #0ea1a8;
-  outline: none;
-  box-shadow: 0 0 8px #0ea1a8; /* More noticeable shadow effect on focus */
+#a1selected {
+  background-color: #ffffff; /* Highlight selected buttons */
+  color: #094d50;
 }
 
 /* Button Active Effect */
