@@ -2,7 +2,7 @@
 .course-management-page {
   padding: 20px;
   font-family: "Roboto", sans-serif;
-  max-width: 1800px; /* تعيين عرض أقصى للصفحة */
+  max-width: 1200px; /* تعيين عرض أقصى للصفحة */
   margin: auto; /* مركزة الصفحة */
 }
 /* تصميم قسم التفاصيل */
@@ -11,7 +11,6 @@
   background-color: #f9f9f9; /* لون خلفية فاتح للقسم */
   border-radius: 8px; /* زوايا دائرية للقسم */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* ظل خفيف للقسم */
-  margin-top: 20px; /* مسافة أعلى القسم */
 }
 
 /* تصميم عنوان القسم */
