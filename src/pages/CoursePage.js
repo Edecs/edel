@@ -404,35 +404,41 @@ function CoursePage() {
 
       <details>
         <summary>Add media / questions</summary>
-        <div className="media-section">
-          <div className="course-selection">
-            <h2>Main Courses</h2>
+        <div className="course-selection">
+          <h2>Main Courses</h2>
+          <select
+            value={selectedCourse}
+            onChange={(e) => setSelectedCourse(e.target.value)}
+            className="dropdown"
+          >
+            <option value="" disabled>
+              Select a main course
+            </option>
             {mainCourses.map((course) => (
-              <button
-                key={course.id}
-                onClick={() => setSelectedCourse(course.id)}
-                className={selectedCourse === course.id ? "selected" : ""}
-              >
+              <option key={course.id} value={course.id}>
                 {course.name}
-              </button>
+              </option>
             ))}
-            <h2>Sub Courses</h2>
-            <div className="sub-course-buttons">
-              {subCourses.map((subCourse) => (
-                <button
-                  key={subCourse.id}
-                  onClick={() => setSelectedSubCourse(subCourse.id)}
-                  className={
-                    selectedSubCourse === subCourse.id ? "selected" : ""
-                  }
-                  disabled={!selectedCourse}
-                >
-                  {subCourse.name}
-                </button>
-              ))}
-            </div>
-          </div>
+          </select>
 
+          <h2>Sub Courses</h2>
+          <select
+            value={selectedSubCourse}
+            onChange={(e) => setSelectedSubCourse(e.target.value)}
+            className="dropdown"
+            disabled={!selectedCourse}
+          >
+            <option value="" disabled>
+              Select a sub-course
+            </option>
+            {subCourses.map((subCourse) => (
+              <option key={subCourse.id} value={subCourse.id}>
+                {subCourse.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="media-section">
           <div className="media-and-questions">
             <h2>Media (Images, Videos)</h2>
             <input
