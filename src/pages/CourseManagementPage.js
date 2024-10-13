@@ -190,9 +190,7 @@ function CourseManagementPage() {
 
   return (
     <div className="course-management-page">
-      <header className="course-management-header">
-        <h1>Course Management</h1>
-      </header>
+      <h1>Course Management</h1>
 
       <div className="search-bar">
         <input
