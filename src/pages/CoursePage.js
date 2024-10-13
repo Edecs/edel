@@ -367,6 +367,23 @@ function CoursePage() {
       }
     });
   };
+  const handleDeleteSubCourse = (subCourseId) => {
+    const subCoursesRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${subCourseId}`
+    );
+
+    remove(subCoursesRef)
+      .then(() => {
+        setSubCourses((prevSubCourses) =>
+          prevSubCourses.filter((subCourse) => subCourse.id !== subCourseId)
+        );
+        setError(""); // Clear any previous error messages
+      })
+      .catch((error) => {
+        setError("Failed to delete sub-course: " + error.message);
+      });
+  };
 
   return (
     <div className="course-page">
@@ -410,9 +427,12 @@ function CoursePage() {
           <div className="add-sub-course">
             <h2>Sub-Courses</h2>
             <div className="sub-course-buttons">
-              {subCourses.map((subCourse) => (
+              {subCourses.map((subCourse, index) => (
                 <div key={subCourse.id} className="sub-course-item">
                   {subCourse.name}
+                  <button onClick={() => handleDeleteSubCourse(subCourse.id)}>
+                    Delete
+                  </button>
                 </div>
               ))}
             </div>
