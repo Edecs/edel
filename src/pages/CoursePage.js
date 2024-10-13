@@ -26,7 +26,7 @@ function CoursePage() {
   const [newCourseName, setNewCourseName] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
-  const [selectedButton, setSelectedButton] = useState(null); // إضافة حالة لتخزين الزر المحدد
+  const [selectedButton, setSelectedButton] = useState(null);
   const [isLoadingCourses, setIsLoadingCourses] = useState(true);
   const [isLoadingSubCourses, setIsLoadingSubCourses] = useState(false);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
@@ -49,6 +49,7 @@ function CoursePage() {
 
     return () => unsubscribe();
   }, [db]);
+
   const handleThumbnailChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -59,23 +60,6 @@ function CoursePage() {
       reader.readAsDataURL(file); // Read the file as a data URL
     }
   };
-  useEffect(() => {
-    setIsLoadingCourses(true);
-    const coursesRef = ref(db, "courses/mainCourses");
-    const unsubscribe = onValue(coursesRef, (snapshot) => {
-      const coursesData = snapshot.val();
-      const coursesArray = coursesData
-        ? Object.keys(coursesData).map((key) => ({
-            id: key,
-            ...coursesData[key],
-          }))
-        : [];
-      setMainCourses(coursesArray);
-      setIsLoadingCourses(false);
-    });
-
-    return () => unsubscribe();
-  }, [db]);
 
   // Load sub-courses
   useEffect(() => {
@@ -141,6 +125,7 @@ function CoursePage() {
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
+  // Add media from a link
   const handleAddMediaFromLink = () => {
     if (!newMediaLink.trim()) {
       setError("The media link cannot be empty");
@@ -149,12 +134,10 @@ function CoursePage() {
 
     let mediaType = "";
 
-    // استخدام تعبير منتظم لتحديد نوع الميديا
-    const imageRegex = /\.(jpg|jpeg|png|gif)(\?.*)?$/i; // Regex للتحقق من الصور مع الاستعلامات
-    const videoRegex = /\.(mp4|mov|avi|wmv|mkv)(\?.*)?$/i; // Regex للتحقق من الفيديوهات مع الاستعلامات
-    const dropboxRegex = /dropbox\.com/; // Regex للتحقق من روابط Dropbox
+    const imageRegex = /\.(jpg|jpeg|png|gif)(\?.*)?$/i;
+    const videoRegex = /\.(mp4|mov|avi|wmv|mkv)(\?.*)?$/i;
+    const dropboxRegex = /dropbox\.com/;
 
-    // تحقق من نوع الميديا
     if (
       videoRegex.test(newMediaLink) ||
       (dropboxRegex.test(newMediaLink) && newMediaLink.includes(".mp4"))
@@ -184,8 +167,18 @@ function CoursePage() {
         setNewMediaLink("");
         setError("");
       })
-      .catch((error) => setError("Failed to save media URL: " + error.message));
+      .catch((error) => {
+        setError("Failed to save media URL: " + error.message);
+        // Revert state update if save fails
+        setMedia((prevMedia) => ({
+          ...prevMedia,
+          [mediaType]: prevMedia[mediaType].filter(
+            (media) => media !== newMediaLink
+          ),
+        }));
+      });
   };
+  // Remaining logic and return statement goes here
 
   // Add or edit question
   const handleAddOrEditQuestion = () => {
@@ -348,7 +341,7 @@ function CoursePage() {
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${mediaKey}`
     );
 
-    // استخدام onValue للحصول على معرف الوسائط الحالية
+    // Use onValue to get the current media's ID in Firebase
     onValue(mediaRef, (snapshot) => {
       const mediaData = snapshot.val();
       const mediaArray = mediaData ? Object.keys(mediaData) : [];
@@ -362,7 +355,7 @@ function CoursePage() {
 
         remove(specificMediaRef)
           .then(() => {
-            // تحديث حالة الوسائط بناءً على المعرف المحذوف
+            // Update state after successful deletion
             setMedia((prevMedia) => ({
               ...prevMedia,
               [mediaKey]: prevMedia[mediaKey].filter((_, i) => i !== index),
@@ -483,6 +476,7 @@ function CoursePage() {
                     disabled={!selectedSubCourse}
                   />
                   <button
+                    type="button" // تأكد من إضافة هذا السطر
                     onClick={handleAddMediaFromLink}
                     disabled={!selectedSubCourse}
                   >
@@ -490,28 +484,25 @@ function CoursePage() {
                   </button>
 
                   {error && <p className="error-message">{error}</p>}
-
                   <div>
                     <h3>Images:</h3>
-                    {media.images.map((image, index) => (
-                      <div key={index}>
-                        <img
-                          src={image}
-                          alt={`Course media ${index}`}
-                          style={{ width: "100px", height: "auto" }}
-                        />
-                        <button
-                          onClick={() => handleDeleteMedia("image", index)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    ))}
+                    <div className="images-container">
+                      {media.images.map((image, index) => (
+                        <div key={index} className="image-item">
+                          <img src={image} alt={`Course media ${index}`} />
+                          <button
+                            onClick={() => handleDeleteMedia("image", index)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ))}
+                    </div>
 
-                    <div>
-                      <h3>Videos:</h3>
+                    <h3>Videos:</h3>
+                    <div className="videos-container">
                       {media.videos.map((video, index) => (
-                        <div key={index}>
+                        <div key={index} className="video-item">
                           <video width="320" height="240" controls>
                             <source src={video} type="video/mp4" />
                           </video>
@@ -588,11 +579,15 @@ function CoursePage() {
                             ))}
                           </ul>
                           <button
+                            id={`edit-question-${index}`} // إضافة ID فريد لزر التعديل
                             onClick={() => handleEditQuestionIndex(index)}
                           >
                             Edit
                           </button>
-                          <button onClick={() => handleDeleteQuestion(index)}>
+                          <button
+                            id={`delete-question-${index}`} // إضافة ID فريد لزر الحذف
+                            onClick={() => handleDeleteQuestion(index)}
+                          >
                             Delete
                           </button>
                         </div>
@@ -600,6 +595,7 @@ function CoursePage() {
                     </div>
 
                     <button
+                      id="a1"
                       onClick={handleSaveQuestions}
                       disabled={!selectedSubCourse}
                     >
