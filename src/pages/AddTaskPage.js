@@ -122,104 +122,108 @@ const AddTaskPage = () => {
   });
 
   return (
-    <div className="add-task-container">
-      <h1>Add New Task</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="dropboxLink">Dropbox File Link:</label>
-          <input
-            type="text"
-            id="dropboxLink"
-            value={dropboxLink}
-            onChange={(e) => setDropboxLink(e.target.value)}
-            placeholder="Paste Dropbox file link"
-          />
-        </div>
-        <div>
-          <label htmlFor="message">Message:</label>
-          <input
-            type="text"
-            id="message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="search-container">
-          <div className="search-field">
-            <label htmlFor="search">Search by Email or Name:</label>
+    <div className="add-task-page">
+      <div className="add-task-container">
+        <h1>Add New Task</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="dropboxLink">Dropbox File Link:</label>
             <input
               type="text"
-              id="search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by email or name"
+              id="dropboxLink"
+              value={dropboxLink}
+              onChange={(e) => setDropboxLink(e.target.value)}
+              placeholder="Paste Dropbox file link"
             />
           </div>
-          <div className="search-field">
-            <label htmlFor="searchDepartment">Search by Department:</label>
+          <div>
+            <label htmlFor="message">Message:</label>
             <input
               type="text"
-              id="searchDepartment"
-              value={searchDepartment}
-              onChange={(e) => setSearchDepartment(e.target.value)}
-              placeholder="Search by department"
+              id="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
             />
           </div>
-        </div>
 
-        <div>
-          {searchTerm || searchDepartment ? ( // Show users only if there is a search term
-            filteredUsers.length > 0 ? (
-              <ul>
-                <label>Select Users to Assign:</label>
-                {filteredUsers.map((user) => (
-                  <li key={user.email}>
-                    <input
-                      type="checkbox"
-                      id={user.email}
-                      checked={assignedEmails.includes(user.email)} // Keep checked if assigned
-                      onChange={() => handleUserSelect(user.email)}
-                    />
-                    <label htmlFor={user.email}>{user.name}</label>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No users found.</p>
-            )
-          ) : null}{" "}
-          {/* Do not show anything if there is no search term */}
-          {/* Display the selected users */}
-          {assignedEmails.length > 0 && (
-            <div>
-              <h3>Assigned Users:</h3>
-              <ul>
-                {assignedEmails.map((email) => {
-                  const user = allUsers.find((u) => u.email === email);
-                  return (
-                    <li key={email}>
-                      {user.name}
-                      <button
-                        className="remove-button"
-                        onClick={() => handleUserSelect(email)}
-                      >
-                        x
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
+          <div className="search-container">
+            <div className="search-field">
+              <label htmlFor="search">Search by Email or Name:</label>
+              <input
+                type="text"
+                id="search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by email or name"
+              />
             </div>
-          )}
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Adding..." : "Add Task"}
-        </button>
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
-      </form>
+            <div className="search-field">
+              <label htmlFor="searchDepartment">Search by Department:</label>
+              <input
+                type="text"
+                id="searchDepartment"
+                value={searchDepartment}
+                onChange={(e) => setSearchDepartment(e.target.value)}
+                placeholder="Search by department"
+              />
+            </div>
+          </div>
+
+          <div>
+            {searchTerm || searchDepartment ? ( // Show users only if there is a search term
+              filteredUsers.length > 0 ? (
+                <div className="user-selection">
+                  <label>Select Users to Assign:</label>
+                  <ul>
+                    {filteredUsers.map((user) => (
+                      <li key={user.email}>
+                        <input
+                          type="checkbox"
+                          id={user.email}
+                          checked={assignedEmails.includes(user.email)}
+                          onChange={() => handleUserSelect(user.email)}
+                        />
+                        <label htmlFor={user.email}>{user.name}</label>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p>No users found.</p>
+              )
+            ) : null}{" "}
+            {/* Do not show anything if there is no search term */}
+            {/* Display the selected users */}
+            {assignedEmails.length > 0 && (
+              <div>
+                <h3>Assigned Users:</h3>
+                <ul>
+                  {assignedEmails.map((email) => {
+                    const user = allUsers.find((u) => u.email === email);
+                    return (
+                      <li key={email}>
+                        {user.name}
+                        <button
+                          className="remove-button"
+                          onClick={() => handleUserSelect(email)}
+                        >
+                          x
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
+          <button type="submit" disabled={loading}>
+            {loading ? "Adding..." : "Add Task"}
+          </button>
+          {error && <p className="error">{error}</p>}
+          {success && <p className="success">{success}</p>}
+        </form>
+      </div>
     </div>
   );
 };
