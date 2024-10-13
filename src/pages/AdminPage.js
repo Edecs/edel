@@ -275,19 +275,19 @@ function AdminPage() {
           className="navigate-to-course-management-btn"
           onClick={navigateToCourseManagementPage}
         >
-          Manage Courses
+          ِAssign Courses
         </button>
         <button className="refresh-data-btn" onClick={handleRefreshData}>
           Refresh Data
         </button>
       </header>
+      <input
+        type="text"
+        placeholder="Search users..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       <div className="main-content">
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
         <div className="user-list">
           {users
             .filter((user) =>
