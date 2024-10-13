@@ -448,177 +448,188 @@ function CoursePage() {
       <details>
         <summary>Add media / questions</summary>
         <div className="course-media-container">
-          {" "}
-          {/* New container */}
-          <div className="course-selection">
-            <h2>Main Courses</h2>
-            <select
-              value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.target.value)}
-              className="dropdown"
-            >
-              <option value="" disabled>
-                Select a main course
-              </option>
-              {mainCourses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.name}
-                </option>
-              ))}
-            </select>
-
-            <h2>Sub Courses</h2>
-            <select
-              value={selectedSubCourse}
-              onChange={(e) => setSelectedSubCourse(e.target.value)}
-              className="dropdown"
-              disabled={!selectedCourse}
-            >
-              <option value="" disabled>
-                Select a sub-course
-              </option>
-              {subCourses.map((subCourse) => (
-                <option key={subCourse.id} value={subCourse.id}>
-                  {subCourse.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* Show the media section only if a sub-course is selected */}
-          {selectedSubCourse && (
-            <div className="media-section">
-              <div className="media-and-questions">
-                <h2>Media (Images, Videos)</h2>
-                <input
-                  type="text"
-                  placeholder="Enter Dropbox link for media"
-                  value={newMediaLink}
-                  onChange={(e) => setNewMediaLink(e.target.value)}
-                  disabled={!selectedSubCourse}
-                />
-                <button
-                  onClick={handleAddMediaFromLink}
-                  disabled={!selectedSubCourse}
+          {/* New container with border */}
+          <div className="course-selection-container">
+            <div className="course-selection">
+              <div className="course-dropdown">
+                <h2>Main Courses</h2>
+                <select
+                  value={selectedCourse}
+                  onChange={(e) => setSelectedCourse(e.target.value)}
+                  className="dropdown"
                 >
-                  Add Media
-                </button>
-
-                {error && <p className="error-message">{error}</p>}
-
-                <div>
-                  <h3>Images:</h3>
-                  {media.images.map((image, index) => (
-                    <div key={index}>
-                      <img
-                        src={image}
-                        alt={`Course media ${index}`}
-                        style={{ width: "100px", height: "auto" }}
-                      />
-                      <button onClick={() => handleDeleteMedia("image", index)}>
-                        Delete
-                      </button>
-                    </div>
+                  <option value="" disabled>
+                    Select a main course
+                  </option>
+                  {mainCourses.map((course) => (
+                    <option key={course.id} value={course.id}>
+                      {course.name}
+                    </option>
                   ))}
+                </select>
+              </div>
+
+              <div className="course-dropdown">
+                <h2>Sub Courses</h2>
+                <select
+                  value={selectedSubCourse}
+                  onChange={(e) => setSelectedSubCourse(e.target.value)}
+                  className="dropdown"
+                  disabled={!selectedCourse}
+                >
+                  <option value="" disabled>
+                    Select a sub-course
+                  </option>
+                  {subCourses.map((subCourse) => (
+                    <option key={subCourse.id} value={subCourse.id}>
+                      {subCourse.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {/* Show the media section only if a sub-course is selected */}
+            {selectedSubCourse && (
+              <div className="media-section">
+                <div className="media-and-questions">
+                  <h2>Media (Images, Videos)</h2>
+                  <input
+                    type="text"
+                    placeholder="Enter Dropbox link for media"
+                    value={newMediaLink}
+                    onChange={(e) => setNewMediaLink(e.target.value)}
+                    disabled={!selectedSubCourse}
+                  />
+                  <button
+                    onClick={handleAddMediaFromLink}
+                    disabled={!selectedSubCourse}
+                  >
+                    Add Media
+                  </button>
+
+                  {error && <p className="error-message">{error}</p>}
 
                   <div>
-                    <h3>Videos:</h3>
-                    {media.videos.map((video, index) => (
+                    <h3>Images:</h3>
+                    {media.images.map((image, index) => (
                       <div key={index}>
-                        <video width="320" height="240" controls>
-                          <source src={video} type="video/mp4" />
-                        </video>
+                        <img
+                          src={image}
+                          alt={`Course media ${index}`}
+                          style={{ width: "100px", height: "auto" }}
+                        />
                         <button
-                          onClick={() => handleDeleteMedia("video", index)}
+                          onClick={() => handleDeleteMedia("image", index)}
                         >
                           Delete
                         </button>
                       </div>
                     ))}
-                  </div>
-                </div>
 
-                <div className="question-section">
-                  <h2>Add/Edit Questions</h2>
-                  <textarea
-                    placeholder="Enter new question"
-                    value={newQuestion}
-                    onChange={(e) => setNewQuestion(e.target.value)}
-                    disabled={!selectedSubCourse}
-                  />
-                  <button
-                    onClick={handleAddOrEditQuestion}
-                    disabled={!selectedSubCourse}
-                  >
-                    {editQuestionIndex !== null
-                      ? "Edit Question"
-                      : "Add Question"}
-                  </button>
-
-                  <div className="answers-section">
-                    <h3>Answers</h3>
-                    {answers.map((answer, index) => (
-                      <div key={index}>
-                        <input
-                          type="checkbox"
-                          checked={answer.correct}
-                          onChange={() => handleCorrectAnswerChange(index)}
-                        />
-                        <span>{answer.text}</span>
-                        <button onClick={() => handleEditAnswer(index)}>
-                          Edit
-                        </button>
-                      </div>
-                    ))}
+                    <div>
+                      <h3>Videos:</h3>
+                      {media.videos.map((video, index) => (
+                        <div key={index}>
+                          <video width="320" height="240" controls>
+                            <source src={video} type="video/mp4" />
+                          </video>
+                          <button
+                            onClick={() => handleDeleteMedia("video", index)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <input
-                    type="text"
-                    placeholder="Enter new answer"
-                    value={newAnswerText}
-                    onChange={(e) => setNewAnswerText(e.target.value)}
-                    disabled={!selectedSubCourse}
-                  />
-                  <button
-                    onClick={handleAddOrUpdateAnswer}
-                    disabled={!selectedSubCourse}
-                  >
-                    {editAnswerIndex !== null ? "Update Answer" : "Add Answer"}
-                  </button>
+                  <div className="question-section">
+                    <h2>Add/Edit Questions</h2>
+                    <textarea
+                      placeholder="Enter new question"
+                      value={newQuestion}
+                      onChange={(e) => setNewQuestion(e.target.value)}
+                      disabled={!selectedSubCourse}
+                    />
+                    <button
+                      onClick={handleAddOrEditQuestion}
+                      disabled={!selectedSubCourse}
+                    >
+                      {editQuestionIndex !== null
+                        ? "Edit Question"
+                        : "Add Question"}
+                    </button>
 
-                  <div className="questions-list">
-                    <h3>Questions List</h3>
-                    {questions.map((question, index) => (
-                      <div key={index} className="question-item">
-                        <h4>{question.text}</h4>
-                        <ul>
-                          {question.answers.map((answer, i) => (
-                            <li key={i} className="answer-item">
-                              {answer.text} {answer.correct && "(Correct)"}
-                            </li>
-                          ))}
-                        </ul>
-                        <button onClick={() => handleEditQuestionIndex(index)}>
-                          Edit
-                        </button>
-                        <button onClick={() => handleDeleteQuestion(index)}>
-                          Delete
-                        </button>
-                      </div>
-                    ))}
+                    <div className="answers-section">
+                      <h3>Answers</h3>
+                      {answers.map((answer, index) => (
+                        <div key={index}>
+                          <input
+                            type="checkbox"
+                            checked={answer.correct}
+                            onChange={() => handleCorrectAnswerChange(index)}
+                          />
+                          <span>{answer.text}</span>
+                          <button onClick={() => handleEditAnswer(index)}>
+                            Edit
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <input
+                      type="text"
+                      placeholder="Enter new answer"
+                      value={newAnswerText}
+                      onChange={(e) => setNewAnswerText(e.target.value)}
+                      disabled={!selectedSubCourse}
+                    />
+                    <button
+                      onClick={handleAddOrUpdateAnswer}
+                      disabled={!selectedSubCourse}
+                    >
+                      {editAnswerIndex !== null
+                        ? "Update Answer"
+                        : "Add Answer"}
+                    </button>
+
+                    <div className="questions-list">
+                      <h3>Questions List</h3>
+                      {questions.map((question, index) => (
+                        <div key={index} className="question-item">
+                          <h4>{question.text}</h4>
+                          <ul>
+                            {question.answers.map((answer, i) => (
+                              <li key={i} className="answer-item">
+                                {answer.text} {answer.correct && "(Correct)"}
+                              </li>
+                            ))}
+                          </ul>
+                          <button
+                            onClick={() => handleEditQuestionIndex(index)}
+                          >
+                            Edit
+                          </button>
+                          <button onClick={() => handleDeleteQuestion(index)}>
+                            Delete
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={handleSaveQuestions}
+                      disabled={!selectedSubCourse}
+                    >
+                      Save Questions
+                    </button>
+
+                    {error && <p className="error-message">{error}</p>}
                   </div>
-
-                  <button
-                    onClick={handleSaveQuestions}
-                    disabled={!selectedSubCourse}
-                  >
-                    Save Questions
-                  </button>
-
-                  {error && <p className="error-message">{error}</p>}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </details>
     </div>
