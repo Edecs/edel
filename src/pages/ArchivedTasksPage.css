@@ -1,5 +1,6 @@
 .archived-tasks-container {
   padding: 20px;
+  padding-top: 0px;
   max-width: 1200px; /* Optional: sets a maximum width for the container */
   margin: auto; /* Centers the container */
   background-color: #ffffff; /* Background color for the entire page */
@@ -11,12 +12,10 @@ h1 {
   padding-left: 5px;
   text-align: left;
   margin-bottom: 15px;
-  margin-top: 60px;
-  font-size: 2em;
+  margin-top: 80px;
+  font-size: 30px;
 }
 .search-container {
-  margin-bottom: 20px; /* Adds space below the search bar */
-  display: flex; /* Uses flexbox for layout */
   align-items: center; /* Centers items vertically */
 }
 
@@ -30,7 +29,7 @@ h1 {
 
 .search-container button {
   padding: 10px 15px; /* Padding for the button */
-  background-color: #007bff; /* Bootstrap primary color */
+  background-color: #094d50; /* Bootstrap primary color */
   color: white; /* Text color */
   border: none; /* No border */
   border-radius: 5px; /* Rounds the corners of the button */
@@ -39,7 +38,7 @@ h1 {
 }
 
 .search-container button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
+  background-color: #127f85; /* Darker shade on hover */
 }
 
 .archived-tasks-list {
@@ -80,7 +79,7 @@ h1 {
   max-width: 100%; /* Ensures the link does not exceed the card width */
   overflow-wrap: break-word; /* Allows the link to wrap to the next line */
   margin-top: 10px; /* Adds space above the link */
-  color: #007bff; /* Link color */
+  color: #094d50; /* Link color */
   text-decoration: none; /* Removes underline from links */
 }
 
