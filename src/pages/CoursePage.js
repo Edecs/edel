@@ -331,6 +331,19 @@ function CoursePage() {
       setError("Failed to save course: " + error.message);
     }
   };
+  const handleDeleteMedia = (type, index) => {
+    if (type === "image") {
+      setMedia((prevMedia) => ({
+        ...prevMedia,
+        images: prevMedia.images.filter((_, i) => i !== index),
+      }));
+    } else if (type === "video") {
+      setMedia((prevMedia) => ({
+        ...prevMedia,
+        videos: prevMedia.videos.filter((_, i) => i !== index),
+      }));
+    }
+  };
 
   return (
     <div className="course-page">
@@ -469,6 +482,9 @@ function CoursePage() {
                       alt={`Course media ${index}`}
                       style={{ width: "100px", height: "auto" }}
                     />
+                    <button onClick={() => handleDeleteMedia("image", index)}>
+                      Delete
+                    </button>
                   </div>
                 ))}
 
@@ -479,6 +495,9 @@ function CoursePage() {
                       <video width="320" height="240" controls>
                         <source src={video} type="video/mp4" />
                       </video>
+                      <button onClick={() => handleDeleteMedia("video", index)}>
+                        Delete
+                      </button>
                     </div>
                   ))}
                 </div>
