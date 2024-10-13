@@ -167,7 +167,7 @@
   background-color: #198c92;
   transform: translateY(-2px); /* Slight lift effect on hover */
 }
-  
+
 /* Active effect for the button */
 .submit-button:active {
   background-color: #0f8086;
