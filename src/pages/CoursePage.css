@@ -224,26 +224,42 @@ input[type="text"]:focus,
 }
 
 .media-section {
-  display: flex; /* استخدام فليكس لتوزيع الأقسام */
   justify-content: space-between; /* توزيع المساحة بين الأقسام */
   margin-top: 20px; /* مسافة أعلى القسم */
 }
 
 .course-selection {
-  flex: 1; /* القسم الأيمن يأخذ مساحة أكبر */
-  margin-right: 20px; /* مساحة بين القسمين */
-  padding: 20px;
-  border: 1px solid #ccc; /* حدود للقسم */
-  border-radius: 8px; /* زوايا مدورة */
-  background-color: #f9f9f9; /* خلفية خفيفة */
+  margin: 20px 0;
 }
 
-.media-and-questions {
-  flex: 2; /* القسم الأيسر يأخذ مساحة أكبر */
-  padding: 20px;
-  border: 1px solid #ccc; /* حدود للقسم */
-  border-radius: 8px; /* زوايا مدورة */
-  background-color: #f9f9f9; /* خلفية خفيفة */
+.course-selection h2 {
+  margin-bottom: 10px;
+}
+
+.dropdown {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  appearance: none; /* Remove default arrow in some browsers */
+}
+
+.dropdown:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.dropdown:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.dropdown option {
+  padding: 10px;
 }
 
 .course-page .media-section img {
