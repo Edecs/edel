@@ -367,23 +367,6 @@ function CoursePage() {
       }
     });
   };
-  const handleDeleteSubCourse = (subCourseId) => {
-    const subCoursesRef = ref(
-      db,
-      `courses/mainCourses/${selectedCourse}/subCourses/${subCourseId}`
-    );
-
-    remove(subCoursesRef)
-      .then(() => {
-        setSubCourses((prevSubCourses) =>
-          prevSubCourses.filter((subCourse) => subCourse.id !== subCourseId)
-        );
-        setError(""); // Clear any previous error messages
-      })
-      .catch((error) => {
-        setError("Failed to delete sub-course: " + error.message);
-      });
-  };
 
   return (
     <div className="course-page">
@@ -425,18 +408,25 @@ function CoursePage() {
           </div>
 
           <div className="add-sub-course">
-            <h2>Sub-Courses</h2>
-            <div className="sub-course-buttons">
-              {subCourses.map((subCourse, index) => (
-                <div key={subCourse.id} className="sub-course-item">
-                  {subCourse.name}
-                  <button onClick={() => handleDeleteSubCourse(subCourse.id)}>
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
+      <h2>Sub-Courses</h2>
+      <div className="sub-course-buttons">
+        {subCourses.map((subCourse) => (
+          <div key={subCourse.id} className="sub-course-item">
+            {subCourse.name}
           </div>
+        ))}
+      </div>
+      <div className="add-sub-course-form">
+        <input
+          type="text"
+          value={newSubCourseName}
+          onChange={(e) => setNewSubCourseName(e.target.value)}
+          placeholder="Add new sub-course"
+        />
+        <button onClick={handleAddSubCourse}>Add Sub-Course</button>
+      </div>
+    </div>
+        
         </div>
       </details>
 
