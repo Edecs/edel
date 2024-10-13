@@ -7,6 +7,7 @@
   border-radius: 8px; /* Rounds the corners of the main container */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow effect for depth */
 }
+
 h1 {
   color: #343a40;
   padding-left: 5px;
@@ -20,6 +21,7 @@ h1 {
 }
 
 .search-container input {
+  width: 90%;
   flex: 1; /* Takes full available width */
   padding: 10px; /* Adds padding inside the input */
   border: 1px solid #ced4da; /* Border color for the input */
