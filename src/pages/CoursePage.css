@@ -196,6 +196,13 @@ input[type="text"]:focus,
   border-radius: 8px; /* زوايا مدورة */
   background-color: #f9f9f9; /* خلفية خفيفة */
 }
+.course-selection-container {
+  border: 1px solid #ccc; /* حدود الحاوية */
+  border-radius: 8px; /* زوايا مدورة */
+  padding: 15px; /* مسافة داخلية للحاوية */
+  background-color: #f9f9f9; /* لون خلفية خفيف */
+  margin: 10px 0; /* مسافة أعلى وأسفل */
+}
 
 .course-page .course-buttons button,
 .course-page .sub-course-buttons button {
@@ -229,36 +236,39 @@ input[type="text"]:focus,
 }
 
 .course-selection {
-  margin: 20px 0;
+  display: flex;
+  justify-content: space-between; /* توزيع الفضاء بين العناصر */
+  width: 100%; /* تأكد من أن الحاوية تأخذ العرض الكامل */
 }
 
-.course-selection h2 {
-  margin-bottom: 10px;
+.course-dropdown {
+  flex: 1; /* كل مجموعة تأخذ نفس المساحة */
+  margin: 0 10px; /* مساحة بين المجموعات */
 }
 
 .dropdown {
-  display: flex;
-  width: 45%;
+  width: 100%; /* تأكد من أن قائمة dropdown تأخذ العرض الكامل */
   padding: 8px;
-  margin: 10px 0;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
-  appearance: none; /* Remove default arrow in some browsers */
 }
 
+/* Focus Styles for Dropdown */
 .dropdown:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
+/* Disabled Dropdown Styles */
 .dropdown:disabled {
   background-color: #e9ecef;
   cursor: not-allowed;
 }
 
+/* Dropdown Options Padding */
 .dropdown option {
   padding: 10px;
 }
@@ -353,37 +363,3 @@ input[type="text"]:focus,
   box-sizing: border-box; /* لتجنب مشاكل المسافات والحدود */
   margin-bottom: 20px; /* مسافة بين الأقسام */
 }
-/* Container for Course Selection and Media/Questions */
-.course-page .course-media-container {
-  display: flex; /* Use flexbox for layout */
-  gap: 20px; /* Space between the two sections */
-}
-
-/* Media Section Adjustments */
-.media-section {
-  flex: 1; /* Allow media section to grow */
-}
-
-/* Course Selection Adjustments */
-.course-selection {
-  flex: 1; /* Allow course selection to grow */
-  margin: 20px 0;
-}
-
-.course-selection h2 {
-  margin-bottom: 10px;
-}
-
-.dropdown {
-  display: flex;
-  width: 100%; /* Set to 100% to fill available space */
-  padding: 8px;
-  margin: 10px 0;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  appearance: none; /* Remove default arrow in some browsers */
-}
-
-/* Other styles remain unchanged... */
