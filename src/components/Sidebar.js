@@ -5,7 +5,6 @@ import { ReactComponent as HomeIcon } from "../photos/icons8-home.svg";
 import { ReactComponent as CoursesIcon } from "../photos/add.svg";
 import { ReactComponent as ProgressIcon } from "../photos/address-book.svg";
 import { ReactComponent as AdminIcon } from "../photos/user-add-outlined.svg";
-import { ReactComponent as LogoutIcon } from "../photos/logout-24-svgrepo-com.svg";
 import { ReactComponent as AddTaskIcon } from "../photos/add task.svg";
 import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-com.svg"; // تأكد من إضافة أيقونة مناسبة للأرشيف
 import "./Sidebar.css";
@@ -75,16 +74,17 @@ function Sidebar({ isOpen, onClose }) {
               </Link>
             </li>
             <li>
-              <Link to="/archived-tasks" onClick={onClose} title="Archived Tasks">
+              <Link
+                to="/archived-tasks"
+                onClick={onClose}
+                title="Archived Tasks"
+              >
                 <ArchiveIcon className="sidebar-icon" />
               </Link>
             </li>
           </>
         )}
       </ul>
-      <div className="logout-button" onClick={handleLogout} title="Logout">
-        <LogoutIcon className="sidebar-icon" />
-      </div>
     </div>
   );
 }
