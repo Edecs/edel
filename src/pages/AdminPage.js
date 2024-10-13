@@ -266,8 +266,8 @@ function AdminPage() {
 
   return (
     <div className="admin-page">
+      <h1>Admin Dashboard</h1>
       <header className="admin-header">
-        <h1>Admin Dashboard</h1>
         <button className="open-popup-btn" onClick={() => setIsPopupOpen(true)}>
           Create User
         </button>
