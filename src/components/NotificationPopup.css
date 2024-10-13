@@ -14,9 +14,7 @@
   transition: all 0.3s ease;
 }
 .notification-popup .close-button {
-  position: absolute;
-  top: -18px;
-  right: 0px; /* زيادة المسافة قليلاً لجعل الزر في الزاوية */
+/* زيادة المسافة قليلاً لجعل الزر في الزاوية */
   background: #ffffff; /* لون خلفية الزر */
   color: rgb(0, 0, 0); /* لون النص */
   border: none; /* لا حدود */
