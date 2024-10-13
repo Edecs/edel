@@ -141,7 +141,6 @@ function CoursePage() {
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
-  // Add media from Dropbox link
   const handleAddMediaFromLink = () => {
     if (!newMediaLink.trim()) {
       setError("The media link cannot be empty");
@@ -149,16 +148,27 @@ function CoursePage() {
     }
 
     let mediaType = "";
-    // Checking for media types based on extensions and Dropbox URLs
+
+    // استخدام تعبير منتظم لتحديد نوع الميديا
+    const imageRegex = /\.(jpg|jpeg|png|gif)(\?.*)?$/i; // Regex للتحقق من الصور مع الاستعلامات
+    const videoRegex = /\.(mp4|mov|avi|wmv|mkv)(\?.*)?$/i; // Regex للتحقق من الفيديوهات مع الاستعلامات
+    const dropboxRegex = /dropbox\.com/; // Regex للتحقق من روابط Dropbox
+
+    // تحقق من نوع الميديا
     if (
-      newMediaLink.endsWith(".jpg") ||
-      newMediaLink.endsWith(".jpeg") ||
-      newMediaLink.endsWith(".png") ||
-      newMediaLink.includes("dropbox.com/scl") // Check for Dropbox image links
+      videoRegex.test(newMediaLink) ||
+      (dropboxRegex.test(newMediaLink) && newMediaLink.includes(".mp4"))
+    ) {
+      mediaType = "videos";
+    } else if (
+      imageRegex.test(newMediaLink) ||
+      (dropboxRegex.test(newMediaLink) &&
+        (newMediaLink.includes(".jpg") ||
+          newMediaLink.includes(".jpeg") ||
+          newMediaLink.includes(".png") ||
+          newMediaLink.includes(".gif")))
     ) {
       mediaType = "images";
-    } else if (newMediaLink.endsWith(".mp4")) {
-      mediaType = "videos";
     } else {
       setError("Unsupported media link format");
       return;
@@ -332,17 +342,37 @@ function CoursePage() {
     }
   };
   const handleDeleteMedia = (type, index) => {
-    if (type === "image") {
-      setMedia((prevMedia) => ({
-        ...prevMedia,
-        images: prevMedia.images.filter((_, i) => i !== index),
-      }));
-    } else if (type === "video") {
-      setMedia((prevMedia) => ({
-        ...prevMedia,
-        videos: prevMedia.videos.filter((_, i) => i !== index),
-      }));
-    }
+    const mediaKey = type === "image" ? "images" : "videos";
+    const mediaRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${mediaKey}`
+    );
+
+    // استخدام onValue للحصول على معرف الوسائط الحالية
+    onValue(mediaRef, (snapshot) => {
+      const mediaData = snapshot.val();
+      const mediaArray = mediaData ? Object.keys(mediaData) : [];
+
+      if (index < mediaArray.length) {
+        const mediaId = mediaArray[index];
+        const specificMediaRef = ref(
+          db,
+          `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${mediaKey}/${mediaId}`
+        );
+
+        remove(specificMediaRef)
+          .then(() => {
+            // تحديث حالة الوسائط بناءً على المعرف المحذوف
+            setMedia((prevMedia) => ({
+              ...prevMedia,
+              [mediaKey]: prevMedia[mediaKey].filter((_, i) => i !== index),
+            }));
+          })
+          .catch((error) => {
+            setError("Failed to delete media: " + error.message);
+          });
+      }
+    });
   };
 
   return (
