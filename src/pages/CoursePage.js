@@ -27,6 +27,9 @@ function CoursePage() {
   const [newSubCourseName, setNewSubCourseName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
   const [selectedButton, setSelectedButton] = useState(null); // إضافة حالة لتخزين الزر المحدد
+  const [isLoadingCourses, setIsLoadingCourses] = useState(true);
+  const [isLoadingSubCourses, setIsLoadingSubCourses] = useState(false);
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
 
   const db = getDatabase();
 
@@ -56,6 +59,24 @@ function CoursePage() {
       reader.readAsDataURL(file); // Read the file as a data URL
     }
   };
+  useEffect(() => {
+    setIsLoadingCourses(true);
+    const coursesRef = ref(db, "courses/mainCourses");
+    const unsubscribe = onValue(coursesRef, (snapshot) => {
+      const coursesData = snapshot.val();
+      const coursesArray = coursesData
+        ? Object.keys(coursesData).map((key) => ({
+            id: key,
+            ...coursesData[key],
+          }))
+        : [];
+      setMainCourses(coursesArray);
+      setIsLoadingCourses(false);
+    });
+
+    return () => unsubscribe();
+  }, [db]);
+
   // Load sub-courses
   useEffect(() => {
     if (selectedCourse) {
@@ -313,28 +334,11 @@ function CoursePage() {
 
   return (
     <div className="course-page">
-      <h1>Add courses</h1>
+      <h1>courses page</h1>
       <details>
-        <summary>Select Course</summary>
+        <summary>Add Course</summary>
         <div className="course-selectors">
           <div className="add-course">
-            <h2>Add New Course</h2>
-            <input
-              type="text"
-              placeholder="Enter new course name"
-              value={newCourseName}
-              onChange={(e) => setNewCourseName(e.target.value)}
-            />
-            <h2>Upload Course Thumbnail</h2>
-            <input
-              type="text"
-              value={thumbnail}
-              onChange={(e) => setThumbnail(e.target.value)}
-              placeholder="Enter thumbnail URL (Dropbox link)"
-            />
-            <button id="a1" onClick={handleAddCourse}>
-              Add Course
-            </button>
             <h2>Courses</h2>
             <div className="course-buttons">
               {mainCourses.map((course) => (
@@ -350,27 +354,26 @@ function CoursePage() {
                 </button>
               ))}
             </div>
+            <h2>Add New Course</h2>
+            <input
+              type="text"
+              placeholder="Enter new course name"
+              value={newCourseName}
+              onChange={(e) => setNewCourseName(e.target.value)}
+            />
+            <h2>Upload Course Thumbnail</h2>
+            <input
+              type="text"
+              value={thumbnail}
+              onChange={(e) => setThumbnail(e.target.value)}
+              placeholder="Enter thumbnail URL (Dropbox link)"
+            />
+            <button onClick={handleAddCourse}>Add Course</button>
           </div>
 
           <div className="add-sub-course">
-            <h2>Add New Sub-Course</h2>
-            <input
-              type="text"
-              placeholder="Enter new sub-course name"
-              value={newSubCourseName}
-              onChange={(e) => setNewSubCourseName(e.target.value)}
-              disabled={!selectedCourse}
-            />
-            <button
-              id="a1"
-              onClick={handleAddSubCourse}
-              disabled={!selectedCourse}
-            >
-              Add Sub-Course
-            </button>
-
+            <h2>Sub-Courses</h2>
             <div className="sub-course-buttons">
-              <h2>Select Sub-Course</h2>
               {subCourses.map((subCourse) => (
                 <button
                   key={subCourse.id}
@@ -384,6 +387,17 @@ function CoursePage() {
                 </button>
               ))}
             </div>
+            <h2>Add New Sub-Course</h2>
+            <input
+              type="text"
+              placeholder="Enter new sub-course name"
+              value={newSubCourseName}
+              onChange={(e) => setNewSubCourseName(e.target.value)}
+              disabled={!selectedCourse}
+            />
+            <button onClick={handleAddSubCourse} disabled={!selectedCourse}>
+              Add Sub-Course
+            </button>
           </div>
         </div>
       </details>
@@ -402,8 +416,8 @@ function CoursePage() {
                 {course.name}
               </button>
             ))}
+            <h2>Sub Courses</h2>
             <div className="sub-course-buttons">
-              <h2>Sub Courses</h2>
               {subCourses.map((subCourse) => (
                 <button
                   key={subCourse.id}
@@ -429,7 +443,6 @@ function CoursePage() {
               disabled={!selectedSubCourse}
             />
             <button
-              id="a1"
               onClick={handleAddMediaFromLink}
               disabled={!selectedSubCourse}
             >
@@ -471,7 +484,6 @@ function CoursePage() {
                 disabled={!selectedSubCourse}
               />
               <button
-                id="a1"
                 onClick={handleAddOrEditQuestion}
                 disabled={!selectedSubCourse}
               >
@@ -488,7 +500,7 @@ function CoursePage() {
                       onChange={() => handleCorrectAnswerChange(index)}
                     />
                     <span>{answer.text}</span>
-                    <button id="a1" onClick={() => handleEditAnswer(index)}>
+                    <button onClick={() => handleEditAnswer(index)}>
                       Edit
                     </button>
                   </div>
@@ -503,7 +515,6 @@ function CoursePage() {
                 disabled={!selectedSubCourse}
               />
               <button
-                id="a1"
                 onClick={handleAddOrUpdateAnswer}
                 disabled={!selectedSubCourse}
               >
@@ -522,13 +533,10 @@ function CoursePage() {
                         </li>
                       ))}
                     </ul>
-                    <button
-                      id="a1"
-                      onClick={() => handleEditQuestionIndex(index)}
-                    >
+                    <button onClick={() => handleEditQuestionIndex(index)}>
                       Edit
                     </button>
-                    <button id="a1" onClick={() => handleDeleteQuestion(index)}>
+                    <button onClick={() => handleDeleteQuestion(index)}>
                       Delete
                     </button>
                   </div>
@@ -536,7 +544,6 @@ function CoursePage() {
               </div>
 
               <button
-                id="a1"
                 onClick={handleSaveQuestions}
                 disabled={!selectedSubCourse}
               >
