@@ -254,7 +254,7 @@ function CourseManagementPage() {
         </div>
 
         <div className="users-section">
-          <h2>Users</h2>
+          <h2>All Users</h2>
           <ul className="user-list1">
             {usersToDisplay.map((user) => (
               <li key={user.email}>
