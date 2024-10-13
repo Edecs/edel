@@ -52,7 +52,6 @@
   border: 1px solid #ddd; /* لون الحدود */
   border-radius: 5px; /* زوايا دائرية لعناصر القائمة */
   padding: 15px; /* حشوة داخل العناصر */
-  margin-bottom: 10px; /* مسافة تحت كل عنصر */
   cursor: pointer; /* تغيير شكل المؤشر عند التحويم */
   transition: background-color 0.3s, transform 0.2s; /* تأثيرات عند التحويم */
 }
@@ -166,7 +165,6 @@
   border: 1px solid #ddd; /* لون الحدود */
   border-radius: 5px; /* زوايا دائرية لعناصر القائمة */
   padding: 15px; /* حشوة داخل العناصر */
-  margin-bottom: 10px; /* مسافة تحت كل عنصر */
   display: flex; /* استخدام Flexbox لتوزيع العناصر داخل القائمة */
   align-items: center; /* محاذاة العناصر عمودياً */
   transition: background-color 0.3s; /* تأثيرات عند التحويم */
