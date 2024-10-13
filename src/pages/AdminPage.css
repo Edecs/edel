@@ -12,10 +12,8 @@
   justify-content: space-between;
   align-items: center;
   color: #343a40;
-  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 60px; /* المسافة بين الـ navbar والعناصر التالية */
   flex-wrap: wrap; /* لجعل العناصر تلتف بشكل مناسب في الأجهزة الصغيرة */
 }
 
