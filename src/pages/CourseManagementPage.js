@@ -221,10 +221,12 @@ function CourseManagementPage() {
           </ul>
         </div>
         <div className="details-section">
-          <h2>Enrolled Users </h2>
+          <h2>Enrolled Users</h2>
           {selectedCourse && (
-            <div className="course-details">
-              <ul className="enrolled-user-list1">
+            <div className="course-details-user-list1">
+              <ul className="user-list1">
+                {" "}
+                {/* تغيير هنا من enrolled-user-list1 إلى user-list1 */}
                 {enrolledUsersToDisplay.map((user) => (
                   <li key={user.email}>
                     <label>
