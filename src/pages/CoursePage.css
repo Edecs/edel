@@ -1,10 +1,57 @@
+/* Course and Sub-Course Buttons with Scrollable Container */
+.course-page .course-buttons,
+.course-page .sub-course-buttons {
+  max-height: 250px; /* تعيين الحد الأقصى لارتفاع الحاوية */
+  overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px; /* مسافة سفلية بين الحاوية وعناصر أخرى */
+  border: 1px solid #ccc; /* حدود للحاوية */
+  padding: 10px; /* مسافة داخلية للحاوية */
+  background-color: #f9f9f9; /* لون خلفية خفيف للحاوية */
+  border-radius: 8px; /* زوايا مدورة للحاوية */
+}
+.add-sub-course h2 {
+  margin-bottom: 144px;
+}
+/* Course and Sub-Course Buttons Styling */
+.course-page .course-buttons button,
+.course-page .sub-course-buttons button {
+  height: fit-content;
+
+  padding: 10px 15px;
+  background-color: #094d50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.course-page .course-buttons button.selected,
+.course-page .sub-course-buttons button.selected,
+#a1.selected {
+  background-color: #ffffff; /* لون الخلفية عند التحديد */
+  color: #094d50;
+}
+
+.course-page .course-buttons button.selected:hover,
+.course-page .sub-course-buttons button.selected:hover {
+  background-color: #d1d3cb; /* لون الخلفية عند التحويم مع التحديد */
+  color: #2ba9af;
+}
+
+.course-page .course-buttons button:hover,
+.course-page .sub-course-buttons button:hover {
+  background-color: #0e6d72; /* تأثير التحويم للأزرار */
+}
+
 input.course-page {
   padding: 20px;
   font-family: Arial, sans-serif;
 }
 
 /* Title Styles */
-.course-page h1,
 .course-page h2,
 .course-page h3,
 .course-page h4 {
@@ -13,7 +60,9 @@ input.course-page {
 }
 
 .course-page h1 {
-  font-size: 24px;
+  color: #000000;
+  font-size: 30px;
+  margin-top: 80px;
 }
 
 .course-page h2 {
@@ -33,7 +82,7 @@ input.course-page {
 }
 
 /* Input Fields */
-input[type="text"],
+.course-page input[type="text"],
 .course-page textarea {
   width: 90%;
   padding: 10px;
@@ -74,7 +123,7 @@ input[type="text"]:focus,
 
 /* Button Focus Effect */
 .course-page button:focus,
-#a1selected {
+#a1.selected {
   background-color: #ffffff; /* Highlight selected buttons */
   color: #094d50;
 }
@@ -82,13 +131,14 @@ input[type="text"]:focus,
 /* Button Active Effect */
 .course-page button:active,
 #a1:active {
-  background-color: #0c5c60; /* لون الزر عند الضغط */
+  background-color: #ffffff; /* لون الزر عند الضغط */
 }
 
 /* Button Hover Effect */
 .course-page button:hover,
 #a1:hover {
-  background-color: #0e6d72; /* Button hover effect */
+  background-color: #ffffff; /* Button hover effect */
+  color: #094d50;
 }
 
 /* Error Message Styles */
@@ -131,6 +181,7 @@ input[type="text"]:focus,
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  margin-bottom: 60px;
 }
 
 .add-course,
@@ -154,7 +205,8 @@ input[type="text"]:focus,
 }
 
 .course-page .course-buttons button.selected,
-.course-page .sub-course-buttons button.selected {
+.course-page .sub-course-buttons button.selected,
+#a1.selected {
   background-color: #ffffff; /* Highlight selected buttons */
   color: #094d50;
 }
@@ -280,10 +332,4 @@ input[type="text"]:focus,
   width: 48%; /* كل قسم يأخذ تقريباً نصف العرض مع مساحة صغيرة بين الأقسام */
   box-sizing: border-box; /* لتجنب مشاكل المسافات والحدود */
   margin-bottom: 20px; /* مسافة بين الأقسام */
-}
-
-/* Selected Button Styles */
-.selected {
-  background-color: #007bff; /* لون الخلفية عند الضغط */
-  color: white; /* لون النص */
 }
