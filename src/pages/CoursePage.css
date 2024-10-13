@@ -80,7 +80,10 @@ input.course-page {
   font-size: 16px;
   margin-bottom: 5px;
 }
-
+.course-page .course-buttons,
+.course-page .sub-course-buttons {
+  height: 200px;
+}
 /* Input Fields */
 .course-page input[type="text"],
 .course-page textarea {
