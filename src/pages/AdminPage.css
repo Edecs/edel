@@ -3,7 +3,7 @@
   color: #333;
   background-color: #f4f4f4;
   padding: 20px;
-  max-width: 1200px;
+  max-width: 90%;
   margin: 0 auto;
 }
 
@@ -21,7 +21,7 @@
 
 .admin-header h1 {
   margin: 0;
-  font-size: 22px;
+  font-size: 30px;
   font-weight: bold;
 }
 
@@ -80,7 +80,7 @@
 }
 
 .user-details h2 {
-  margin-top: 0;
+  margin-top: 80px;
   font-size: 22px;
   border-bottom: 2px solid #ddd;
   padding-bottom: 10px;
