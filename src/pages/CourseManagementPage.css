@@ -2,9 +2,195 @@
 .course-management-page {
   padding: 20px;
   font-family: "Roboto", sans-serif;
-  max-width: 1200px; /* تعيين عرض أقصى للصفحة */
+  max-width: 1800px; /* تعيين عرض أقصى للصفحة */
   margin: auto; /* مركزة الصفحة */
 }
+/* تصميم قسم التفاصيل */
+.details-section {
+  padding: 20px;
+  background-color: #f9f9f9; /* لون خلفية فاتح للقسم */
+  border-radius: 8px; /* زوايا دائرية للقسم */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* ظل خفيف للقسم */
+  margin-top: 20px; /* مسافة أعلى القسم */
+}
+
+/* تصميم عنوان القسم */
+.details-section h2 {
+  font-size: 24px; /* حجم الخط */
+  color: #094d50; /* لون العنوان */
+  margin-bottom: 15px; /* مسافة تحت العنوان */
+}
+/* قسم الكورسات */
+.courses-section {
+  background-color: #f9f9f9; /* لون خلفية فاتح للقسم */
+  padding: 20px; /* حشوة للقسم */
+  border-radius: 8px; /* زوايا دائرية للقسم */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف للقسم */
+  margin-bottom: 20px; /* مسافة تحت القسم */
+}
+
+.courses-section h2 {
+  font-size: 28px; /* حجم خط كبير للعنوان */
+  color: #333; /* لون النص */
+  margin-bottom: 15px; /* مسافة تحت العنوان */
+}
+
+/* تصميم قائمة الكورسات */
+.course-list {
+  list-style-type: none; /* إزالة النقاط من القائمة */
+  padding: 0; /* إزالة الحشوة من القائمة */
+  margin: 0; /* إزالة الهامش من القائمة */
+}
+
+.course-list li {
+  background-color: #fff; /* لون خلفية فاتح لعناصر القائمة */
+  border: 1px solid #ddd; /* لون الحدود */
+  border-radius: 5px; /* زوايا دائرية لعناصر القائمة */
+  padding: 15px; /* حشوة داخل العناصر */
+  margin-bottom: 10px; /* مسافة تحت كل عنصر */
+  cursor: pointer; /* تغيير شكل المؤشر عند التحويم */
+  transition: background-color 0.3s, transform 0.2s; /* تأثيرات عند التحويم */
+}
+
+/* تغيير لون العنصر عند التحويم */
+.course-list li:hover {
+  background-color: #e0f7fa; /* لون خلفية عند التحويم */
+  transform: translateY(-2px); /* رفع العنصر عند التحويم */
+}
+
+/* تصميم العنصر المحدد */
+.course-list li.selected {
+  background-color: #094d50; /* لون خلفية العنصر المحدد */
+  color: #fff; /* لون النص للعنصر المحدد */
+  font-weight: bold; /* جعل النص عريضًا للعنصر المحدد */
+}
+
+/* رسالة عدم توفر الكورسات */
+.courses-section p {
+  color: #888; /* لون النص للرسالة */
+  text-align: center; /* توسيط الرسالة */
+  font-size: 18px; /* حجم خط الرسالة */
+}
+
+/* تصميم قائمة المستخدمين المسجلين */
+.enrolled-user-list1 {
+  list-style-type: none; /* إزالة النقاط من القائمة */
+  padding: 0; /* إزالة الحشوة */
+  margin: 0; /* إزالة الهامش */
+}
+
+/* تصميم عناصر القائمة */
+.enrolled-user-list1 li {
+  display: flex; /* استخدام Flexbox لترتيب العناصر */
+  align-items: center; /* توسيط العناصر عمودياً */
+  padding: 10px 15px; /* حشوة داخل العنصر */
+  border-bottom: 1px solid #ddd; /* خط أسفل العنصر */
+  transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
+}
+
+/* تأثير التحويم لعناصر القائمة */
+.enrolled-user-list1 li:hover {
+  background-color: #e6f7ff; /* تغيير لون الخلفية عند التحويم */
+}
+
+/* تصميم التسمية داخل العناصر */
+.enrolled-user-list1 li label {
+  flex-grow: 1; /* السماح للنص بالتمدد لملء المساحة المتاحة */
+  color: #333; /* لون النص */
+  font-size: 1rem; /* حجم الخط */
+}
+
+/* تصميم الـ checkbox */
+.enrolled-user-list1 input[type="checkbox"] {
+  margin-right: 10px; /* مسافة بين الـ checkbox والنص */
+  width: 20px; /* عرض الـ checkbox */
+  height: 20px; /* ارتفاع الـ checkbox */
+}
+
+/* تصميم الـ checkbox ليكون دائري */
+.enrolled-user-list1 input[type="checkbox"] {
+  appearance: none; /* إزالة التنسيق الافتراضي */
+  border: 2px solid #094d50; /* لون الحدود */
+  border-radius: 50%; /* جعلها دائرية */
+  background-color: #fff; /* لون الخلفية */
+  cursor: pointer; /* تغيير المؤشر عند التحويم */
+}
+
+/* تصميم الـ checkbox عند التحديد */
+.enrolled-user-list1 input[type="checkbox"]:checked {
+  background-color: #094d50; /* تغيير لون الخلفية عند التحديد */
+}
+
+/* إضافة نقطة زرقاء داخل الـ checkbox عند التحديد */
+.enrolled-user-list1 input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px; /* عرض النقطة */
+  height: 8px; /* ارتفاع النقطة */
+  background: #fff; /* لون النقطة */
+  border-radius: 50%; /* جعلها دائرية */
+  transform: translate(-50%, -50%);
+}
+/* قسم المستخدمين */
+.users-section {
+  background-color: #f9f9f9; /* لون خلفية فاتح للقسم */
+  padding: 20px; /* حشوة للقسم */
+  border-radius: 8px; /* زوايا دائرية للقسم */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف للقسم */
+  margin-bottom: 20px; /* مسافة تحت القسم */
+}
+
+.users-section h2 {
+  font-size: 28px; /* حجم خط كبير للعنوان */
+  color: #333; /* لون النص */
+  margin-bottom: 15px; /* مسافة تحت العنوان */
+}
+
+/* تصميم قائمة المستخدمين */
+.user-list1 {
+  list-style-type: none; /* إزالة النقاط من القائمة */
+  padding: 0; /* إزالة الحشوة من القائمة */
+  margin: 0; /* إزالة الهامش من القائمة */
+}
+
+.user-list1 li {
+  background-color: #fff; /* لون خلفية فاتح لعناصر القائمة */
+  border: 1px solid #ddd; /* لون الحدود */
+  border-radius: 5px; /* زوايا دائرية لعناصر القائمة */
+  padding: 15px; /* حشوة داخل العناصر */
+  margin-bottom: 10px; /* مسافة تحت كل عنصر */
+  display: flex; /* استخدام Flexbox لتوزيع العناصر داخل القائمة */
+  align-items: center; /* محاذاة العناصر عمودياً */
+  transition: background-color 0.3s; /* تأثيرات عند التحويم */
+}
+
+/* تغيير لون العنصر عند التحويم */
+.user-list1 li:hover {
+  background-color: #e0f7fa; /* لون خلفية عند التحويم */
+}
+
+/* تصميم الـ checkbox ليكون دائري */
+.user-list1 input[type="checkbox"] {
+  margin-right: 10px; /* مسافة بين الـ checkbox والنص */
+  transform: scale(1.2); /* تكبير حجم الـ checkbox */
+}
+
+/* تصميم الرسالة عند عدم وجود مستخدمين */
+.users-section p {
+  color: #888; /* لون النص للرسالة */
+  text-align: center; /* توسيط الرسالة */
+  font-size: 18px; /* حجم خط الرسالة */
+}
+
+/* رسالة عدم توفر المستخدمين */
+.no-users-message {
+  text-align: center; /* توسيط الرسالة */
+  color: #888; /* لون رمادي */
+  font-size: 18px; /* حجم خط الرسالة */
+}
+
 .user-list1,
 .user-details {
   background-color: #fff;
@@ -13,7 +199,9 @@
   padding: 15px;
   max-width: 100%;
 }
+
 .course-management-header {
+  display: flex; /* إضافة Flexbox لترتيب العناصر */
   justify-content: space-between;
   align-items: center;
   color: #000;
@@ -26,7 +214,6 @@
 .course-management-header h1 {
   font-size: 30px;
   margin-top: 80px;
-
   color: #080404;
 }
 
@@ -40,10 +227,23 @@
 
 /* تحسين التوافق مع الأجهزة الكبيرة */
 @media (max-width: 1200px) {
-  .courses-section,
-  .users-section,
-  .details-section {
-    flex: 1 1 100%; /* تعديل العرض لجعل الأقسام تناسب الشاشات الصغيرة */
+  .courses-section {
+    flex: 1 1 100%; /* تعديل العرض لجعل القسم يتناسب مع الشاشات الصغيرة */
+    margin-bottom: 20px; /* إضافة مسافة تحت القسم */
+  }
+
+  .courses-section h2 {
+    font-size: 22px; /* تقليل حجم الخط للعنوان */
+  }
+
+  .course-list {
+    padding: 0; /* إزالة الحشوة من القائمة */
+    margin: 0; /* إزالة الهامش من القائمة */
+  }
+
+  .course-list li {
+    font-size: 0.9rem; /* تقليل حجم الخط لعناصر القائمة */
+    padding: 10px; /* تعديل الحشوة لعناصر القائمة */
   }
 }
 
@@ -53,10 +253,18 @@
     flex-direction: column; /* ترتيب العناصر عموديًا على الشاشات الصغيرة */
   }
 
-  .courses-section,
-  .users-section,
-  .details-section {
+  .courses-section {
     width: 100%; /* استخدام العرض الكامل على الشاشات الصغيرة */
+  }
+
+  .courses-section h2 {
+    font-size: 20px; /* تقليل حجم الخط أكثر على الشاشات الصغيرة */
+    margin-bottom: 10px; /* تقليل المسافة تحت العنوان */
+  }
+
+  .course-list li {
+    font-size: 0.8rem; /* تقليل حجم الخط أكثر لعناصر القائمة */
+    padding: 8px; /* تعديل الحشوة لعناصر القائمة */
   }
 }
 
@@ -68,7 +276,7 @@
 }
 
 .course-list li {
-  border-radius: 28px;
+  border-radius: 18px;
   margin: 10px auto; /* تحسين المحاذاة */
   background-color: #094d50;
   color: #f0f8ff;
@@ -82,7 +290,6 @@
 
 .course-list li.selected {
   color: #000000;
-
   background-color: #f0f8ff;
   font-weight: bold;
 }
@@ -126,7 +333,7 @@
   border: none;
   border-radius: 5px;
   background-color: #dfe6ec;
-  color: #fff;
+  color: #094d50; /* تغيير لون النص ليتناسب مع الخلفية */
   font-size: 1rem; /* استخدام وحدة rem */
   cursor: pointer;
   transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
@@ -234,6 +441,7 @@ input[type="checkbox"]:checked::after {
 .actions button:hover {
   background-color: #12848a; /* تغيير لون الخلفية عند التحويم */
 }
+
 .actions img {
   width: 20px; /* عرض الأيقونة */
   height: 20px; /* ارتفاع الأيقونة */
