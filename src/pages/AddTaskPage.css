@@ -158,3 +158,117 @@ input#message:focus {
   border-color: #4caf50; /* تغيير اللون عند التركيز */
   outline: none; /* إزالة الإطار الأزرق الافتراضي */
 }
+/* Styles for the user selection section */
+.user-selection {
+  background-color: #f9f9f9; /* لون خلفية خفيف */
+  border: 1px solid #ccc; /* حدود خفيفة حول الحاوية */
+  border-radius: 8px; /* زوايا مدورة */
+  padding: 20px; /* مساحة داخلية */
+  max-width: 400px; /* عرض أقصى للحاوية */
+  margin: 20px auto; /* توسيط الحاوية */
+}
+
+/* Styles for the label */
+.user-selection label {
+  font-weight: bold; /* جعل الخط سميكًا */
+  color: #094d50; /* لون النص */
+  display: block; /* جعل النص يشغل السطر بالكامل */
+}
+
+/* Styles for the list */
+.user-selection ul {
+  list-style-type: none; /* إزالة النقاط من القائمة */
+  padding: 0; /* إزالة المساحة داخل القائمة */
+  margin: 0; /* إزالة المسافة الخارجية للقائمة */
+}
+
+/* Styles for each list item */
+.user-selection li {
+  display: flex; /* استخدام flexbox لترتيب العناصر */
+  align-items: center; /* توسيط العناصر عمودياً */
+  padding: 10px; /* مساحة داخلية لكل عنصر */
+  border: 1px solid #ccc; /* حدود خفيفة حول العناصر */
+  border-radius: 4px; /* زوايا مدورة للعناصر */
+  background-color: #ffffff; /* خلفية بيضاء للعناصر */
+  transition: background-color 0.3s; /* تأثير سلس عند تغيير الخلفية */
+}
+
+/* Hover effect for list items */
+.user-selection li:hover {
+  background-color: #e1f5fe; /* لون خلفية عند التحويم */
+}
+
+/* Styles for the checkbox */
+.user-selection input[type="checkbox"] {
+  margin-right: 10px; /* مساحة بين مربع الاختيار والنص */
+  cursor: pointer; /* تغيير شكل المؤشر عند المرور */
+}
+
+/* Optional: Styles for the checked state */
+.user-selection input[type="checkbox"]:checked + label {
+  color: #0e6d72; /* تغيير لون النص إذا كان محددًا */
+  font-weight: bold; /* جعل النص سميكًا عند التحديد */
+}
+/* General styles for the user selection */
+.user-selection {
+  background-color: #f4f4f4; /* لون خلفية خفيف */
+  border: 1px solid #ddd; /* حدود خفيفة حول الحاوية */
+  border-radius: 8px; /* زوايا مدورة للحاوية */
+  padding: 15px; /* مساحة داخلية للحاوية */
+  margin-top: 20px; /* مساحة فوق الحاوية */
+}
+
+/* Styles for the checkbox input */
+.user-selection input[type="checkbox"] {
+  accent-color: #0e6d72; /* تغيير لون مربع الاختيار */
+  width: 20px; /* عرض مربع الاختيار */
+  height: 20px; /* ارتفاع مربع الاختيار */
+  margin-right: 10px; /* مساحة بين مربع الاختيار والنص */
+  cursor: pointer; /* تغيير شكل المؤشر عند المرور */
+  transition: transform 0.2s; /* تأثير سلس عند التغيير */
+}
+
+/* Styles for the checkbox label */
+.user-selection label {
+  font-size: 16px; /* حجم خط label */
+  color: #333; /* لون النص */
+}
+
+/* Styles for list items in user selection */
+.user-selection ul {
+  list-style: none; /* إزالة النقاط من القائمة */
+  padding: 0; /* إزالة المساحة داخل القائمة */
+}
+
+/* Styles for each list item */
+.user-selection li {
+  display: flex; /* استخدام flexbox لترتيب العناصر */
+  align-items: center; /* توسيط العناصر عمودياً */
+  padding: 10px; /* مساحة داخلية لكل عنصر */
+  border-bottom: 1px solid #ddd; /* حدود أسفل كل عنصر */
+}
+
+/* Hover effect for list items */
+.user-selection li:hover {
+  background-color: #e1f5fe; /* لون خلفية عند التحويم */
+}
+
+/* Optional: Styles for checked state */
+.user-selection input[type="checkbox"]:checked + label {
+  font-weight: bold; /* جعل النص سميكًا عند التحديد */
+  color: #0e6d72; /* تغيير لون النص عند التحديد */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .user-selection {
+    padding: 10px; /* تقليل المساحة الداخلية على الشاشات الصغيرة */
+  }
+  .user-selection input[type="checkbox"] {
+    width: 18px; /* تقليل حجم مربع الاختيار على الشاشات الصغيرة */
+    height: 18px; /* تقليل ارتفاع مربع الاختيار */
+  }
+  .user-selection label {
+    font-size: 14px; /* تقليل حجم خط label على الشاشات الصغيرة */
+  }
+}
