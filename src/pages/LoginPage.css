@@ -1,156 +1,349 @@
-.login-container {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-image: url('../photos/edecs HQ 1.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+/* Course and Sub-Course Buttons with Scrollable Container */
+.course-page .course-buttons,
+.course-page .sub-course-buttons {
+  max-height: 250px; /* تعيين الحد الأقصى لارتفاع الحاوية */
+  overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* استخدام min-height لضمان احتواء الشاشة */
-  flex-direction: column;
-  box-sizing: border-box; /* لتجنب تداخل الحواف مع المربع */
+  flex-direction: row; /* عرض الأزرار في صف */
+  justify-content: center; /* توسيط الأزرار أفقياً */
+  align-items: center; /* توسيط الأزرار عمودياً */
+  gap: 10px; /* الفجوة بين الأزرار */
+  flex-wrap: wrap; /* لف الأزرار إلى صفوف عند الحاجة */
+  margin-bottom: 20px; /* مسافة سفلية بين الحاوية وعناصر أخرى */
+  border: 1px solid #ccc; /* حدود للحاوية */
+  padding: 10px; /* مسافة داخلية للحاوية */
+  background-color: #f9f9f9; /* لون خلفية خفيف للحاوية */
+  border-radius: 8px; /* زوايا مدورة للحاوية */
 }
 
-/* تصميم الشريط العلوي */
-.navbar {
-  width: 100%;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  background-color: #094d50; /* لضمان وضوح الشريط العلوي */
-}
-
-.navbar-logo {
-  height: 40px;
-}
-
-/* تصميم صندوق تسجيل الدخول */
-.login-page {
-  width: 100%;
-  max-width: 500px;
-  margin-top: 15vh;
-  padding: 20px;
-  border: 1px solid #c5c5c5;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.course-page button {
+  padding: 10px 15px;
   background-color: #ffffff;
-  box-sizing: border-box; /* لضمان توازن العناصر داخل المربع */
-}
-
-.login-page h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  margin-top: 25;
-  color: #333;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.error {
-  color: #dc3545;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-.login-page form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* لضبط المسافات بين الحقول */
-}
-
-/* المدخلات */
-.login-page input[type="email"],
-.login-page input[type="password"],
-.login-page button {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  box-sizing: border-box;
-}
-
-.login-page input[type="email"]:focus,
-.login-page input[type="password"]:focus {
-  border-color: #094d50;
-  outline: none;
-  box-shadow: 0 0 4px rgba(36, 94, 76, 0.363);
-}
-
-.login-page button {
-  background-color: #094d50;
-  color: white;
+  color: #094d50;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  padding: 12px;
+  width: 45%; /* تأكد من أن الأزرار تأخذ عرض تلقائي */
+  transition: background-color 0.3s, color 0.3s; /* إضافة تأثير انتقالي */
+}
+
+/* Button Hover Effect */
+.course-page button:hover {
+  background-color: #0e6d72; /* تأثير التحويم للأزرار */
+  color: #ffffff; /* تغيير لون النص عند التحويم */
+}
+
+/* Title Styles */
+.course-page h1 {
+  color: #000000;
+  font-size: 30px;
+  margin-top: 80px;
+}
+
+.course-page h2,
+.course-page h3,
+.course-page h4 {
+  margin-bottom: 20px;
+  color: #094d50; /* لون النص */
+}
+
+.course-page h2 {
+  font-size: 24px; /* حجم النص */
+  border-bottom: 2px solid #094d50; /* خط */
+  padding-bottom: 8px; /* المسافة بين النص والخط */
+  transition: color 0.3s ease, border-bottom 0.3s ease; /* تأثير انتقال سلس */
+}
+
+.course-page h3 {
+  font-size: 18px;
+}
+
+.course-page h4 {
   font-size: 16px;
+  margin-bottom: 5px;
 }
 
-.login-page button:hover {
-  background-color: #094d50a8;
+/* Input Fields */
+.course-page input[type="text"],
+.course-page textarea {
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s; /* Transition for focus effect */
 }
 
-/* حاوية كلمة المرور */
-.password-container {
-  position: relative;
+.course-page textarea {
+  height: 100px;
+  resize: vertical;
 }
 
-.password-container input {
-  width: 100%;
+/* Input Focus Effect */
+.course-page input[type="text"]:focus,
+.course-page textarea:focus {
+  border-color: #0ea1a8;
+  outline: none;
+  box-shadow: 0 0 8px #0ea1a8; /* More noticeable shadow effect on focus */
 }
 
-.password-toggle {
-  position: absolute;
-  top: 38%;
-  right: 8px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 14px;
+/* Course and Sub-Course Buttons Styling */
+.course-page .course-buttons button.selected,
+.course-page .sub-course-buttons button.selected {
+  background-color: #ffffff; /* لون الخلفية عند التحديد */
   color: #094d50;
 }
 
-label {
-  font-size: 16px;
-  color: #333;
+.course-page .course-buttons button.selected:hover,
+.course-page .sub-course-buttons button.selected:hover {
+  background-color: #d1d3cb; /* لون الخلفية عند التحويم مع التحديد */
+  color: #2ba9af;
 }
 
-input[type="checkbox"] {
-  margin-top: 16px;
-  padding-top: 6px;
+/* Button Focus Effect */
+.course-page button:focus {
+  background-color: #ffffff; /* Highlight selected buttons */
+  color: #094d50;
+}
+
+/* Button Active Effect */
+.course-page button:active {
+  background-color: #ffffff; /* لون الزر عند الضغط */
+}
+
+/* Error Message Styles */
+.course-page .error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Details and Summary Styles */
+.course-page details {
+  margin-bottom: 20px;
+}
+
+.course-page summary {
+  border: 1px solid #094d50;
+  background-color: #094d50;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.course-page details[open] summary {
+  margin-bottom: 20px;
+}
+
+/* Course and Sub-Course Selectors */
+.course-page .course-selectors {
+  display: flex;
+  justify-content: space-between; /* توزيع المساحة بين الأقسام */
+  margin-top: 20px;
+}
+
+/* Media Section Styles */
+.media-and-questions {
+  margin-left: 11px;
+}
+
+.add-course,
+.add-sub-course {
+  flex: 1; /* كل قسم يأخذ نفس المساحة */
+  margin: 0 10px; /* مساحة بين الأقسام */
+  padding: 20px;
+  border: 1px solid #ccc; /* حدود للأقسام */
+  border-radius: 8px; /* زوايا مدورة */
+  background-color: #f9f9f9; /* خلفية خفيفة */
+}
+
+.course-selection-container {
+  border: 1px solid #ccc; /* حدود الحاوية */
+  border-radius: 8px; /* زوايا مدورة */
+  padding: 15px; /* مسافة داخلية للحاوية */
+  background-color: #f9f9f9; /* لون خلفية خفيف */
+  margin: 10px 0; /* مسافة أعلى وأسفل */
+}
+
+.sub-course-item {
+  width: 100%;
+  padding: 10px; /* مسافة داخلية */
+  border: 1px solid #ccc; /* حدود */
+  border-radius: 4px; /* زوايا مدورة */
+  margin-bottom: 5px; /* مسافة بين العناصر */
+  background-color: #f9f9f9; /* خلفية خفيفة */
+}
+
+.course-selection {
+  display: flex; /* استخدم flexbox لترتيب العناصر بجانب بعضها */
+  justify-content: space-between; /* لضبط المساحة بين العناصر */
+  align-items: center; /* لمركز العناصر عموديًا */
+  margin-bottom: 20px; /* إضافة مسافة أسفل لتفادي تداخل العناصر */
+}
+
+.course-dropdown {
+  flex: 1; /* كل مجموعة تأخذ نفس المساحة */
+  margin: 0 10px; /* مساحة بين المجموعات */
+}
+
+.dropdown {
+  width: 100%; /* تأكد من أن قائمة dropdown تأخذ العرض الكامل */
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Focus Styles for Dropdown */
+.dropdown:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Disabled Dropdown Styles */
+.dropdown:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+/* Dropdown Options Padding */
+.dropdown option {
+  padding: 10px;
+}
+
+/* Media Section Images and Links */
+.course-page .media-section img {
+  width: 100px;
+  height: auto;
   margin-right: 10px;
 }
 
-/* استعلامات الوسائط لتصغير الشاشة */
-@media (max-width: 900px) {
-  .login-page {
-    width: 100%;
-    padding: 15px;
+.course-page .media-section video {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.course-page .media-section a {
+  color: #094d50;
+  text-decoration: none;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.course-page .media-section a:hover {
+  text-decoration: underline;
+}
+
+/* Questions Section Styles */
+.course-page .question-section {
+  margin-bottom: 20px;
+}
+
+.course-page .answers-section {
+  margin-top: 10px;
+}
+
+.course-page .answers-section div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.answers-section input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Questions List Styles */
+.course-page .questions-list {
+  margin-top: 15px;
+}
+
+.course-page .question-item {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.course-page .question-item h4 {
+  margin: 0;
+}
+
+.course-page .question-item ul {
+  padding-left: 20px;
+}
+
+.course-page .question-item .answer-item {
+  margin-bottom: 5px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .course-page button {
+    width: auto;
+  }
+
+  .course-page .section-container .section {
+    width: 100%; /* عند الشاشات الصغيرة، يأخذ كل قسم العرض الكامل */
   }
 }
 
-@media (max-width: 600px) {
-  .login-page {
-    width: 100%;
-    padding: 15px;
-  }
-  
-  .login-page h2 {
-    font-size: 20px;
-  }
+/* Container for Sections */
+.course-page .section-container {
+  display: flex;
+  flex-wrap: wrap; /* للتأكد من التداخل بشكل جيد في الشاشات الصغيرة */
+  justify-content: space-between;
+}
 
-  .login-page button {
-    font-size: 14px;
-  }
+/* Each Section */
+.course-page .section-container .section {
+  width: 48%; /* كل قسم يأخذ تقريباً نصف العرض مع مساحة صغيرة بين الأقسام */
+  box-sizing: border-box; /* لتجنب مشاكل المسافات والحدود */
+  margin-bottom: 20px; /* مسافة بين الأقسام */
+}
+.course-media-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* المسافة بين العناصر */
+}
+
+.media-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* المسافة بين العناصر داخل قسم الوسائط */
+}
+
+.images-container,
+.videos-container {
+  display: flex;
+  flex-wrap: wrap; /* يسمح بلف العناصر عندما تكون كبيرة جداً */
+  gap: 10px; /* المسافة بين العناصر */
+  margin: 10px 0;
+}
+
+.image-item,
+.video-item {
+  border: 1px solid #ccc; /* إطار للمربعات */
+  border-radius: 8px; /* زوايا دائرية */
+  padding: 10px; /* مساحة داخلية */
+  width: 25%; /* عرض ثابت للمربعات */
+  text-align: center; /* توسيط المحتوى */
+}
+
+.image-item img {
+  max-width: 100%; /* يجعل الصورة تتناسب مع عرض المربع */
+  height: auto; /* يحافظ على نسبة الطول إلى العرض */
+}
+
+.video-item video {
+  max-width: 100%; /* يجعل الفيديو يتناسب مع عرض المربع */
+  height: auto; /* يحافظ على نسبة الطول إلى العرض */
 }
