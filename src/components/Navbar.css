@@ -37,7 +37,7 @@
   background-color: #094d50; /* لون الخلفية الأساسي للزر */
   color: #fff; /* لون النص للزر */
   border: none; /* إزالة الحدود */
-  padding: 10px 20px; /* إضافة مساحة حول النص */
+  padding: 5px 11px; /* إضافة مساحة حول النص */
   border-radius: 4px; /* حواف دائرية للزر */
   cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
   transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
@@ -48,7 +48,7 @@
 }
 
 .navbar-buttons button {
-  background-color: #094D50; /* لون الخلفية الأساسي للزر */
+  background-color: #094d50; /* لون الخلفية الأساسي للزر */
   color: #fff; /* لون النص للزر */
   border: none; /* إزالة الحدود */
   padding: 10px; /* إضافة مساحة حول النص */
@@ -70,7 +70,7 @@
 }
 
 .custom-icon {
-  width: 24px;  /* عرض الأيقونة */
+  width: 24px; /* عرض الأيقونة */
   height: 24px; /* ارتفاع الأيقونة */
 }
 
@@ -100,12 +100,11 @@
 }
 
 .menu-btn .navbar-icon {
-  width:800px; /* ضبط عرض الأيقونة حسب التصميم المطلوب */
-  height:800px; /* ضبط ارتفاع الأيقونة حسب التصميم المطلوب */
+  width: 800px; /* ضبط عرض الأيقونة حسب التصميم المطلوب */
+  height: 800px; /* ضبط ارتفاع الأيقونة حسب التصميم المطلوب */
 }
 
 .menu-btn:hover {
   background-color: rgba(255, 255, 255, 0.1); /* لون الخلفية عند hover */
   border-radius: 4px; /* حواف دائرية عند hover */
 }
-
