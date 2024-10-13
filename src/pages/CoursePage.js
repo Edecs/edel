@@ -377,7 +377,7 @@ function CoursePage() {
 
   return (
     <div className="course-page">
-      <h1>courses page</h1>
+      <h1>courses Management</h1>
       <details>
         <summary>Add Course</summary>
         <div className="course-selectors">
@@ -418,29 +418,11 @@ function CoursePage() {
             <h2>Sub-Courses</h2>
             <div className="sub-course-buttons">
               {subCourses.map((subCourse) => (
-                <button
-                  key={subCourse.id}
-                  onClick={() => setSelectedSubCourse(subCourse.id)}
-                  className={
-                    selectedSubCourse === subCourse.id ? "selected" : ""
-                  }
-                  disabled={!selectedCourse}
-                >
+                <div key={subCourse.id} className="sub-course-item">
                   {subCourse.name}
-                </button>
+                </div>
               ))}
             </div>
-            <h2>Add New Sub-Course</h2>
-            <input
-              type="text"
-              placeholder="Enter new sub-course name"
-              value={newSubCourseName}
-              onChange={(e) => setNewSubCourseName(e.target.value)}
-              disabled={!selectedCourse}
-            />
-            <button onClick={handleAddSubCourse} disabled={!selectedCourse}>
-              Add Sub-Course
-            </button>
           </div>
         </div>
       </details>
