@@ -12,17 +12,18 @@
   body {
     font-family: "Arial", sans-serif;
     margin: 0;
-    padding: 0px;
+    padding-top: 60px;
     line-height: 1.5; /* تحسين التباعد بين النصوص */
   }
 
   /* عنوان الصفحة */
   h1 {
+    margin-top: 80px;
     color: $text-color;
     padding-left: 5px;
     text-align: left;
     margin-bottom: 15px;
-    font-size: 32px; /* زيادة حجم الخط */
+    font-size: 30px;
   }
 
   /* زر تصدير إلى Excel */
