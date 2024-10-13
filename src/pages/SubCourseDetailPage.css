@@ -1,40 +1,45 @@
+/* Main container styling */
 .sub-course-detail-container {
   max-width: 900px;
-  margin: 20px auto;
-  padding: 30px;
+  margin: 30px auto;
+  padding: 25px;
   font-family: "Roboto", sans-serif;
   background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
 }
 
+/* Media container styling */
 .media-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the media */
+  align-items: center;
   margin-top: 20px;
 }
 
 .media-content {
   width: 100%;
-  max-width: 900px; /* Limit the max width of media */
+  max-width: 850px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .media-content img,
-.media-content iframe {
+.media-content video {
   width: 100%;
-  border-radius: 8px;
+  max-height: 500px; /* Ensure media does not get too large */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* Aspect ratio for 16:9 videos */
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
   height: 0;
   overflow: hidden;
   border-radius: 8px;
   background-color: #000;
   margin-bottom: 20px;
-  max-width: 100%; /* Ensure video does not exceed the container's width */
 }
 
 .video-container video {
@@ -46,20 +51,23 @@
   border-radius: 8px;
 }
 
+/* Media navigation styling */
 .media-navigation {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center the navigation buttons */
+  gap: 15px; /* Space between buttons */
   margin-top: 10px;
 }
 
 .media-navigation button {
-  padding: 10px 20px;
-  background-color: #007bff;
+  padding: 12px 25px;
+  background-color: #094d50;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 16px;
 }
 
 .media-navigation button:disabled {
@@ -68,27 +76,31 @@
 }
 
 .media-navigation button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #13898f;
+  transform: translateY(-2px); /* Slight lift effect on hover */
 }
 
+/* Question container styling */
 .question-container {
   margin-top: 30px;
 }
 
 .question-navigation {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  justify-content: center;
+  gap: 15px; /* Space between question buttons */
+  margin-bottom: 15px;
 }
 
 .question-navigation button {
-  padding: 10px 15px;
-  background-color: #28a745;
+  padding: 12px 20px;
+  background-color: #094d50;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 16px;
 }
 
 .question-navigation button:disabled {
@@ -97,14 +109,16 @@
 }
 
 .question-navigation button:hover:not(:disabled) {
-  background-color: #218838;
+  background-color: #107a80;
+  transform: translateY(-2px);
 }
 
 .question {
   padding: 15px;
   background-color: #f9f9f9;
-  border-radius: 5px;
+  border-radius: 8px;
   margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .answer-option {
@@ -115,16 +129,14 @@
   margin-right: 10px;
 }
 
-.timer {
-  display: none;
-}
-
+/* Submission result styling */
 .submission-result {
   margin-top: 20px;
-  padding: 15px;
+  padding: 20px;
   background-color: #f0f4f8;
   border: 1px solid #d1e3f0;
-  border-radius: 5px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .submission-result h2 {
@@ -134,4 +146,38 @@
 
 .submission-result p {
   margin: 5px 0;
+}
+/* Styling for the Submit button */
+.submit-button {
+  padding: 12px 30px;
+  background-color: #094d50; /* Bright color for emphasis */
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px; /* To add some spacing above the button */
+}
+
+/* Hover effect for the button */
+.submit-button:hover {
+  background-color: #198c92;
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+/* Active effect for the button */
+.submit-button:active {
+  background-color: #0f8086;
+  transform: translateY(0); /* Return to original position on click */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly smaller shadow on click */
+}
+
+/* Disabled state for the button */
+.submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
 }
