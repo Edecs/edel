@@ -365,9 +365,6 @@ function AdminPage() {
                         Object.entries(course.subCourses).map(
                           ([subCourseId, subCourse]) => (
                             <div key={subCourseId}>
-                              <span>
-                                {getSubCourseName(courseId, subCourseId)}
-                              </span>
                               <input
                                 type="checkbox"
                                 checked={
@@ -384,6 +381,9 @@ function AdminPage() {
                                   )
                                 }
                               />
+                              <span>
+                                {getSubCourseName(courseId, subCourseId)}
+                              </span>
                             </div>
                           )
                         )}
