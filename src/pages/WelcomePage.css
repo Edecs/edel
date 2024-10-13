@@ -157,3 +157,22 @@ h2 {
   float: right;
   font-size: 1.5rem;
 }
+/* تصميم زر "View Task" و "End Task" */
+.task-card button {
+  background-color: #094d50; /* اللون الأساسي للأزرار */
+  color: white; /* لون النص */
+  border: none; /* إزالة الحدود */
+  padding: 10px 15px; /* حشو داخلي للأزرار */
+  margin: 5px; /* مسافة بين الأزرار */
+  border-radius: 5px; /* زوايا مستديرة للأزرار */
+  cursor: pointer; /* شكل المؤشر عند التحويم */
+  transition: background-color 0.3s ease; /* تأثير الانتقال عند تغيير لون الخلفية */
+}
+
+.task-card button:hover {
+  background-color: #12757a; /* لون أغمق عند التحويم */
+}
+
+.task-card button:focus {
+  outline: none; /* إزالة الإطار الافتراضي عند التركيز */
+}
