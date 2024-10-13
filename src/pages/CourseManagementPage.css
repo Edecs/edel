@@ -24,6 +24,9 @@
 }
 
 .course-management-header h1 {
+  font-size: 30px;
+  margin-top: 80px;
+
   color: #080404;
 }
 
@@ -33,17 +36,6 @@
   justify-content: space-between; /* توزيع العناصر بالتساوي بين الحواف */
   flex-wrap: nowrap; /* منع الانتقال إلى سطر جديد */
   gap: 20px; /* مسافة بين الأقسام */
-}
-
-.courses-section,
-.users-section,
-.details-section {
-  flex: 1 1 30%; /* استخدم flexbox لتوزيع الأقسام */
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #fff;
-  margin: 0; /* إزالة المسافة الخارجية بين العناصر */
 }
 
 /* تحسين التوافق مع الأجهزة الكبيرة */
