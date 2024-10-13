@@ -190,7 +190,7 @@ function CourseManagementPage() {
 
   return (
     <div className="course-management-page">
-      <h1>Course Management</h1>
+      <h1>ِAssign Courses</h1>
 
       <div className="search-bar">
         <input
