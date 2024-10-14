@@ -1,4 +1,7 @@
 /* Course and Sub-Course Buttons with Scrollable Container */
+.course-page {
+  margin: 20px;
+}
 .course-page .course-buttons,
 .course-page .sub-course-buttons {
   width: 90%;
