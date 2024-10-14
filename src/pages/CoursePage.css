@@ -17,23 +17,28 @@
   border-radius: 8px; /* زوايا مدورة للحاوية */
   transition: background-color 0.3s ease; /* إضافة تأثير انتقالي للخلفية */
 }
-
 .course-page button {
+  margin-left: 20px;
   padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
   background-color: #ffffff; /* لون الخلفية للأزرار */
-  color: #094d50;
-  border: none; /* إزالة الحدود */
+  color: #094d50; /* لون النص */
+  border: 1px solid #094d509a; /* تحديد لون الحدود وسماكتها */
   border-radius: 4px; /* زوايا مدورة */
   cursor: pointer; /* شكل المؤشر عند المرور على الزر */
   width: 45%; /* تأكد من أن الأزرار تأخذ عرض تلقائي */
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
-}
 
-/* Button Hover Effect */
-.course-page button:hover {
-  background-color: #0e6d72; /* تأثير التحويم للأزرار */
-  color: #ffffff; /* تغيير لون النص عند التحويم */
-  transform: translateY(-2px); /* تأثير الرفع عند التحويم */
+  /* تأثيرات عند التحويم */
+  &:hover {
+    background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
+    color: #ffffff; /* تغيير لون النص عند التحويم */
+    transform: translateY(-2px); /* رفع خفيف عند التحويم */
+  }
+
+  /* تأثير عند الضغط على الزر */
+  &:active {
+    transform: translateY(1px); /* تأثير ضغط عند الضغط */
+  }
 }
 
 /* Title Styles */
@@ -277,8 +282,59 @@
 }
 
 /* Questions List Styles */
-.course-page .questions-list {
-  margin-top: 15px;
+.questions-list {
+  h3 {
+    margin-bottom: 20px; /* مساحة أسفل العنوان */
+    font-size: 24px; /* حجم خط العنوان */
+  }
+
+  .question-item {
+    margin-bottom: 30px; /* مساحة بين كل سؤال وآخر */
+    padding: 15px; /* إضافة مساحة داخل كل سؤال */
+    border: 1px solid #ced4da; /* لون الحدود */
+    border-radius: 8px; /* زوايا مدورة للحدود */
+    background-color: #f8f9fa; /* لون خلفية فاتح */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* تأثير ظل خفيف */
+
+    h4 {
+      margin: 0 0 10px; /* مساحة أسفل عنوان السؤال */
+      font-size: 20px; /* حجم خط السؤال */
+    }
+
+    ul {
+      list-style-type: none; /* إزالة النقاط من القائمة */
+      padding: 0; /* إزالة الحشوة من القائمة */
+
+      .answer-item {
+        border: 1px solid #ced4da; /* لون الحدود لكل إجابة */
+        border-radius: 4px; /* زوايا مدورة للحدود */
+        padding: 10px; /* مساحة داخل كل إجابة */
+        margin-bottom: 10px; /* مساحة بين كل إجابة وأخرى */
+        background-color: #ffffff; /* لون خلفية الإجابة */
+
+        /* تأثير عند التحويم */
+        &:hover {
+          background-color: #e9ecef; /* تغيير لون الخلفية عند التحويم */
+        }
+      }
+    }
+
+    button {
+      border: 1px solid #094d50ab;
+
+      margin-top: 10px; /* مساحة فوق الأزرار */
+      margin-right: 10px; /* مساحة بين الأزرار */
+      padding: 10px 15px; /* إضافة مساحة داخل الأزرار */
+      border-radius: 4px; /* زوايا مدورة */
+      cursor: pointer; /* شكل المؤشر عند المرور على الزر */
+      transition: background-color 0.3s ease; /* إضافة تأثيرات انتقالية */
+
+      /* تأثير عند التحويم */
+      &:hover {
+        background-color: #f0f0f0; /* تغيير لون الخلفية عند التحويم */
+      }
+    }
+  }
 }
 
 .course-page .question-item {
@@ -357,7 +413,7 @@
   border: 1px solid #ccc; /* إطار للمربعات */
   border-radius: 8px; /* زوايا دائرية */
   padding: 10px; /* مساحة داخلية */
-  width: 25%; /* عرض ثابت للمربعات */
+  width: fit-content; /* عرض ثابت للمربعات */
   text-align: center; /* توسيط المحتوى */
   transition: transform 0.3s; /* تأثير انتقالي على الحجم */
 }
@@ -409,4 +465,102 @@
 .delete-button:hover {
   background-color: #c82333; /* لون الخلفية عند المرور */
   transform: translateY(-2px); /* تأثير الرفع عند التحويم */
+}
+.button-container {
+  display: flex; /* استخدام flexbox لتوسيع العنصر */
+  justify-content: center; /* محاذاة المحتوى إلى الوسط أفقيًا */
+  align-items: center; /* محاذاة المحتوى إلى الوسط عموديًا */
+}
+
+button {
+  background-color: #16979e; /* لون الخلفية للزر */
+  color: #ffffff; /* لون نص الزر */
+  border: none; /* إزالة الحدود */
+  border-radius: 4px; /* زوايا مدورة */
+  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
+  transition: background-color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
+  font-size: 16px; /* حجم خط الزر */
+
+  /* تأثير عند التحويم */
+  &:hover {
+    background-color: #5a6268; /* تغيير لون الخلفية عند التحويم */
+    transform: translateY(-2px); /* تأثير رفع خفيف عند التحويم */
+  }
+
+  /* تأثير عند الضغط */
+  &:active {
+    transform: translateY(1px); /* تأثير ضغط عند الضغط */
+  }
+
+  /* تقييد الزر عند عدم تحديد الدورة الفرعية */
+  &:disabled {
+    background-color: #ccc; /* لون خلفية للزر عند التعطيل */
+    cursor: not-allowed; /* تغيير شكل المؤشر عند التعطيل */
+  }
+}
+.question-answers-container {
+  background-color: #f9f9f9; /* لون خلفية فاتح للحاوية */
+  padding: 20px; /* مساحة داخلية حول المحتوى */
+  border: 1px solid #ddd; /* لون حدود خفيف */
+  border-radius: 8px; /* زوايا مدورة */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* تأثير ظل لطيف */
+  margin-bottom: 20px; /* مساحة سفلية بين الحاويات */
+}
+
+.question-section {
+  margin-bottom: 15px; /* مساحة سفلية بين قسم الأسئلة وقسم الإجابات */
+}
+
+.answers-section {
+  margin-top: 15px; /* مساحة علوية بين عنوان الإجابات والمحتوى */
+}
+
+h2,
+h3 {
+  color: #094d50; /* لون النص */
+  margin-bottom: 10px; /* مساحة سفلية بين العناوين والمحتوى */
+}
+
+button {
+  margin-top: 10px; /* مساحة علوية للأزرار */
+  padding: 8px 12px; /* مساحة داخلية للأزرار */
+  background-color: #ffffff; /* لون الخلفية للأزرار */
+  color: #094d50; /* لون النص للأزرار */
+  border: 1px solid #094d50; /* لون حدود للأزرار */
+  border-radius: 4px; /* زوايا مدورة للأزرار */
+  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
+  transition: background-color 0.3s ease, color 0.3s ease; /* تأثيرات انتقالية */
+
+  &:hover {
+    background-color: #094d50; /* لون خلفية عند المرور على الزر */
+    color: #ffffff; /* لون نص عند المرور على الزر */
+  }
+}
+/* تنسيق الحاوية للأزرار */
+.question-answers-container {
+  .question-section,
+  .answers-section {
+    margin-bottom: 15px; /* مساحة سفلية بين الأقسام */
+  }
+
+  button {
+    margin-top: 10px; /* مساحة علوية للأزرار */
+    padding: 8px 12px; /* مساحة داخلية للأزرار */
+    background-color: #ffffff; /* لون الخلفية */
+    color: #094d50; /* لون النص */
+    border: none; /* إزالة الحدود */
+    border-radius: 4px; /* زوايا مدورة */
+    cursor: pointer; /* شكل المؤشر عند المرور على الزر */
+    transition: background-color 0.3s ease; /* تأثيرات انتقالية */
+
+    &:hover {
+      background-color: #094d50; /* لون خلفية عند المرور على الزر */
+    }
+
+    &:disabled {
+      background-color: #ccc; /* لون خلفية للأزرار المعطلة */
+      color: #666; /* لون نص للأزرار المعطلة */
+      cursor: not-allowed; /* شكل المؤشر للأزرار المعطلة */
+    }
+  }
 }
