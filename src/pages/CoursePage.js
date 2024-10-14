@@ -558,7 +558,7 @@ function CoursePage() {
                             className="answer-button" // إضافة اسم جديد للزر
                             onClick={() => handleEditAnswer(index)}
                           >
-                            Edet
+                            Edit
                           </button>
                         </div>
                       ))}
