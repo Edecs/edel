@@ -513,6 +513,34 @@ button {
 .question-section {
   margin-bottom: 15px; /* مساحة سفلية بين قسم الأسئلة وقسم الإجابات */
 }
+.question-button,
+.answer-button {
+  background-color: #007bff; /* لون خلفية الزر */
+  color: white; /* لون النص */
+  border: none; /* إزالة الحدود الافتراضية */
+  border-radius: 5px; /* زوايا مستديرة */
+  padding: 10px 15px; /* حشوة داخلية */
+  cursor: pointer; /* تغيير المؤشر عند التمرير فوق الزر */
+  font-size: 16px; /* حجم الخط */
+  transition: background-color 0.3s, transform 0.2s; /* تأثير التغيير */
+}
+
+.question-button:hover,
+.answer-button:hover {
+  background-color: #0056b3; /* تغيير اللون عند التحويم */
+  transform: scale(1.05); /* تكبير الزر قليلاً عند التحويم */
+}
+
+.question-button:disabled,
+.answer-button:disabled {
+  background-color: #ccc; /* لون الخلفية عند التعطيل */
+  cursor: not-allowed; /* تغيير المؤشر عند التعطيل */
+}
+
+.question-button:disabled:hover,
+.answer-button:disabled:hover {
+  background-color: #ccc; /* الحفاظ على اللون عند التحويم أثناء التعطيل */
+}
 
 .answers-section {
   margin-top: 15px; /* مساحة علوية بين عنوان الإجابات والمحتوى */
@@ -544,6 +572,43 @@ button {
   .question-section,
   .answers-section {
     margin-bottom: 15px; /* مساحة سفلية بين الأقسام */
+  }
+  .button-container {
+    display: flex; /* استخدام flexbox */
+    justify-content: center; /* توسيط المحتوى أفقيًا */
+    margin-top: 10px; /* إضافة هامش أعلى للحاوية */
+  }
+
+  .question-section button,
+  .answers-section button {
+    background-color: #f8ffff; /* لون خلفية الزر */
+    color: #094d50; /* لون النص */
+    border: none; /* إزالة الحدود الافتراضية */
+    border-radius: 5px; /* زوايا مستديرة */
+    padding: 10px 15px; /* حشوة داخلية */
+    cursor: pointer; /* تغيير المؤشر عند التمرير فوق الزر */
+    font-size: 16px; /* حجم الخط */
+    transition: background-color 0.3s, transform 0.2s; /* تأثير التغيير */
+  }
+
+  /* التأثير عند التحويم */
+  .question-section button:hover,
+  .answers-section button:hover {
+    background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
+    color: #ffffff;
+    transform: scale(1.05); /* تكبير الزر قليلاً عند التحويم */
+  }
+
+  /* حالة الزر المعطلة */
+  .question-section button:disabled,
+  .answers-section button:disabled {
+    background-color: #ccc; /* لون الخلفية عند التعطيل */
+    cursor: not-allowed; /* تغيير المؤشر عند التعطيل */
+  }
+
+  .question-section button:disabled:hover,
+  .answers-section button:disabled:hover {
+    background-color: #ccc; /* الحفاظ على اللون عند التحويم أثناء التعطيل */
   }
 
   button {
