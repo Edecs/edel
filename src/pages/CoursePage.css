@@ -21,7 +21,7 @@
   transition: background-color 0.3s ease; /* إضافة تأثير انتقالي للخلفية */
 }
 .course-page button {
-  margin-left: 20px;
+  margin-left: 46px;
   padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
   background-color: #ffffff; /* لون الخلفية للأزرار */
   color: #094d50; /* لون النص */
@@ -294,7 +294,7 @@
   .question-item {
     margin-bottom: 30px; /* مساحة بين كل سؤال وآخر */
     padding: 15px; /* إضافة مساحة داخل كل سؤال */
-    border: 1px solid #ced4da; /* لون الحدود */
+    border: 1px solid #094d50; /* لون الحدود */
     border-radius: 8px; /* زوايا مدورة للحدود */
     background-color: #f8f9fa; /* لون خلفية فاتح */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* تأثير ظل خفيف */
@@ -309,7 +309,7 @@
       padding: 0; /* إزالة الحشوة من القائمة */
 
       .answer-item {
-        border: 1px solid #ced4da; /* لون الحدود لكل إجابة */
+        border: 1px solid #094d50; /* لون الحدود لكل إجابة */
         border-radius: 4px; /* زوايا مدورة للحدود */
         padding: 10px; /* مساحة داخل كل إجابة */
         margin-bottom: 10px; /* مساحة بين كل إجابة وأخرى */
@@ -334,7 +334,7 @@
 
       /* تأثير عند التحويم */
       &:hover {
-        background-color: #f0f0f0; /* تغيير لون الخلفية عند التحويم */
+        background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
       }
     }
   }
