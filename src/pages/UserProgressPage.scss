@@ -1,22 +1,22 @@
-.user-progress-page {
-  /* إعدادات المتغيرات */
-  $primary-color: #16979e; /* لون أساسي هادئ */
-  $primary-hover-color: #5a6268; /* لون التحويم */
-  $background-color: #f8f9fa; /* خلفية فاتحة وهادئة */
-  $text-color: #343a40; /* لون نص هادئ */
-  $white: #fff;
-  $shadow: rgba(0, 0, 0, 0.15); /* تأثير ظل أقل كثافة */
-  $border-color: #ced4da; /* لون الحدود */
+// إعداد المتغيرات
+$primary-color: #16979e; // لون أساسي هادئ
+$primary-hover-color: #5a6268; // لون التحويم
+$background-color: #f8f9fa; // خلفية فاتحة وهادئة
+$text-color: #343a40; // لون نص هادئ
+$white: #fff;
+$shadow: rgba(0, 0, 0, 0.15); // تأثير ظل أقل كثافة
+$border-color: #ced4da; // لون الحدود
 
-  /* إعدادات عامة */
+.user-progress-page {
+  // إعدادات عامة
   body {
     font-family: "Arial", sans-serif;
     margin: 0;
     padding-top: 60px;
-    line-height: 1.5; /* تحسين التباعد بين النصوص */
+    line-height: 1.5; // تحسين التباعد بين النصوص
   }
 
-  /* عنوان الصفحة */
+  // عنوان الصفحة
   h1 {
     margin-top: 80px;
     color: $text-color;
@@ -26,29 +26,29 @@
     font-size: 30px;
   }
 
-  /* زر تصدير إلى Excel */
+  // زر تصدير إلى Excel
   button {
     background-color: $primary-color;
     color: $white;
     border: none;
-    padding: 14px 24px; /* زيادة padding */
-    border-radius: 8px; /* جعل الزوايا أكثر نعومة */
+    padding: 14px 24px; // زيادة padding
+    border-radius: 8px; // جعل الزوايا أكثر نعومة
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
     margin: 20px 0;
-    font-size: 18px; /* زيادة حجم الخط */
+    font-size: 18px; // زيادة حجم الخط
 
     &:hover {
       background-color: $primary-hover-color;
-      transform: translateY(-2px); /* تأثير رفع خفيف عند التحويم */
+      transform: translateY(-2px); // تأثير رفع خفيف عند التحويم
     }
 
     &:active {
-      transform: translateY(1px); /* تأثير ضغط عند الضغط */
+      transform: translateY(1px); // تأثير ضغط عند الضغط
     }
   }
 
-  /* حقل البحث */
+  // حقل البحث
   input[type="text"] {
     width: 100%;
     padding: 14px;
@@ -56,38 +56,38 @@
     border: 1px solid $border-color;
     border-radius: 5px;
     font-size: 16px;
-    transition: border-color 0.3s, box-shadow 0.3s; /* إضافة انتقال للظل */
+    transition: border-color 0.3s, box-shadow 0.3s; // إضافة انتقال للظل
 
     &:focus {
       border-color: $primary-color;
       outline: none;
-      box-shadow: 0 0 8px $primary-color; /* تأثير ظل أكثر وضوحًا عند التركيز */
+      box-shadow: 0 0 8px $primary-color; // تأثير ظل أكثر وضوحًا عند التركيز
     }
   }
 
-  /* إعدادات تفاصيل الجداول */
+  // إعدادات تفاصيل الجداول
   details {
     background: $white;
     border-radius: 5px;
     box-shadow: 0 4px 8px $shadow;
     margin-bottom: 20px;
-    padding: 15px; /* زيادة padding داخل details */
+    padding: 15px; // زيادة padding داخل details
 
     summary {
       padding: 12px;
       font-weight: bold;
       cursor: pointer;
-      background-color: #e9ecef; /* لون خلفية أكثر هدوءًا */
+      background-color: #e9ecef; // لون خلفية أكثر هدوءًا
       border-radius: 5px;
       transition: background-color 0.3s;
 
       &:hover {
-        background-color: #dee2e6; /* تغيير لون الخلفية عند التحويم */
+        background-color: #dee2e6; // تغيير لون الخلفية عند التحويم
       }
     }
   }
 
-  /* إعدادات الجداول */
+  // إعدادات الجداول
   table {
     width: 100%;
     border-collapse: collapse;
@@ -106,38 +106,129 @@
       background-color: $primary-color;
       color: $white;
       text-transform: uppercase;
-      letter-spacing: 1px; /* إضافة تباعد بين الحروف */
+      letter-spacing: 1px; // إضافة تباعد بين الحروف
     }
 
     tr {
       &:nth-child(even) {
-        background-color: #f2f2f2; /* لون خلفية هادئ للصفوف الزوجية */
+        background-color: #f2f2f2; // لون خلفية هادئ للصفوف الزوجية
       }
 
       &:hover {
-        background-color: #e9ecef; /* تغيير لون الخلفية عند التحويم */
+        background-color: #e9ecef; // تغيير لون الخلفية عند التحويم
       }
     }
   }
 
-  /* تطبيق الـ CSS فقط على شاشات معينة */
+  // تطبيق الـ CSS فقط على شاشات معينة
   @media (max-width: 800px) {
-    /* هنا يمكنك إضافة التعديلات اللازمة للشاشات الصغيرة */
+    // هنا يمكنك إضافة التعديلات اللازمة للشاشات الصغيرة
     body {
-      padding: 0px; /* تقليل padding في الشاشات الصغيرة */
+      padding: 0px; // تقليل padding في الشاشات الصغيرة
     }
 
     h1 {
-      font-size: 24px; /* تقليل حجم الخط في الشاشات الصغيرة */
+      font-size: 24px; // تقليل حجم الخط في الشاشات الصغيرة
     }
 
     button {
-      padding: 10px 20px; /* تقليل padding في الشاشات الصغيرة */
+      padding: 10px 20px; // تقليل padding في الشاشات الصغيرة
     }
 
     input[type="text"] {
-      padding: 10px; /* تقليل padding في حقل البحث */
+      padding: 10px; // تقليل padding في حقل البحث
     }
   }
 }
- 
+// تنسيقات الـ <tbody> والعناصر الداخلية
+tbody {
+  // تنسيق الصفوف داخل tbody
+  tr {
+    &:nth-child(even) {
+      background-color: #f2f2f2; // لون خلفية هادئ للصفوف الزوجية
+    }
+
+    &:hover {
+      background-color: #e9ecef; // تغيير لون الخلفية عند التحويم
+    }
+
+    // تنسيق الخلايا داخل الصفوف
+    td {
+      padding: 12px;
+      border: 1px solid #ced4da; // لون الحدود
+      text-align: left;
+      font-size: 16px;
+
+      // تحسين عرض النص داخل الخلايا
+      &:first-child {
+        font-weight: bold; // جعل النص في العمود الأول بخط عريض
+      }
+    }
+
+    // تنسيق الصورة المصغرة داخل الخلايا
+    .thumbnail {
+      width: 60px; // تحديد عرض الصورة
+      height: 60px; // تحديد ارتفاع الصورة
+      border-radius: 8px; // زوايا ناعمة للصورة
+      object-fit: cover; // لقص الصورة بما يتناسب مع الإطار
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); // إضافة ظل خفيف للصورة
+      transition: transform 0.2s; // تأثير الانتقال عند التحويم
+
+      &:hover {
+        transform: scale(1.1); // تكبير الصورة قليلاً عند التحويم
+      }
+    }
+  }
+}
+// تنسيقات الـ <tbody> والعناصر الداخلية الخاصة بالإشعارات
+tbody {
+  // تنسيق الصفوف داخل tbody
+  tr {
+    &:nth-child(even) {
+      background-color: #f2f2f2; // لون خلفية هادئ للصفوف الزوجية
+    }
+
+    &:hover {
+      background-color: #e9ecef; // تغيير لون الخلفية عند التحويم
+    }
+
+    // تنسيق الخلايا داخل الصفوف
+    td {
+      padding: 12px; // إضافة padding للخلايا
+      border: 1px solid #ced4da; // لون الحدود
+      text-align: left; // محاذاة النص إلى اليسار
+      font-size: 16px; // حجم الخط
+
+      // تنسيق الخلايا بحسب نوع المحتوى
+      &:first-child {
+        font-weight: bold; // جعل النص في العمود الأول بخط عريض
+      }
+
+      // تخصيص تنسيق الوقت وتاريخ الإنشاء
+      &:nth-child(3) {
+        color: #6c757d; // لون خفيف لتاريخ الإنشاء
+        font-style: italic; // تنسيق مائل
+      }
+
+      // تخصيص رابط Dropbox
+      &:nth-child(5) {
+        a {
+          color: #16979e; // لون رابط Dropbox
+          text-decoration: none; // إزالة التسطير
+          transition: color 0.3s; // تأثير الانتقال عند التحويم
+
+          &:hover {
+            color: #5a6268; // تغيير لون الرابط عند التحويم
+          }
+        }
+      }
+
+      &:nth-child(6) {
+        word-break: break-word; // كسر الكلمات إذا كانت طويلة
+      }
+
+      // تخصيص حالة القراءة
+     
+    }
+  }
+}
