@@ -408,25 +408,24 @@ function CoursePage() {
           </div>
 
           <div className="add-sub-course">
-      <h2>Sub-Courses</h2>
-      <div className="sub-course-buttons">
-        {subCourses.map((subCourse) => (
-          <div key={subCourse.id} className="sub-course-item">
-            {subCourse.name}
+            <h2>Sub-Courses</h2>
+            <div className="sub-course-buttons">
+              {subCourses.map((subCourse) => (
+                <div key={subCourse.id} className="sub-course-item">
+                  {subCourse.name}
+                </div>
+              ))}
+            </div>
+            <div className="add-sub-course-form">
+              <input
+                type="text"
+                value={newSubCourseName}
+                onChange={(e) => setNewSubCourseName(e.target.value)}
+                placeholder="Add new sub-course"
+              />
+              <button onClick={handleAddSubCourse}>Add Sub-Course</button>
+            </div>
           </div>
-        ))}
-      </div>
-      <div className="add-sub-course-form">
-        <input
-          type="text"
-          value={newSubCourseName}
-          onChange={(e) => setNewSubCourseName(e.target.value)}
-          placeholder="Add new sub-course"
-        />
-        <button onClick={handleAddSubCourse}>Add Sub-Course</button>
-      </div>
-    </div>
-        
         </div>
       </details>
 
@@ -525,23 +524,24 @@ function CoursePage() {
                       ))}
                     </div>
                   </div>
-
-                  <div className="question-section">
-                    <h2>Add/Edit Questions</h2>
-                    <textarea
-                      placeholder="Enter new question"
-                      value={newQuestion}
-                      onChange={(e) => setNewQuestion(e.target.value)}
-                      disabled={!selectedSubCourse}
-                    />
-                    <button
-                      onClick={handleAddOrEditQuestion}
-                      disabled={!selectedSubCourse}
-                    >
-                      {editQuestionIndex !== null
-                        ? "Edit Question"
-                        : "Add Question"}
-                    </button>
+                  <div className="question-answers-container">
+                    <div className="question-section">
+                      <h2>Add/Edit Questions</h2>
+                      <input
+                        type="text"
+                        value={newQuestion}
+                        onChange={(e) => setNewQuestion(e.target.value)}
+                        disabled={!selectedSubCourse}
+                      />
+                      <button
+                        onClick={handleAddOrEditQuestion}
+                        disabled={!selectedSubCourse}
+                      >
+                        {editQuestionIndex !== null
+                          ? "Edit Question"
+                          : "Add Question"}
+                      </button>
+                    </div>
 
                     <div className="answers-section">
                       <h3>Answers</h3>
@@ -557,53 +557,54 @@ function CoursePage() {
                             Edit
                           </button>
                         </div>
-                      ))}
+                      ))}{" "}
+                      <input
+                        type="text"
+                        placeholder="Enter new answer"
+                        value={newAnswerText}
+                        onChange={(e) => setNewAnswerText(e.target.value)}
+                        disabled={!selectedSubCourse}
+                      />
+                      <button
+                        onClick={handleAddOrUpdateAnswer}
+                        disabled={!selectedSubCourse}
+                      >
+                        {editAnswerIndex !== null
+                          ? "Update Answer"
+                          : "Add Answer"}
+                      </button>
                     </div>
+                  </div>
 
-                    <input
-                      type="text"
-                      placeholder="Enter new answer"
-                      value={newAnswerText}
-                      onChange={(e) => setNewAnswerText(e.target.value)}
-                      disabled={!selectedSubCourse}
-                    />
-                    <button
-                      onClick={handleAddOrUpdateAnswer}
-                      disabled={!selectedSubCourse}
-                    >
-                      {editAnswerIndex !== null
-                        ? "Update Answer"
-                        : "Add Answer"}
-                    </button>
+                  <div className="questions-list">
+                    <h3>Questions List</h3>
+                    {questions.map((question, index) => (
+                      <div key={index} className="question-item">
+                        <h4>{question.text}</h4>
+                        <ul>
+                          {question.answers.map((answer, i) => (
+                            <li key={i} className="answer-item">
+                              {answer.text} {answer.correct && "(Correct)"}
+                            </li>
+                          ))}
+                        </ul>
+                        <button
+                          id={`edit-question-${index}`} // إضافة ID فريد لزر التعديل
+                          onClick={() => handleEditQuestionIndex(index)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          id={`delete-question-${index}`} // إضافة ID فريد لزر الحذف
+                          onClick={() => handleDeleteQuestion(index)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ))}
+                  </div>
 
-                    <div className="questions-list">
-                      <h3>Questions List</h3>
-                      {questions.map((question, index) => (
-                        <div key={index} className="question-item">
-                          <h4>{question.text}</h4>
-                          <ul>
-                            {question.answers.map((answer, i) => (
-                              <li key={i} className="answer-item">
-                                {answer.text} {answer.correct && "(Correct)"}
-                              </li>
-                            ))}
-                          </ul>
-                          <button
-                            id={`edit-question-${index}`} // إضافة ID فريد لزر التعديل
-                            onClick={() => handleEditQuestionIndex(index)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            id={`delete-question-${index}`} // إضافة ID فريد لزر الحذف
-                            onClick={() => handleDeleteQuestion(index)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-
+                  <div className="button-container">
                     <button
                       id="a1"
                       onClick={handleSaveQuestions}
@@ -611,9 +612,9 @@ function CoursePage() {
                     >
                       Save Questions
                     </button>
-
-                    {error && <p className="error-message">{error}</p>}
                   </div>
+
+                  {error && <p className="error-message">{error}</p>}
                 </div>
               </div>
             )}
