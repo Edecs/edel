@@ -31,7 +31,7 @@ function CoursePage() {
   const [isLoadingSubCourses, setIsLoadingSubCourses] = useState(false);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  
+
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
   const db = getDatabase();
@@ -387,6 +387,11 @@ function CoursePage() {
     setEditAnswerIndex(null); // إنهاء وضع التعديل للإجابة
   };
 
+  const handleDeleteAnswer = (questionIndex, answerIndex) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].answers.splice(answerIndex, 1); // إزالة الإجابة من المصفوفة
+    setQuestions(updatedQuestions); // تحديث الحالة
+  };
 
   return (
     <div className="course-page">
@@ -546,75 +551,91 @@ function CoursePage() {
                   </div>
 
                   <div className="main-container">
-  {/* زر لفتح النافذة المنبثقة */}
-  <button className="open-popup-button" onClick={openPopup}>Add/Edit Question</button>
+                    {/* زر لفتح النافذة المنبثقة */}
+                    <button className="open-popup-button" onClick={openPopup}>
+                      Add/Edit Question
+                    </button>
 
-  {/* النافذة المنبثقة */}
-  {isPopupOpen && (
-    <div className="popup-overlay" onClick={closePopup}>
-      <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-        <h2>Add/Edit Questions</h2>
-        <input
-          type="text"
-          className="question-input" // إضافة اسم جديد لحقل الإدخال
-          value={newQuestion}
-          onChange={(e) => setNewQuestion(e.target.value)}
-          disabled={!selectedSubCourse}
-        />
-        <button
-          className="question-submit-button" // إضافة اسم جديد لزر الإرسال
-          onClick={handleAddOrEditQuestion}
-          disabled={!selectedSubCourse}
-        >
-          {editQuestionIndex !== null ? "Update Question" : "Create Question"}
-        </button>
+                    {/* النافذة المنبثقة */}
+                    {isPopupOpen && (
+                      <div className="popup-overlay" onClick={closePopup}>
+                        <div
+                          className="popup-content"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <h2>Add/Edit Questions</h2>
+                          <input
+                            type="text"
+                            className="question-input" // إضافة اسم جديد لحقل الإدخال
+                            value={newQuestion}
+                            onChange={(e) => setNewQuestion(e.target.value)}
+                            disabled={!selectedSubCourse}
+                          />
+                          <button
+                            className="question-submit-button" // إضافة اسم جديد لزر الإرسال
+                            onClick={handleAddOrEditQuestion}
+                            disabled={!selectedSubCourse}
+                          >
+                            {editQuestionIndex !== null
+                              ? "Update Question"
+                              : "Create Question"}
+                          </button>
 
-        <div className="answers-section">
-          <h3>Answers</h3>
-          {answers.map((answer, index) => (
-            <div key={index} className="answer-item">
-              <input
-                type="checkbox"
-                className="answer-checkbox" // إضافة اسم جديد للصندوق
-                checked={answer.correct}
-                onChange={() => handleCorrectAnswerChange(index)}
-              />
-              <span className="answer-text">{answer.text}</span>
-              <button
-                className="answer-edit-button" // إضافة اسم جديد لزر التعديل
-                onClick={() => handleEditAnswer(index)}
-              >
-                Edit
-              </button>
-            </div>
-          ))}
-          <input
-            type="text"
-            className="new-answer-input" // إضافة اسم جديد لحقل إدخال الإجابة الجديدة
-            placeholder="Enter new answer"
-            value={newAnswerText}
-            onChange={(e) => setNewAnswerText(e.target.value)}
-            disabled={!selectedSubCourse}
-          />
-          <button
-            className="answer-submit-button" // إضافة اسم جديد لزر إضافة الإجابة
-            onClick={handleAddOrUpdateAnswer}
-            disabled={!selectedSubCourse}
-          >
-            {editAnswerIndex !== null ? "Save Changes" : "Add Answer"}
-          </button>
-        </div>
+                          <div className="answers-section">
+                            <h3>Answers</h3>
+                            {answers.map((answer, index) => (
+                              <div key={index} className="answer-item">
+                                <input
+                                  type="checkbox"
+                                  className="answer-checkbox" // إضافة اسم جديد للصندوق
+                                  checked={answer.correct}
+                                  onChange={() =>
+                                    handleCorrectAnswerChange(index)
+                                  }
+                                />
+                                <span className="answer-text">
+                                  {answer.text}
+                                </span>
+                                <button
+                                  className="answer-edit-button" // إضافة اسم جديد لزر التعديل
+                                  onClick={() => handleEditAnswer(index)}
+                                >
+                                  Edit
+                                </button>
+                              </div>
+                            ))}
+                            <input
+                              type="text"
+                              className="new-answer-input" // إضافة اسم جديد لحقل إدخال الإجابة الجديدة
+                              placeholder="Enter new answer"
+                              value={newAnswerText}
+                              onChange={(e) => setNewAnswerText(e.target.value)}
+                              disabled={!selectedSubCourse}
+                            />
+                            <button
+                              className="answer-submit-button" // إضافة اسم جديد لزر إضافة الإجابة
+                              onClick={handleAddOrUpdateAnswer}
+                              disabled={!selectedSubCourse}
+                            >
+                              {editAnswerIndex !== null
+                                ? "Save Changes"
+                                : "Add Answer"}
+                            </button>
+                          </div>
 
-        {/* زر لإغلاق النافذة المنبثقة */}
-        <button className="close-popup-button" onClick={closePopup}>
-          Close
-        </button>
-      </div>
-    </div>
-  )}
-</div>
+                          {/* زر لإغلاق النافذة المنبثقة */}
+                          <button
+                            className="close-popup-button"
+                            onClick={closePopup}
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                 <div className="questions-list">
+                  <div className="questions-list">
                     <h3>Questions List</h3>
                     {questions.map((question, index) => (
                       <div key={index} className="question-item">
@@ -634,7 +655,9 @@ function CoursePage() {
                             </button>
                           </div>
                         ) : (
-                          <h4>{question.text}</h4>
+                          <div className="question-content">
+                            <h4>{question.text}</h4>
+                          </div>
                         )}
                         <ul className="answers-list">
                           {question.answers.map((answer, i) => (
@@ -665,12 +688,20 @@ function CoursePage() {
                                 </span>
                               )}
                               {editQuestionIndex === index && (
-                                <button
-                                  className="edit-button"
-                                  onClick={() => handleEditAnswer(i)}
-                                >
-                                  Edit
-                                </button>
+                                <div className="action-buttons">
+                                  <button
+                                    className="edit-button"
+                                    onClick={() => handleEditAnswer(i)}
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    className="delete-button"
+                                    onClick={() => handleDeleteAnswer(index, i)}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
                               )}
                             </li>
                           ))}
