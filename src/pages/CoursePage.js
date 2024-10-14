@@ -30,7 +30,10 @@ function CoursePage() {
   const [isLoadingCourses, setIsLoadingCourses] = useState(true);
   const [isLoadingSubCourses, setIsLoadingSubCourses] = useState(false);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
-
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  
+  const openPopup = () => setIsPopupOpen(true);
+  const closePopup = () => setIsPopupOpen(false);
   const db = getDatabase();
 
   // Load main courses
@@ -367,6 +370,23 @@ function CoursePage() {
       }
     });
   };
+  const handleSaveEditedAnswer = (questionIndex, answerIndex) => {
+    if (newAnswerText.trim() === "") {
+      setError("The answer text cannot be empty");
+      return;
+    }
+
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].answers[answerIndex] = {
+      text: newAnswerText,
+      correct: updatedQuestions[questionIndex].answers[answerIndex].correct,
+    };
+
+    setQuestions(updatedQuestions);
+    setNewAnswerText(""); // إعادة تعيين حقل النص
+    setEditAnswerIndex(null); // إنهاء وضع التعديل للإجابة
+  };
+
 
   return (
     <div className="course-page">
@@ -524,102 +544,156 @@ function CoursePage() {
                       ))}
                     </div>
                   </div>
-                  <div className="question-answers-container">
-                    <div className="question-section">
-                      <h2>Add/Edit Questions</h2>
-                      <input
-                        type="text"
-                        value={newQuestion}
-                        onChange={(e) => setNewQuestion(e.target.value)}
-                        disabled={!selectedSubCourse}
-                      />
-                      <button
-                        className="question-button" // إضافة اسم جديد للزر
-                        onClick={handleAddOrEditQuestion}
-                        disabled={!selectedSubCourse}
-                      >
-                        {editQuestionIndex !== null
-                          ? "Update Question" // تغيير النص
-                          : "Create Question"}{" "}
-                      </button>
-                    </div>
 
-                    <div className="answers-section">
-                      <h3>Answers</h3>
-                      {answers.map((answer, index) => (
-                        <div key={index}>
-                          <input
-                            type="checkbox"
-                            checked={answer.correct}
-                            onChange={() => handleCorrectAnswerChange(index)}
-                          />
-                          <span>{answer.text}</span>
-                          <button
-                            className="answer-button" // إضافة اسم جديد للزر
-                            onClick={() => handleEditAnswer(index)}
-                          >
-                            Edit
-                          </button>
-                        </div>
-                      ))}
-                      <input
-                        type="text"
-                        placeholder="Enter new answer"
-                        value={newAnswerText}
-                        onChange={(e) => setNewAnswerText(e.target.value)}
-                        disabled={!selectedSubCourse}
-                      />
-                      <button
-                        className="answer-button" // إضافة اسم جديد للزر
-                        onClick={handleAddOrUpdateAnswer}
-                        disabled={!selectedSubCourse}
-                      >
-                        {editAnswerIndex !== null
-                          ? "Save Changes" // تغيير النص
-                          : "Add Answer"}
-                      </button>
-                    </div>
-                  </div>
+                  <div className="main-container">
+  {/* زر لفتح النافذة المنبثقة */}
+  <button className="open-popup-button" onClick={openPopup}>Add/Edit Question</button>
 
-                  <div className="questions-list">
+  {/* النافذة المنبثقة */}
+  {isPopupOpen && (
+    <div className="popup-overlay" onClick={closePopup}>
+      <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+        <h2>Add/Edit Questions</h2>
+        <input
+          type="text"
+          className="question-input" // إضافة اسم جديد لحقل الإدخال
+          value={newQuestion}
+          onChange={(e) => setNewQuestion(e.target.value)}
+          disabled={!selectedSubCourse}
+        />
+        <button
+          className="question-submit-button" // إضافة اسم جديد لزر الإرسال
+          onClick={handleAddOrEditQuestion}
+          disabled={!selectedSubCourse}
+        >
+          {editQuestionIndex !== null ? "Update Question" : "Create Question"}
+        </button>
+
+        <div className="answers-section">
+          <h3>Answers</h3>
+          {answers.map((answer, index) => (
+            <div key={index} className="answer-item">
+              <input
+                type="checkbox"
+                className="answer-checkbox" // إضافة اسم جديد للصندوق
+                checked={answer.correct}
+                onChange={() => handleCorrectAnswerChange(index)}
+              />
+              <span className="answer-text">{answer.text}</span>
+              <button
+                className="answer-edit-button" // إضافة اسم جديد لزر التعديل
+                onClick={() => handleEditAnswer(index)}
+              >
+                Edit
+              </button>
+            </div>
+          ))}
+          <input
+            type="text"
+            className="new-answer-input" // إضافة اسم جديد لحقل إدخال الإجابة الجديدة
+            placeholder="Enter new answer"
+            value={newAnswerText}
+            onChange={(e) => setNewAnswerText(e.target.value)}
+            disabled={!selectedSubCourse}
+          />
+          <button
+            className="answer-submit-button" // إضافة اسم جديد لزر إضافة الإجابة
+            onClick={handleAddOrUpdateAnswer}
+            disabled={!selectedSubCourse}
+          >
+            {editAnswerIndex !== null ? "Save Changes" : "Add Answer"}
+          </button>
+        </div>
+
+        {/* زر لإغلاق النافذة المنبثقة */}
+        <button className="close-popup-button" onClick={closePopup}>
+          Close
+        </button>
+      </div>
+    </div>
+  )}
+</div>
+
+                 <div className="questions-list">
                     <h3>Questions List</h3>
                     {questions.map((question, index) => (
                       <div key={index} className="question-item">
-                        <h4>{question.text}</h4>
-                        <ul>
+                        {editQuestionIndex === index ? (
+                          <div className="edit-question">
+                            <input
+                              type="text"
+                              value={newQuestion}
+                              onChange={(e) => setNewQuestion(e.target.value)}
+                              placeholder="Edit question"
+                            />
+                            <button
+                              className="save-button"
+                              onClick={() => handleAddOrEditQuestion()}
+                            >
+                              Save
+                            </button>
+                          </div>
+                        ) : (
+                          <h4>{question.text}</h4>
+                        )}
+                        <ul className="answers-list">
                           {question.answers.map((answer, i) => (
                             <li key={i} className="answer-item">
-                              {answer.text} {answer.correct && "(Correct)"}
+                              {editAnswerIndex === i &&
+                              editQuestionIndex === index ? (
+                                <div className="edit-answer">
+                                  <input
+                                    type="text"
+                                    value={newAnswerText}
+                                    onChange={(e) =>
+                                      setNewAnswerText(e.target.value)
+                                    }
+                                    placeholder="Edit answer"
+                                  />
+                                  <button
+                                    className="save-button"
+                                    onClick={() =>
+                                      handleSaveEditedAnswer(index, i)
+                                    }
+                                  >
+                                    Save
+                                  </button>
+                                </div>
+                              ) : (
+                                <span>
+                                  {answer.text} {answer.correct && "(Correct)"}
+                                </span>
+                              )}
+                              {editQuestionIndex === index && (
+                                <button
+                                  className="edit-button"
+                                  onClick={() => handleEditAnswer(i)}
+                                >
+                                  Edit
+                                </button>
+                              )}
                             </li>
                           ))}
                         </ul>
-                        <button
-                          id={`edit-question-${index}`} // إضافة ID فريد لزر التعديل
-                          onClick={() => handleEditQuestionIndex(index)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          id={`delete-question-${index}`} // إضافة ID فريد لزر الحذف
-                          onClick={() => handleDeleteQuestion(index)}
-                        >
-                          Delete
-                        </button>
+                        <div className="action-buttons">
+                          <button
+                            id={`edit-question-${index}`}
+                            className="edit-button"
+                            onClick={() => handleEditQuestionIndex(index)}
+                          >
+                            Edit Question
+                          </button>
+                          <button
+                            id={`delete-question-${index}`}
+                            className="delete-button"
+                            onClick={() => handleDeleteQuestion(index)}
+                          >
+                            Delete Question
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
-
-                  <div className="button-container">
-                    <button
-                      id="a1"
-                      onClick={handleSaveQuestions}
-                      disabled={!selectedSubCourse}
-                    >
-                      Save Questions
-                    </button>
-                  </div>
-
-                  {error && <p className="error-message">{error}</p>}
                 </div>
               </div>
             )}
