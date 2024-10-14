@@ -534,12 +534,13 @@ function CoursePage() {
                         disabled={!selectedSubCourse}
                       />
                       <button
+                        className="question-button" // إضافة اسم جديد للزر
                         onClick={handleAddOrEditQuestion}
                         disabled={!selectedSubCourse}
                       >
                         {editQuestionIndex !== null
-                          ? "Edit Question"
-                          : "Add Question"}
+                          ? "Update Question" // تغيير النص
+                          : "Create Question"}{" "}
                       </button>
                     </div>
 
@@ -553,11 +554,14 @@ function CoursePage() {
                             onChange={() => handleCorrectAnswerChange(index)}
                           />
                           <span>{answer.text}</span>
-                          <button onClick={() => handleEditAnswer(index)}>
-                            Edit
+                          <button
+                            className="answer-button" // إضافة اسم جديد للزر
+                            onClick={() => handleEditAnswer(index)}
+                          >
+                            Edet
                           </button>
                         </div>
-                      ))}{" "}
+                      ))}
                       <input
                         type="text"
                         placeholder="Enter new answer"
@@ -566,11 +570,12 @@ function CoursePage() {
                         disabled={!selectedSubCourse}
                       />
                       <button
+                        className="answer-button" // إضافة اسم جديد للزر
                         onClick={handleAddOrUpdateAnswer}
                         disabled={!selectedSubCourse}
                       >
                         {editAnswerIndex !== null
-                          ? "Update Answer"
+                          ? "Save Changes" // تغيير النص
                           : "Add Answer"}
                       </button>
                     </div>
