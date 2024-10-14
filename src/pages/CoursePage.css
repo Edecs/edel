@@ -20,6 +20,15 @@
   border-radius: 8px; /* زوايا مدورة للحاوية */
   transition: background-color 0.3s ease; /* إضافة تأثير انتقالي للخلفية */
 }
+/* Consistent Button Hover State */
+.course-page button:hover,
+.question-section button:hover,
+.answers-section button:hover {
+  background-color: #0056b3; /* Consistent hover color */
+  color: #ffffff; /* Text color on hover */
+  transform: scale(1.05); /* Consistent scale effect */
+}
+
 .course-page button {
   margin-left: 46px;
   padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
@@ -555,7 +564,7 @@ h3 {
   background-color: #0056b3;
 }
 .open-popup-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -570,7 +579,7 @@ h3 {
 }
 
 .question-submit-button {
-  background-color: #008CBA;
+  background-color: #008cba;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -635,4 +644,61 @@ h3 {
   border-radius: 5px;
   width: 500px;
   position: relative;
+}
+.question-item {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.question-item {
+  display: flex;
+  flex-direction: column; /* تغيير الاتجاه لعرض العناصر في عمود */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.answers-list {
+  list-style-type: none; /* إزالة النقط من القائمة */
+  padding: 0;
+}
+
+.answer-item {
+  display: flex;
+  justify-content: space-between; /* لمحاذاة الإجابات والأزرار */
+  align-items: center; /* محاذاة العناصر عموديًا في الوسط */
+  gap: 10px; /* إضافة مسافة بين العناصر */
+  margin-bottom: 5px;
+}
+
+.action-buttons {
+  gap: 10px; /* مسافة بين الأزرار */
+  justify-content: flex-end; /* محاذاة الأزرار إلى اليمين */
+  align-items: center; /* لضبط الأزرار مع النص في المنتصف */
+}
+
+.edit-button,
+.delete-button {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.edit-button {
+  background-color: #2196f3; /* لون الزر الأزرق */
+  color: white;
+}
+
+.delete-button {
+  background-color: #d9534f; /* لون الزر الأحمر */
+  color: white;
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  opacity: 0.8; /* تأثير عند المرور فوق الأزرار */
 }
