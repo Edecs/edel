@@ -15,6 +15,34 @@ function UserProgressPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const database = getDatabase();
 
+  // Fetch Archived Tasks: Moving this definition above the useEffect call
+  const fetchArchivedTasks = useCallback(async () => {
+    try {
+      const archivedTasksRef = ref(database, "archivedTasks");
+      const snapshot = await get(archivedTasksRef);
+      if (snapshot.exists()) {
+        const archivedTasksData = snapshot.val();
+        const archivedTasksList = Object.entries(archivedTasksData).map(
+          ([id, data]) => ({
+            id,
+            message: data.message || "No message",
+            createdAt: data.createdAt || "Not available",
+            createdBy: data.createdBy || "Not available",
+            dropboxLink: data.dropboxLink || "Not available",
+            assignedEmails: Array.isArray(data.assignedEmails)
+              ? data.assignedEmails
+              : typeof data.assignedEmails === "string"
+              ? [data.assignedEmails] // تحويل النص إلى قائمة تحتوي على عنصر واحد
+              : [], // تعيين قائمة فارغة في حال عدم وجود قيمة
+          })
+        );
+        setArchivedTasks(archivedTasksList);
+      }
+    } catch (error) {
+      setError(`Failed to fetch archived tasks. Error: ${error.message}`);
+    }
+  }, [database]);
+
   const fetchUsers = useCallback(async () => {
     try {
       const usersRef = ref(database, "users");
@@ -33,27 +61,6 @@ function UserProgressPage() {
     }
   }, [database]);
 
-  const fetchArchivedTasks = useCallback(async () => {
-    try {
-      const tasksRef = ref(database, "archivedTasks");
-      const snapshot = await get(tasksRef);
-      if (snapshot.exists()) {
-        const tasksData = snapshot.val();
-        const tasksList = Object.entries(tasksData).map(([id, data]) => ({
-          id,
-          assignedEmails: data.assignedEmails || [],
-          createdBy: data.createdBy || "Unknown",
-          createdAt: data.createdAt || "Not available",
-          dropboxLink: data.dropboxLink || "Not available",
-          message: data.message || "No message",
-        }));
-        setArchivedTasks(tasksList);
-      }
-    } catch (error) {
-      setError(`Failed to fetch archived tasks. Error: ${error.message}`);
-    }
-  }, [database]);
-
   const fetchNotifications = useCallback(async () => {
     try {
       const notificationsRef = ref(database, "notifications");
@@ -69,7 +76,9 @@ function UserProgressPage() {
             dropboxLink: data.dropboxLink || "Not available",
             assignedEmails: Array.isArray(data.assignedEmails)
               ? data.assignedEmails
-              : [],
+              : typeof data.assignedEmails === "string"
+              ? [data.assignedEmails] // تحويل النص إلى قائمة تحتوي على عنصر واحد
+              : [], // تعيين قائمة فارغة في حال عدم وجود قيمة
             isRead: data.isRead || false,
           })
         );
@@ -135,7 +144,7 @@ function UserProgressPage() {
         try {
           await Promise.all([
             fetchUsers(),
-            fetchArchivedTasks(),
+            fetchArchivedTasks(), // Now the function is defined before its use
             fetchNotifications(),
             fetchCourses(),
             fetchSubmissions(),
@@ -151,13 +160,14 @@ function UserProgressPage() {
     }
   }, [
     fetchUsers,
-    fetchArchivedTasks,
+    fetchArchivedTasks, // Function dependency is now correctly referenced
     fetchNotifications,
     fetchCourses,
     fetchSubmissions,
     dataLoaded,
   ]);
 
+  
   const exportToExcel = () => {
     const usersSheet = XLSX.utils.json_to_sheet(users);
     const archivedTasksSheet = XLSX.utils.json_to_sheet(archivedTasks);
