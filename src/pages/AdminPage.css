@@ -57,7 +57,6 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 15px;
   width: 45%; /* عرض كل قسم بنسبة 45% ليظهروا بجانب بعضهم */
-  max-width: 45%;
 }
 
 .admin-page .user-list {
@@ -229,4 +228,133 @@
 
 .admin-page .search-button:hover {
   background-color: #0056b3;
+}
+
+/* تنسيق قسم الوصول للدورة */
+.course-access {
+  h3 {
+    font-size: 1.5rem; /* حجم الخط */
+    color: #333; /* لون النص */
+    margin-bottom: 15px; /* مساحة سفلية */
+  }
+
+  input[type="text"] {
+    width: 100%; /* عرض كامل للحقل */
+    padding: 10px; /* مساحة داخلية */
+    border: 1px solid #ccc; /* لون الحدود */
+    border-radius: 4px; /* زوايا مدورة */
+    font-size: 1rem; /* حجم الخط */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* تأثير ظل خفيف */
+    transition: border-color 0.3s ease; /* تأثيرات انتقالية */
+
+    &:focus {
+      border-color: #007bff; /* تغيير لون الحدود عند التركيز */
+      outline: none; /* إزالة التأشير الافتراضي */
+    }
+
+    &::placeholder {
+      color: #aaa; /* لون نص العنوان */
+    }
+  }
+
+  .course-list {
+    margin-top: 20px; /* مساحة علوية لقائمة الدورات */
+    list-style: none; /* إزالة النقاط من القائمة */
+
+    .course-item {
+      background-color: #f9f9f9; /* لون الخلفية */
+      padding: 10px; /* مساحة داخلية */
+      border-radius: 4px; /* زوايا مدورة */
+      margin-bottom: 10px; /* مساحة سفلية بين العناصر */
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* تأثير ظل خفيف */
+      transition: background-color 0.3s ease; /* تأثيرات انتقالية */
+
+      &:hover {
+        background-color: #e2e6ea; /* لون الخلفية عند المرور */
+      }
+    }
+  }
+}
+
+/* تنسيق قسم عرض الدورات */
+.course-list {
+  margin-top: 20px; /* مساحة علوية للقائمة */
+  padding: 0; /* إزالة مساحة داخلية */
+  list-style-type: none; /* إزالة النقاط من القائمة */
+
+  .course-item {
+    background-color: #f9f9f9; /* لون الخلفية */
+    padding: 15px; /* مساحة داخلية */
+    border-radius: 4px; /* زوايا مدورة */
+    margin-bottom: 15px; /* مساحة سفلية بين العناصر */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* تأثير ظل خفيف */
+    transition: background-color 0.3s ease; /* تأثيرات انتقالية */
+
+    .sub-course {
+      display: flex; /* استخدام الفليكس لتنسيق العناصر */
+      align-items: center; /* محاذاة العناصر عموديًا */
+      margin: 8px 0; /* مساحة علوية وسفلية بين العناصر الفرعية */
+
+      input[type="checkbox"] {
+        margin-right: 10px; /* مساحة يمينية بين الصندوق والنص */
+        cursor: pointer; /* تغيير شكل المؤشر عند المرور فوقه */
+      }
+
+      span {
+        font-size: 1rem; /* حجم خط النص */
+        color: #555; /* لون النص */
+      }
+    }
+  }
+}
+.courses-container {
+  margin-top: 20px; /* هامش أعلى */
+  padding: 20px; /* حشوة داخلية للصندوق */
+  background-color: #fff; /* لون خلفية الصندوق */
+  border: 2px solid #007bff; /* لون حدود الصندوق */
+  border-radius: 8px; /* زوايا مستديرة للصندوق */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل للصندوق */
+  max-width: 800px; /* عرض أقصى للصندوق */
+  margin-left: auto; /* محاذاة في الوسط */
+  margin-right: auto; /* محاذاة في الوسط */
+}
+
+.course-row {
+  border: 1px solid #ccc; /* حدود خفيفة */
+  border-radius: 5px; /* زوايا مستديرة */
+  padding: 15px; /* حشوة داخلية */
+  margin: 10px 0; /* هامش عمودي */
+  background-color: #f9f9f9; /* لون خلفية فاتح */
+  transition: background-color 0.3s; /* تأثير تغيير اللون */
+}
+
+.course-row:hover {
+  background-color: #e6f7ff; /* تغيير لون الخلفية عند التحويم */
+}
+
+h4 {
+  font-size: 18px; /* حجم خط عنوان الدورات */
+  margin-bottom: 10px; /* هامش أسفل العنوان */
+}
+
+.sub-course {
+  border: #107f85 1px;
+  display: flex; /* استخدام التخطيط المرن */
+  align-items: center; /* محاذاة العناصر في المنتصف */
+  margin: 5px 0; /* هامش عمودي بين الدورات الفرعية */
+}
+
+input[type="checkbox"] {
+  margin-right: 10px; /* مساحة بين الصندوق والنص */
+  transform: scale(1.2); /* تكبير صندوق الاختيار */
+}
+
+span {
+  font-size: 16px; /* حجم خط النص */
+  color: #333; /* لون النص */
+}
+
+/* تنسيق للطاولة الخاصة بالدورات */
+.courses-table {
+  margin-top: 10px; /* هامش أعلى */
 }
