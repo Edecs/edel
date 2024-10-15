@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue, set, remove } from "firebase/database";
+import { getAuth } from "firebase/auth";
+
 import "./CoursePage.css";
 
-function CoursePage() {
+function CoursePage({ roles }) {
   const [mainCourses, setMainCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [subCourses, setSubCourses] = useState([]);
@@ -12,10 +14,7 @@ function CoursePage() {
   const [answers, setAnswers] = useState([{ text: "", correct: false }]);
   const [editQuestionIndex, setEditQuestionIndex] = useState(null);
   const [questions, setQuestions] = useState([]);
-
-  // Newly added state for the popup
   const [showPopup, setShowPopup] = useState(false);
-
   const [newCourseName, setNewCourseName] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
@@ -198,6 +197,7 @@ function CoursePage() {
       <h1>Courses Management</h1>
       <details>
         <summary>Add Course</summary>
+
         <div className="course-management-content">
           <div className="add-course-section">
             <h2>Main Courses</h2>
@@ -230,27 +230,6 @@ function CoursePage() {
               placeholder="Enter thumbnail URL (Dropbox link)"
             />
             <button onClick={handleAddCourse}>Add Course</button>
-          </div>
-
-          <div className="add-sub-course-section">
-            <h2>Sub-Courses</h2>
-            <div className="sub-course-buttons">
-              {subCourses.map((subCourse) => (
-                <div key={subCourse.id} className="sub-course-item">
-                  {subCourse.name}
-                </div>
-              ))}
-            </div>
-
-            <div className="add-sub-course-form">
-              <input
-                type="text"
-                value={newSubCourseName}
-                onChange={(e) => setNewSubCourseName(e.target.value)}
-                placeholder="Add new sub-course"
-              />
-              <button onClick={handleAddSubCourse}>Add Sub-Course</button>
-            </div>
           </div>
         </div>
       </details>
@@ -295,6 +274,19 @@ function CoursePage() {
                     </option>
                   ))}
                 </select>
+                <div className="add-sub-course-section">
+                  <h2>Sub-Courses</h2>
+
+                  <div className="add-sub-course-form">
+                    <input
+                      type="text"
+                      value={newSubCourseName}
+                      onChange={(e) => setNewSubCourseName(e.target.value)}
+                      placeholder="Add new sub-course"
+                    />
+                    <button onClick={handleAddSubCourse}>Add Sub-Course</button>
+                  </div>
+                </div>
               </div>
             </div>
 
