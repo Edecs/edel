@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  push,
-  set,
-  remove,
-} from "firebase/database";
+import { getDatabase, ref, onValue, set, remove } from "firebase/database";
 import "./CoursePage.css";
 
 function CoursePage() {
@@ -14,26 +7,19 @@ function CoursePage() {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [subCourses, setSubCourses] = useState([]);
   const [selectedSubCourse, setSelectedSubCourse] = useState("");
-  const [newQuestion, setNewQuestion] = useState("");
-  const [newAnswerText, setNewAnswerText] = useState("");
-  const [answers, setAnswers] = useState([{ text: "", correct: false }]);
-  const [questions, setQuestions] = useState([]);
-  const [editQuestionIndex, setEditQuestionIndex] = useState(null);
-  const [editAnswerIndex, setEditAnswerIndex] = useState(null);
   const [error, setError] = useState("");
-  const [media, setMedia] = useState({ images: [], videos: [] });
-  const [newMediaLink, setNewMediaLink] = useState("");
-  const [newCourseName, setNewCourseName] = useState("");
-  const [newSubCourseName, setNewSubCourseName] = useState("");
-  const [thumbnail, setThumbnail] = useState(null);
-  const [selectedButton, setSelectedButton] = useState(null);
-  const [isLoadingCourses, setIsLoadingCourses] = useState(true);
-  const [isLoadingSubCourses, setIsLoadingSubCourses] = useState(false);
-  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [newQuestion, setNewQuestion] = useState("");
+  const [answers, setAnswers] = useState([{ text: "", correct: false }]);
+  const [editQuestionIndex, setEditQuestionIndex] = useState(null);
+  const [questions, setQuestions] = useState([]);
 
-  const openPopup = () => setIsPopupOpen(true);
-  const closePopup = () => setIsPopupOpen(false);
+  // Newly added state for the popup
+  const [showPopup, setShowPopup] = useState(false);
+
+  const [newCourseName, setNewCourseName] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
+  const [newSubCourseName, setNewSubCourseName] = useState("");
+
   const db = getDatabase();
 
   // Load main courses
@@ -52,17 +38,6 @@ function CoursePage() {
 
     return () => unsubscribe();
   }, [db]);
-
-  const handleThumbnailChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setThumbnail(reader.result); // Set the thumbnail URL
-      };
-      reader.readAsDataURL(file); // Read the file as a data URL
-    }
-  };
 
   // Load sub-courses
   useEffect(() => {
@@ -87,20 +62,12 @@ function CoursePage() {
     }
   }, [db, selectedCourse]);
 
-  // Load questions and media
+  // Load questions
   useEffect(() => {
     if (selectedCourse && selectedSubCourse) {
       const questionsRef = ref(
         db,
         `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`
-      );
-      const imagesRef = ref(
-        db,
-        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/images`
-      );
-      const videosRef = ref(
-        db,
-        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/videos`
       );
 
       const unsubscribeQuestions = onValue(questionsRef, (snapshot) => {
@@ -114,307 +81,139 @@ function CoursePage() {
         setQuestions(questionsArray);
       });
 
-      const unsubscribeImages = onValue(imagesRef, (snapshot) => {
-        const imagesData = snapshot.val();
-        const imagesArray = imagesData ? Object.values(imagesData) : [];
-        setMedia((prev) => ({ ...prev, images: imagesArray }));
-      });
-
-      const unsubscribeVideos = onValue(videosRef, (snapshot) => {
-        const videosData = snapshot.val();
-        const videosArray = videosData ? Object.values(videosData) : [];
-        setMedia((prev) => ({ ...prev, videos: videosArray }));
-      });
+      return () => unsubscribeQuestions();
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
-  // Add media from a link
-  const handleAddMediaFromLink = () => {
-    if (!newMediaLink.trim()) {
-      setError("The media link cannot be empty");
-      return;
-    }
-
-    let mediaType = "";
-
-    const imageRegex = /\.(jpg|jpeg|png|gif)(\?.*)?$/i;
-    const videoRegex = /\.(mp4|mov|avi|wmv|mkv)(\?.*)?$/i;
-    const dropboxRegex = /dropbox\.com/;
-
-    if (
-      videoRegex.test(newMediaLink) ||
-      (dropboxRegex.test(newMediaLink) && newMediaLink.includes(".mp4"))
-    ) {
-      mediaType = "videos";
-    } else if (
-      imageRegex.test(newMediaLink) ||
-      (dropboxRegex.test(newMediaLink) &&
-        (newMediaLink.includes(".jpg") ||
-          newMediaLink.includes(".jpeg") ||
-          newMediaLink.includes(".png") ||
-          newMediaLink.includes(".gif")))
-    ) {
-      mediaType = "images";
-    } else {
-      setError("Unsupported media link format");
-      return;
-    }
-
-    const mediaRef = ref(
-      db,
-      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${mediaType}`
-    );
-    const newMediaRef = push(mediaRef);
-    set(newMediaRef, newMediaLink)
-      .then(() => {
-        setNewMediaLink("");
-        setError("");
-      })
-      .catch((error) => {
-        setError("Failed to save media URL: " + error.message);
-        // Revert state update if save fails
-        setMedia((prevMedia) => ({
-          ...prevMedia,
-          [mediaType]: prevMedia[mediaType].filter(
-            (media) => media !== newMediaLink
-          ),
-        }));
-      });
-  };
-  // Remaining logic and return statement goes here
-
-  // Add or edit question
-  const handleAddOrEditQuestion = () => {
-    if (!newQuestion.trim()) {
-      setError("The question cannot be empty");
-      return;
-    }
-
-    const newQuestionObj = {
-      text: newQuestion,
-      answers: [...answers],
-    };
-
-    if (editQuestionIndex !== null) {
-      const updatedQuestions = [...questions];
-      updatedQuestions[editQuestionIndex] = newQuestionObj;
-      setQuestions(updatedQuestions);
-      setEditQuestionIndex(null);
-    } else {
-      setQuestions([...questions, newQuestionObj]);
-    }
-
-    setNewQuestion("");
-    setAnswers([{ text: "", correct: false }]);
-    setError("");
-  };
-
-  // Add or update answer
-  const handleAddOrUpdateAnswer = () => {
-    if (newAnswerText.trim() === "") {
-      setError("The answer text cannot be empty");
-      return;
-    }
-
-    const updatedAnswers = [...answers];
-    if (editAnswerIndex !== null) {
-      updatedAnswers[editAnswerIndex] = {
-        text: newAnswerText,
-        correct: updatedAnswers[editAnswerIndex].correct,
-      };
-      setEditAnswerIndex(null);
-    } else {
-      updatedAnswers.push({ text: newAnswerText, correct: false });
-    }
-
-    setAnswers(updatedAnswers);
-    setNewAnswerText("");
-    setError("");
-  };
-
-  // Edit answer
-  const handleEditAnswer = (index) => {
-    if (index >= 0 && index < answers.length) {
-      setNewAnswerText(answers[index].text);
-      setEditAnswerIndex(index);
-    }
-  };
-
-  // Set correct answer
-  const handleCorrectAnswerChange = (index) => {
-    const updatedAnswers = answers.map((answer, i) =>
-      i === index ? { ...answer, correct: !answer.correct } : answer
-    );
-    setAnswers(updatedAnswers);
-  };
-
-  // Edit question
-  const handleEditQuestionIndex = (index) => {
-    const question = questions[index];
+  // Handle editing a question
+  const handleEditQuestion = (question) => {
     setNewQuestion(question.text);
-    setAnswers(question.answers || []);
-    setEditQuestionIndex(index);
+    setAnswers(question.answers);
+    setEditQuestionIndex(question.id);
   };
 
-  // Delete question
-  const handleDeleteQuestion = (index) => {
-    const updatedQuestions = questions.filter((_, i) => i !== index);
-    setQuestions(updatedQuestions);
-  };
-
-  // Save questions
-  const handleSaveQuestions = () => {
-    if (!selectedSubCourse) {
-      setError("Select a sub-course to save questions");
+  // Handle updating a question
+  const handleUpdateQuestion = async () => {
+    if (!newQuestion.trim() || answers.every((a) => !a.text)) {
+      setError("Question and at least one answer are required.");
       return;
     }
 
-    if (questions.length === 0) {
-      setError("There are no questions to save");
-      return;
-    }
-
-    const questionsRef = ref(
+    const questionRef = ref(
       db,
-      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}`
     );
 
-    remove(questionsRef)
-      .then(() => {
-        Promise.all(
-          questions.map((question) => {
-            const questionRef = push(questionsRef);
-            return set(questionRef, question);
-          })
-        )
-          .then(() => {
-            setQuestions([]);
-            setError("");
-          })
-          .catch((error) => {
-            setError("Failed to save questions: " + error.message);
-          });
-      })
-      .catch((error) => {
-        setError("Failed to clear existing questions: " + error.message);
+    try {
+      await set(questionRef, {
+        text: newQuestion,
+        answers: answers,
       });
-  };
-
-  const handleAddSubCourse = async () => {
-    if (!newSubCourseName.trim()) {
-      setError("The sub-course name cannot be empty");
-      return;
-    }
-
-    const subCoursesRef = ref(
-      db,
-      `courses/mainCourses/${selectedCourse}/subCourses`
-    );
-    const newSubCourseRef = push(subCoursesRef);
-    try {
-      await set(newSubCourseRef, { name: newSubCourseName });
-      setNewSubCourseName("");
+      setNewQuestion("");
+      setAnswers([{ text: "", correct: false }]); // Reset answers
+      setEditQuestionIndex(null);
       setError("");
     } catch (error) {
-      setError("Failed to save sub-course: " + error.message);
+      setError("Failed to update question: " + error.message);
     }
   };
 
-  // Add main course
-  const handleAddCourse = async () => {
-    if (!newCourseName.trim()) {
-      setError("The course name cannot be empty");
-      return;
-    }
-
-    const coursesRef = ref(db, "courses/mainCourses");
-    const newCourseRef = push(coursesRef);
-    try {
-      await set(newCourseRef, { name: newCourseName });
-      setNewCourseName("");
-      setError("");
-    } catch (error) {
-      setError("Failed to save course: " + error.message);
-    }
-  };
-  const handleDeleteMedia = (type, index) => {
-    const mediaKey = type === "image" ? "images" : "videos";
-    const mediaRef = ref(
+  // Handle deleting a question
+  const handleDeleteQuestion = async (questionId) => {
+    const questionRef = ref(
       db,
-      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${mediaKey}`
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${questionId}`
     );
 
-    // Use onValue to get the current media's ID in Firebase
-    onValue(mediaRef, (snapshot) => {
-      const mediaData = snapshot.val();
-      const mediaArray = mediaData ? Object.keys(mediaData) : [];
-
-      if (index < mediaArray.length) {
-        const mediaId = mediaArray[index];
-        const specificMediaRef = ref(
-          db,
-          `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/${mediaKey}/${mediaId}`
-        );
-
-        remove(specificMediaRef)
-          .then(() => {
-            // Update state after successful deletion
-            setMedia((prevMedia) => ({
-              ...prevMedia,
-              [mediaKey]: prevMedia[mediaKey].filter((_, i) => i !== index),
-            }));
-          })
-          .catch((error) => {
-            setError("Failed to delete media: " + error.message);
-          });
-      }
-    });
+    try {
+      await remove(questionRef);
+    } catch (error) {
+      setError("Failed to delete question: " + error.message);
+    }
   };
-  const handleSaveEditedAnswer = (questionIndex, answerIndex) => {
-    if (newAnswerText.trim() === "") {
-      setError("The answer text cannot be empty");
+
+  // Function to handle adding a new course
+  const handleAddCourse = () => {
+    if (!newCourseName.trim() || !thumbnail.trim()) {
+      setError("Course name and thumbnail are required.");
       return;
     }
 
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].answers[answerIndex] = {
-      text: newAnswerText,
-      correct: updatedQuestions[questionIndex].answers[answerIndex].correct,
-    };
+    const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
+    set(courseRef, { name: newCourseName, thumbnail: thumbnail });
 
-    setQuestions(updatedQuestions);
-    setNewAnswerText(""); // إعادة تعيين حقل النص
-    setEditAnswerIndex(null); // إنهاء وضع التعديل للإجابة
+    setNewCourseName("");
+    setThumbnail("");
   };
 
-  const handleDeleteAnswer = (questionIndex, answerIndex) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].answers.splice(answerIndex, 1); // إزالة الإجابة من المصفوفة
-    setQuestions(updatedQuestions); // تحديث الحالة
+  // Function to handle adding a new sub-course
+  const handleAddSubCourse = () => {
+    if (!newSubCourseName.trim() || !selectedCourse) {
+      setError("Sub-course name and selected main course are required.");
+      return;
+    }
+
+    const subCourseRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${newSubCourseName}`
+    );
+    set(subCourseRef, { name: newSubCourseName });
+
+    setNewSubCourseName("");
+  };
+
+  // Function to handle adding a new question
+  const handleAddNewQuestion = async () => {
+    if (!newQuestion.trim() || answers.every((a) => !a.text)) {
+      setError("Question and at least one answer are required.");
+      return;
+    }
+
+    const newQuestionRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${newQuestion}`
+    );
+
+    try {
+      await set(newQuestionRef, {
+        text: newQuestion,
+        answers: answers,
+      });
+      setNewQuestion("");
+      setAnswers([{ text: "", correct: false }]); // Reset answers
+      setShowPopup(false); // Close popup
+      setError("");
+    } catch (error) {
+      setError("Failed to add question: " + error.message);
+    }
+  };
+
+  // Function to handle adding a new answer input
+  const handleAddAnswer = () => {
+    setAnswers([...answers, { text: "", correct: false }]);
   };
 
   return (
     <div className="course-page">
-      <h1>courses Management</h1>
+      <h1>Courses Management</h1>
       <details>
         <summary>Add Course</summary>
-        <div className="course-selectors">
-          <div className="add-course">
-            <h2>Courses</h2>
+        <div className="course-management-content">
+          <div className="add-course-section">
+            <h2>Main Courses</h2>
             <div className="course-buttons">
               {mainCourses.map((course) => (
                 <button
                   key={course.id}
                   onClick={() => {
                     setSelectedCourse(course.id);
-                    setSelectedButton(course.id); // تحديث الزر المحدد
                   }}
-                  className={selectedButton === course.id ? "selected" : ""} // تطبيق النمط إذا كان الزر هو المحدد
                 >
                   {course.name}
                 </button>
               ))}
             </div>
+
             <h2>Add New Course</h2>
             <input
               type="text"
@@ -422,6 +221,7 @@ function CoursePage() {
               value={newCourseName}
               onChange={(e) => setNewCourseName(e.target.value)}
             />
+
             <h2>Upload Course Thumbnail</h2>
             <input
               type="text"
@@ -432,7 +232,7 @@ function CoursePage() {
             <button onClick={handleAddCourse}>Add Course</button>
           </div>
 
-          <div className="add-sub-course">
+          <div className="add-sub-course-section">
             <h2>Sub-Courses</h2>
             <div className="sub-course-buttons">
               {subCourses.map((subCourse) => (
@@ -441,6 +241,7 @@ function CoursePage() {
                 </div>
               ))}
             </div>
+
             <div className="add-sub-course-form">
               <input
                 type="text"
@@ -455,9 +256,8 @@ function CoursePage() {
       </details>
 
       <details>
-        <summary>Add media / questions</summary>
+        <summary>Edit Questions</summary>
         <div className="course-media-container">
-          {/* New container with border */}
           <div className="course-selection-container">
             <div className="course-selection">
               <div className="course-dropdown">
@@ -497,240 +297,127 @@ function CoursePage() {
                 </select>
               </div>
             </div>
-            {/* Show the media section only if a sub-course is selected */}
+
             {selectedSubCourse && (
-              <div className="media-section">
-                <div className="media-and-questions">
-                  <h2>Media (Images, Videos)</h2>
-                  <input
-                    type="text"
-                    placeholder="Enter Dropbox link for media"
-                    value={newMediaLink}
-                    onChange={(e) => setNewMediaLink(e.target.value)}
-                    disabled={!selectedSubCourse}
-                  />
-                  <button
-                    type="button" // تأكد من إضافة هذا السطر
-                    onClick={handleAddMediaFromLink}
-                    disabled={!selectedSubCourse}
-                  >
-                    Add Media
-                  </button>
-
-                  {error && <p className="error-message">{error}</p>}
-                  <div>
-                    <h3>Images:</h3>
-                    <div className="images-container">
-                      {media.images.map((image, index) => (
-                        <div key={index} className="image-item">
-                          <img src={image} alt={`Course media ${index}`} />
-                          <button
-                            onClick={() => handleDeleteMedia("image", index)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      ))}
+              <div className="questions-list">
+                <h3>Questions List</h3>
+                {questions.map((question) => (
+                  <div key={question.id} className="question-item">
+                    <div className="question-content">
+                      <h4>{question.text}</h4>
+                      <button onClick={() => handleEditQuestion(question)}>
+                        Edit
+                      </button>
+                      <button onClick={() => handleDeleteQuestion(question.id)}>
+                        Delete
+                      </button>
                     </div>
 
-                    <h3>Videos:</h3>
-                    <div className="videos-container">
-                      {media.videos.map((video, index) => (
-                        <div key={index} className="video-item">
-                          <video width="320" height="240" controls>
-                            <source src={video} type="video/mp4" />
-                          </video>
-                          <button
-                            onClick={() => handleDeleteMedia("video", index)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="main-container">
-                    {/* زر لفتح النافذة المنبثقة */}
-                    <button className="open-popup-button" onClick={openPopup}>
-                      Add/Edit Question
-                    </button>
-
-                    {/* النافذة المنبثقة */}
-                    {isPopupOpen && (
-                      <div className="popup-overlay" onClick={closePopup}>
-                        <div
-                          className="popup-content"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <h2>Add/Edit Questions</h2>
-                          <input
-                            type="text"
-                            className="question-input" // إضافة اسم جديد لحقل الإدخال
-                            value={newQuestion}
-                            onChange={(e) => setNewQuestion(e.target.value)}
-                            disabled={!selectedSubCourse}
-                          />
-                          <button
-                            className="question-submit-button" // إضافة اسم جديد لزر الإرسال
-                            onClick={handleAddOrEditQuestion}
-                            disabled={!selectedSubCourse}
-                          >
-                            {editQuestionIndex !== null
-                              ? "Update Question"
-                              : "Create Question"}
-                          </button>
-
-                          <div className="answers-section">
-                            <h3>Answers</h3>
-                            {answers.map((answer, index) => (
-                              <div key={index} className="answer-item">
-                                <input
-                                  type="checkbox"
-                                  className="answer-checkbox" // إضافة اسم جديد للصندوق
-                                  checked={answer.correct}
-                                  onChange={() =>
-                                    handleCorrectAnswerChange(index)
-                                  }
-                                />
-                                <span className="answer-text">
-                                  {answer.text}
-                                </span>
-                                <button
-                                  className="answer-edit-button" // إضافة اسم جديد لزر التعديل
-                                  onClick={() => handleEditAnswer(index)}
-                                >
-                                  Edit
-                                </button>
-                              </div>
-                            ))}
+                    {editQuestionIndex === question.id && (
+                      <div className="edit-question-form">
+                        <h3>Edit Question</h3>
+                        <input
+                          type="text"
+                          value={newQuestion}
+                          onChange={(e) => setNewQuestion(e.target.value)}
+                          placeholder="Enter question"
+                        />
+                        <h4>Answers:</h4>
+                        {answers.map((answer, index) => (
+                          <div key={index}>
                             <input
                               type="text"
-                              className="new-answer-input" // إضافة اسم جديد لحقل إدخال الإجابة الجديدة
-                              placeholder="Enter new answer"
-                              value={newAnswerText}
-                              onChange={(e) => setNewAnswerText(e.target.value)}
-                              disabled={!selectedSubCourse}
+                              value={answer.text}
+                              onChange={(e) => {
+                                const newAnswers = [...answers];
+                                newAnswers[index].text = e.target.value;
+                                setAnswers(newAnswers);
+                              }}
+                              placeholder="Enter answer"
                             />
-                            <button
-                              className="answer-submit-button" // إضافة اسم جديد لزر إضافة الإجابة
-                              onClick={handleAddOrUpdateAnswer}
-                              disabled={!selectedSubCourse}
-                            >
-                              {editAnswerIndex !== null
-                                ? "Save Changes"
-                                : "Add Answer"}
-                            </button>
-                          </div>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={answer.correct}
+                                onChange={() => {
+                                  const newAnswers = [...answers];
+                                  // Toggle the correct answer
+                                  newAnswers[index].correct =
+                                    !newAnswers[index].correct;
 
-                          {/* زر لإغلاق النافذة المنبثقة */}
-                          <button
-                            className="close-popup-button"
-                            onClick={closePopup}
-                          >
-                            Close
-                          </button>
-                        </div>
+                                  // Ensure at least one answer is marked as correct
+                                  if (!newAnswers.some((ans) => ans.correct)) {
+                                    newAnswers[index].correct = true; // Set the current answer as correct
+                                  }
+
+                                  setAnswers(newAnswers);
+                                }}
+                              />
+                              Correct Answer
+                            </label>
+                          </div>
+                        ))}
+                        <button onClick={handleUpdateQuestion}>
+                          Update Question
+                        </button>
+                        {error && <p className="error-message">{error}</p>}
                       </div>
                     )}
                   </div>
-
-                  <div className="questions-list">
-                    <h3>Questions List</h3>
-                    {questions.map((question, index) => (
-                      <div key={index} className="question-item">
-                        {editQuestionIndex === index ? (
-                          <div className="edit-question">
-                            <input
-                              type="text"
-                              value={newQuestion}
-                              onChange={(e) => setNewQuestion(e.target.value)}
-                              placeholder="Edit question"
-                            />
-                            <button
-                              className="save-button"
-                              onClick={() => handleAddOrEditQuestion()}
-                            >
-                              Save
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="question-content">
-                            <h4>{question.text}</h4>
-                          </div>
-                        )}
-                        <ul className="answers-list">
-                          {question.answers.map((answer, i) => (
-                            <li key={i} className="answer-item">
-                              {editAnswerIndex === i &&
-                              editQuestionIndex === index ? (
-                                <div className="edit-answer">
-                                  <input
-                                    type="text"
-                                    value={newAnswerText}
-                                    onChange={(e) =>
-                                      setNewAnswerText(e.target.value)
-                                    }
-                                    placeholder="Edit answer"
-                                  />
-                                  <button
-                                    className="save-button"
-                                    onClick={() =>
-                                      handleSaveEditedAnswer(index, i)
-                                    }
-                                  >
-                                    Save
-                                  </button>
-                                </div>
-                              ) : (
-                                <span>
-                                  {answer.text} {answer.correct && "(Correct)"}
-                                </span>
-                              )}
-                              {editQuestionIndex === index && (
-                                <div className="action-buttons">
-                                  <button
-                                    className="edit-button"
-                                    onClick={() => handleEditAnswer(i)}
-                                  >
-                                    Edit
-                                  </button>
-                                  <button
-                                    className="delete-button"
-                                    onClick={() => handleDeleteAnswer(index, i)}
-                                  >
-                                    Delete
-                                  </button>
-                                </div>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="action-buttons">
-                          <button
-                            id={`edit-question-${index}`}
-                            className="edit-button"
-                            onClick={() => handleEditQuestionIndex(index)}
-                          >
-                            Edit Question
-                          </button>
-                          <button
-                            id={`delete-question-${index}`}
-                            className="delete-button"
-                            onClick={() => handleDeleteQuestion(index)}
-                          >
-                            Delete Question
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                ))}
+                <button onClick={() => setShowPopup(true)}>
+                  Add New Question
+                </button>
               </div>
             )}
           </div>
         </div>
       </details>
+
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Add New Question</h2>
+            <input
+              type="text"
+              value={newQuestion}
+              onChange={(e) => setNewQuestion(e.target.value)}
+              placeholder="Enter new question"
+            />
+            <h4>Answers:</h4>
+            {answers.map((answer, index) => (
+              <div key={index}>
+                <input
+                  type="text"
+                  value={answer.text}
+                  onChange={(e) => {
+                    const newAnswers = [...answers];
+                    newAnswers[index].text = e.target.value;
+                    setAnswers(newAnswers);
+                  }}
+                  placeholder="Enter answer"
+                />
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={answer.correct}
+                    onChange={() => {
+                      const newAnswers = [...answers];
+                      newAnswers[index].correct = !newAnswers[index].correct;
+                      setAnswers(newAnswers);
+                    }}
+                  />
+                  Correct Answer
+                </label>
+              </div>
+            ))}
+            <button onClick={handleAddAnswer}>Add Answer</button>
+            <button onClick={handleAddNewQuestion}>Add Question</button>
+            <button onClick={() => setShowPopup(false)}>Close</button>
+            {error && <p className="error-message">{error}</p>}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
