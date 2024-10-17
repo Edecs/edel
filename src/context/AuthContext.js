@@ -1,6 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { getDatabase, ref, get } from 'firebase/database';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  sendPasswordResetEmail,
+} from "firebase/auth"; // استيراد الدوال المطلوبة
+import { getDatabase, ref, get } from "firebase/database"; // استيراد دوال قاعدة البيانات
 
 const sanitizeEmail = (email) => {
   return email.replace(/\./g, ",");
@@ -8,26 +13,20 @@ const sanitizeEmail = (email) => {
 
 const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
-    
-    // التحقق من وجود معرف المستخدم في localStorage
-    const storedUser = localStorage.getItem('userEmail');
-    if (storedUser) {
-      setUser({ email: storedUser }); // تعيين المستخدم بناءً على البريد المخزن
-    }
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user);
-        localStorage.setItem('userEmail', sanitizeEmail(user.email)); // حفظ البريد في localStorage
-
-        const email = sanitizeEmail(user.email);
+      if (currentUser) {
+        const email = sanitizeEmail(currentUser.email);
         const db = getDatabase();
         const userRef = ref(db, `users/${email}`);
 
@@ -37,13 +36,9 @@ export function AuthProvider({ children }) {
             const userData = snapshot.val();
             const role = userData.role || "User";
 
-            if (role === "SuperAdmin" || role === "admin") {
-              setIsSuperAdmin(true);
-              setIsAdmin(true);
-            } else {
-              setIsAdmin(false);
-              setIsSuperAdmin(false);
-            }
+            // ضبط الصلاحيات بناءً على الدور
+            setIsSuperAdmin(role === "SuperAdmin");
+            setIsAdmin(role === "admin" || role === "SuperAdmin");
           } else {
             setIsAdmin(false);
             setIsSuperAdmin(false);
@@ -57,12 +52,15 @@ export function AuthProvider({ children }) {
         setUser(null);
         setIsAdmin(false);
         setIsSuperAdmin(false);
-        localStorage.removeItem('userEmail'); // إزالة البريد من localStorage إذا لم يكن هناك مستخدم
       }
     });
 
     return () => unsubscribe();
   }, []);
+
+  const resetPassword = async (email) => {
+    await sendPasswordResetEmail(getAuth(), email);
+  };
 
   const logout = async () => {
     const auth = getAuth();
@@ -71,19 +69,23 @@ export function AuthProvider({ children }) {
       setUser(null);
       setIsAdmin(false);
       setIsSuperAdmin(false);
-      localStorage.removeItem('userEmail'); // إزالة البريد من localStorage عند تسجيل الخروج
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, isAdmin, isSuperAdmin, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
+  const value = {
+    user,
+    loading,
+    isAdmin,
+    isSuperAdmin,
+    resetPassword,
+    logout,
+  };
 
-export function useAuth() {
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = () => {
   return useContext(AuthContext);
-}
+};
