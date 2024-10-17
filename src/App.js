@@ -12,8 +12,10 @@ import UserProgressPage from "./pages/UserProgressPage";
 import CourseManagementPage from "./pages/CourseManagementPage";
 import AddTaskPage from "./pages/AddTaskPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import ArchivedTasksPage from "./pages/ArchivedTasksPage"; // استيراد صفحة الأرشيف
-import LoadingScreen from "./components/LoadingScreen"; // استيراد شاشة التحميل
+import ArchivedTasksPage from "./pages/ArchivedTasksPage";
+import DepartmentManagement from "./pages/DepartmentManagement";
+import LoadingScreen from "./components/LoadingScreen";
+import ResetPasswordPage from "./pages/ResetPasswordPage"; // استيراد صفحة إعادة تعيين كلمة المرور
 import { useAuth } from "./context/AuthContext";
 import "./App.css";
 
@@ -29,12 +31,10 @@ const App = () => {
     setIsSidebarOpen(false);
   };
 
-  // عرض شاشة التحميل عندما تكون حالة التحميل نشطة
   if (loading) {
     return <LoadingScreen />;
   }
 
-  // التحقق من وجود المستخدم في localStorage
   const storedUserEmail = localStorage.getItem("userEmail");
 
   return (
@@ -43,7 +43,9 @@ const App = () => {
       {user && <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />}
       <main className="main-content" onClick={closeSidebar}>
         <Routes>
-          {/* إذا لم يكن هناك مستخدم، عرض صفحة تسجيل الدخول */}
+          {/* إضافة مسار صفحة إعادة تعيين كلمة المرور */}
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
           {!user && !storedUserEmail ? (
             <Route path="*" element={<Navigate to="/" replace />} />
           ) : (
@@ -65,12 +67,15 @@ const App = () => {
                     path="/course-management"
                     element={<CourseManagementPage />}
                   />
+                  <Route
+                    path="/department-management"
+                    element={<DepartmentManagement />}
+                  />
                 </>
               )}
               <Route path="*" element={<NotFoundPage />} />
             </>
           )}
-          {/* صفحة تسجيل الدخول */}
           <Route path="/" element={<LoginPage />} />
         </Routes>
       </main>
