@@ -408,29 +408,28 @@ function CoursePage() {
                 <button onClick={() => setShowPopup(true)}>
                   Add New Question
                 </button>
+                <h2>Media</h2>
+                <input
+                  type="text"
+                  value={newImageUrl}
+                  onChange={(e) => setNewImageUrl(e.target.value)}
+                  placeholder="Add Image URL"
+                />
+                <input
+                  type="text"
+                  value={newVideoUrl}
+                  onChange={(e) => setNewVideoUrl(e.target.value)}
+                  placeholder="Add Video URL"
+                />
+                <button onClick={handleAddMedia}>Add Media</button>
+                {media.images.map((mediaItem, index) => (
+                  <img key={index} src={mediaItem.url} alt={`Media ${index}`} />
+                ))}
+                {media.videos.map((mediaItem, index) => (
+                  <video key={index} src={mediaItem.url} controls />
+                ))}
               </div>
             )}
-
-            <h2>Media</h2>
-            <input
-              type="text"
-              value={newImageUrl}
-              onChange={(e) => setNewImageUrl(e.target.value)}
-              placeholder="Add Image URL"
-            />
-            <input
-              type="text"
-              value={newVideoUrl}
-              onChange={(e) => setNewVideoUrl(e.target.value)}
-              placeholder="Add Video URL"
-            />
-            <button onClick={handleAddMedia}>Add Media</button>
-            {media.images.map((mediaItem, index) => (
-              <img key={index} src={mediaItem.url} alt={`Media ${index}`} />
-            ))}
-            {media.videos.map((mediaItem, index) => (
-              <video key={index} src={mediaItem.url} controls />
-            ))}
           </div>
         </div>
       </details>
