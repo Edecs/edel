@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue, set, remove } from "firebase/database";
 import { getAuth } from "firebase/auth";
-
 import "./CoursePage.css";
 
-function CoursePage({ roles }) {
+function CoursePage() {
   const [mainCourses, setMainCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [subCourses, setSubCourses] = useState([]);
@@ -18,10 +17,44 @@ function CoursePage({ roles }) {
   const [newCourseName, setNewCourseName] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState("");
+  const [currentUserDepartment, setCurrentUserDepartment] = useState("");
+  const [media, setMedia] = useState({
+    images: [],
+    videos: [],
+  });
+  const [newImageUrl, setNewImageUrl] = useState("");
+  const [newVideoUrl, setNewVideoUrl] = useState("");
 
   const db = getDatabase();
 
-  // Load main courses
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      const userEmail = user.email;
+      const usersRef = ref(db, "users");
+      onValue(
+        usersRef,
+        (snapshot) => {
+          const usersData = snapshot.val();
+          const userData = Object.values(usersData).find(
+            (u) => u.email === userEmail
+          );
+          if (userData) {
+            setCurrentUserRole(userData.role);
+            setCurrentUserDepartment(userData.department || "");
+          } else {
+            console.error("User data not found for email:", userEmail);
+          }
+        },
+        (error) => {
+          console.error("Error fetching user data:", error);
+        }
+      );
+    }
+  }, [db]);
+
   useEffect(() => {
     const coursesRef = ref(db, "courses/mainCourses");
     const unsubscribe = onValue(coursesRef, (snapshot) => {
@@ -38,7 +71,6 @@ function CoursePage({ roles }) {
     return () => unsubscribe();
   }, [db]);
 
-  // Load sub-courses
   useEffect(() => {
     if (selectedCourse) {
       const subCoursesRef = ref(
@@ -53,7 +85,7 @@ function CoursePage({ roles }) {
               ...subCoursesData[key],
             }))
           : [];
-        setSubCourses(subCoursesArray);
+        setSubCourses(subCoursesArray); // لا يوجد فلتر هنا بناءً على القسم
         setSelectedSubCourse("");
       });
 
@@ -61,7 +93,6 @@ function CoursePage({ roles }) {
     }
   }, [db, selectedCourse]);
 
-  // Load questions
   useEffect(() => {
     if (selectedCourse && selectedSubCourse) {
       const questionsRef = ref(
@@ -84,20 +115,13 @@ function CoursePage({ roles }) {
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
-  // Handle editing a question
   const handleEditQuestion = (question) => {
     setNewQuestion(question.text);
     setAnswers(question.answers);
     setEditQuestionIndex(question.id);
   };
 
-  // Handle updating a question
   const handleUpdateQuestion = async () => {
-    if (!newQuestion.trim() || answers.every((a) => !a.text)) {
-      setError("Question and at least one answer are required.");
-      return;
-    }
-
     const questionRef = ref(
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}`
@@ -109,7 +133,7 @@ function CoursePage({ roles }) {
         answers: answers,
       });
       setNewQuestion("");
-      setAnswers([{ text: "", correct: false }]); // Reset answers
+      setAnswers([{ text: "", correct: false }]);
       setEditQuestionIndex(null);
       setError("");
     } catch (error) {
@@ -117,7 +141,6 @@ function CoursePage({ roles }) {
     }
   };
 
-  // Handle deleting a question
   const handleDeleteQuestion = async (questionId) => {
     const questionRef = ref(
       db,
@@ -131,27 +154,19 @@ function CoursePage({ roles }) {
     }
   };
 
-  // Function to handle adding a new course
   const handleAddCourse = () => {
-    if (!newCourseName.trim() || !thumbnail.trim()) {
-      setError("Course name and thumbnail are required.");
-      return;
-    }
-
     const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
-    set(courseRef, { name: newCourseName, thumbnail: thumbnail });
+    set(courseRef, {
+      name: newCourseName,
+      thumbnail: thumbnail,
+      department: currentUserDepartment,
+    });
 
     setNewCourseName("");
     setThumbnail("");
   };
 
-  // Function to handle adding a new sub-course
   const handleAddSubCourse = () => {
-    if (!newSubCourseName.trim() || !selectedCourse) {
-      setError("Sub-course name and selected main course are required.");
-      return;
-    }
-
     const subCourseRef = ref(
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${newSubCourseName}`
@@ -161,13 +176,7 @@ function CoursePage({ roles }) {
     setNewSubCourseName("");
   };
 
-  // Function to handle adding a new question
   const handleAddNewQuestion = async () => {
-    if (!newQuestion.trim() || answers.every((a) => !a.text)) {
-      setError("Question and at least one answer are required.");
-      return;
-    }
-
     const newQuestionRef = ref(
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${newQuestion}`
@@ -179,30 +188,61 @@ function CoursePage({ roles }) {
         answers: answers,
       });
       setNewQuestion("");
-      setAnswers([{ text: "", correct: false }]); // Reset answers
-      setShowPopup(false); // Close popup
+      setAnswers([{ text: "", correct: false }]);
+      setShowPopup(false);
       setError("");
     } catch (error) {
       setError("Failed to add question: " + error.message);
     }
   };
 
-  // Function to handle adding a new answer input
   const handleAddAnswer = () => {
     setAnswers([...answers, { text: "", correct: false }]);
   };
 
+  const filteredCourses = mainCourses.filter(
+    (course) => course.department === currentUserDepartment
+  );
+  const handleAddMedia = async () => {
+    const mediaRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
+    );
+    const currentMedia = media.images.concat(media.videos);
+    await set(mediaRef, {
+      images: [...currentMedia, { type: "image", url: newImageUrl }],
+      videos: [...currentMedia, { type: "video", url: newVideoUrl }],
+    });
+
+    setNewImageUrl("");
+    setNewVideoUrl("");
+  };
+  {
+    media.images.map((mediaItem) => (
+      <img
+        key={mediaItem.url}
+        src={mediaItem.url}
+        alt={`Media ${mediaItem.url}`}
+      />
+    ));
+  }
+  {
+    media.videos.map((mediaItem) => (
+      <video key={mediaItem.url} src={mediaItem.url} controls />
+    ));
+  }
+
   return (
     <div className="course-page">
       <h1>Courses Management</h1>
+
       <details>
         <summary>Add Course</summary>
-
         <div className="course-management-content">
           <div className="add-course-section">
             <h2>Main Courses</h2>
             <div className="course-buttons">
-              {mainCourses.map((course) => (
+              {filteredCourses.map((course) => (
                 <button
                   key={course.id}
                   onClick={() => {
@@ -213,7 +253,6 @@ function CoursePage({ roles }) {
                 </button>
               ))}
             </div>
-
             <h2>Add New Course</h2>
             <input
               type="text"
@@ -221,7 +260,6 @@ function CoursePage({ roles }) {
               value={newCourseName}
               onChange={(e) => setNewCourseName(e.target.value)}
             />
-
             <h2>Upload Course Thumbnail</h2>
             <input
               type="text"
@@ -230,6 +268,19 @@ function CoursePage({ roles }) {
               placeholder="Enter thumbnail URL (Dropbox link)"
             />
             <button onClick={handleAddCourse}>Add Course</button>
+            <div className="add-sub-course-section">
+              <h2>Sub-Courses</h2>
+
+              <div className="add-sub-course-form">
+                <input
+                  type="text"
+                  value={newSubCourseName}
+                  onChange={(e) => setNewSubCourseName(e.target.value)}
+                  placeholder="Add new sub-course"
+                />
+                <button onClick={handleAddSubCourse}>Add Sub-Course</button>
+              </div>
+            </div>
           </div>
         </div>
       </details>
@@ -249,7 +300,7 @@ function CoursePage({ roles }) {
                   <option value="" disabled>
                     Select a main course
                   </option>
-                  {mainCourses.map((course) => (
+                  {filteredCourses.map((course) => (
                     <option key={course.id} value={course.id}>
                       {course.name}
                     </option>
@@ -274,19 +325,6 @@ function CoursePage({ roles }) {
                     </option>
                   ))}
                 </select>
-                <div className="add-sub-course-section">
-                  <h2>Sub-Courses</h2>
-
-                  <div className="add-sub-course-form">
-                    <input
-                      type="text"
-                      value={newSubCourseName}
-                      onChange={(e) => setNewSubCourseName(e.target.value)}
-                      placeholder="Add new sub-course"
-                    />
-                    <button onClick={handleAddSubCourse}>Add Sub-Course</button>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -333,13 +371,11 @@ function CoursePage({ roles }) {
                                 checked={answer.correct}
                                 onChange={() => {
                                   const newAnswers = [...answers];
-                                  // Toggle the correct answer
                                   newAnswers[index].correct =
                                     !newAnswers[index].correct;
 
-                                  // Ensure at least one answer is marked as correct
                                   if (!newAnswers.some((ans) => ans.correct)) {
-                                    newAnswers[index].correct = true; // Set the current answer as correct
+                                    newAnswers[index].correct = true;
                                   }
 
                                   setAnswers(newAnswers);
@@ -357,11 +393,44 @@ function CoursePage({ roles }) {
                     )}
                   </div>
                 ))}
+
+                {media.images.map((mediaItem) => (
+                  <img
+                    key={mediaItem.url}
+                    src={mediaItem.url}
+                    alt={`Media ${mediaItem.url}`}
+                  />
+                ))}
+                {media.videos.map((mediaItem) => (
+                  <video key={mediaItem.url} src={mediaItem.url} controls />
+                ))}
+
                 <button onClick={() => setShowPopup(true)}>
                   Add New Question
                 </button>
               </div>
             )}
+
+            <h2>Media</h2>
+            <input
+              type="text"
+              value={newImageUrl}
+              onChange={(e) => setNewImageUrl(e.target.value)}
+              placeholder="Add Image URL"
+            />
+            <input
+              type="text"
+              value={newVideoUrl}
+              onChange={(e) => setNewVideoUrl(e.target.value)}
+              placeholder="Add Video URL"
+            />
+            <button onClick={handleAddMedia}>Add Media</button>
+            {media.images.map((mediaItem, index) => (
+              <img key={index} src={mediaItem.url} alt={`Media ${index}`} />
+            ))}
+            {media.videos.map((mediaItem, index) => (
+              <video key={index} src={mediaItem.url} controls />
+            ))}
           </div>
         </div>
       </details>
