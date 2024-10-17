@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-// import { useAuth } from '../context/AuthContext'; // Removed unused import
 import "./LoginPage.css";
 import { ReactComponent as Logo } from "../photos/edecs logo white.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Import Link from React Router
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,11 +20,14 @@ function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       if (user) {
-        // No need for setUserEmail, use local/session storage directly
         if (rememberMe) {
           localStorage.setItem("userEmail", user.email);
         } else {
@@ -37,7 +39,7 @@ function LoginPage() {
         setError("Authentication failed. Please try again.");
       }
     } catch (error) {
-      setError("Login failed. " + error.message);
+      setError("Login failed: " + error.message);
     }
   };
 
@@ -80,10 +82,13 @@ function LoginPage() {
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
-            Remember Me
+            Remember me
           </label>
           <button type="submit">Login</button>
         </form>
+        <div className="reset-password-link">
+          <Link to="/reset-password">Forgot Password?</Link>
+        </div>
       </div>
     </div>
   );
