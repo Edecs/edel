@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ref, get, set } from "firebase/database";
 import { db } from "../firebase";
@@ -20,7 +20,6 @@ const SubCourseDetailPage = () => {
 
   const auth = getAuth();
   const user = auth.currentUser;
-  const mediaRef = useRef(null);
 
   useEffect(() => {
     setStartTime(new Date());
@@ -61,10 +60,10 @@ const SubCourseDetailPage = () => {
   }, [subCourseId]);
 
   const handleNextMedia = () => {
-    if (subCourse) {
+    if (subCourse?.media) {
       const mediaKeys = [
-        ...Object.keys(subCourse.images || {}),
-        ...Object.keys(subCourse.videos || {}),
+        ...Object.keys(subCourse.media.images || {}),
+        ...Object.keys(subCourse.media.videos || {}),
       ];
       if (currentMediaIndex < mediaKeys.length - 1) {
         setCurrentMediaIndex(currentMediaIndex + 1);
@@ -144,52 +143,57 @@ const SubCourseDetailPage = () => {
     }
   };
 
+  const convertDropboxLink = (link) => {
+    if (link.includes("dropbox.com")) {
+      return link
+        .replace("www.dropbox.com", "dl.dropboxusercontent.com")
+        .replace("?dl=1", "");
+    }
+    return link;
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!subCourse) return <p>Sub-course not found.</p>;
 
   const mediaKeys = [
-    ...Object.keys(subCourse.images || {}),
-    ...Object.keys(subCourse.videos || {}),
+    ...Object.keys(subCourse.media?.images || {}),
+    ...Object.keys(subCourse.media?.videos || {}),
   ];
 
   const currentMediaKey = mediaKeys[currentMediaIndex];
   const currentMedia = currentMediaKey
-    ? subCourse.images?.[currentMediaKey] || subCourse.videos?.[currentMediaKey]
+    ? subCourse.media?.images?.[currentMediaKey]?.url ||
+      subCourse.media?.videos?.[currentMediaKey]?.url
     : null;
 
   const currentQuestion = subCourse?.questions
     ? Object.values(subCourse.questions)[currentQuestionIndex]
     : null;
 
-  const convertDropboxLink = (link) => {
-    if (link.includes("dropbox.com")) {
-      return link
-        .replace("www.dropbox.com", "dl.dropboxusercontent.com")
-        .replace("?dl=1", ""); // تغيير هنا لتجنب التنزيل
-    }
-    return link;
-  };
-
   return (
     <div className="sub-course-detail-container">
-      <h1>{subCourse.title}</h1>
+      <h1>{subCourse.name}</h1>
       <p>{subCourse.description}</p>
 
       <div className="media-container">
         {currentMedia && (
           <div className="media-content">
-            {subCourse.images?.[currentMediaKey] && (
+            {subCourse.media?.images?.[currentMediaKey] && (
               <img
-                src={convertDropboxLink(subCourse.images[currentMediaKey])}
+                src={convertDropboxLink(
+                  subCourse.media.images[currentMediaKey].url
+                )}
                 alt="Course Media"
+                style={{ width: "100%", height: "auto" }}
               />
             )}
-
-            {subCourse.videos?.[currentMediaKey] && (
-              <video controls style={{ width: "100%", height: "900px" }}>
+            {subCourse.media?.videos?.[currentMediaKey] && (
+              <video controls style={{ width: "100%", height: "auto" }}>
                 <source
-                  src={convertDropboxLink(subCourse.videos[currentMediaKey])}
+                  src={convertDropboxLink(
+                    subCourse.media.videos[currentMediaKey].url
+                  )}
                   type="video/mp4"
                 />
                 Your browser does not support the video tag.
@@ -219,6 +223,23 @@ const SubCourseDetailPage = () => {
       {currentQuestion && (
         <div className="question-container">
           <div className="question">
+            <h3>{currentQuestion.text}</h3>
+            {currentQuestion.answers.map((answer, index) => (
+              <div className="answer-option" key={index}>
+                <label>
+                  <input
+                    type="radio"
+                    name={`question-${currentQuestionIndex}`}
+                    value={answer.text}
+                    checked={userAnswers[currentQuestionIndex] === answer.text}
+                    onChange={() =>
+                      handleAnswerChange(currentQuestionIndex, answer.text)
+                    }
+                  />
+                  {answer.text}
+                </label>
+              </div>
+            ))}
             <div className="question-navigation">
               <button
                 onClick={handlePrevQuestion}
@@ -237,23 +258,6 @@ const SubCourseDetailPage = () => {
                 Next Question
               </button>
             </div>
-            <h3>{currentQuestion.text}</h3>
-            {currentQuestion.answers.map((answer, index) => (
-              <div className="answer-option" key={index}>
-                <label>
-                  <input
-                    type="radio"
-                    name={`question-${currentQuestionIndex}`}
-                    value={answer.text}
-                    checked={userAnswers[currentQuestionIndex] === answer.text}
-                    onChange={() =>
-                      handleAnswerChange(currentQuestionIndex, answer.text)
-                    }
-                  />
-                  {answer.text}
-                </label>
-              </div>
-            ))}
           </div>
         </div>
       )}
