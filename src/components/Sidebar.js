@@ -6,7 +6,8 @@ import { ReactComponent as CoursesIcon } from "../photos/add.svg";
 import { ReactComponent as ProgressIcon } from "../photos/address-book.svg";
 import { ReactComponent as AdminIcon } from "../photos/user-add-outlined.svg";
 import { ReactComponent as AddTaskIcon } from "../photos/add task.svg";
-import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-com.svg"; // تأكد من إضافة أيقونة مناسبة للأرشيف
+import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-com.svg";
+import { ReactComponent as DepartmentIcon } from "../photos/open-data-square.svg"; // تأكد من وجود أيقونة للقسم
 import "./Sidebar.css";
 
 function Sidebar({ isOpen, onClose }) {
@@ -83,6 +84,18 @@ function Sidebar({ isOpen, onClose }) {
               </Link>
             </li>
           </>
+        )}
+        {/* يظهر رابط قسم إدارة الأقسام فقط إذا كان المستخدم سوبر أدمن */}
+        {isSuperAdmin && (
+          <li>
+            <Link
+              to="/department-management"
+              onClick={onClose}
+              title="Department Management"
+            >
+              <DepartmentIcon className="sidebar-icon" />
+            </Link>
+          </li>
         )}
       </ul>
     </div>
