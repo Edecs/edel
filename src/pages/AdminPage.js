@@ -1,64 +1,32 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { db, ref, set, get, remove } from "../firebase"; // استيراد العمليات على قاعدة البيانات
-import { getAuth, deleteUser, signInWithEmailAndPassword } from "firebase/auth"; // استيراد العمليات المتعلقة بالمصادقة
-import { createUserWithEmailAndPassword } from "firebase/auth"; // لإنشاء مستخدم جديد
-import { useNavigate } from "react-router-dom"; // لتوجيه المستخدم بين الصفحات
-import "./AdminPage.css"; // استيراد التنسيقات
+import { db, ref, get, set } from "../firebase"; // استيراد فقط ما تحتاجه
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import "./AdminPage.css";
 
 function AdminPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [users, setUsers] = useState([]); // لتخزين قائمة المستخدمين
-  const [roles, setRoles] = useState({}); // لتخزين قائمة الأدوار
-  const [courses, setCourses] = useState({}); // لتخزين قائمة الكورسات
-  const [newUserEmail, setNewUserEmail] = useState(""); // لتخزين البريد الإلكتروني للمستخدم الجديد
-  const [newUserName, setNewUserName] = useState(""); // لتخزين اسم المستخدم الجديد
-  const [newUserPassword, setNewUserPassword] = useState(""); // لتخزين كلمة مرور المستخدم الجديد
-  const [newUserRole, setNewUserRole] = useState("admin"); // لتحديد دور المستخدم الجديد
-  const [newUserDepartment, setNewUserDepartment] = useState("Top Management"); // لتحديد قسم المستخدم الجديد
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // للتحكم في عرض النافذة المنبثقة
-  const [selectedUser, setSelectedUser] = useState(null); // لتحديد المستخدم المختار
-  const [courseSearchQuery, setCourseSearchQuery] = useState(""); // لتخزين استعلام البحث عن الكورسات
+  const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState({});
+  const [courses, setCourses] = useState({});
+  const [departments, setDepartments] = useState([]);
+  const [newUserEmail, setNewUserEmail] = useState("");
+  const [newUserName, setNewUserName] = useState("");
+  const [newUserPassword, setNewUserPassword] = useState("");
+  const [newUserRole, setNewUserRole] = useState("user");
+  const [newUserDepartment, setNewUserDepartment] = useState("");
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [currentUserRole, setCurrentUserRole] = useState(null);
+  const [currentUserDepartment, setCurrentUserDepartment] = useState("");
+  const [courseSearchQuery, setCourseSearchQuery] = useState("");
 
-  const auth = getAuth(); // للحصول على مصادقة Firebase
-
-  const departments = [
-    // قائمة الأقسام المتاحة
-    "Top Management",
-    "Administration and Gov. Relations",
-    "Projects Management Departments",
-    "Commercial Department",
-    "Project Control Department",
-    "Operation Support Unit",
-    "Contract Department",
-    "HSE Department",
-    "QA/QC Department",
-    "Business Applications",
-    "Strategy and Innovation",
-    "Finance Department",
-    "HR Department",
-    "Communication and Marketing Department",
-    "Internal Audit, Ethics & Compliance",
-    "EDECS Foundation",
-    "Marketing",
-    "Information Technology",
-  ];
-
+  const auth = getAuth();
   const navigate = useNavigate();
-  const fetchCurrentUserRole = useCallback(async () => {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const sanitizedEmail = user.email.replace(/\./g, ",");
-        const roleRef = ref(db, `roles/${sanitizedEmail}`);
-        const roleSnapshot = await get(roleRef);
-        if (roleSnapshot.exists()) {
-          // معالجة الدور إذا كان موجودًا (حاليًا غير مستخدمة)
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching current user role:", error);
-    }
-  }, [auth]);
 
   const fetchData = useCallback(async () => {
     try {
@@ -76,178 +44,63 @@ function AdminPage() {
           }, {})
         : {};
 
+      const departmentsRef = ref(db, "departments");
+      const departmentsSnapshot = await get(departmentsRef);
+      const departmentsData = departmentsSnapshot.exists()
+        ? Object.values(departmentsSnapshot.val())
+        : [];
+
       setRoles(rolesData);
       setUsers(Object.values(usersData));
+      setDepartments(departmentsData);
       setCourses((await get(ref(db, "courses/mainCourses"))).val() || {});
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }, []);
 
-  useEffect(() => {
-    fetchCurrentUserRole();
-    fetchData();
-  }, [fetchCurrentUserRole, fetchData]);
-
-  const handleAddUser = async () => {
-    if (newUserEmail && newUserPassword && newUserName) {
-      const currentAdminUser = auth.currentUser; // حفظ المستخدم الحالي
-      const adminEmail = currentAdminUser.email;
-      const adminPassword = prompt(
-        "Please enter your admin password to continue"
-      ); // طلب كلمة مرور المدير الحالي
-
-      try {
-        // إنشاء المستخدم الجديد
-        const { user } = await createUserWithEmailAndPassword(
-          auth,
-          newUserEmail,
-          newUserPassword
-        );
-
-        // تخزين بيانات المستخدم الجديد في قاعدة البيانات
-        const sanitizedEmail = newUserEmail.replace(/\./g, ",");
-        const rolesRef = ref(db, `roles/${sanitizedEmail}`);
-        const usersRef = ref(db, `users/${sanitizedEmail}`);
-
-        await set(rolesRef, { role: newUserRole, courses: {} });
-        await set(usersRef, {
-          email: newUserEmail,
-          name: newUserName,
-          role: newUserRole,
-          department: newUserDepartment,
-        });
-
-        // إعادة تسجيل الدخول بالحساب الإداري
-        await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
-
-        // إعادة تعيين المدخلات
-        setNewUserEmail("");
-        setNewUserPassword("");
-        setNewUserName("");
-        setNewUserRole("admin");
-        setNewUserDepartment("Top Management");
-
-        // تحديث البيانات وإغلاق النافذة
-        await fetchData();
-        setIsPopupOpen(false);
-      } catch (error) {
-        console.error("Error adding user:", error);
-      }
-    }
-  };
-
-  const handleRoleChange = async (userEmail, newRole) => {
-    try {
-      const sanitizedEmail = userEmail.replace(/\./g, ",");
-      const roleRef = ref(db, `roles/${sanitizedEmail}`);
-      const userRef = ref(db, `users/${sanitizedEmail}`);
-
-      await set(roleRef, {
-        role: newRole,
-        courses: roles[sanitizedEmail]?.courses || {},
-      });
-
-      await set(userRef, {
-        ...users[sanitizedEmail],
-        role: newRole,
-      });
-
-      await fetchData();
-    } catch (error) {
-      console.error("Error changing user role:", error);
-    }
-  };
-
-  const handleUpdateCourseAccess = async (
-    userEmail,
-    courseId,
-    subCourseName,
-    hasAccess
-  ) => {
-    try {
-      const sanitizedEmail = userEmail.replace(/\./g, ",");
-      const userCoursesRef = ref(db, `roles/${sanitizedEmail}/courses`);
-
-      const userCoursesSnapshot = await get(userCoursesRef);
-      const userCourses = userCoursesSnapshot.exists()
-        ? userCoursesSnapshot.val()
-        : {};
-
-      if (!userCourses[courseId]) {
-        userCourses[courseId] = {};
-      }
-
-      if (subCourseName) {
-        userCourses[courseId][subCourseName] = { hasAccess };
-      } else {
-        userCourses[courseId] = { hasAccess };
-      }
-
-      await set(userCoursesRef, userCourses);
-      await fetchData();
-    } catch (error) {
-      console.error("Error updating course access:", error);
-    }
-  };
-
-  const handleToggleAccess = (userEmail, courseId, subCourseName) => {
-    if (!selectedUser) return;
-
-    const sanitizedEmail = selectedUser.email.replace(/\./g, ",");
-    const currentCourseAccess =
-      roles[sanitizedEmail]?.courses?.[courseId] || {};
-    const hasAccess = subCourseName
-      ? !!currentCourseAccess[subCourseName]?.hasAccess
-      : !!currentCourseAccess.hasAccess;
-
-    handleUpdateCourseAccess(userEmail, courseId, subCourseName, !hasAccess);
-  };
-
-  const handleDisableUser = async (userEmail) => {
-    try {
-      const sanitizedEmail = userEmail.replace(/\./g, ",");
-      const roleRef = ref(db, `roles/${sanitizedEmail}`);
-      const userRef = ref(db, `users/${sanitizedEmail}`);
-
-      await set(roleRef, {
-        role: "Disabled",
-        courses: roles[sanitizedEmail]?.courses || {},
-      });
-
-      await set(userRef, {
-        ...users[sanitizedEmail],
-        role: "Disabled",
-      });
-
-      await fetchData();
-    } catch (error) {
-      console.error("Error disabling user:", error);
-    }
-  };
-
-  const handleRemoveUser = async (userEmail) => {
+  const fetchCurrentUserRole = useCallback(async () => {
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error("No authenticated user found");
-
-      const sanitizedEmail = userEmail.replace(/\./g, ",");
-      const userRef = ref(db, `users/${sanitizedEmail}`);
-      const roleRef = ref(db, `roles/${sanitizedEmail}`);
-
-      // Remove user from Firebase Authentication
-      const userToDelete = await getAuth().getUserByEmail(userEmail);
-      await deleteUser(userToDelete);
-
-      // Remove user data from the database
-      await remove(userRef);
-      await remove(roleRef);
-
-      await fetchData();
-      setSelectedUser(null);
+      if (user) {
+        const sanitizedEmail = user.email.replace(/\./g, ",");
+        const roleRef = ref(db, `roles/${sanitizedEmail}`);
+        const roleSnapshot = await get(roleRef);
+        if (roleSnapshot.exists()) {
+          const roleData = roleSnapshot.val();
+          setCurrentUserRole(roleData.role);
+          setCurrentUserDepartment(roleData.department || "");
+        } else {
+          setCurrentUserDepartment("");
+        }
+      }
     } catch (error) {
-      console.error("Error removing user:", error);
+      console.error("Error fetching current user role:", error);
     }
+  }, [auth]);
+
+  const handleToggleAccess = async (email, courseId, subCourseName) => {
+    try {
+      const sanitizedEmail = email.replace(/\./g, ",");
+      const userRoleRef = ref(
+        db,
+        `roles/${sanitizedEmail}/courses/${courseId}/${subCourseName}`
+      );
+      const currentAccessSnapshot = await get(userRoleRef);
+      const currentAccess = currentAccessSnapshot.exists()
+        ? currentAccessSnapshot.val().hasAccess
+        : false;
+      await set(userRoleRef, { hasAccess: !currentAccess });
+      await fetchData(); // تحديث البيانات بعد تغيير حالة الوصول
+    } catch (error) {
+      console.error("Error toggling course access:", error);
+    }
+  };
+
+  const getSubCourseName = (courseId, subCourseId) => {
+    return (
+      courses[courseId]?.subCourses?.[subCourseId]?.name || "Unknown SubCourse"
+    );
   };
 
   const navigateToCourseManagementPage = () => {
@@ -255,13 +108,68 @@ function AdminPage() {
   };
 
   const handleRefreshData = async () => {
-    await fetchData();
+    try {
+      await fetchData();
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    }
   };
 
-  const getSubCourseName = (courseId, subCourseId) => {
-    return (
-      courses[courseId]?.subCourses?.[subCourseId]?.name || "Unknown SubCourse"
+  useEffect(() => {
+    fetchCurrentUserRole();
+    fetchData();
+  }, [fetchCurrentUserRole, fetchData]);
+
+  const handleAddUser = async () => {
+    if (!newUserEmail || !newUserPassword || !newUserName) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    const currentAdminUser = auth.currentUser;
+    const adminEmail = currentAdminUser.email;
+    const adminPassword = prompt(
+      "Please enter your admin password to continue"
     );
+
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        newUserEmail,
+        newUserPassword
+      );
+      const sanitizedEmail = newUserEmail.replace(/\./g, ",");
+      const rolesRef = ref(db, `roles/${sanitizedEmail}`);
+
+      if (currentUserRole === "SuperAdmin") {
+        await set(rolesRef, {
+          role: newUserRole,
+          courses: {},
+          department: newUserDepartment,
+        });
+      } else if (currentUserRole === "admin") {
+        if (newUserRole === "admin") {
+          alert("Admin cannot add another admin.");
+          return;
+        }
+        await set(rolesRef, {
+          role: newUserRole,
+          courses: {},
+          department: currentUserDepartment,
+        });
+      }
+
+      await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+      setNewUserEmail("");
+      setNewUserPassword("");
+      setNewUserName("");
+      setNewUserRole("user");
+      setNewUserDepartment("");
+      await fetchData();
+      setIsPopupOpen(false);
+    } catch (error) {
+      console.error("Error adding user:", error);
+    }
   };
 
   return (
@@ -275,7 +183,7 @@ function AdminPage() {
           className="navigate-to-course-management-btn"
           onClick={navigateToCourseManagementPage}
         >
-          ِAssign Courses
+          Assign Courses
         </button>
         <button className="refresh-data-btn" onClick={handleRefreshData}>
           Refresh Data
@@ -290,14 +198,16 @@ function AdminPage() {
       <div className="main-content">
         <div className="user-list">
           {users
-            .filter((user) =>
-              user.name.toLowerCase().includes(searchQuery.toLowerCase())
+            .filter(
+              (user) =>
+                user.name &&
+                user.name.toLowerCase().includes(searchQuery.toLowerCase())
             )
             .map((user) => (
               <div
                 key={user.email}
                 className="user-item"
-                onClick={() => setSelectedUser(user)}
+                onClick={() => setSelectedUser(user)} // تعيين المستخدم المحدد هنا
               >
                 {user.name}
               </div>
@@ -318,13 +228,10 @@ function AdminPage() {
                 <strong>Department:</strong>{" "}
                 {selectedUser.department || "Not assigned"}
               </p>
-
-              {/* عرض الصلاحية بدون تعديل */}
               <p>
                 <strong>Role:</strong>{" "}
                 {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
               </p>
-
               <h3>Course Access</h3>
               <input
                 type="text"
@@ -334,11 +241,9 @@ function AdminPage() {
               />
               {Object.entries(courses)
                 .filter(([courseId, course]) => {
-                  // تحقق مما إذا كانت اسم الدورة الرئيسية أو أي من الأسماء الفرعية تحتوي على نص البحث
                   const isMainCourseMatch = course.name
                     .toLowerCase()
                     .includes(courseSearchQuery.toLowerCase());
-
                   const isSubCourseMatch =
                     course.subCourses &&
                     Object.values(course.subCourses).some((subCourse) =>
@@ -346,18 +251,14 @@ function AdminPage() {
                         .toLowerCase()
                         .includes(courseSearchQuery.toLowerCase())
                     );
-
-                  return isMainCourseMatch || isSubCourseMatch; // أعد الدورة إذا كان هناك تطابق
+                  return isMainCourseMatch || isSubCourseMatch;
                 })
                 .map(([courseId, course]) => {
                   const hasMainCourseAccess =
                     !!roles[selectedUser.email.replace(/\./g, ",")]?.courses?.[
                       courseId
                     ]?.hasAccess;
-
-                  // عرض الكورسات الرئيسية فقط إذا كان لدى المستخدم الوصول
                   if (!hasMainCourseAccess) return null;
-
                   return (
                     <div key={courseId}>
                       <h4>{course.name}</h4>
@@ -370,20 +271,20 @@ function AdminPage() {
                                 checked={
                                   !!roles[
                                     selectedUser.email.replace(/\./g, ",")
-                                  ]?.courses?.[courseId]?.[subCourse.name]
+                                  ]?.courses?.[courseId]?.[subCourseId]
                                     ?.hasAccess
                                 }
                                 onChange={() =>
                                   handleToggleAccess(
                                     selectedUser.email,
                                     courseId,
-                                    subCourse.name
+                                    subCourseId
                                   )
                                 }
                               />
-                              <span>
+                              <label>
                                 {getSubCourseName(courseId, subCourseId)}
-                              </span>
+                              </label>
                             </div>
                           )
                         )}
@@ -393,66 +294,64 @@ function AdminPage() {
             </>
           )}
         </div>
-      </div>
-      {isPopupOpen && (
-        <div className="popup">
-          <div className="popup-content">
-            <h2>Create New User</h2>
-            <label>
-              Email:
-              <input
-                type="email"
-                value={newUserEmail}
-                onChange={(e) => setNewUserEmail(e.target.value)}
-              />
-            </label>
-            <label>
-              Name:
-              <input
-                type="text"
-                value={newUserName}
-                onChange={(e) => setNewUserName(e.target.value)}
-              />
-            </label>
-            <label>
-              Password:
-              <input
-                type="password"
-                value={newUserPassword}
-                onChange={(e) => setNewUserPassword(e.target.value)}
-              />
-            </label>
-            <label>
-              Role:
-              <select
-                value={newUserRole}
-                onChange={(e) => setNewUserRole(e.target.value)}
-              >
-                <option value="admin">admin</option>
-                <option value="User">User</option>
-              </select>
-            </label>
-            <label>
-              Department:
+        {isPopupOpen && (
+          <div className="popup">
+            <h2>Create User</h2>
+            <input
+              type="text"
+              placeholder="Email"
+              value={newUserEmail}
+              onChange={(e) => setNewUserEmail(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Name"
+              value={newUserName}
+              onChange={(e) => setNewUserName(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={newUserPassword}
+              onChange={(e) => setNewUserPassword(e.target.value)}
+            />
+            <select
+              value={newUserRole}
+              onChange={(e) => setNewUserRole(e.target.value)}
+            >
+              <option value="user">User</option>
+              {currentUserRole === "SuperAdmin" && (
+                <option value="admin">Admin</option>
+              )}
+            </select>
+            {currentUserRole === "SuperAdmin" ? (
               <select
                 value={newUserDepartment}
                 onChange={(e) => setNewUserDepartment(e.target.value)}
               >
+                <option value="">Select Department</option>
                 {departments.map((department) => (
-                  <option key={department} value={department}>
-                    {department}
+                  <option key={department.id} value={department.name}>
+                    {department.name}
                   </option>
                 ))}
               </select>
-            </label>
+            ) : (
+              // عرض قسم الإداري العادي فقط
+              <select value={currentUserDepartment || "Not assigned"} disabled>
+                <option value={currentUserDepartment || "Not assigned"}>
+                  {currentUserDepartment || "Not assigned"}
+                </option>
+              </select>
+            )}
+
             <button onClick={handleAddUser}>Add User</button>
             <button onClick={() => setIsPopupOpen(false)}>Close</button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
-  // Closing the return statement
 }
 
 export default AdminPage;
