@@ -146,11 +146,11 @@
 
 .admin-page .search-input:focus {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  border-color: #007bff;
+  border-color: #0ea1a8;
 }
 
 .admin-page .search-button {
-  background-color: #007bff;
+  background-color: #107f85;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -162,7 +162,7 @@
 }
 
 .admin-page .search-button:hover {
-  background-color: #0056b3;
+  background-color: #0b595e;
 }
 
 /* تنسيق قسم عرض الدورات */
@@ -176,7 +176,7 @@
   margin-top: 20px; /* هامش أعلى */
   padding: 20px; /* حشوة داخلية للصندوق */
   background-color: #fff; /* لون خلفية الصندوق */
-  border: 2px solid #007bff; /* لون حدود الصندوق */
+  border: 2px solid #0ea1a8; /* لون حدود الصندوق */
   border-radius: 8px; /* زوايا مستديرة للصندوق */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل للصندوق */
   max-width: 800px; /* عرض أقصى للصندوق */
@@ -242,7 +242,7 @@ span {
 }
 
 .popup button {
-  background-color: #007bff;
+  background-color: #107f85;
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -253,15 +253,15 @@ span {
 }
 
 .popup button:hover {
-  background-color: #0056b3;
+  background-color: #0c595e;
 }
 
 .popup button:last-of-type {
-  background-color: #6c757d;
+  background-color: #0b3d41;
 }
 
 .popup button:last-of-type:hover {
-  background-color: #5a6268;
+  background-color: #1598a1;
 }
 
 h1,
