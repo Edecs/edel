@@ -1,0 +1,60 @@
+/* تحديد النمط الأساسي للصفحة */
+.department-management {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9; /* لون خلفية ناعم */
+  border: 1px solid #ddd; /* حدود خفيفة */
+  border-radius: 8px; /* زوايا دائرية */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف */
+}
+
+/* تنسيق العنوان */
+.department-management h2 {
+  text-align: center;
+  color: #333; /* لون داكن للنص */
+  margin-bottom: 20px;
+}
+
+/* تنسيق حقل الإدخال */
+.department-management input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc; /* حدود رمادية خفيفة */
+  border-radius: 4px; /* زوايا مستديرة */
+  font-size: 16px;
+}
+
+/* تنسيق الزر */
+.department-management button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff; /* لون أزرق للزر */
+  color: white;
+  border: none;
+  border-radius: 4px; /* زوايا مستديرة */
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* تأثير التحويل عند التمرير */
+}
+
+/* تغيير لون الزر عند التمرير عليه */
+.department-management button:hover {
+  background-color: #0056b3; /* لون أغمق عند التمرير */
+}
+
+/* تنسيق قائمة الأقسام */
+.department-management ul {
+  list-style-type: none; /* إزالة النقاط من القائمة */
+  padding: 0;
+}
+
+.department-management li {
+  padding: 10px;
+  background-color: #e9ecef; /* لون خلفية خفيف */
+  margin: 5px 0;
+  border-radius: 4px; /* زوايا مستديرة */
+  font-size: 16px;
+}
