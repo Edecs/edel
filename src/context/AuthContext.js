@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [currentUserDepartment, setCurrentUserDepartment] = useState(null); // إضافة حالة للقسم
 
   useEffect(() => {
     const auth = getAuth();
@@ -29,29 +30,35 @@ export const AuthProvider = ({ children }) => {
         const email = sanitizeEmail(currentUser.email);
         const db = getDatabase();
         const userRef = ref(db, `users/${email}`);
-
         try {
           const snapshot = await get(userRef);
           if (snapshot.exists()) {
             const userData = snapshot.val();
             const role = userData.role || "User";
+            const department = userData.department || null; // تأكد من أن الحقل موجود
 
             // ضبط الصلاحيات بناءً على الدور
             setIsSuperAdmin(role === "SuperAdmin");
             setIsAdmin(role === "admin" || role === "SuperAdmin");
+            setCurrentUserDepartment(department || "Not Assigned"); // تعيين القسم هنا أو تعيين قيمة افتراضية
           } else {
+            // إذا لم يكن هناك مستخدم، تعيين القيم الافتراضية
             setIsAdmin(false);
             setIsSuperAdmin(false);
+            setCurrentUserDepartment(null);
           }
         } catch (error) {
           console.error("Error fetching user roles:", error);
           setIsAdmin(false);
           setIsSuperAdmin(false);
+          setCurrentUserDepartment(null); // في حالة حدوث خطأ
         }
       } else {
+        // إذا لم يكن هناك مستخدم، تعيين القيم الافتراضية
         setUser(null);
         setIsAdmin(false);
         setIsSuperAdmin(false);
+        setCurrentUserDepartment(null);
       }
     });
 
@@ -69,6 +76,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setIsAdmin(false);
       setIsSuperAdmin(false);
+      setCurrentUserDepartment(null); // إعادة تعيين القسم عند تسجيل الخروج
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -79,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAdmin,
     isSuperAdmin,
+    currentUserDepartment, // إضافة القسم إلى القيمة المرجعة
     resetPassword,
     logout,
   };
