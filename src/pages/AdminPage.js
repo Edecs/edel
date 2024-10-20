@@ -121,54 +121,53 @@ function AdminPage() {
   }, [fetchCurrentUserRole, fetchData]);
 
   const handleAddUser = async () => {
-    if (!newUserEmail || !newUserPassword || !newUserName) {
-      alert("Please fill in all fields");
-      return;
-    }
+    if (newUserEmail && newUserPassword && newUserName) {
+      const currentAdminUser = auth.currentUser; // حفظ المستخدم الحالي
+      const adminEmail = currentAdminUser.email;
+      const adminPassword = prompt(
+        "Please enter your admin password to continue"
+      ); // طلب كلمة مرور المدير الحالي
 
-    const currentAdminUser = auth.currentUser;
-    const adminEmail = currentAdminUser.email;
-    const adminPassword = prompt(
-      "Please enter your admin password to continue"
-    );
+      try {
+        // إنشاء المستخدم الجديد
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          newUserEmail,
+          newUserPassword
+        );
 
-    try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        newUserEmail,
-        newUserPassword
-      );
-      const sanitizedEmail = newUserEmail.replace(/\./g, ",");
-      const rolesRef = ref(db, `roles/${sanitizedEmail}`);
+        // تحويل البريد الإلكتروني لصيغة مناسبة للتخزين
+        const sanitizedEmail = newUserEmail.replace(/\./g, ",");
 
-      if (currentUserRole === "SuperAdmin") {
-        await set(rolesRef, {
+        // إعداد المرجعين لحفظ بيانات المستخدم الجديد
+        const rolesRef = ref(db, `roles/${sanitizedEmail}`);
+        const usersRef = ref(db, `users/${sanitizedEmail}`);
+
+        // إضافة المستخدم الجديد إلى قاعدة البيانات
+        await set(rolesRef, { role: newUserRole, courses: {} });
+        await set(usersRef, {
+          email: newUserEmail,
+          name: newUserName,
           role: newUserRole,
-          courses: {},
           department: newUserDepartment,
         });
-      } else if (currentUserRole === "admin") {
-        if (newUserRole === "admin") {
-          alert("Admin cannot add another admin.");
-          return;
-        }
-        await set(rolesRef, {
-          role: newUserRole,
-          courses: {},
-          department: currentUserDepartment,
-        });
-      }
 
-      await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
-      setNewUserEmail("");
-      setNewUserPassword("");
-      setNewUserName("");
-      setNewUserRole("user");
-      setNewUserDepartment("");
-      await fetchData();
-      setIsPopupOpen(false);
-    } catch (error) {
-      console.error("Error adding user:", error);
+        // إعادة تسجيل الدخول بالحساب الإداري
+        await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+
+        // إعادة تعيين المدخلات
+        setNewUserEmail("");
+        setNewUserPassword("");
+        setNewUserName("");
+        setNewUserRole("admin");
+        setNewUserDepartment("Top Management");
+
+        // تحديث البيانات وإغلاق النافذة المنبثقة
+        await fetchData();
+        setIsPopupOpen(false);
+      } catch (error) {
+        console.error("Error adding user:", error);
+      }
     }
   };
 
