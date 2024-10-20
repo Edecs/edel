@@ -100,6 +100,17 @@ $border-color: #ced4da; // لون الحدود
       border: 1px solid $border-color;
       text-align: left;
       font-size: 16px;
+
+      // تنسيق الوقت وتاريخ الإنشاء
+      &:nth-child(3) {
+        color: #6c757d; // لون خفيف لتاريخ الإنشاء
+        font-style: italic; // تنسيق مائل
+      }
+
+      // تخصيص حالة القراءة
+      &:nth-child(6) {
+        text-align: center; // محاذاة النص في العمود لحالة القراءة
+      }
     }
 
     th {
@@ -119,6 +130,14 @@ $border-color: #ced4da; // لون الحدود
       }
     }
   }
+  .course-thumbnail {
+    width: 20%;          // اجعل الصورة تأخذ عرض العنصر
+    height: auto;        // اجعل الارتفاع يتناسب مع العرض
+    max-height: 150px;   // تحديد الحد الأقصى للارتفاع
+    object-fit: cover;   // ملء المساحة مع الحفاظ على نسبة العرض إلى الارتفاع
+    border-radius: 8px;  // لتنعيم زوايا الصورة (اختياري)
+  }
+  
 
   // تطبيق الـ CSS فقط على شاشات معينة
   @media (max-width: 800px) {
@@ -139,96 +158,44 @@ $border-color: #ced4da; // لون الحدود
       padding: 10px; // تقليل padding في حقل البحث
     }
   }
-}
-// تنسيقات الـ <tbody> والعناصر الداخلية
-tbody {
-  // تنسيق الصفوف داخل tbody
-  tr {
-    &:nth-child(even) {
-      background-color: #f2f2f2; // لون خلفية هادئ للصفوف الزوجية
-    }
 
-    &:hover {
-      background-color: #e9ecef; // تغيير لون الخلفية عند التحويم
-    }
-
-    // تنسيق الخلايا داخل الصفوف
-    td {
-      padding: 12px;
-      border: 1px solid #ced4da; // لون الحدود
-      text-align: left;
-      font-size: 16px;
-
-      // تحسين عرض النص داخل الخلايا
-      &:first-child {
-        font-weight: bold; // جعل النص في العمود الأول بخط عريض
+  // تنسيقات الـ <tbody> والعناصر الداخلية
+  tbody {
+    // تنسيق الصفوف داخل tbody
+    tr {
+      &:nth-child(even) {
+        background-color: #f2f2f2; // لون خلفية هادئ للصفوف الزوجية
       }
-    }
-
-    // تنسيق الصورة المصغرة داخل الخلايا
-    .thumbnail {
-      width: 60px; // تحديد عرض الصورة
-      height: 60px; // تحديد ارتفاع الصورة
-      border-radius: 8px; // زوايا ناعمة للصورة
-      object-fit: cover; // لقص الصورة بما يتناسب مع الإطار
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); // إضافة ظل خفيف للصورة
-      transition: transform 0.2s; // تأثير الانتقال عند التحويم
 
       &:hover {
-        transform: scale(1.1); // تكبير الصورة قليلاً عند التحويم
-      }
-    }
-  }
-}
-// تنسيقات الـ <tbody> والعناصر الداخلية الخاصة بالإشعارات
-tbody {
-  // تنسيق الصفوف داخل tbody
-  tr {
-    &:nth-child(even) {
-      background-color: #f2f2f2; // لون خلفية هادئ للصفوف الزوجية
-    }
-
-    &:hover {
-      background-color: #e9ecef; // تغيير لون الخلفية عند التحويم
-    }
-
-    // تنسيق الخلايا داخل الصفوف
-    td {
-      padding: 12px; // إضافة padding للخلايا
-      border: 1px solid #ced4da; // لون الحدود
-      text-align: left; // محاذاة النص إلى اليسار
-      font-size: 16px; // حجم الخط
-
-      // تنسيق الخلايا بحسب نوع المحتوى
-      &:first-child {
-        font-weight: bold; // جعل النص في العمود الأول بخط عريض
+        background-color: #e9ecef; // تغيير لون الخلفية عند التحويم
       }
 
-      // تخصيص تنسيق الوقت وتاريخ الإنشاء
-      &:nth-child(3) {
-        color: #6c757d; // لون خفيف لتاريخ الإنشاء
-        font-style: italic; // تنسيق مائل
-      }
+      // تنسيق الخلايا داخل الصفوف
+      td {
+        padding: 12px; // إضافة padding للخلايا
+        border: 1px solid #ced4da; // لون الحدود
+        text-align: left; // محاذاة النص إلى اليسار
+        font-size: 16px; // حجم الخط
 
-      // تخصيص رابط Dropbox
-      &:nth-child(5) {
-        a {
-          color: #16979e; // لون رابط Dropbox
-          text-decoration: none; // إزالة التسطير
-          transition: color 0.3s; // تأثير الانتقال عند التحويم
+        // تحسين عرض النص داخل الخلايا
+        &:first-child {
+          font-weight: bold; // جعل النص في العمود الأول بخط عريض
+        }
 
-          &:hover {
-            color: #5a6268; // تغيير لون الرابط عند التحويم
+        // تخصيص رابط Dropbox
+        &:nth-child(4) {
+          a {
+            color: $primary-color; // لون رابط Dropbox
+            text-decoration: none; // إزالة التسطير
+            transition: color 0.3s; // تأثير الانتقال عند التحويم
+
+            &:hover {
+              color: $primary-hover-color; // تغيير لون الرابط عند التحويم
+            }
           }
         }
       }
-
-      &:nth-child(6) {
-        word-break: break-word; // كسر الكلمات إذا كانت طويلة
-      }
-
-      // تخصيص حالة القراءة
-     
     }
   }
 }
