@@ -19,10 +19,8 @@ function CoursePage() {
   const [newSubCourseName, setNewSubCourseName] = useState("");
   const [currentUserRole, setCurrentUserRole] = useState("");
   const [currentUserDepartment, setCurrentUserDepartment] = useState("");
-  const [media, setMedia] = useState({
-    images: [],
-    videos: [],
-  });
+  const [media, setMedia] = useState({ images: [], videos: [] });
+
   const [newImageUrl, setNewImageUrl] = useState("");
   const [newVideoUrl, setNewVideoUrl] = useState("");
 
@@ -85,7 +83,7 @@ function CoursePage() {
               ...subCoursesData[key],
             }))
           : [];
-        setSubCourses(subCoursesArray); // لا يوجد فلتر هنا بناءً على القسم
+        setSubCourses(subCoursesArray);
         setSelectedSubCourse("");
       });
 
@@ -209,15 +207,32 @@ function CoursePage() {
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
     );
 
-    // بناء قائمة الوسائط الحالية
+    // التأكد من وجود media.images و media.videos
     const currentMedia = {
-      images: media.images.concat(newImageUrl ? [{ url: newImageUrl }] : []),
-      videos: media.videos.concat(newVideoUrl ? [{ url: newVideoUrl }] : []),
+      images: [
+        ...(media.images || []),
+        ...(newImageUrl ? [{ url: newImageUrl }] : []),
+      ],
+      videos: [
+        ...(media.videos || []),
+        ...(newVideoUrl ? [{ url: newVideoUrl }] : []),
+      ],
     };
 
-    await set(mediaRef, currentMedia);
-    setNewImageUrl("");
-    setNewVideoUrl("");
+    // التأكد من أن لدينا وسائط لنضيفها
+    if (currentMedia.images.length > 0 || currentMedia.videos.length > 0) {
+      try {
+        await set(mediaRef, currentMedia);
+        setNewImageUrl("");
+        setNewVideoUrl("");
+        // تحديث الحالة media بعد إضافة الوسائط الجديدة
+        setMedia(currentMedia);
+      } catch (error) {
+        setError("Failed to add media: " + error.message);
+      }
+    } else {
+      setError("Please provide at least one image or video URL.");
+    }
   };
 
   useEffect(() => {
@@ -229,7 +244,7 @@ function CoursePage() {
 
       const unsubscribeMedia = onValue(mediaRef, (snapshot) => {
         const mediaData = snapshot.val();
-        setMedia(mediaData || { images: [], videos: [] }); // تعيين البيانات المستردة إلى الحالة
+        setMedia(mediaData || { images: [], videos: [] });
       });
 
       return () => unsubscribeMedia();
@@ -416,16 +431,18 @@ function CoursePage() {
                 <button onClick={handleAddMedia}>Add Media</button>
                 {/* عرض الوسائط المحملة */}
                 <div className="media-display">
-                  {media.images.map((mediaItem, index) => (
-                    <img
-                      key={index}
-                      src={mediaItem.url}
-                      alt={`Media ${index}`}
-                    />
-                  ))}
-                  {media.videos.map((mediaItem, index) => (
-                    <video key={index} src={mediaItem.url} controls />
-                  ))}
+                  {media.images &&
+                    media.images.map((mediaItem, index) => (
+                      <img
+                        key={index}
+                        src={mediaItem.url}
+                        alt={`Media ${index}`}
+                      />
+                    ))}
+                  {media.videos &&
+                    media.videos.map((mediaItem, index) => (
+                      <video key={index} src={mediaItem.url} controls />
+                    ))}
                 </div>{" "}
               </div>
             )}
