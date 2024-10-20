@@ -702,3 +702,28 @@ h3 {
 .delete-button:hover {
   opacity: 0.8; /* تأثير عند المرور فوق الأزرار */
 }
+.media-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* المسافة بين العناصر */
+  margin-top: 20px; /* المسافة العلوية */
+}
+
+.media-display img,
+.media-display video {
+  max-width: 100%; /* لجعل الوسائط تتناسب مع العرض */
+  height: auto; /* للحفاظ على نسبة العرض إلى الارتفاع */
+  border-radius: 8px; /* زوايا دائرية */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* تأثير الظل */
+}
+
+.media-display video {
+  width: 320px; /* عرض الفيديو */
+  height: 240px; /* ارتفاع الفيديو */
+}
+
+.media-display img {
+  width: 320px; /* عرض الصورة */
+  height: 180px; /* ارتفاع الصورة */
+  object-fit: cover; /* لتغطية المنطقة المحددة */
+}
