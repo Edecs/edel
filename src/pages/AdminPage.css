@@ -36,13 +36,6 @@
   margin: 10px 0; /* إضافة هامش لتجنب التداخل في الشاشات الصغيرة */
 }
 
-.open-popup-btn:hover,
-.navigate-to-course-management-btn:hover,
-.refresh-data-btn:hover {
-  background-color: #0eadb6a2;
-  color: #fff;
-}
-
 .admin-page .main-content {
   display: flex;
   justify-content: space-between;
@@ -110,64 +103,6 @@
   background-color: #c9302c;
 }
 
-.admin-page .popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* خلفية شفافة */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000; /* تأكد من أن النافذة تظهر فوق المحتوى */
-}
-
-.admin-page .popup-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 400px; /* عرض ثابت للنافذة */
-}
-
-.admin-page .popup-content h2 {
-  margin: 0 0 15px; /* تباعد بين العنوان ومحتوى النافذة */
-  font-size: 24px;
-  color: #333; /* لون العنوان */
-}
-
-.admin-page .popup-content label {
-  display: block;
-  margin-bottom: 10px; /* تباعد بين كل حقل إدخال */
-  color: #555; /* لون النص */
-}
-
-.admin-page .popup-content input,
-.admin-page .popup-content select {
-  width: 90%; /* عرض كامل للحقل */
-  padding: 10px; /* padding داخلي */
-  border: 1px solid #ddd; /* لون الحدود */
-  border-radius: 4px; /* زوايا مدورة */
-  font-size: 16px; /* حجم الخط */
-  margin-top: 5px; /* تباعد بين النص والمدخل */
-}
-
-.admin-page .popup-content button {
-  background-color: #007bff; /* لون زر الإضافة */
-  color: white; /* لون النص داخل الزر */
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px; /* تباعد بين الزر والمحتوى السابق */
-  width: 100%; /* عرض كامل للزر */
-}
-
-.admin-page .popup-content button:hover {
-  background-color: #0056b3; /* لون الزر عند التمرير */
-}
-
 .admin-page .search-bar {
   display: flex;
   justify-content: center;
@@ -230,83 +165,13 @@
   background-color: #0056b3;
 }
 
-/* تنسيق قسم الوصول للدورة */
-.course-access {
-  h3 {
-    font-size: 1.5rem; /* حجم الخط */
-    color: #333; /* لون النص */
-    margin-bottom: 15px; /* مساحة سفلية */
-  }
-
-  input[type="text"] {
-    width: 100%; /* عرض كامل للحقل */
-    padding: 10px; /* مساحة داخلية */
-    border: 1px solid #ccc; /* لون الحدود */
-    border-radius: 4px; /* زوايا مدورة */
-    font-size: 1rem; /* حجم الخط */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* تأثير ظل خفيف */
-    transition: border-color 0.3s ease; /* تأثيرات انتقالية */
-
-    &:focus {
-      border-color: #007bff; /* تغيير لون الحدود عند التركيز */
-      outline: none; /* إزالة التأشير الافتراضي */
-    }
-
-    &::placeholder {
-      color: #aaa; /* لون نص العنوان */
-    }
-  }
-
-  .course-list {
-    margin-top: 20px; /* مساحة علوية لقائمة الدورات */
-    list-style: none; /* إزالة النقاط من القائمة */
-
-    .course-item {
-      background-color: #f9f9f9; /* لون الخلفية */
-      padding: 10px; /* مساحة داخلية */
-      border-radius: 4px; /* زوايا مدورة */
-      margin-bottom: 10px; /* مساحة سفلية بين العناصر */
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* تأثير ظل خفيف */
-      transition: background-color 0.3s ease; /* تأثيرات انتقالية */
-
-      &:hover {
-        background-color: #e2e6ea; /* لون الخلفية عند المرور */
-      }
-    }
-  }
-}
-
 /* تنسيق قسم عرض الدورات */
 .course-list {
   margin-top: 20px; /* مساحة علوية للقائمة */
   padding: 0; /* إزالة مساحة داخلية */
   list-style-type: none; /* إزالة النقاط من القائمة */
-
-  .course-item {
-    background-color: #f9f9f9; /* لون الخلفية */
-    padding: 15px; /* مساحة داخلية */
-    border-radius: 4px; /* زوايا مدورة */
-    margin-bottom: 15px; /* مساحة سفلية بين العناصر */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* تأثير ظل خفيف */
-    transition: background-color 0.3s ease; /* تأثيرات انتقالية */
-
-    .sub-course {
-      display: flex; /* استخدام الفليكس لتنسيق العناصر */
-      align-items: center; /* محاذاة العناصر عموديًا */
-      margin: 8px 0; /* مساحة علوية وسفلية بين العناصر الفرعية */
-
-      input[type="checkbox"] {
-        margin-right: 10px; /* مساحة يمينية بين الصندوق والنص */
-        cursor: pointer; /* تغيير شكل المؤشر عند المرور فوقه */
-      }
-
-      span {
-        font-size: 1rem; /* حجم خط النص */
-        color: #555; /* لون النص */
-      }
-    }
-  }
 }
+
 .courses-container {
   margin-top: 20px; /* هامش أعلى */
   padding: 20px; /* حشوة داخلية للصندوق */
@@ -357,4 +222,80 @@ span {
 /* تنسيق للطاولة الخاصة بالدورات */
 .courses-table {
   margin-top: 10px; /* هامش أعلى */
+}
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  z-index: 1000;
+}
+
+.popup h2 {
+  margin-top: 0;
+}
+
+.popup button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.popup button:hover {
+  background-color: #0056b3;
+}
+
+.popup button:last-of-type {
+  background-color: #6c757d;
+}
+
+.popup button:last-of-type:hover {
+  background-color: #5a6268;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+  border-color: #0ea1a8;
+  outline: none;
+  box-shadow: 0 0 5px #0ea1a8;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
 }
