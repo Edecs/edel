@@ -208,29 +208,33 @@ function CoursePage() {
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
     );
-    const currentMedia = media.images.concat(media.videos);
-    await set(mediaRef, {
-      images: [...currentMedia, { type: "image", url: newImageUrl }],
-      videos: [...currentMedia, { type: "video", url: newVideoUrl }],
-    });
 
+    // بناء قائمة الوسائط الحالية
+    const currentMedia = {
+      images: media.images.concat(newImageUrl ? [{ url: newImageUrl }] : []),
+      videos: media.videos.concat(newVideoUrl ? [{ url: newVideoUrl }] : []),
+    };
+
+    await set(mediaRef, currentMedia);
     setNewImageUrl("");
     setNewVideoUrl("");
   };
-  {
-    media.images.map((mediaItem) => (
-      <img
-        key={mediaItem.url}
-        src={mediaItem.url}
-        alt={`Media ${mediaItem.url}`}
-      />
-    ));
-  }
-  {
-    media.videos.map((mediaItem) => (
-      <video key={mediaItem.url} src={mediaItem.url} controls />
-    ));
-  }
+
+  useEffect(() => {
+    if (selectedCourse && selectedSubCourse) {
+      const mediaRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
+      );
+
+      const unsubscribeMedia = onValue(mediaRef, (snapshot) => {
+        const mediaData = snapshot.val();
+        setMedia(mediaData || { images: [], videos: [] }); // تعيين البيانات المستردة إلى الحالة
+      });
+
+      return () => unsubscribeMedia();
+    }
+  }, [db, selectedCourse, selectedSubCourse]);
 
   return (
     <div className="course-page">
@@ -393,18 +397,6 @@ function CoursePage() {
                     )}
                   </div>
                 ))}
-
-                {media.images.map((mediaItem) => (
-                  <img
-                    key={mediaItem.url}
-                    src={mediaItem.url}
-                    alt={`Media ${mediaItem.url}`}
-                  />
-                ))}
-                {media.videos.map((mediaItem) => (
-                  <video key={mediaItem.url} src={mediaItem.url} controls />
-                ))}
-
                 <button onClick={() => setShowPopup(true)}>
                   Add New Question
                 </button>
@@ -422,12 +414,19 @@ function CoursePage() {
                   placeholder="Add Video URL"
                 />
                 <button onClick={handleAddMedia}>Add Media</button>
-                {media.images.map((mediaItem, index) => (
-                  <img key={index} src={mediaItem.url} alt={`Media ${index}`} />
-                ))}
-                {media.videos.map((mediaItem, index) => (
-                  <video key={index} src={mediaItem.url} controls />
-                ))}
+                {/* عرض الوسائط المحملة */}
+                <div className="media-display">
+                  {media.images.map((mediaItem, index) => (
+                    <img
+                      key={index}
+                      src={mediaItem.url}
+                      alt={`Media ${index}`}
+                    />
+                  ))}
+                  {media.videos.map((mediaItem, index) => (
+                    <video key={index} src={mediaItem.url} controls />
+                  ))}
+                </div>{" "}
               </div>
             )}
           </div>
