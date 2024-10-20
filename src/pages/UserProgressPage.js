@@ -15,6 +15,18 @@ function UserProgressPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const database = getDatabase();
 
+  // دالة لتنسيق التاريخ
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const formattedDate = date.toLocaleDateString(undefined, options);
+    const formattedHours = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `${formattedDate} - ${formattedHours}`;
+  };
+
   // Fetch Archived Tasks: Moving this definition above the useEffect call
   const fetchArchivedTasks = useCallback(async () => {
     try {
@@ -26,7 +38,7 @@ function UserProgressPage() {
           ([id, data]) => ({
             id,
             message: data.message || "No message",
-            createdAt: data.createdAt || "Not available",
+            createdAt: formatDate(data.createdAt) || "Not available", // استخدم دالة formatDate هنا
             createdBy: data.createdBy || "Not available",
             dropboxLink: data.dropboxLink || "Not available",
             assignedEmails: Array.isArray(data.assignedEmails)
@@ -71,7 +83,7 @@ function UserProgressPage() {
           ([id, data]) => ({
             id,
             message: data.message || "No message",
-            createdAt: data.createdAt || "Not available",
+            createdAt: formatDate(data.createdAt) || "Not available", // استخدم دالة formatDate هنا
             createdBy: data.createdBy || "Not available",
             dropboxLink: data.dropboxLink || "Not available",
             assignedEmails: Array.isArray(data.assignedEmails)
@@ -120,11 +132,11 @@ function UserProgressPage() {
             Object.entries(courses).map(([courseId, submission]) => ({
               email: submission.email || "Unknown",
               courseId: courseId,
-              endTime: submission.endTime || "Not completed",
+              startTime: formatDate(submission.startTime) || "Not available", // استخدم دالة formatDate هنا
+              endTime: formatDate(submission.endTime) || "Not completed", // استخدم دالة formatDate هنا
+              totalTime: submission.totalTime || "Not available",
               percentageSuccess:
                 submission.percentageSuccess || "Not available",
-              startTime: submission.startTime || "Not available",
-              totalTime: submission.totalTime || "Not available",
               userAnswers: submission.userAnswers
                 ? submission.userAnswers.join(", ")
                 : "Not available",
@@ -188,6 +200,16 @@ function UserProgressPage() {
     XLSX.writeFile(workbook, "User_Progress_Data.xlsx");
   };
 
+  const formatTime = (totalTime) => {
+    if (totalTime === "Not available") return totalTime;
+    const totalSeconds = parseInt(totalTime); // افترض أن totalTime هو عدد ثوانٍ
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${hours} hours، ${minutes} minutes، ${seconds} seconds`;
+  };
+
   const filteredUsers = users.filter(
     (user) =>
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -220,159 +242,154 @@ function UserProgressPage() {
       submission.courseId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
   return (
-    <div>
-      <div className="user-progress-page">
-        <h1>User Progress Page</h1>
-        <button onClick={exportToExcel}>Export to Excel</button>
-
-        <input
-          type="text"
-          placeholder="Search across all data"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-
-        <div>
-          <details>
-            <summary>Users</summary>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
+    <div className="user-progress-page">
+      <h1>User Progress Page</h1>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <button onClick={exportToExcel}>Export to Excel</button>
+      <div className="data-sections">
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : (
+          <>
+            <details>
+              <summary>Archived Tasks</summary>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Message</th>
+                    <th>Created At</th>
+                    <th>Created By</th>
+                    <th>Dropbox Link</th>
+                    <th>Assigned Emails</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </details>
+                </thead>
+                <tbody>
+                  {filteredArchivedTasks.map((task) => (
+                    <tr key={task.id}>
+                      <td>{task.message}</td>
+                      <td>{task.createdAt}</td>
+                      <td>{task.createdBy}</td>
+                      <td>{task.dropboxLink}</td>
+                      <td>{task.assignedEmails.join(", ")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
 
-          <details>
-            <summary>Archived Tasks</summary>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Assigned Emails</th>
-                  <th>Created By</th>
-                  <th>Created At</th>
-                  <th>Dropbox Link</th>
-                  <th>Message</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredArchivedTasks.map((task) => (
-                  <tr key={task.id}>
-                    <td>{task.id}</td>
-                    <td>{task.assignedEmails.join(", ")}</td>
-                    <td>{task.createdBy}</td>
-                    <td>{task.createdAt}</td>
-                    <td>{task.dropboxLink}</td>
-                    <td>{task.message}</td>
+            <details>
+              <summary>Users</summary>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Role</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </details>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user) => (
+                    <tr key={user.id}>
+                      <td>{user.email}</td>
+                      <td>{user.role}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
 
-          <details>
-            <summary>Notifications</summary>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Message</th>
-                  <th>Created At</th>
-                  <th>Created By</th>
-                  <th>Dropbox Link</th>
-                  <th>Assigned Emails</th>
-                  <th>Is Read</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredNotifications.map((notification) => (
-                  <tr key={notification.id}>
-                    <td>{notification.id}</td>
-                    <td>{notification.message}</td>
-                    <td>{notification.createdAt}</td>
-                    <td>{notification.createdBy}</td>
-                    <td>{notification.dropboxLink}</td>
-                    <td>{notification.assignedEmails.join(", ")}</td>
-                    <td>{notification.isRead ? "Yes" : "No"}</td>
+            <details>
+              <summary>Notifications</summary>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Message</th>
+                    <th>Created At</th>
+                    <th>Created By</th>
+                    <th>Dropbox Link</th>
+                    <th>Assigned Emails</th>
+                    <th>Is Read</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </details>
+                </thead>
+                <tbody>
+                  {filteredNotifications.map((notification) => (
+                    <tr key={notification.id}>
+                      <td>{notification.message}</td>
+                      <td>{notification.createdAt}</td>
+                      <td>{notification.createdBy}</td>
+                      <td>{notification.dropboxLink}</td>
+                      <td>{notification.assignedEmails.join(", ")}</td>
+                      <td>{notification.isRead ? "Yes" : "No"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
 
-          <details>
-            <summary>Courses</summary>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Thumbnail</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCourses.map((course) => (
-                  <tr key={course.id}>
-                    <td>{course.name}</td>
-                    <td>
-                      <img
-                        src={course.thumbnail}
-                        alt={course.name}
-                        className="thumbnail"
-                      />
-                    </td>
+            <details>
+              <summary>Courses</summary>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Thumbnail</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </details>
+                </thead>
+                <tbody>
+                  {filteredCourses.map((course) => (
+                    <tr key={course.id}>
+                      <td>{course.name}</td>
+                      <td>
+                        <img
+                          src={course.thumbnail}
+                          alt={course.name}
+                          className="course-thumbnail"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
 
-          <details>
-            <summary>Submissions</summary>
-            <table>
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Course ID</th>
-                  <th>End Time</th>
-                  <th>Percentage Success</th>
-                  <th>Start Time</th>
-                  <th>Total Time</th>
-                  <th>User Answers</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredSubmissions.map((submission) => (
-                  <tr key={submission.userId + submission.courseId}>
-                    <td>{submission.email}</td>
-                    <td>{submission.courseId}</td>
-                    <td>{submission.endTime}</td>
-                    <td>{submission.percentageSuccess}</td>
-                    <td>{submission.startTime}</td>
-                    <td>{submission.totalTime}</td>
-                    <td>{submission.userAnswers}</td>
+            <details>
+              <summary>Submissions</summary>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Course ID</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Total Time</th>
+                    <th>Percentage Success</th>
+                    <th>User Answers</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </details>
-        </div>
+                </thead>
+                <tbody>
+                  {filteredSubmissions.map((submission) => (
+                    <tr key={submission.userId}>
+                      <td>{submission.email}</td>
+                      <td>{submission.courseId}</td>
+                      <td>{submission.startTime}</td>
+                      <td>{submission.endTime}</td>
+                      <td>{formatTime(submission.totalTime)}</td>
+                      <td>{submission.percentageSuccess}%</td>
+                      <td>{submission.userAnswers}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
+          </>
+        )}
       </div>
     </div>
   );
