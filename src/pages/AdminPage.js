@@ -159,8 +159,8 @@ function AdminPage() {
         setNewUserEmail("");
         setNewUserPassword("");
         setNewUserName("");
-        setNewUserRole("admin");
-        setNewUserDepartment("Top Management");
+        setNewUserRole("user");
+        setNewUserDepartment(""); // إعادة تعيين قسم المستخدم الجديد
 
         // تحديث البيانات وإغلاق النافذة المنبثقة
         await fetchData();
@@ -257,7 +257,6 @@ function AdminPage() {
                     !!roles[selectedUser.email.replace(/\./g, ",")]?.courses?.[
                       courseId
                     ]?.hasAccess;
-                  if (!hasMainCourseAccess) return null;
                   return (
                     <div key={courseId}>
                       <h4>{course.name}</h4>
@@ -336,11 +335,16 @@ function AdminPage() {
                 ))}
               </select>
             ) : (
-              // عرض قسم الإداري العادي فقط
-              <select value={currentUserDepartment || "Not assigned"} disabled>
-                <option value={currentUserDepartment || "Not assigned"}>
-                  {currentUserDepartment || "Not assigned"}
-                </option>
+              <select
+                value={newUserDepartment}
+                onChange={(e) => setNewUserDepartment(e.target.value)}
+              >
+                <option value="">Select Department</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={department.name}>
+                    {department.name}
+                  </option>
+                ))}
               </select>
             )}
 
