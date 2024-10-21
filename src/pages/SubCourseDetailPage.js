@@ -171,11 +171,15 @@ const SubCourseDetailPage = () => {
     ? Object.values(subCourse.questions)[currentQuestionIndex]
     : null;
 
+  // عدد الأسئلة التي تم الإجابة عليها
+  const answeredQuestionsCount = userAnswers.filter(
+    (answer) => answer !== undefined
+  ).length;
+
   return (
     <div className="sub-course-detail-container">
       <h1>{subCourse.name}</h1>
       <p>{subCourse.description}</p>
-
       <div className="media-container">
         {currentMedia && (
           <div className="media-content">
@@ -224,7 +228,6 @@ const SubCourseDetailPage = () => {
           </div>
         )}
       </div>
-
       {currentQuestion && (
         <div className="question-container">
           <div className="question">
@@ -266,11 +269,34 @@ const SubCourseDetailPage = () => {
           </div>
         </div>
       )}
-
-      <button onClick={handleSubmit} className="submit-button">
+      // Update the class name to avoid conflict
+      {/* Question overview with clickable squares */}
+      <div className="question-overview">
+        <h3>Question Overview</h3>
+        <div className="question-squares">
+          {Array.from({ length: totalQuestions }).map((_, index) => {
+            const isAnswered = userAnswers[index] !== undefined;
+            return (
+              <div
+                key={index}
+                className={`question-square ${
+                  isAnswered ? "answered" : "unanswered"
+                }`}
+                onClick={() => setCurrentQuestionIndex(index)} // Navigate to the question
+              >
+                {index + 1}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <button
+        onClick={handleSubmit}
+        className="submit-button"
+        disabled={answeredQuestionsCount < totalQuestions} // تعطيل الزر إذا لم يتم الإجابة على جميع الأسئلة
+      >
         Submit
       </button>
-
       {submissionResult && (
         <div className="submission-result">
           <h3>Submission Result</h3>
