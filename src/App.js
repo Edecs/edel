@@ -19,7 +19,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage"; // استيراد ص�
 import { useAuth } from "./context/AuthContext";
 import "./App.css";
 
-const App = () => {
+const App = () => { 
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const { user, isAdmin, isSuperAdmin, loading } = useAuth();
 
