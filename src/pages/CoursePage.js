@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getDatabase, ref, onValue, set, remove } from "firebase/database";
+import { getDatabase, ref, onValue, set, remove, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import "./CoursePage.css";
 
@@ -207,25 +207,36 @@ function CoursePage() {
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
     );
 
-    // التأكد من وجود media.images و media.videos
-    const currentMedia = {
-      images: [
-        ...(media.images || []),
-        ...(newImageUrl ? [{ url: newImageUrl }] : []),
-      ],
-      videos: [
-        ...(media.videos || []),
-        ...(newVideoUrl ? [{ url: newVideoUrl }] : []),
-      ],
+    // Create unique identifiers for images and videos
+    const newMedia = {
+      images: newImageUrl ? [{ url: newImageUrl, id: Date.now() }] : [],
+      videos: newVideoUrl ? [{ url: newVideoUrl, id: Date.now() }] : [],
     };
 
-    // التأكد من أن لدينا وسائط لنضيفها
-    if (currentMedia.images.length > 0 || currentMedia.videos.length > 0) {
+    // Ensure there are media to add
+    if (newMedia.images.length > 0 || newMedia.videos.length > 0) {
       try {
+        // Retrieve the existing media
+        const snapshot = await get(mediaRef);
+        const existingMedia = snapshot.val() || { images: [], videos: [] };
+
+        // Ensure existing media is an array
+        const currentMedia = {
+          images: Array.isArray(existingMedia.images)
+            ? existingMedia.images
+            : [],
+          videos: Array.isArray(existingMedia.videos)
+            ? existingMedia.videos
+            : [],
+        };
+
+        // Combine existing media with the new media
+        currentMedia.images.push(...newMedia.images);
+        currentMedia.videos.push(...newMedia.videos);
+
         await set(mediaRef, currentMedia);
         setNewImageUrl("");
         setNewVideoUrl("");
-        // تحديث الحالة media بعد إضافة الوسائط الجديدة
         setMedia(currentMedia);
       } catch (error) {
         setError("Failed to add media: " + error.message);
@@ -432,17 +443,26 @@ function CoursePage() {
                 {/* عرض الوسائط المحملة */}
                 <div className="media-display">
                   {media.images &&
-                    media.images.map((mediaItem, index) => (
-                      <img
-                        key={index}
-                        src={mediaItem.url}
-                        alt={`Media ${index}`}
-                      />
-                    ))}
+                    media.images
+                      .sort((a, b) => a.id - b.id)
+                      .map((mediaItem, index) => (
+                        <img
+                          key={mediaItem.id}
+                          src={mediaItem.url}
+                          alt={`Media ${index}`}
+                        />
+                      ))}
+
                   {media.videos &&
-                    media.videos.map((mediaItem, index) => (
-                      <video key={index} src={mediaItem.url} controls />
-                    ))}
+                    media.videos
+                      .sort((a, b) => a.id - b.id)
+                      .map((mediaItem, index) => (
+                        <video
+                          key={mediaItem.id}
+                          src={mediaItem.url}
+                          controls
+                        />
+                      ))}
                 </div>{" "}
               </div>
             )}
