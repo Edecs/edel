@@ -181,3 +181,37 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+.question-overview {
+  margin-top: 30px;
+}
+
+.question-squares {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for better layout */
+  gap: 10px; /* Space between squares */
+}
+
+.question-square {
+  width: 40px; /* Width of each square */
+  height: 40px; /* Height of each square */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white; /* Text color */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Cursor indicates clickable */
+  transition: transform 0.2s;
+}
+
+.question-square:hover {
+  transform: scale(1.1); /* Slightly increase size on hover */
+}
+
+.answered {
+  background-color: green; /* Color for answered questions */
+}
+
+.unanswered {
+  background-color: red; /* Color for unanswered questions */
+}
