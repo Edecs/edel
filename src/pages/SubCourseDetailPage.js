@@ -180,25 +180,30 @@ const SubCourseDetailPage = () => {
         {currentMedia && (
           <div className="media-content">
             {subCourse.media?.images?.[currentMediaKey] && (
-              <img
-                src={convertDropboxLink(
-                  subCourse.media.images[currentMediaKey].url
-                )}
-                alt="Course Media"
-                style={{ width: "100%", height: "auto" }}
-              />
+              <div className="media-item">
+                <img
+                  src={convertDropboxLink(
+                    subCourse.media.images[currentMediaKey].url
+                  )}
+                  alt="Course Media"
+                  style={{ width: "100%", height: "auto" }}
+                />
+              </div>
             )}
             {subCourse.media?.videos?.[currentMediaKey] && (
-              <video controls style={{ width: "100%", height: "auto" }}>
-                <source
-                  src={convertDropboxLink(
-                    subCourse.media.videos[currentMediaKey].url
-                  )}
-                  type="video/mp4"
-                />
-                Your browser does not support the video tag.
-              </video>
+              <div className="media-item">
+                <video controls style={{ width: "100%", height: "auto" }}>
+                  <source
+                    src={convertDropboxLink(
+                      subCourse.media.videos[currentMediaKey].url
+                    )}
+                    type="video/mp4" // Ensure the video type is mp4 or a supported format
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
             )}
+
             <div className="media-navigation">
               <button
                 onClick={handlePrevMedia}
