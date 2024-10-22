@@ -148,7 +148,6 @@ const SubCourseDetailPage = () => {
         submissionData
       );
       setSubmissionResult(submissionData);
-      alert("Submitted!");
       navigate("/welcome");
     } catch (error) {
       console.error("Error submitting data:", error);
