@@ -15,7 +15,6 @@ function UserProgressPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const database = getDatabase();
 
-  // دالة لتنسيق التاريخ
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
@@ -27,7 +26,6 @@ function UserProgressPage() {
     return `${formattedDate} - ${formattedHours}`;
   };
 
-  // Fetch Archived Tasks: Moving this definition above the useEffect call
   const fetchArchivedTasks = useCallback(async () => {
     try {
       const archivedTasksRef = ref(database, "archivedTasks");
@@ -38,14 +36,14 @@ function UserProgressPage() {
           ([id, data]) => ({
             id,
             message: data.message || "No message",
-            createdAt: formatDate(data.createdAt) || "Not available", // استخدم دالة formatDate هنا
+            createdAt: formatDate(data.createdAt) || "Not available",
             createdBy: data.createdBy || "Not available",
             dropboxLink: data.dropboxLink || "Not available",
             assignedEmails: Array.isArray(data.assignedEmails)
               ? data.assignedEmails
               : typeof data.assignedEmails === "string"
-              ? [data.assignedEmails] // تحويل النص إلى قائمة تحتوي على عنصر واحد
-              : [], // تعيين قائمة فارغة في حال عدم وجود قيمة
+              ? [data.assignedEmails]
+              : [],
           })
         );
         setArchivedTasks(archivedTasksList);
@@ -83,14 +81,14 @@ function UserProgressPage() {
           ([id, data]) => ({
             id,
             message: data.message || "No message",
-            createdAt: formatDate(data.createdAt) || "Not available", // استخدم دالة formatDate هنا
+            createdAt: formatDate(data.createdAt) || "Not available",
             createdBy: data.createdBy || "Not available",
             dropboxLink: data.dropboxLink || "Not available",
             assignedEmails: Array.isArray(data.assignedEmails)
               ? data.assignedEmails
               : typeof data.assignedEmails === "string"
-              ? [data.assignedEmails] // تحويل النص إلى قائمة تحتوي على عنصر واحد
-              : [], // تعيين قائمة فارغة في حال عدم وجود قيمة
+              ? [data.assignedEmails]
+              : [],
             isRead: data.isRead || false,
           })
         );
@@ -132,8 +130,8 @@ function UserProgressPage() {
             Object.entries(courses).map(([courseId, submission]) => ({
               email: submission.email || "Unknown",
               courseId: courseId,
-              startTime: formatDate(submission.startTime) || "Not available", // استخدم دالة formatDate هنا
-              endTime: formatDate(submission.endTime) || "Not completed", // استخدم دالة formatDate هنا
+              startTime: formatDate(submission.startTime) || "Not available",
+              endTime: formatDate(submission.endTime) || "Not completed",
               totalTime: submission.totalTime || "Not available",
               percentageSuccess:
                 submission.percentageSuccess || "Not available",
@@ -156,7 +154,7 @@ function UserProgressPage() {
         try {
           await Promise.all([
             fetchUsers(),
-            fetchArchivedTasks(), // Now the function is defined before its use
+            fetchArchivedTasks(),
             fetchNotifications(),
             fetchCourses(),
             fetchSubmissions(),
@@ -172,7 +170,7 @@ function UserProgressPage() {
     }
   }, [
     fetchUsers,
-    fetchArchivedTasks, // Function dependency is now correctly referenced
+    fetchArchivedTasks,
     fetchNotifications,
     fetchCourses,
     fetchSubmissions,
@@ -202,7 +200,7 @@ function UserProgressPage() {
 
   const formatTime = (totalTime) => {
     if (totalTime === "Not available") return totalTime;
-    const totalSeconds = parseInt(totalTime); // افترض أن totalTime هو عدد ثوانٍ
+    const totalSeconds = parseInt(totalTime);
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
@@ -261,7 +259,7 @@ function UserProgressPage() {
           <>
             <details>
               <summary>Archived Tasks</summary>
-              <table>
+              <table className="custom-table">
                 <thead>
                   <tr>
                     <th>Message</th>
@@ -286,28 +284,8 @@ function UserProgressPage() {
             </details>
 
             <details>
-              <summary>Users</summary>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Email</th>
-                    <th>Role</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.map((user) => (
-                    <tr key={user.id}>
-                      <td>{user.email}</td>
-                      <td>{user.role}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </details>
-
-            <details>
               <summary>Notifications</summary>
-              <table>
+              <table className="custom-table">
                 <thead>
                   <tr>
                     <th>Message</th>
@@ -335,7 +313,7 @@ function UserProgressPage() {
 
             <details>
               <summary>Courses</summary>
-              <table>
+              <table className="custom-table">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -349,8 +327,8 @@ function UserProgressPage() {
                       <td>
                         <img
                           src={course.thumbnail}
-                          alt={course.name}
-                          className="course-thumbnail"
+                          alt={`${course.name} thumbnail`}
+                          style={{ width: "50px" }}
                         />
                       </td>
                     </tr>
@@ -361,7 +339,7 @@ function UserProgressPage() {
 
             <details>
               <summary>Submissions</summary>
-              <table>
+              <table className="custom-table">
                 <thead>
                   <tr>
                     <th>Email</th>
@@ -375,13 +353,13 @@ function UserProgressPage() {
                 </thead>
                 <tbody>
                   {filteredSubmissions.map((submission) => (
-                    <tr key={submission.userId}>
+                    <tr key={`${submission.email}-${submission.courseId}`}>
                       <td>{submission.email}</td>
                       <td>{submission.courseId}</td>
                       <td>{submission.startTime}</td>
                       <td>{submission.endTime}</td>
                       <td>{formatTime(submission.totalTime)}</td>
-                      <td>{submission.percentageSuccess}%</td>
+                      <td>{submission.percentageSuccess}</td>
                       <td>{submission.userAnswers}</td>
                     </tr>
                   ))}
