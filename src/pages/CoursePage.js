@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getDatabase, ref, onValue, set, remove, get } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import "./CoursePage.css";
@@ -8,6 +8,7 @@ function CoursePage() {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [subCourses, setSubCourses] = useState([]);
   const [selectedSubCourse, setSelectedSubCourse] = useState("");
+  const selectedSubCourseRef = useRef(""); // Use ref to store the selected sub-course
   const [error, setError] = useState("");
   const [newQuestion, setNewQuestion] = useState("");
   const [answers, setAnswers] = useState([{ text: "", correct: false }]);
@@ -20,11 +21,18 @@ function CoursePage() {
   const [currentUserRole, setCurrentUserRole] = useState("");
   const [currentUserDepartment, setCurrentUserDepartment] = useState("");
   const [media, setMedia] = useState({ images: [], videos: [] });
-
   const [newImageUrl, setNewImageUrl] = useState("");
+  const filteredCourses = mainCourses.filter(
+    (course) => course.department === currentUserDepartment
+  );
+
   const [newVideoUrl, setNewVideoUrl] = useState("");
 
   const db = getDatabase();
+
+  useEffect(() => {
+    selectedSubCourseRef.current = selectedSubCourse;
+  }, [selectedSubCourse]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -84,7 +92,11 @@ function CoursePage() {
             }))
           : [];
         setSubCourses(subCoursesArray);
-        setSelectedSubCourse("");
+
+        // Re-set selectedSubCourse from the ref to avoid losing the selected sub-course
+        if (selectedSubCourseRef.current) {
+          setSelectedSubCourse(selectedSubCourseRef.current);
+        }
       });
 
       return () => unsubscribe();
@@ -198,29 +210,22 @@ function CoursePage() {
     setAnswers([...answers, { text: "", correct: false }]);
   };
 
-  const filteredCourses = mainCourses.filter(
-    (course) => course.department === currentUserDepartment
-  );
   const handleAddMedia = async () => {
     const mediaRef = ref(
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
     );
 
-    // Create unique identifiers for images and videos
     const newMedia = {
       images: newImageUrl ? [{ url: newImageUrl, id: Date.now() }] : [],
       videos: newVideoUrl ? [{ url: newVideoUrl, id: Date.now() }] : [],
     };
 
-    // Ensure there are media to add
     if (newMedia.images.length > 0 || newMedia.videos.length > 0) {
       try {
-        // Retrieve the existing media
         const snapshot = await get(mediaRef);
         const existingMedia = snapshot.val() || { images: [], videos: [] };
 
-        // Ensure existing media is an array
         const currentMedia = {
           images: Array.isArray(existingMedia.images)
             ? existingMedia.images
@@ -230,7 +235,6 @@ function CoursePage() {
             : [],
         };
 
-        // Combine existing media with the new media
         currentMedia.images.push(...newMedia.images);
         currentMedia.videos.push(...newMedia.videos);
 
@@ -252,13 +256,12 @@ function CoursePage() {
         db,
         `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
       );
-
-      const unsubscribeMedia = onValue(mediaRef, (snapshot) => {
-        const mediaData = snapshot.val();
-        setMedia(mediaData || { images: [], videos: [] });
+      const unsubscribe = onValue(mediaRef, (snapshot) => {
+        const mediaData = snapshot.val() || { images: [], videos: [] };
+        setMedia(mediaData);
       });
 
-      return () => unsubscribeMedia();
+      return () => unsubscribe();
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
