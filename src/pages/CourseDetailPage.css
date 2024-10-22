@@ -1,848 +1,99 @@
-/* Course and Sub-Course Buttons with Scrollable Container */
-.course-page {
-  margin: 20px;
-}
-.course-page .courses-container {
-  display: flex; /* جعل الحاويات تظهر بجانب بعضها البعض */
-  gap: 20px; /* مسافة بين الحاويتين */
-}
-
-.course-page .course-buttons,
-.course-page .sub-course-buttons {
-  width: 45%;
-  display: flex;
-  max-height: 250px; /* تعيين الحد الأقصى لارتفاع الحاوية */
-  overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
-  flex-direction: row; /* عرض الأزرار في صف */
-  justify-content: center; /* توسيط الأزرار أفقياً */
-  align-items: center; /* توسيط الأزرار عمودياً */
-  gap: 10px; /* الفجوة بين الأزرار */
-  flex-wrap: wrap; /* لف الأزرار إلى صفوف عند الحاجة */
-  margin-bottom: 20px; /* مسافة سفلية بين الحاوية وعناصر أخرى */
-  border: 1px solid #ccc; /* حدود للحاوية */
-  padding: 10px; /* مسافة داخلية للحاوية */
-  background-color: #f9f9f9; /* لون خلفية خفيف للحاوية */
-  border-radius: 8px; /* زوايا مدورة للحاوية */
-  transition: background-color 0.3s ease; /* إضافة تأثير انتقالي للخلفية */
-}
-
-/* Consistent Button Hover State */
-.course-page button:hover,
-.question-section button:hover,
-.answers-section button:hover {
-  background-color: #0056b3; /* Consistent hover color */
-  color: #ffffff; /* Text color on hover */
-  transform: scale(1.05); /* Consistent scale effect */
-}
-
-.course-page button {
-  margin-left: 46px;
-  padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
-  background-color: #ffffff; /* لون الخلفية للأزرار */
-  color: #094d50; /* لون النص */
-  border: 1px solid #094d509a; /* تحديد لون الحدود وسماكتها */
-  border-radius: 4px; /* زوايا مدورة */
-  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
-  width: 45%; /* تأكد من أن الأزرار تأخذ عرض تلقائي */
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
-
-  /* تأثيرات عند التحويم */
-  &:hover {
-    background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
-    color: #ffffff; /* تغيير لون النص عند التحويم */
-    transform: translateY(-2px); /* رفع خفيف عند التحويم */
-  }
-
-  /* تأثير عند الضغط على الزر */
-  &:active {
-    transform: translateY(1px); /* تأثير ضغط عند الضغط */
-  }
-}
-
-/* Title Styles */
-.course-page h1 {
-  color: #000000;
-  font-size: 30px;
-  margin-top: 80px;
-}
-
-.course-page h2,
-.course-page h3,
-.course-page h4 {
-  margin-bottom: 20px;
-  color: #094d50; /* لون النص */
-}
-
-.course-page h2 {
-  font-size: 24px; /* حجم النص */
-  border-bottom: 2px solid #094d50; /* خط */
-  padding-bottom: 8px; /* المسافة بين النص والخط */
-  transition: color 0.3s ease, border-bottom 0.3s ease; /* تأثير انتقال سلس */
-}
-
-.course-page h3 {
-  font-size: 18px;
-}
-
-.course-page h4 {
-  font-size: 16px;
-  margin-bottom: 5px;
-}
-
-/* Input Fields */
-.course-page input[type="text"],
-.course-page textarea {
-  width: 90%;
-  padding: 12px; /* زيادة المساحة داخل حقول الإدخال */
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: border-color 0.3s, box-shadow 0.3s; /* Transition for focus effect */
-}
-
-.course-page textarea {
-  height: 100px;
-  resize: vertical;
-}
-
-/* Input Focus Effect */
-.course-page input[type="text"]:focus,
-.course-page textarea:focus {
-  border-color: #0ea1a8;
-  outline: none;
-  box-shadow: 0 0 8px #0ea1a8; /* More noticeable shadow effect on focus */
-}
-
-/* Course and Sub-Course Buttons Styling */
-.course-page .course-buttons button.selected,
-.course-page .sub-course-buttons button.selected {
-  width: 25%;
-  background-color: #ffffff; /* لون الخلفية عند التحديد */
-  color: #094d50;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* إضافة ظل خفيف */
-}
-
-.course-page .course-buttons button.selected:hover,
-.course-page .sub-course-buttons button.selected:hover {
-  background-color: #d1d3cb; /* لون الخلفية عند التحويم مع التحديد */
-  color: #2ba9af;
-}
-
-/* Button Focus Effect */
-.course-page button:focus {
-  background-color: #ffffff; /* Highlight selected buttons */
-  color: #094d50;
-}
-
-/* Button Active Effect */
-.course-page button:active {
-  background-color: #ffffff; /* لون الزر عند الضغط */
-  transform: translateY(1px); /* تأثير الضغط لأسفل */
-}
-
-/* Error Message Styles */
-.course-page .error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-/* Details and Summary Styles */
-.course-page details {
-  margin-bottom: 20px;
-}
-
-.course-page summary {
-  margin-top: 20px;
-  border: 1px solid #094d50;
-  background-color: #094d50;
-  color: white;
-  padding: 15px;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s; /* تأثير انتقال للخلفية */
-}
-
-/* Course and Sub-Course Selectors */
-.course-page .course-selectors {
-  display: flex;
-  justify-content: space-between; /* توزيع المساحة بين الأقسام */
-  margin-top: 20px;
-}
-
-/* Media Section Styles */
-.media-and-questions {
-  margin-left: 11px;
-}
-
-.add-course,
-.add-sub-course {
-  flex: 1; /* كل قسم يأخذ نفس المساحة */
-  margin: 0 10px; /* مساحة بين الأقسام */
+/* General container styling */
+.course-detail-container {
+  max-width: 900px;
+  margin: 40px auto;
   padding: 20px;
-  border: 1px solid #ccc; /* حدود للأقسام */
-  border-radius: 8px; /* زوايا مدورة */
-  background-color: #f9f9f9; /* خلفية خفيفة */
-  transition: background-color 0.3s; /* تأثير انتقالي لخلفية الأقسام */
+  background-color: #f8f9fa; /* Light background for better readability */
+  border: 1px solid #ddd; /* Light border for separation */
+  border-radius: 8px; /* Rounded corners for a softer look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  font-family: Arial, sans-serif;
 }
 
-.add-course:hover,
-.add-sub-course:hover {
-  background-color: #eaeaea; /* تغيير لون الخلفية عند التحويم */
-}
-
-.course-selection-container {
-  border: 1px solid #ccc; /* حدود الحاوية */
-  border-radius: 8px; /* زوايا مدورة */
-  padding: 15px; /* مسافة داخلية للحاوية */
-  background-color: #f9f9f9; /* لون خلفية خفيف */
-  margin: 10px 0; /* مسافة أعلى وأسفل */
-}
-
-.sub-course-item {
-  width: 100%;
-  display: flex;
-  border: 1px solid #ccc; /* حدود */
-  border-radius: 4px; /* زوايا مدورة */
-  margin-bottom: 5px; /* مسافة بين العناصر */
-  background-color: #f9f9f9; /* خلفية خفيفة */
-}
-
-.course-selection {
-  display: flex; /* استخدم flexbox لترتيب العناصر بجانب بعضها */
-  justify-content: space-between; /* لضبط المساحة بين العناصر */
-  align-items: center; /* لمركز العناصر عموديًا */
-  margin-bottom: 20px; /* إضافة مسافة أسفل لتفادي تداخل العناصر */
-}
-
-.course-dropdown {
-  flex: 1; /* كل مجموعة تأخذ نفس المساحة */
-  margin: 0 10px; /* مساحة بين المجموعات */
-}
-
-.dropdown {
-  width: 100%; /* تأكد من أن قائمة dropdown تأخذ العرض الكامل */
-  padding: 12px; /* زيادة المساحة داخل قائمة الاختيار */
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  transition: border-color 0.3s, box-shadow 0.3s; /* Transition for focus effect */
-}
-
-/* Focus Styles for Dropdown */
-.dropdown:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Disabled Dropdown Styles */
-.dropdown:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-}
-
-/* Dropdown Options Padding */
-.dropdown option {
-  padding: 10px;
-}
-
-/* Media Section Images and Links */
-.course-page .media-section img {
-  width: 100px;
-  height: auto;
-  margin-right: 10px;
-}
-
-.course-page .media-section video {
-  display: block;
-  margin-bottom: 10px;
-}
-
-.course-page .media-section a {
-  color: #094d50;
-  text-decoration: none;
-  margin-bottom: 10px;
-  display: inline-block;
-  transition: color 0.3s; /* تأثير انتقالي على اللون */
-}
-
-.course-page .media-section a:hover {
-  text-decoration: underline;
-  color: #007bff; /* تغيير لون النص عند التحويم */
-}
-
-/* Questions Section Styles */
-.course-page .question-section {
-  margin-bottom: 20px;
-}
-
-.course-page .answers-section {
-  margin-top: 10px;
-}
-
-.course-page .answers-section div {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-}
-.answers-container {
-  margin-top: 1rem; /* Space above the answers container */
-  border: 1px solid #ccc; /* Light gray border */
-  border-radius: 5px; /* Slightly rounded corners */
-  padding: 1rem; /* Padding inside the container */
-  background-color: #f9f9f9; /* Light background color */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
-
-.answer-content {
-  margin-bottom: 0.75rem; /* Space below each answer */
-  padding: 0.5rem; /* Padding inside each answer box */
-  border: 1px solid #007bff; /* Blue border for each answer */
-  border-radius: 4px; /* Slightly rounded corners for answers */
-  background-color: #fff; /* White background for answers */
-  transition: background-color 0.3s ease; /* Transition effect for hover */
-}
-
-/* Change background color on hover */
-
-.answer-content p {
-  margin: 0; /* Remove default margin for paragraphs */
-  font-size: 1rem; /* Font size for the answer text */
-  color: #333; /* Darker color for answer text */
-}
-
-.answers-section input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .course-page button {
-    width: auto; /* الأزرار تأخذ عرض تلقائي في الشاشات الصغيرة */
-  }
-
-  .course-page .section-container .section {
-    width: 100%; /* عند الشاشات الصغيرة، يأخذ كل قسم العرض الكامل */
-  }
-}
-
-/* Container for Sections */
-.course-page .section-container {
-  display: flex;
-  flex-wrap: wrap; /* للتأكد من التداخل بشكل جيد في الشاشات الصغيرة */
-  justify-content: space-between;
-}
-
-/* Each Section */
-.course-page .section-container .section {
-  width: 48%; /* كل قسم يأخذ تقريباً نصف العرض مع مساحة صغيرة بين الأقسام */
-  box-sizing: border-box; /* لتجنب مشاكل المسافات والحدود */
-  margin-bottom: 20px; /* مسافة بين الأقسام */
-}
-
-/* Course Media Container */
-.course-media-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* المسافة بين العناصر */
-}
-
-.media-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* المسافة بين العناصر داخل قسم الوسائط */
-}
-
-.images-container,
-.videos-container {
-  display: flex;
-  flex-wrap: wrap; /* يسمح بلف العناصر عندما تكون كبيرة جداً */
-  gap: 10px; /* المسافة بين العناصر */
-  margin: 10px 0;
-}
-
-.image-item,
-.video-item {
-  border: 1px solid #ccc; /* إطار للمربعات */
-  border-radius: 8px; /* زوايا دائرية */
-  padding: 10px; /* مساحة داخلية */
-  width: fit-content; /* عرض ثابت للمربعات */
-  text-align: center; /* توسيط المحتوى */
-  transition: transform 0.3s; /* تأثير انتقالي على الحجم */
-}
-
-.image-item:hover,
-.video-item:hover {
-  transform: scale(1.05); /* تأثير تكبير خفيف عند التحويم */
-}
-
-.image-item img {
-  max-width: 100%; /* يجعل الصورة تتناسب مع عرض المربع */
-  height: auto; /* يحافظ على نسبة الطول إلى العرض */
-}
-
-.video-item video {
-  max-width: 100%; /* يجعل الفيديو يتناسب مع عرض المربع */
-  height: auto; /* يحافظ على نسبة الطول إلى العرض */
-}
-
-/* General Course Button */
-.course-button {
-  background-color: #007bff; /* لون الخلفية */
-  color: white; /* لون النص */
-  border: none; /* إزالة الحدود */
-  padding: 10px 15px; /* هوامش الزر */
-  margin: 5px; /* المسافة بين الأزرار */
-  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
-  border-radius: 5px; /* زوايا دائرية */
-  transition: background-color 0.3s, transform 0.2s; /* تأثير انتقال لون الخلفية */
-}
-
-.course-button:hover {
-  background-color: #0056b3; /* لون الخلفية عند المرور */
-  transform: translateY(-2px); /* تأثير الرفع عند التحويم */
-}
-
-/* Delete Button */
-.delete-button {
-  background-color: #dc3545; /* لون الخلفية لزر الحذف */
-  color: white; /* لون النص */
-  border: none; /* إزالة الحدود */
-  padding: 10px 15px; /* هوامش الزر */
-  margin-top: 10px; /* مسافة أعلى زر الحذف */
-  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
-  border-radius: 5px; /* زوايا دائرية */
-  transition: background-color 0.3s, transform 0.2s; /* تأثير انتقال لون الخلفية */
-}
-
-.delete-button:hover {
-  background-color: #c82333; /* لون الخلفية عند المرور */
-  transform: translateY(-2px); /* تأثير الرفع عند التحويم */
-}
-.button-container {
-  display: flex; /* استخدام flexbox لتوسيع العنصر */
-  justify-content: center; /* محاذاة المحتوى إلى الوسط أفقيًا */
-  align-items: center; /* محاذاة المحتوى إلى الوسط عموديًا */
-}
-
-.question-answers-container {
-  background-color: #f9f9f9; /* لون خلفية فاتح للحاوية */
-  padding: 20px; /* مساحة داخلية حول المحتوى */
-  border: 1px solid #ddd; /* لون حدود خفيف */
-  border-radius: 8px; /* زوايا مدورة */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* تأثير ظل لطيف */
-  margin-bottom: 20px; /* مساحة سفلية بين الحاويات */
-}
-
-.question-section {
-  margin-bottom: 15px; /* مساحة سفلية بين قسم الأسئلة وقسم الإجابات */
-}
-.question-button,
-.answer-button {
-  background-color: #007bff; /* لون خلفية الزر */
-  color: white; /* لون النص */
-  border: none; /* إزالة الحدود الافتراضية */
-  border-radius: 5px; /* زوايا مستديرة */
-  padding: 10px 15px; /* حشوة داخلية */
-  cursor: pointer; /* تغيير المؤشر عند التمرير فوق الزر */
-  font-size: 16px; /* حجم الخط */
-  transition: background-color 0.3s, transform 0.2s; /* تأثير التغيير */
-}
-
-.question-button:hover,
-.answer-button:hover {
-  background-color: #0056b3; /* تغيير اللون عند التحويم */
-  transform: scale(1.05); /* تكبير الزر قليلاً عند التحويم */
-}
-
-.question-button:disabled,
-.answer-button:disabled {
-  background-color: #ccc; /* لون الخلفية عند التعطيل */
-  cursor: not-allowed; /* تغيير المؤشر عند التعطيل */
-}
-
-.question-button:disabled:hover,
-.answer-button:disabled:hover {
-  background-color: #ccc; /* الحفاظ على اللون عند التحويم أثناء التعطيل */
-}
-
-.answers-section {
-  margin-top: 15px; /* مساحة علوية بين عنوان الإجابات والمحتوى */
-}
-
-h2,
-h3 {
-  color: #094d50; /* لون النص */
-  margin-bottom: 10px; /* مساحة سفلية بين العناوين والمحتوى */
-}
-
-/* تنسيق الحاوية للأزرار */
-.question-answers-container {
-  .question-section,
-  .answers-section {
-    margin-bottom: 15px; /* مساحة سفلية بين الأقسام */
-  }
-  .button-container {
-    display: flex; /* استخدام flexbox */
-    justify-content: center; /* توسيط المحتوى أفقيًا */
-    margin-top: 10px; /* إضافة هامش أعلى للحاوية */
-  }
-
-  .question-section button,
-  .answers-section button {
-    background-color: #f8ffff; /* لون خلفية الزر */
-    color: #094d50; /* لون النص */
-    border: none; /* إزالة الحدود الافتراضية */
-    border-radius: 5px; /* زوايا مستديرة */
-    padding: 10px 15px; /* حشوة داخلية */
-    cursor: pointer; /* تغيير المؤشر عند التمرير فوق الزر */
-    font-size: 16px; /* حجم الخط */
-    transition: background-color 0.3s, transform 0.2s; /* تأثير التغيير */
-  }
-
-  /* التأثير عند التحويم */
-  .question-section button:hover,
-  .answers-section button:hover {
-    background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
-    color: #ffffff;
-    transform: scale(1.05); /* تكبير الزر قليلاً عند التحويم */
-  }
-
-  /* حالة الزر المعطلة */
-  .question-section button:disabled,
-  .answers-section button:disabled {
-    background-color: #ccc; /* لون الخلفية عند التعطيل */
-    cursor: not-allowed; /* تغيير المؤشر عند التعطيل */
-  }
-
-  .question-section button:disabled:hover,
-  .answers-section button:disabled:hover {
-    background-color: #ccc; /* الحفاظ على اللون عند التحويم أثناء التعطيل */
-  }
-}
-.questions-list {
-  margin: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.question-item {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #fff;
-}
-
-.question-item h4 {
-  margin: 0;
+/* Loading and error messages styling */
+.course-detail-container p {
+  text-align: center;
+  font-size: 18px;
   color: #333;
 }
 
-.answer-item {
-  margin: 5px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.edit-question,
-.edit-answer {
-  display: flex;
-  align-items: center;
-}
-
-.edit-question input,
-.edit-answer input {
-  flex: 1;
-  padding: 5px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-.save-button,
-.edit-button,
-.delete-button {
-  padding: 5px 10px;
-  margin-left: 5px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-}
-
-.save-button:hover,
-.edit-button:hover,
-.delete-button:hover {
-  background-color: #0056b3;
-}
-.open-popup-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-.question-input {
-  width: 100%;
+.error-message {
+  color: #d9534f; /* Red color for error message */
+  background-color: #f2dede; /* Light red background */
   padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
 }
 
-.question-submit-button {
-  background-color: #008cba;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-.answer-item {
-  display: flex;
-  align-items: center;
-}
-
-.answer-checkbox {
-  margin-right: 10px;
-}
-
-.answer-edit-button {
-  background-color: #f0ad4e;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
-}
-
-.new-answer-input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-}
-
-.answer-submit-button {
-  background-color: #5bc0de;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-.close-popup-button {
-  background-color: #d9534f;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: 500px;
-  position: relative;
-}
-.question-item {
+/* Course title styling */
+.course-title {
+  font-size: 28px;
+  color: #094d50; /* Darker color to make the title stand out */
   margin-bottom: 20px;
+  text-align: center; /* Center the title for a balanced look */
+  border-bottom: 2px solid #0e6d72; /* Accent line under the title */
+  padding-bottom: 10px;
+}
+
+/* Sub-course list styling */
+.sub-course-list {
+  list-style: none; /* Remove default list styling */
+  padding: 0;
+  margin: 20px 0;
+}
+
+.sub-course-item {
+  background-color: #ffffff; /* White background for each item */
   border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.question-item {
+  border-radius: 4px;
+  margin: 10px 0;
+  padding: 15px;
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effect */
   display: flex;
-  flex-direction: column; /* تغيير الاتجاه لعرض العناصر في عمود */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 15px;
+  justify-content: space-between; /* Align items properly */
+  align-items: center;
 }
 
-.answer-item {
-  display: flex;
-  justify-content: space-between; /* لمحاذاة الإجابات والأزرار */
-  align-items: center; /* محاذاة العناصر عموديًا في الوسط */
-  gap: 10px; /* إضافة مسافة بين العناصر */
-  margin-bottom: 5px;
+.sub-course-item:hover {
+  transform: translateY(-2px); /* Slightly raise the item on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
 }
 
-.action-buttons {
-  gap: 10px; /* مسافة بين الأزرار */
-  justify-content: flex-end; /* محاذاة الأزرار إلى اليمين */
-  align-items: center; /* لضبط الأزرار مع النص في المنتصف */
+.sub-course-item a {
+  text-decoration: none; /* Remove underline from links */
+  color: #0e6d72; /* Link color to match the theme */
+  font-weight: bold;
 }
 
-.edit-button,
-.delete-button {
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
+.sub-course-item a:hover {
+  color: #007bff; /* Change color on hover for better UX */
 }
 
-.edit-button {
-  background-color: #2196f3; /* لون الزر الأزرق */
-  color: white;
+.no-access {
+  background-color: #f9f9f9; /* Greyed out background for no access */
+  color: #999; /* Light grey text */
+  cursor: not-allowed; /* Change cursor to indicate non-clickable */
 }
 
-.delete-button {
-  background-color: #d9534f; /* لون الزر الأحمر */
-  color: white;
+/* No sub-courses message styling */
+.no-sub-courses {
+  color: #777;
+  text-align: center;
+  font-style: italic;
 }
 
-.edit-button:hover,
-.delete-button:hover {
-  opacity: 0.8; /* تأثير عند المرور فوق الأزرار */
-}
-.media-display {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px; /* المسافة بين العناصر */
-  margin-top: 20px; /* المسافة العلوية */
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-detail-container {
+    padding: 15px;
+  }
 
-.media-display img,
-.media-display video {
-  max-width: 100%; /* لجعل الوسائط تتناسب مع العرض */
-  height: auto; /* للحفاظ على نسبة العرض إلى الارتفاع */
-  border-radius: 8px; /* زوايا دائرية */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* تأثير الظل */
-}
+  .course-title {
+    font-size: 24px;
+  }
 
-.media-display video {
-  width: 320px; /* عرض الفيديو */
-  height: 240px; /* ارتفاع الفيديو */
-}
-
-.media-display img {
-  width: 320px; /* عرض الصورة */
-  height: 180px; /* ارتفاع الصورة */
-  object-fit: cover; /* لتغطية المنطقة المحددة */
-}
-.add-course-section {
-  display: flex;
-  flex-direction: column; /* جعل العناصر في عمود */
-  gap: 20px; /* مساحة بين المربعات */
-}
-
-.forms-container {
-  display: flex; /* عرض المربعات بجانب بعضها */
-  justify-content: space-between; /* توزيع المساحة بين المربعات */
-  gap: 20px; /* مساحة بين المربعات */
-}
-
-.course-form-box,
-.sub-course-box {
-  width: 45%; /* عرض المربعات */
-  border: 1px solid #ccc; /* حدود للمربعات */
-  padding: 15px; /* مسافة داخلية */
-  border-radius: 8px; /* زوايا مدورة */
-  background-color: #f9f9f9; /* لون خلفية خفيف */
-}
-
-.add-course-form,
-.add-sub-course-form {
-  display: flex; /* عرض العناصر بجانب بعضها */
-  gap: 10px; /* فجوة بين العناصر */
-  align-items: center; /* توسيط العناصر عموديًا */
-  margin-bottom: 10px; /* مسافة سفلية بين الحقول */
-  width: 100%; /* جعل الحاويات تأخذ عرض الصفحة بالكامل */
-}
-
-.add-course-form input,
-.add-sub-course-form input {
-  flex-grow: 1; /* لجعل الحقل يتمدد ليشغل مساحة أكبر */
-  padding: 5px; /* مسافة داخلية للحقل */
-}
-
-.add-course-form button,
-.add-sub-course-form button {
-  padding: 5px 10px; /* مسافة داخلية للأزرار */
-  background-color: #4caf50; /* لون خلفية الزر */
-  color: white; /* لون النص */
-  border: none; /* إزالة الحدود */
-  cursor: pointer; /* إظهار مؤشر اليد عند تمرير الماوس */
-}
-
-.add-course-form button:hover,
-.add-sub-course-form button:hover {
-  background-color: #45a049; /* تغيير لون الخلفية عند التمرير */
-}
-
-/* Change background color when open */
-
-summary {
-  cursor: pointer; /* Pointer cursor for summary */
-  font-weight: bold; /* Bold text for summary */
-  padding: 0.5rem 0; /* Padding for summary */
-}
-
-/* Style for input fields */
-input[type="text"] {
-  width: calc(100% - 20px); /* Full width minus padding */
-  padding: 0.5rem; /* Padding inside input */
-  margin-bottom: 0.5rem; /* Space below inputs */
-  border: 1px solid #007bff; /* Blue border */
-  border-radius: 4px; /* Slightly rounded corners */
-}
-
-/* Style for the button */
-button {
-  background-color: #007bff; /* Blue background for button */
-  color: white; /* White text color */
-  border: none; /* No border */
-  border-radius: 4px; /* Rounded corners */
-  padding: 0.5rem 1rem; /* Padding inside the button */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth transition for hover */
-}
-
-/* Change button color on hover */
-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
-
-/* Media display styling */
-.media-display {
-  display: flex; /* Flexbox layout for media items */
-  flex-wrap: wrap; /* Wrap items to next line */
-  gap: 1rem; /* Space between items */
-}
-
-.media-display img {
-  max-width: 100%; /* Responsive image */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 4px; /* Rounded corners for images */
-}
-
-.media-display video {
-  max-width: 100%; /* Responsive video */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 4px; /* Rounded corners for videos */
+  .sub-course-item {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    text-align: center;
+  }
 }
