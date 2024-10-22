@@ -27,35 +27,16 @@
 .media-content img,
 .media-content video {
   width: 100%;
-  max-height: 500px; /* Ensure media does not get too large */
+  max-height: 500px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.video-container {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
-  height: 0;
-  overflow: hidden;
-  border-radius: 8px;
-  background-color: #000;
-  margin-bottom: 20px;
-}
-
-.video-container video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
 }
 
 /* Media navigation styling */
 .media-navigation {
   display: flex;
-  justify-content: center; /* Center the navigation buttons */
-  gap: 15px; /* Space between buttons */
+  justify-content: center;
+  gap: 15px;
   margin-top: 10px;
 }
 
@@ -77,7 +58,7 @@
 
 .media-navigation button:hover:not(:disabled) {
   background-color: #13898f;
-  transform: translateY(-2px); /* Slight lift effect on hover */
+  transform: translateY(-2px);
 }
 
 /* Question container styling */
@@ -87,8 +68,7 @@
 
 .question-navigation {
   display: flex;
-  justify-content: center;
-  gap: 15px; /* Space between question buttons */
+  justify-content: space-between; /* لوضع الـNext في اليمين و Previous في اليسار */
   margin-bottom: 15px;
 }
 
@@ -147,10 +127,11 @@
 .submission-result p {
   margin: 5px 0;
 }
+
 /* Styling for the Submit button */
 .submit-button {
   padding: 12px 30px;
-  background-color: #094d50; /* Bright color for emphasis */
+  background-color: #094d50;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -159,20 +140,23 @@
   font-weight: bold;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 20px; /* To add some spacing above the button */
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; /* To center the button */
 }
 
 /* Hover effect for the button */
 .submit-button:hover {
   background-color: #198c92;
-  transform: translateY(-2px); /* Slight lift effect on hover */
+  transform: translateY(-2px);
 }
 
 /* Active effect for the button */
 .submit-button:active {
   background-color: #0f8086;
-  transform: translateY(0); /* Return to original position on click */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly smaller shadow on click */
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Disabled state for the button */
@@ -181,37 +165,67 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+
+/* Question overview with clickable squares */
 .question-overview {
   margin-top: 30px;
 }
 
 .question-squares {
   display: flex;
-  flex-wrap: wrap; /* Allow wrapping for better layout */
-  gap: 10px; /* Space between squares */
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .question-square {
-  width: 40px; /* Width of each square */
-  height: 40px; /* Height of each square */
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  color: white; /* Text color */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Cursor indicates clickable */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
   transition: transform 0.2s;
 }
 
 .question-square:hover {
-  transform: scale(1.1); /* Slightly increase size on hover */
+  transform: scale(1.1);
 }
 
 .answered {
-  background-color: green; /* Color for answered questions */
+  background-color: green;
 }
 
 .unanswered {
-  background-color: red; /* Color for unanswered questions */
+  background-color: red;
+}
+/* Media navigation styling */
+.media-navigation {
+  display: flex;
+  justify-content: space-between; /* Ensure buttons are spaced to left and right */
+  gap: 15px; /* Space between buttons */
+  margin-top: 10px;
+}
+
+.media-navigation button {
+  padding: 12px 25px;
+  background-color: #094d50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 16px;
+}
+
+.media-navigation button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.media-navigation button:hover:not(:disabled) {
+  background-color: #13898f;
+  transform: translateY(-2px); /* Slight lift effect on hover */
 }
