@@ -25,15 +25,6 @@
   transition: background-color 0.3s ease; /* إضافة تأثير انتقالي للخلفية */
 }
 
-/* Consistent Button Hover State */
-.course-page button:hover,
-.question-section button:hover,
-.answers-section button:hover {
-  background-color: #0056b3; /* Consistent hover color */
-  color: #ffffff; /* Text color on hover */
-  transform: scale(1.05); /* Consistent scale effect */
-}
-
 .course-page button {
   margin-left: 46px;
   padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
@@ -671,7 +662,8 @@ h3 {
 }
 
 .popup-content button:last-child:hover {
-  background-color: #ffffff;
+  background-color: #094d50;
+  color: #ffffff;
 }
 
 .question-item {
