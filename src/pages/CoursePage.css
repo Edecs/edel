@@ -586,13 +586,6 @@ h3 {
 .delete-button:hover {
   background-color: #0056b3;
 }
-.open-popup-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
 
 .question-input {
   width: 100%;
@@ -779,20 +772,6 @@ h3 {
 .add-sub-course-form input {
   flex-grow: 1; /* لجعل الحقل يتمدد ليشغل مساحة أكبر */
   padding: 5px; /* مسافة داخلية للحقل */
-}
-
-.add-course-form button,
-.add-sub-course-form button {
-  padding: 5px 10px; /* مسافة داخلية للأزرار */
-  background-color: #4caf50; /* لون خلفية الزر */
-  color: white; /* لون النص */
-  border: none; /* إزالة الحدود */
-  cursor: pointer; /* إظهار مؤشر اليد عند تمرير الماوس */
-}
-
-.add-course-form button:hover,
-.add-sub-course-form button:hover {
-  background-color: #45a049; /* تغيير لون الخلفية عند التمرير */
 }
 
 /* Change background color when open */
