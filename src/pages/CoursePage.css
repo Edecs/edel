@@ -2,12 +2,17 @@
 .course-page {
   margin: 20px;
 }
+.course-page .courses-container {
+  display: flex; /* جعل الحاويات تظهر بجانب بعضها البعض */
+  gap: 20px; /* مسافة بين الحاويتين */
+}
+
 .course-page .course-buttons,
 .course-page .sub-course-buttons {
-  width: 90%;
+  width: 45%;
+  display: flex;
   max-height: 250px; /* تعيين الحد الأقصى لارتفاع الحاوية */
   overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
-  display: flex; /* استخدام flexbox لتنظيم الأزرار */
   flex-direction: row; /* عرض الأزرار في صف */
   justify-content: center; /* توسيط الأزرار أفقياً */
   align-items: center; /* توسيط الأزرار عمودياً */
@@ -20,6 +25,7 @@
   border-radius: 8px; /* زوايا مدورة للحاوية */
   transition: background-color 0.3s ease; /* إضافة تأثير انتقالي للخلفية */
 }
+
 /* Consistent Button Hover State */
 .course-page button:hover,
 .question-section button:hover,
@@ -148,6 +154,7 @@
 }
 
 .course-page summary {
+  margin-top: 20px;
   border: 1px solid #094d50;
   background-color: #094d50;
   color: white;
@@ -158,10 +165,6 @@
   margin-bottom: 10px;
   cursor: pointer;
   transition: background-color 0.3s; /* تأثير انتقال للخلفية */
-}
-
-.course-page details[open] summary {
-  margin-bottom: 20px;
 }
 
 /* Course and Sub-Course Selectors */
@@ -287,6 +290,31 @@
   display: flex;
   align-items: center;
   margin-bottom: 5px;
+}
+.answers-container {
+  margin-top: 1rem; /* Space above the answers container */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 5px; /* Slightly rounded corners */
+  padding: 1rem; /* Padding inside the container */
+  background-color: #f9f9f9; /* Light background color */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.answer-content {
+  margin-bottom: 0.75rem; /* Space below each answer */
+  padding: 0.5rem; /* Padding inside each answer box */
+  border: 1px solid #007bff; /* Blue border for each answer */
+  border-radius: 4px; /* Slightly rounded corners for answers */
+  background-color: #fff; /* White background for answers */
+  transition: background-color 0.3s ease; /* Transition effect for hover */
+}
+
+/* Change background color on hover */
+
+.answer-content p {
+  margin: 0; /* Remove default margin for paragraphs */
+  font-size: 1rem; /* Font size for the answer text */
+  color: #333; /* Darker color for answer text */
 }
 
 .answers-section input[type="checkbox"] {
@@ -519,11 +547,6 @@ h3 {
   color: #333;
 }
 
-.answers-list {
-  list-style-type: none;
-  padding: 0;
-}
-
 .answer-item {
   margin: 5px 0;
   display: flex;
@@ -661,11 +684,6 @@ h3 {
   margin-bottom: 15px;
 }
 
-.answers-list {
-  list-style-type: none; /* إزالة النقط من القائمة */
-  padding: 0;
-}
-
 .answer-item {
   display: flex;
   justify-content: space-between; /* لمحاذاة الإجابات والأزرار */
@@ -726,4 +744,105 @@ h3 {
   width: 320px; /* عرض الصورة */
   height: 180px; /* ارتفاع الصورة */
   object-fit: cover; /* لتغطية المنطقة المحددة */
+}
+.add-course-section {
+  display: flex;
+  flex-direction: column; /* جعل العناصر في عمود */
+  gap: 20px; /* مساحة بين المربعات */
+}
+
+.forms-container {
+  display: flex; /* عرض المربعات بجانب بعضها */
+  justify-content: space-between; /* توزيع المساحة بين المربعات */
+  gap: 20px; /* مساحة بين المربعات */
+}
+
+.course-form-box,
+.sub-course-box {
+  width: 45%; /* عرض المربعات */
+  border: 1px solid #ccc; /* حدود للمربعات */
+  padding: 15px; /* مسافة داخلية */
+  border-radius: 8px; /* زوايا مدورة */
+  background-color: #f9f9f9; /* لون خلفية خفيف */
+}
+
+.add-course-form,
+.add-sub-course-form {
+  display: flex; /* عرض العناصر بجانب بعضها */
+  gap: 10px; /* فجوة بين العناصر */
+  align-items: center; /* توسيط العناصر عموديًا */
+  margin-bottom: 10px; /* مسافة سفلية بين الحقول */
+  width: 100%; /* جعل الحاويات تأخذ عرض الصفحة بالكامل */
+}
+
+.add-course-form input,
+.add-sub-course-form input {
+  flex-grow: 1; /* لجعل الحقل يتمدد ليشغل مساحة أكبر */
+  padding: 5px; /* مسافة داخلية للحقل */
+}
+
+.add-course-form button,
+.add-sub-course-form button {
+  padding: 5px 10px; /* مسافة داخلية للأزرار */
+  background-color: #4caf50; /* لون خلفية الزر */
+  color: white; /* لون النص */
+  border: none; /* إزالة الحدود */
+  cursor: pointer; /* إظهار مؤشر اليد عند تمرير الماوس */
+}
+
+.add-course-form button:hover,
+.add-sub-course-form button:hover {
+  background-color: #45a049; /* تغيير لون الخلفية عند التمرير */
+}
+
+/* Change background color when open */
+
+summary {
+  cursor: pointer; /* Pointer cursor for summary */
+  font-weight: bold; /* Bold text for summary */
+  padding: 0.5rem 0; /* Padding for summary */
+}
+
+/* Style for input fields */
+input[type="text"] {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 0.5rem; /* Padding inside input */
+  margin-bottom: 0.5rem; /* Space below inputs */
+  border: 1px solid #007bff; /* Blue border */
+  border-radius: 4px; /* Slightly rounded corners */
+}
+
+/* Style for the button */
+button {
+  background-color: #007bff; /* Blue background for button */
+  color: white; /* White text color */
+  border: none; /* No border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 0.5rem 1rem; /* Padding inside the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover */
+}
+
+/* Change button color on hover */
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Media display styling */
+.media-display {
+  display: flex; /* Flexbox layout for media items */
+  flex-wrap: wrap; /* Wrap items to next line */
+  gap: 1rem; /* Space between items */
+}
+
+.media-display img {
+  max-width: 100%; /* Responsive image */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 4px; /* Rounded corners for images */
+}
+
+.media-display video {
+  max-width: 100%; /* Responsive video */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 4px; /* Rounded corners for videos */
 }
