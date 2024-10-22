@@ -300,23 +300,6 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.answer-content {
-  margin-bottom: 0.75rem; /* Space below each answer */
-  padding: 0.5rem; /* Padding inside each answer box */
-  border: 1px solid #007bff; /* Blue border for each answer */
-  border-radius: 4px; /* Slightly rounded corners for answers */
-  background-color: #fff; /* White background for answers */
-  transition: background-color 0.3s ease; /* Transition effect for hover */
-}
-
-/* Change background color on hover */
-
-.answer-content p {
-  margin: 0; /* Remove default margin for paragraphs */
-  font-size: 1rem; /* Font size for the answer text */
-  color: #333; /* Darker color for answer text */
-}
-
 .answers-section input[type="checkbox"] {
   margin-right: 10px;
 }
@@ -685,12 +668,6 @@ h3 {
   margin-bottom: 5px;
 }
 
-.action-buttons {
-  gap: 10px; /* مسافة بين الأزرار */
-  justify-content: flex-end; /* محاذاة الأزرار إلى اليمين */
-  align-items: center; /* لضبط الأزرار مع النص في المنتصف */
-}
-
 .edit-button,
 .delete-button {
   padding: 5px 10px;
@@ -824,4 +801,97 @@ button:hover {
   max-width: 100%; /* Responsive video */
   height: auto; /* Maintain aspect ratio */
   border-radius: 4px; /* Rounded corners for videos */
+}
+
+/* Course management content */
+.course-management-content {
+  margin-top: 1rem; /* Space above course management content */
+}
+
+/* Section headers */
+h2 {
+  font-size: 1.25rem; /* Size for section headers */
+  margin-bottom: 0.5rem; /* Margin below section headers */
+}
+
+/* Button styles */
+button {
+  background-color: #007bff; /* Blue background for buttons */
+  color: white; /* White text color */
+  border: none; /* No border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 0.5rem 1rem; /* Padding inside the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover */
+  margin: 0.5rem; /* Margin between buttons */
+}
+
+/* Change button color on hover */
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Input fields */
+input[type="text"] {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 0.5rem; /* Padding inside input */
+  margin-bottom: 1rem; /* Space below inputs */
+  border: 1px solid #007bff; /* Blue border */
+  border-radius: 4px; /* Slightly rounded corners */
+}
+
+/* Container for courses */
+.courses-container {
+  display: flex; /* Flexbox for layout */
+  flex-wrap: wrap; /* Wrap items to next line */
+  gap: 1rem; /* Space between items */
+}
+
+/* Button group styling */
+.course-buttons {
+  display: flex; /* Flexbox for button layout */
+  flex-direction: column; /* Vertical layout for buttons */
+}
+
+/* Sub-course section */
+
+.add-sub-course-form {
+  display: flex; /* Flexbox for input and button */
+  gap: 0.5rem; /* Space between input and button */
+}
+.answers-container {
+  display: flex; /* Align items in a row */
+  align-items: flex-start; /* Align items at the top */
+  gap: 1rem; /* Space between answers and buttons */
+}
+.answers-container {
+  display: flex;
+  justify-content: space-between; /* Space the answer section and buttons to left and right */
+  align-items: flex-start; /* Align items at the top */
+  gap: 1rem; /* Space between answers and buttons */
+}
+
+.answer-content {
+  flex-grow: 1; /* Allow answer container to take up available space */
+  padding: 0.5rem;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+  margin-bottom: 0.5rem;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 0.5rem; /* Space between the buttons */
+  justify-content: flex-start; /* Align buttons to the top */
+  align-self: flex-start; /* Align the button container to the top right */
+}
+
+.action-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
