@@ -11,7 +11,7 @@
 .course-page .sub-course-buttons {
   width: 45%;
   display: flex;
-  max-height: 528px; /* تعيين الحد الأقصى لارتفاع الحاوية */
+  max-height: 569px; /* تعيين الحد الأقصى لارتفاع الحاوية */
   overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
   flex-direction: row; /* عرض الأزرار في صف */
   justify-content: center; /* توسيط الأزرار أفقياً */
@@ -114,6 +114,7 @@
 /* Course and Sub-Course Buttons Styling */
 .course-page .course-buttons button.selected,
 .course-page .sub-course-buttons button.selected {
+  max-height: 569px;
   width: 25%;
   background-color: #ffffff; /* لون الخلفية عند التحديد */
   color: #094d50;
@@ -231,19 +232,6 @@
   transition: border-color 0.3s, box-shadow 0.3s; /* Transition for focus effect */
 }
 
-/* Focus Styles for Dropdown */
-.dropdown:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Disabled Dropdown Styles */
-.dropdown:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-}
-
 /* Dropdown Options Padding */
 .dropdown option {
   padding: 10px;
@@ -271,7 +259,6 @@
 
 .course-page .media-section a:hover {
   text-decoration: underline;
-  color: #007bff; /* تغيير لون النص عند التحويم */
 }
 
 /* Questions Section Styles */
@@ -289,10 +276,10 @@
   margin-bottom: 5px;
 }
 .answers-container {
-  margin-top: 1rem; /* Space above the answers container */
+  margin-top: 16px; /* Space above the answers container */
   border: 1px solid #ccc; /* Light gray border */
   border-radius: 5px; /* Slightly rounded corners */
-  padding: 1rem; /* Padding inside the container */
+  padding: 16px; /* Padding inside the container */
   background-color: #f9f9f9; /* Light background color */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
@@ -374,7 +361,6 @@
 
 /* General Course Button */
 .course-button {
-  background-color: #007bff; /* لون الخلفية */
   color: white; /* لون النص */
   border: none; /* إزالة الحدود */
   padding: 10px 15px; /* هوامش الزر */
@@ -425,7 +411,6 @@
 }
 .question-button,
 .answer-button {
-  background-color: #007bff; /* لون خلفية الزر */
   color: white; /* لون النص */
   border: none; /* إزالة الحدود الافتراضية */
   border-radius: 5px; /* زوايا مستديرة */
@@ -437,7 +422,6 @@
 
 .question-button:hover,
 .answer-button:hover {
-  background-color: #0056b3; /* تغيير اللون عند التحويم */
   transform: scale(1.05); /* تكبير الزر قليلاً عند التحويم */
 }
 
@@ -557,7 +541,6 @@ h3 {
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  background-color: #007bff;
   color: white;
 }
 
@@ -575,8 +558,6 @@ h3 {
 }
 
 .question-submit-button {
-  background-color: #008cba;
-  color: white;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
@@ -613,34 +594,86 @@ h3 {
   border: none;
   cursor: pointer;
 }
-
-.close-popup-button {
-  background-color: #d9534f;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
 .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7); /* خلفية داكنة لتمييز النافذة */
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000; /* تأكيد أن الـ popup يظهر فوق كل شيء */
 }
 
 .popup-content {
-  background-color: white;
+  background-color: #fff;
   padding: 20px;
-  border-radius: 5px;
-  width: 500px;
-  position: relative;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
 }
+
+.popup-content h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.popup-content h4 {
+  margin-top: 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+.popup-content input[type="text"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.popup-content label {
+  display: block;
+  margin-top: 10px;
+}
+
+.popup-content .error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* زراير مخصصة للـ popup */
+.popup-content button {
+  background-color: #ffffff;
+  color: #094d50;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 5px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.popup-content button:hover {
+  transform: scale(1.05); /* تأثير hover عند التمرير */
+}
+
+/* زر الغلق */
+.popup-content button:last-child {
+  background-color: #ffffff; /* لون أحمر مميز */
+}
+
+.popup-content button:last-child:hover {
+  background-color: #ffffff;
+}
+
 .question-item {
   margin-bottom: 20px;
   border: 1px solid #ddd;
@@ -714,16 +747,17 @@ h3 {
 }
 
 .forms-container {
+  height: 569px;
   display: flex;
   justify-content: space-between; /* Space the containers */
-  gap: 1rem; /* Space between the containers */
+  gap: 16px; /* Space between the containers */
   align-items: flex-start; /* Align the containers to the top */
 }
 
 .course-form-box,
 .sub-course-box {
   flex: 1; /* Allow each container to take up equal space */
-  padding: 1rem;
+  padding: 16px;
   background-color: #f9f9f9; /* Background for visual separation */
   border-radius: 8px; /* Optional: rounded corners */
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
@@ -749,39 +783,32 @@ h3 {
 summary {
   cursor: pointer; /* Pointer cursor for summary */
   font-weight: bold; /* Bold text for summary */
-  padding: 0.5rem 0; /* Padding for summary */
+  padding: 8px 0; /* Padding for summary */
 }
 
 /* Style for input fields */
 input[type="text"] {
   width: calc(100% - 20px); /* Full width minus padding */
-  padding: 0.5rem; /* Padding inside input */
-  margin-bottom: 0.5rem; /* Space below inputs */
-  border: 1px solid #007bff; /* Blue border */
+  padding: 8px; /* Padding inside input */
+  margin-bottom: 8px; /* Space below inputs */
   border-radius: 4px; /* Slightly rounded corners */
 }
 
 /* Style for the button */
 button {
-  background-color: #007bff; /* Blue background for button */
   color: white; /* White text color */
   border: none; /* No border */
   border-radius: 4px; /* Rounded corners */
-  padding: 0.5rem 1rem; /* Padding inside the button */
+  padding: 8px 16px; /* Padding inside the button */
   cursor: pointer; /* Pointer cursor on hover */
   transition: background-color 0.3s ease; /* Smooth transition for hover */
-}
-
-/* Change button color on hover */
-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
 }
 
 /* Media display styling */
 .media-display {
   display: flex; /* Flexbox layout for media items */
   flex-wrap: wrap; /* Wrap items to next line */
-  gap: 1rem; /* Space between items */
+  gap: 16px; /* Space between items */
 }
 
 .media-display img {
@@ -798,37 +825,22 @@ button:hover {
 
 /* Course management content */
 .course-management-content {
-  margin-top: 1rem; /* Space above course management content */
+  margin-top: 16px; /* Space above course management content */
 }
 
 /* Section headers */
 h2 {
-  font-size: 1.25rem; /* Size for section headers */
-  margin-bottom: 0.5rem; /* Margin below section headers */
+  font-size: 20px; /* Size for section headers */
+  margin-bottom: 8px; /* Margin below section headers */
 }
 
 /* Button styles */
-button {
-  background-color: #007bff; /* Blue background for buttons */
-  color: white; /* White text color */
-  border: none; /* No border */
-  border-radius: 4px; /* Rounded corners */
-  padding: 0.5rem 1rem; /* Padding inside the button */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth transition for hover */
-  margin: 0.5rem; /* Margin between buttons */
-}
-
-/* Change button color on hover */
-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
 
 /* Input fields */
 input[type="text"] {
   width: calc(100% - 20px); /* Full width minus padding */
-  padding: 0.5rem; /* Padding inside input */
-  margin-bottom: 1rem; /* Space below inputs */
+  padding: 8px; /* Padding inside input */
+  margin-bottom: 16px; /* Space below inputs */
   border: 1px solid #007bff; /* Blue border */
   border-radius: 4px; /* Slightly rounded corners */
 }
@@ -841,7 +853,7 @@ input[type="text"] {
 .add-course-section {
   margin: 5%;
   display: flex;
-  gap: 3rem; /* Adjust gap between the two sections */
+  gap: 48px; /* Adjust gap between the two sections */
 }
 
 .courses-container {
@@ -850,16 +862,17 @@ input[type="text"] {
 
 .course-buttons,
 .sub-course-buttons {
+  height: 569px;
   display: flex;
   flex-direction: column; /* Stack the course buttons vertically */
-  gap: 1rem; /* Space between each button */
+  gap: 16px; /* Space between each button */
 }
 
 .course-form-box,
 .sub-course-box {
   flex: 1; /* Allow the form boxes to take up available space */
   background-color: #f9f9f9; /* Light background for separation */
-  padding: 1rem; /* Add some padding inside the boxes */
+  padding: 16px; /* Add some padding inside the boxes */
   border-radius: 8px; /* Rounded corners for the boxes */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
 }
@@ -867,58 +880,54 @@ input[type="text"] {
 .add-course-form {
   display: flex;
   flex-direction: column; /* Stack inputs and buttons vertically */
-  gap: 0.5rem; /* Space between input fields and buttons */
+  gap: 8px; /* Space between input fields and buttons */
 }
 /* Sub-course section */
 
 .add-sub-course-form {
   display: flex; /* Flexbox for input and button */
-  gap: 0.5rem; /* Space between input and button */
+  gap: 8px; /* Space between input and button */
 }
 .answers-container {
   display: flex; /* Align items in a row */
   align-items: flex-start; /* Align items at the top */
-  gap: 1rem; /* Space between answers and buttons */
+  gap: 16px; /* Space between answers and buttons */
 }
 .answers-container {
   display: flex;
   justify-content: space-between; /* Space the answer section and buttons to left and right */
   align-items: flex-start; /* Align items at the top */
-  gap: 1rem; /* Space between answers and buttons */
+  gap: 16px; /* Space between answers and buttons */
 }
 .answers-container {
   display: flex;
   align-items: flex-start; /* Align items to the top */
-  gap: 1rem; /* Space between answers and buttons */
+  gap: 16px; /* Space between answers and buttons */
 }
 
 .answer-list {
   display: flex;
   flex-direction: column; /* Stack answers vertically */
   flex-grow: 1; /* Ensure answers take up the remaining space */
-  gap: 0.5rem; /* Space between answers */
+  gap: 8px; /* Space between answers */
 }
 
 .answer-content {
   width: 100%; /* Full width for each answer */
-  padding: 0.5rem;
+  padding: 8px;
   background-color: #fff;
   border-radius: 4px;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
-
-.action-buttons {
-  display: flex;
-  flex-direction: column; /* Stack buttons vertically */
-  gap: 0.5rem; /* Space between the buttons */
-  justify-content: flex-start; /* Align buttons to the top */
-  align-self: flex-start; /* Align button container at the top */
-}
-
 .action-buttons button {
-  padding: 0.5rem 1rem;
+  padding: 8px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 1em; /* This adjusts the text size relative to the button size */
+}
+
+.action-buttons button:hover {
+  background-color: #094d50;
 }
