@@ -176,7 +176,6 @@
   margin-top: 20px; /* هامش أعلى */
   padding: 20px; /* حشوة داخلية للصندوق */
   background-color: #fff; /* لون خلفية الصندوق */
-  border: 2px solid #0ea1a8; /* لون حدود الصندوق */
   border-radius: 8px; /* زوايا مستديرة للصندوق */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل للصندوق */
   max-width: 800px; /* عرض أقصى للصندوق */
