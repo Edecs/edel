@@ -716,7 +716,7 @@ h3 {
 .forms-container {
   display: flex;
   justify-content: space-between; /* Space the containers */
-  gap: 2rem; /* Space between the containers */
+  gap: 1rem; /* Space between the containers */
   align-items: flex-start; /* Align the containers to the top */
 }
 
@@ -839,9 +839,9 @@ input[type="text"] {
   flex-direction: column; /* Vertical layout for buttons */
 }
 .add-course-section {
+  margin: 5%;
   display: flex;
-  justify-content: space-between; /* Space between the two main sections */
-  gap: 2rem; /* Adjust gap between the two sections */
+  gap: 3rem; /* Adjust gap between the two sections */
 }
 
 .courses-container {
