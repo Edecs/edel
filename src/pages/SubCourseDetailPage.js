@@ -5,6 +5,19 @@ import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import "./SubCourseDetailPage.css";
 
+// Reusable Button Component
+const NavigationButton = ({ onClick, disabled, visible, text }) => {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{ visibility: visible ? "visible" : "hidden" }}
+    >
+      {text}
+    </button>
+  );
+};
+
 const SubCourseDetailPage = () => {
   const { subCourseId } = useParams();
   const navigate = useNavigate();
@@ -207,23 +220,19 @@ const SubCourseDetailPage = () => {
                 </video>
               </div>
             )}
-
             <div className="media-navigation">
-              <button
+              <NavigationButton
                 onClick={handlePrevMedia}
                 disabled={currentMediaIndex === 0}
-                style={{
-                  display: currentMediaIndex > 0 ? "inline-block" : "none",
-                }}
-              >
-                Previous Media
-              </button>
-              <button
+                visible={currentMediaIndex > 0}
+                text="Previous Media"
+              />
+              <NavigationButton
                 onClick={handleNextMedia}
                 disabled={currentMediaIndex === mediaKeys.length - 1}
-              >
-                Next Media
-              </button>
+                visible={currentMediaIndex < mediaKeys.length - 1}
+                text="Next Media"
+              />
             </div>
           </div>
         )}
@@ -248,24 +257,20 @@ const SubCourseDetailPage = () => {
                 </label>
               </div>
             ))}
-            <div className="question-navigation">
-              <button
-                onClick={handlePrevQuestion}
-                disabled={currentQuestionIndex === 0}
-                style={{
-                  display: currentQuestionIndex > 0 ? "inline-block" : "none",
-                }}
-              >
-                Previous Question
-              </button>
-
-              <button
-                onClick={handleNextQuestion}
-                disabled={currentQuestionIndex === totalQuestions - 1}
-              >
-                Next Question
-              </button>
-            </div>
+          </div>
+          <div className="question-navigation">
+            <NavigationButton
+              onClick={handlePrevQuestion}
+              disabled={currentQuestionIndex === 0}
+              visible={currentQuestionIndex > 0}
+              text="Previous Question"
+            />
+            <NavigationButton
+              onClick={handleNextQuestion}
+              disabled={currentQuestionIndex === totalQuestions - 1}
+              visible={currentQuestionIndex < totalQuestions - 1}
+              text="Next Question"
+            />
           </div>
         </div>
       )}
