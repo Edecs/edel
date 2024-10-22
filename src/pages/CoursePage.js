@@ -317,18 +317,6 @@ function CoursePage() {
                   </button>
                 ))}
               </div>
-              <div className="sub-course-buttons">
-                {subCourses.map((subCourse) => (
-                  <button key={subCourse.id} value={subCourse.id}>
-                    {subCourse.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* حاوية المربعات */}
-            <div className="forms-container">
-              {/* مربع إضافة دورة جديدة */}
               <div className="course-form-box">
                 <h2>Add New Course</h2>
                 <div className="add-course-form">
@@ -352,18 +340,31 @@ function CoursePage() {
                   <button onClick={handleAddCourse}>Add Course</button>
                 </div>
               </div>
+            </div>
 
-              {/* مربع إضافة الدورات الفرعية */}
-              <div className="sub-course-box">
-                <h2>Sub-Courses</h2>
-                <div className="add-sub-course-form">
-                  <input
-                    type="text"
-                    value={newSubCourseName}
-                    onChange={(e) => setNewSubCourseName(e.target.value)}
-                    placeholder="Add new sub-course"
-                  />
-                  <button onClick={handleAddSubCourse}>Add Sub-Course</button>
+            {/* حاوية المربعات */}
+            <div className="forms-container">
+              {/* مربع إضافة دورة جديدة */}
+              <div className="courses-container">
+                <div className="sub-course-buttons">
+                  {subCourses.map((subCourse) => (
+                    <button key={subCourse.id} value={subCourse.id}>
+                      {subCourse.name}
+                    </button>
+                  ))}
+                </div>
+                {/* مربع إضافة الدورات الفرعية */}
+                <div className="sub-course-box">
+                  <h2>Sub-Courses</h2>
+                  <div className="add-sub-course-form">
+                    <input
+                      type="text"
+                      value={newSubCourseName}
+                      onChange={(e) => setNewSubCourseName(e.target.value)}
+                      placeholder="Add new sub-course"
+                    />
+                    <button onClick={handleAddSubCourse}>Add Sub-Course</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -428,15 +429,18 @@ function CoursePage() {
                           <div key={answer.id} className="answer-content">
                             <p>{answer.text}</p>
                           </div>
-                        ))}{" "}
-                        <button onClick={() => handleEditQuestion(question)}>
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteQuestion(question.id)}
-                        >
-                          Delete
-                        </button>
+                        ))}
+
+                        <div className="action-buttons">
+                          <button onClick={() => handleEditQuestion(question)}>
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteQuestion(question.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
 
