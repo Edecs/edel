@@ -269,7 +269,6 @@ const SubCourseDetailPage = () => {
           </div>
         </div>
       )}
-      // Update the class name to avoid conflict
       {/* Question overview with clickable squares */}
       <div className="question-overview">
         <h3>Question Overview</h3>
