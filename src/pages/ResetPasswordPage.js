@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import "./ResetPasswordPage.css"; // تأكد من أنك أنشأت ملف CSS لتنسيق الصفحة
+import "./ResetPasswordPage.css"; // Make sure you have created a CSS file for page styling
 
 const ResetPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -11,26 +11,24 @@ const ResetPasswordPage = () => {
     e.preventDefault();
     try {
       await resetPassword(email);
-      setMessage(
-        "تم إرسال تعليمات إعادة تعيين كلمة المرور إلى بريدك الإلكتروني."
-      );
+      setMessage("Password reset instructions have been sent to your email.");
     } catch (error) {
-      setMessage("حدث خطأ: " + error.message);
+      setMessage("An error occurred: " + error.message);
     }
   };
 
   return (
     <div className="reset-password-container">
-      <h2>إعادة تعيين كلمة المرور</h2>
+      <h2>Reset Password</h2>
       <form onSubmit={handleResetPassword}>
         <input
           type="email"
-          placeholder="أدخل بريدك الإلكتروني"
+          placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button type="submit">إعادة تعيين كلمة المرور</button>
+        <button type="submit">Reset Password</button>
       </form>
       {message && <p>{message}</p>}
     </div>
