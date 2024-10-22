@@ -11,14 +11,13 @@
 .course-page .sub-course-buttons {
   width: 45%;
   display: flex;
-  max-height: 250px; /* تعيين الحد الأقصى لارتفاع الحاوية */
+  max-height: 528px; /* تعيين الحد الأقصى لارتفاع الحاوية */
   overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
   flex-direction: row; /* عرض الأزرار في صف */
   justify-content: center; /* توسيط الأزرار أفقياً */
   align-items: center; /* توسيط الأزرار عمودياً */
   gap: 10px; /* الفجوة بين الأزرار */
   flex-wrap: wrap; /* لف الأزرار إلى صفوف عند الحاجة */
-  margin-bottom: 20px; /* مسافة سفلية بين الحاوية وعناصر أخرى */
   border: 1px solid #ccc; /* حدود للحاوية */
   padding: 10px; /* مسافة داخلية للحاوية */
   background-color: #f9f9f9; /* لون خلفية خفيف للحاوية */
@@ -713,11 +712,6 @@ h3 {
   height: 180px; /* ارتفاع الصورة */
   object-fit: cover; /* لتغطية المنطقة المحددة */
 }
-.add-course-section {
-  display: flex;
-  flex-direction: column; /* جعل العناصر في عمود */
-  gap: 20px; /* مساحة بين المربعات */
-}
 
 .forms-container {
   display: flex;
@@ -839,19 +833,42 @@ input[type="text"] {
   border-radius: 4px; /* Slightly rounded corners */
 }
 
-/* Container for courses */
-.courses-container {
-  display: flex; /* Flexbox for layout */
-  flex-wrap: wrap; /* Wrap items to next line */
-  gap: 1rem; /* Space between items */
-}
-
 /* Button group styling */
 .course-buttons {
   display: flex; /* Flexbox for button layout */
   flex-direction: column; /* Vertical layout for buttons */
 }
+.add-course-section {
+  display: flex;
+  justify-content: space-between; /* Space between the two main sections */
+  gap: 2rem; /* Adjust gap between the two sections */
+}
 
+.courses-container {
+  flex: 1; /* Make the course container take available space */
+}
+
+.course-buttons,
+.sub-course-buttons {
+  display: flex;
+  flex-direction: column; /* Stack the course buttons vertically */
+  gap: 1rem; /* Space between each button */
+}
+
+.course-form-box,
+.sub-course-box {
+  flex: 1; /* Allow the form boxes to take up available space */
+  background-color: #f9f9f9; /* Light background for separation */
+  padding: 1rem; /* Add some padding inside the boxes */
+  border-radius: 8px; /* Rounded corners for the boxes */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+}
+
+.add-course-form {
+  display: flex;
+  flex-direction: column; /* Stack inputs and buttons vertically */
+  gap: 0.5rem; /* Space between input fields and buttons */
+}
 /* Sub-course section */
 
 .add-sub-course-form {
