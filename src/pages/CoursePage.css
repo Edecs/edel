@@ -109,9 +109,7 @@
 /* Input Focus Effect */
 .course-page input[type="text"]:focus,
 .course-page textarea:focus {
-  border-color: #0ea1a8;
   outline: none;
-  box-shadow: 0 0 8px #0ea1a8; /* More noticeable shadow effect on focus */
 }
 
 /* Course and Sub-Course Buttons Styling */
@@ -722,18 +720,19 @@ h3 {
 }
 
 .forms-container {
-  display: flex; /* عرض المربعات بجانب بعضها */
-  justify-content: space-between; /* توزيع المساحة بين المربعات */
-  gap: 20px; /* مساحة بين المربعات */
+  display: flex;
+  justify-content: space-between; /* Space the containers */
+  gap: 2rem; /* Space between the containers */
+  align-items: flex-start; /* Align the containers to the top */
 }
 
 .course-form-box,
 .sub-course-box {
-  width: 45%; /* عرض المربعات */
-  border: 1px solid #ccc; /* حدود للمربعات */
-  padding: 15px; /* مسافة داخلية */
-  border-radius: 8px; /* زوايا مدورة */
-  background-color: #f9f9f9; /* لون خلفية خفيف */
+  flex: 1; /* Allow each container to take up equal space */
+  padding: 1rem;
+  background-color: #f9f9f9; /* Background for visual separation */
+  border-radius: 8px; /* Optional: rounded corners */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
 }
 
 .add-course-form,
