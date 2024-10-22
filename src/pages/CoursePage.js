@@ -348,6 +348,7 @@ function CoursePage() {
               {/* مربع إضافة دورة جديدة */}
               <div className="courses-container">
                 <div className="sub-course-buttons">
+                  <h2>Sub Courses</h2>
                   {subCourses.map((subCourse) => (
                     <button key={subCourse.id} value={subCourse.id} disabled>
                       {subCourse.name}
@@ -357,7 +358,7 @@ function CoursePage() {
 
                 {/* مربع إضافة الدورات الفرعية */}
                 <div className="sub-course-box">
-                  <h2>Sub-Courses</h2>
+                  <h2>Add Sub Courses</h2>
                   <div className="add-sub-course-form">
                     <input
                       type="text"
