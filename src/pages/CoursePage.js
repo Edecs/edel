@@ -303,9 +303,10 @@ function CoursePage() {
         <summary>Add Course</summary>
         <div className="course-management-content">
           <div className="add-course-section">
-            <h2>Main Courses</h2>
             <div className="courses-container">
               <div className="course-buttons">
+                <h2>Main Courses</h2>
+
                 {filteredCourses.map((course) => (
                   <button
                     key={course.id}
@@ -348,11 +349,12 @@ function CoursePage() {
               <div className="courses-container">
                 <div className="sub-course-buttons">
                   {subCourses.map((subCourse) => (
-                    <button key={subCourse.id} value={subCourse.id}>
+                    <button key={subCourse.id} value={subCourse.id} disabled>
                       {subCourse.name}
                     </button>
                   ))}
                 </div>
+
                 {/* مربع إضافة الدورات الفرعية */}
                 <div className="sub-course-box">
                   <h2>Sub-Courses</h2>
