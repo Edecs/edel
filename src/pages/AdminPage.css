@@ -179,8 +179,6 @@
   border-radius: 8px; /* زوايا مستديرة للصندوق */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل للصندوق */
   max-width: 800px; /* عرض أقصى للصندوق */
-  margin-left: auto; /* محاذاة في الوسط */
-  margin-right: auto; /* محاذاة في الوسط */
 }
 
 .course-row {
