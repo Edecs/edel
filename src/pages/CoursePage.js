@@ -425,11 +425,13 @@ function CoursePage() {
 
                       {/* عرض الإجابات تحت السؤال */}
                       <div className="answers-container">
-                        {question.answers.map((answer) => (
-                          <div key={answer.id} className="answer-content">
-                            <p>{answer.text}</p>
-                          </div>
-                        ))}
+                        <div className="answer-list">
+                          {question.answers.map((answer) => (
+                            <div key={answer.id} className="answer-content">
+                              <p>{answer.text}</p>
+                            </div>
+                          ))}
+                        </div>
 
                         <div className="action-buttons">
                           <button onClick={() => handleEditQuestion(question)}>
