@@ -16,7 +16,7 @@ courses-container {
 .course-page .sub-course-buttons {
   margin-bottom: 20px;
   display: flex;
-  max-height: 569px; /* تعيين الحد الأقصى لارتفاع الحاوية */
+  max-height: 450px; /* تعيين الحد الأقصى لارتفاع الحاوية */
   overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
   justify-content: center; /* توسيط الأزرار أفقياً */
   align-items: center; /* توسيط الأزرار عمودياً */
@@ -39,8 +39,6 @@ courses-container {
   cursor: pointer; /* شكل المؤشر عند المرور على الزر */
   width: 50%; /* تأكد من أن الأزرار تأخذ عرض تلقائي */
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
-
-  /* تأثيرات عند التحويم */
   &:hover {
     background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
     color: #ffffff; /* تغيير لون النص عند التحويم */
@@ -764,7 +762,7 @@ h3 {
 
 .course-form-box,
 .sub-course-box {
-  height: 600px;
+  height: 525px;
   width: 500px;
   flex: 1; /* Allow each container to take up equal space */
   padding: 16px;
