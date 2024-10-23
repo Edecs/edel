@@ -1,19 +1,23 @@
 /* Course and Sub-Course Buttons with Scrollable Container */
 .course-page {
-  margin: 20px;
+  margin: 100px;
 }
 .course-page .courses-container {
-  display: flex; /* جعل الحاويات تظهر بجانب بعضها البعض */
-  gap: 20px; /* مسافة بين الحاويتين */
+  margin-top: 20px; /* هامش أعلى */
+  padding: 20px; /* حشوة داخلية للصندوق */
+  background-color: #fff; /* لون خلفية الصندوق */
+  border-radius: 8px; /* زوايا مستديرة للصندوق */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل للصندوق */
 }
-
+courses-container {
+  width: 100%;
+}
 .course-page .course-buttons,
 .course-page .sub-course-buttons {
-  width: 45%;
+  margin-bottom: 20px;
   display: flex;
   max-height: 569px; /* تعيين الحد الأقصى لارتفاع الحاوية */
   overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
-  flex-direction: row; /* عرض الأزرار في صف */
   justify-content: center; /* توسيط الأزرار أفقياً */
   align-items: center; /* توسيط الأزرار عمودياً */
   gap: 10px; /* الفجوة بين الأزرار */
@@ -23,6 +27,7 @@
   background-color: #f9f9f9; /* لون خلفية خفيف للحاوية */
   border-radius: 8px; /* زوايا مدورة للحاوية */
   transition: background-color 0.3s ease; /* إضافة تأثير انتقالي للخلفية */
+  width: 100%; /* عرض أقصى للصندوق */
 }
 
 .course-page button {
@@ -33,7 +38,7 @@
   border: 1px solid #094d509a; /* تحديد لون الحدود وسماكتها */
   border-radius: 4px; /* زوايا مدورة */
   cursor: pointer; /* شكل المؤشر عند المرور على الزر */
-  width: 45%; /* تأكد من أن الأزرار تأخذ عرض تلقائي */
+  width: 50%; /* تأكد من أن الأزرار تأخذ عرض تلقائي */
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
 
   /* تأثيرات عند التحويم */
@@ -59,7 +64,7 @@
 .course-page h2,
 .course-page h3,
 .course-page h4 {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   color: #094d50; /* لون النص */
 }
 
@@ -71,7 +76,9 @@
 }
 
 .course-page h3 {
-  font-size: 18px;
+  font-size: 20px;
+  text-align: left;
+  border-bottom: 2px solid #094d50;
 }
 
 .course-page h4 {
@@ -105,7 +112,6 @@
 /* Course and Sub-Course Buttons Styling */
 .course-page .course-buttons button.selected,
 .course-page .sub-course-buttons button.selected {
-  max-height: 569px;
   width: 25%;
   background-color: #ffffff; /* لون الخلفية عند التحديد */
   color: #094d50;
@@ -484,7 +490,6 @@ h3 {
 .questions-list {
   margin: 20px;
   padding: 10px;
-  border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
 }
@@ -498,8 +503,7 @@ h3 {
 }
 
 .question-item h4 {
-  margin: 0;
-  color: #333;
+  text-align: left;
 }
 
 .answer-item {
@@ -564,8 +568,6 @@ h3 {
 }
 
 .answer-edit-button {
-  background-color: #f0ad4e;
-  color: white;
   padding: 5px 10px;
   border: none;
   cursor: pointer;
@@ -580,7 +582,6 @@ h3 {
 
 .answer-submit-button {
   background-color: #5bc0de;
-  color: white;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
@@ -591,11 +592,11 @@ h3 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* خلفية داكنة لتمييز النافذة */
+  background-color: rgba(0, 0, 0, 0.7); /* خلفية داكنة */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* تأكيد أن الـ popup يظهر فوق كل شيء */
+  z-index: 1000; /* الـ popup يظهر فوق كل شيء */
 }
 
 .popup-content {
@@ -603,7 +604,7 @@ h3 {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 400px;
+  width: 650px;
   max-width: 90%;
   text-align: center;
 }
@@ -615,6 +616,9 @@ h3 {
 }
 
 .popup-content h4 {
+  display: flex;
+  width: fit-content;
+  text-align: left;
   margin-top: 15px;
   font-size: 18px;
   color: #333;
@@ -628,21 +632,13 @@ h3 {
   border-radius: 5px;
 }
 
-.popup-content label {
-  display: block;
-  margin-top: 10px;
-}
-
 .popup-content .error-message {
-  color: red;
   margin-top: 10px;
   font-size: 14px;
 }
 
-/* زراير مخصصة للـ popup */
+/* أزرار مخصصة للـ popup */
 .popup-content button {
-  background-color: #ffffff;
-  color: #094d50;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
@@ -651,23 +647,44 @@ h3 {
   margin-right: 5px;
   transition: background-color 0.3s, transform 0.2s;
 }
-
-.popup-content button:hover {
-  transform: scale(1.05); /* تأثير hover عند التمرير */
+.Add-answer {
+  display: flex;
+}
+/* زر "Add Answer" */
+.popup-content .add-answer-btn {
+  color: rgb(0, 0, 0);
+}
+.align-left {
+  margin-left: 14px;
+  display: flex;
+  justify-content: flex-start; /* توجيه المحتوى إلى أقصى اليسار */
+  align-items: center; /* محاذاة العناصر بشكل عمودي إذا لزم الأمر */
+  margin-top: 10px; /* مساحة صغيرة للفصل بين العناصر */
 }
 
-/* زر الغلق */
-.popup-content button:last-child {
-  background-color: #ffffff; /* لون أحمر مميز */
+.popup-content .add-answer-btn:hover {
+  transform: scale(1.05);
 }
 
-.popup-content button:last-child:hover {
-  background-color: #094d50;
-  color: #ffffff;
+/* زر "Save" */
+.popup-content .save-question-btn {
+  color: rgb(0, 0, 0);
 }
 
+.popup-content .save-question-btn:hover {
+  transform: scale(1.05);
+}
+
+.popup-content .close-popup-btn {
+  margin-left: 561px;
+  width: fit-content;
+  color: rgb(0, 0, 0);
+}
+
+.popup-content .close-popup-btn:hover {
+  transform: scale(1.05);
+}
 .question-item {
-  margin-bottom: 20px;
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 5px;
@@ -748,6 +765,8 @@ h3 {
 
 .course-form-box,
 .sub-course-box {
+  height: 600px;
+  width: 500px;
   flex: 1; /* Allow each container to take up equal space */
   padding: 16px;
   background-color: #f9f9f9; /* Background for visual separation */
@@ -843,13 +862,9 @@ input[type="text"] {
   flex-direction: column; /* Vertical layout for buttons */
 }
 .add-course-section {
-  margin: 5%;
   display: flex;
-  gap: 48px; /* Adjust gap between the two sections */
-}
-
-.courses-container {
-  flex: 1; /* Make the course container take available space */
+  justify-content: center; /* محاذاة المحتوى في منتصف الصفحة أفقياً */
+  gap: 48px; /* المسافة بين الأقسام داخل السكشن */
 }
 
 .course-buttons,
@@ -862,6 +877,8 @@ input[type="text"] {
 
 .course-form-box,
 .sub-course-box {
+  gap: 5px;
+  margin-bottom: 10px;
   flex: 1; /* Allow the form boxes to take up available space */
   background-color: #f9f9f9; /* Light background for separation */
   padding: 16px; /* Add some padding inside the boxes */
@@ -900,18 +917,19 @@ input[type="text"] {
 .answer-list {
   display: flex;
   flex-direction: column; /* Stack answers vertically */
-  flex-grow: 1; /* Ensure answers take up the remaining space */
+  flex-grow: 1;
   gap: 8px; /* Space between answers */
 }
 
 .answer-content {
+  margin-bottom: 5px;
   width: 100%; /* Full width for each answer */
   padding: 8px;
-  background-color: #fff;
   border-radius: 4px;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
 .action-buttons button {
+  margin-bottom: 30px;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
