@@ -31,7 +31,6 @@ courses-container {
 }
 
 .course-page button {
-  margin-left: 46px;
   padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
   background-color: #ffffff; /* لون الخلفية للأزرار */
   color: #094d50; /* لون النص */
@@ -928,7 +927,14 @@ input[type="text"] {
   border-radius: 4px;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
+.a1 {
+  justify-content: center; /* توسيط الأزرار أفقياً */
+  margin-left: 110px;
+}
 .action-buttons button {
+  text-align: center;
+  width: 100%;
+  display: flex;
   margin-bottom: 30px;
   padding: 8px 16px;
   border: none;
