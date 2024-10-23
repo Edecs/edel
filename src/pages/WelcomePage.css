@@ -40,13 +40,16 @@ h1 {
 }
 
 h2 {
-  padding-top: 80px;
-  /* ضبط المسافة العليا لعنوان h2 */
-  margin-bottom: 20px;
-  /* إضافة مسافة أسفل العنوان */
+  margin-top: 60px;
+  margin-bottom: 100px;
+  font-size: 60px; /* حجم النص */
+  border-bottom: 2px solid #094d50; /* خط */
+  padding-bottom: 8px; /* المسافة بين النص والخط */
+  transition: color 0.3s ease, border-bottom 0.3s ease; /* تأثير انتقال سلس */
 }
 
 .course-container {
+  margin-top: 100px;
   display: flex;
   flex-direction: row;
   /* عرض العناصر في صف */
@@ -60,7 +63,9 @@ h2 {
   /* Adjust for header height if necessary */
   box-sizing: border-box;
 }
-
+.p {
+  margin-top: 100px;
+}
 .task-card {
   background-color: #ffffff; /* لون خلفية البطاقة */
   padding: 20px;
