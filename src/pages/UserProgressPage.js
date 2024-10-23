@@ -242,14 +242,17 @@ function UserProgressPage() {
 
   return (
     <div className="user-progress-page">
-      <h1>User Progress Page</h1>
+      <div>
+        <h1>User Progress Page</h1>
+        <button onClick={exportToExcel}>Export to Excel</button>
+      </div>
       <input
         type="text"
         placeholder="Search..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <button onClick={exportToExcel}>Export to Excel</button>
+
       <div className="data-sections">
         {loading ? (
           <p>Loading...</p>
@@ -342,12 +345,12 @@ function UserProgressPage() {
               <table className="custom-table">
                 <thead>
                   <tr>
-                    <th>Email</th>
-                    <th>Course ID</th>
+                    <th>User Name</th>
+                    <th>Course</th>
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Total Time</th>
-                    <th>Percentage Success</th>
+                    <th>Success Percentage</th>
                     <th>User Answers</th>
                   </tr>
                 </thead>
@@ -359,7 +362,7 @@ function UserProgressPage() {
                       <td>{submission.startTime}</td>
                       <td>{submission.endTime}</td>
                       <td>{formatTime(submission.totalTime)}</td>
-                      <td>{submission.percentageSuccess}</td>
+                      <td>{submission.percentageSuccess}%</td>
                       <td>{submission.userAnswers}</td>
                     </tr>
                   ))}
