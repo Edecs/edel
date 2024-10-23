@@ -367,7 +367,9 @@ function CoursePage() {
                       placeholder="Add new sub-course"
                     />
                   </div>
-                  <button onClick={handleAddSubCourse}>Add Sub-Course</button>
+                  <button className="a1" onClick={handleAddSubCourse}>
+                    Add Sub-Course
+                  </button>
                 </div>
               </div>
             </div>
