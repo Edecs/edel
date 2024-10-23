@@ -300,13 +300,13 @@ function CoursePage() {
       <h1>Courses Management</h1>
 
       <details>
-        <summary>Add Course</summary>
+        <summary>Add New</summary>
         <div className="course-management-content">
           <div className="add-course-section">
             <div className="courses-container">
-              <div className="course-buttons">
-                <h2>Main Courses</h2>
+              <h2>Main Courses</h2>
 
+              <div className="course-buttons">
                 {filteredCourses.map((course) => (
                   <button
                     key={course.id}
@@ -347,8 +347,8 @@ function CoursePage() {
             <div className="forms-container">
               {/* مربع إضافة دورة جديدة */}
               <div className="courses-container">
+                <h2>Sub Courses</h2>
                 <div className="sub-course-buttons">
-                  <h2>Sub Courses</h2>
                   {subCourses.map((subCourse) => (
                     <button key={subCourse.id} value={subCourse.id} disabled>
                       {subCourse.name}
@@ -366,8 +366,8 @@ function CoursePage() {
                       onChange={(e) => setNewSubCourseName(e.target.value)}
                       placeholder="Add new sub-course"
                     />
-                    <button onClick={handleAddSubCourse}>Add Sub-Course</button>
                   </div>
+                  <button onClick={handleAddSubCourse}>Add Sub-Course</button>
                 </div>
               </div>
             </div>
@@ -376,12 +376,13 @@ function CoursePage() {
       </details>
 
       <details>
-        <summary>Edit Questions</summary>
+        <summary>Manage Content</summary>
         <div className="course-media-container">
           <div className="course-selection-container">
             <div className="course-selection">
               <div className="course-dropdown">
                 <h2>Main Courses</h2>
+
                 <select
                   value={selectedCourse}
                   onChange={(e) => setSelectedCourse(e.target.value)}
@@ -420,7 +421,8 @@ function CoursePage() {
 
             {selectedSubCourse && (
               <div className="questions-list">
-                <h3>Questions List</h3>
+                <h2>Questions List</h2>
+
                 {questions.map((question) => (
                   <div key={question.id} className="question-item">
                     <div className="question-content">
@@ -551,14 +553,26 @@ function CoursePage() {
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-content">
-            <h2>Add New Question</h2>
+            <button
+              className="close-popup-btn"
+              onClick={() => setShowPopup(false)}
+            >
+              X
+            </button>
+            <h3>Add New Question</h3>
+            <h4>Question:</h4>
             <input
               type="text"
               value={newQuestion}
               onChange={(e) => setNewQuestion(e.target.value)}
               placeholder="Enter new question"
             />
-            <h4>Answers:</h4>
+            <div className="Add-answer">
+              <h4>Answers: </h4>
+              <button className="add-answer-btn" onClick={handleAddAnswer}>
+                Add Answer
+              </button>
+            </div>
             {answers.map((answer, index) => (
               <div key={index}>
                 <input
@@ -571,7 +585,7 @@ function CoursePage() {
                   }}
                   placeholder="Enter answer"
                 />
-                <label>
+                <label className="align-left">
                   <input
                     type="checkbox"
                     checked={answer.correct}
@@ -585,9 +599,13 @@ function CoursePage() {
                 </label>
               </div>
             ))}
-            <button onClick={handleAddAnswer}>Add Answer</button>
-            <button onClick={handleAddNewQuestion}>Add Question</button>
-            <button onClick={() => setShowPopup(false)}>Close</button>
+            <button
+              className="save-question-btn"
+              onClick={handleAddNewQuestion}
+            >
+              Save
+            </button>
+
             {error && <p className="error-message">{error}</p>}
           </div>
         </div>
