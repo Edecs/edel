@@ -124,6 +124,7 @@ function CoursePage() {
       return () => unsubscribeQuestions();
     }
   }, [db, selectedCourse, selectedSubCourse]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEditQuestion = (question) => {
     setNewQuestion(question.text);
@@ -205,6 +206,7 @@ function CoursePage() {
       setError("Failed to add question: " + error.message);
     }
   };
+
   const handleEditAnswer = (answer) => {
     const questionToEdit = questions.find((q) =>
       q.answers.some((a) => a.id === answer.id)
@@ -475,7 +477,7 @@ function CoursePage() {
 
             {selectedSubCourse && (
               <div className="questions-list">
-                <h2>Questions List</h2>
+                <h2>Questions </h2>
 
                 {questions.map((question) => (
                   <div key={question.id} className="question-item">
@@ -493,9 +495,15 @@ function CoursePage() {
                         </div>
 
                         <div className="action-buttons">
-                          <button onClick={() => handleEditQuestion(question)}>
+                          <button
+                            onClick={() => {
+                              setIsModalOpen(true);
+                              handleEditQuestion(question);
+                            }}
+                          >
                             Edit
                           </button>
+
                           <button
                             onClick={() => handleDeleteQuestion(question.id)}
                           >
@@ -505,54 +513,72 @@ function CoursePage() {
                       </div>
                     </div>
 
-                    {editQuestionIndex === question.id && (
-                      <div className="edit-question-form">
-                        <h3>Edit Question</h3>
-                        <input
-                          type="text"
-                          value={newQuestion}
-                          onChange={(e) => setNewQuestion(e.target.value)}
-                          placeholder="Enter question"
-                        />
-                        <h4>Answers:</h4>
-                        {answers.map((answer, index) => (
-                          <div key={index}>
+                    <div>
+                      {/* الزر الذي يفتح النافذة المنبثقة */}
+
+                      {/* إذا كانت النافذة مفتوحة، نقوم بعرض الـ popup */}
+                      {isModalOpen && (
+                        <div className="modal-overlay">
+                          <div className="modal-content">
+                            <h3>Edit</h3>
                             <input
                               type="text"
-                              value={answer.text}
-                              onChange={(e) => {
-                                const newAnswers = [...answers];
-                                newAnswers[index].text = e.target.value;
-                                setAnswers(newAnswers);
-                              }}
-                              placeholder="Enter answer"
+                              value={newQuestion}
+                              onChange={(e) => setNewQuestion(e.target.value)}
+                              placeholder="Enter question"
                             />
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={answer.correct}
-                                onChange={() => {
-                                  const newAnswers = [...answers];
-                                  newAnswers[index].correct =
-                                    !newAnswers[index].correct;
+                            <h4>Answers:</h4>
+                            {answers.map((answer, index) => (
+                              <div key={index}>
+                                <input
+                                  type="text"
+                                  value={answer.text}
+                                  onChange={(e) => {
+                                    const newAnswers = [...answers];
+                                    newAnswers[index].text = e.target.value;
+                                    setAnswers(newAnswers);
+                                  }}
+                                  placeholder="Enter answer"
+                                />
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    checked={answer.correct}
+                                    onChange={() => {
+                                      const newAnswers = [...answers];
+                                      newAnswers[index].correct =
+                                        !newAnswers[index].correct;
 
-                                  if (!newAnswers.some((ans) => ans.correct)) {
-                                    newAnswers[index].correct = true;
-                                  }
+                                      // تأكد من أن هناك إجابة واحدة صحيحة على الأقل
+                                      if (
+                                        !newAnswers.some((ans) => ans.correct)
+                                      ) {
+                                        newAnswers[index].correct = true;
+                                      }
 
-                                  setAnswers(newAnswers);
-                                }}
-                              />
-                              Correct Answer
-                            </label>
+                                      setAnswers(newAnswers);
+                                    }}
+                                  />
+                                  Correct Answer
+                                </label>
+                              </div>
+                            ))}
+                            <button
+                              className="add-answer-btn"
+                              onClick={handleAddAnswer}
+                            >
+                              Add Answer
+                            </button>
+                            <button onClick={handleUpdateQuestion}>Save</button>
+                            <button onClick={() => setIsModalOpen(false)}>
+                              Close
+                            </button>{" "}
+                            {/* زر لإغلاق الـ popup */}
+                            {error && <p className="error-message">{error}</p>}
                           </div>
-                        ))}
-                        <button onClick={handleUpdateQuestion}>
-                          Update Question
-                        </button>
-                        {error && <p className="error-message">{error}</p>}
-                      </div>
-                    )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
                 <button onClick={() => setShowPopup(true)}>
