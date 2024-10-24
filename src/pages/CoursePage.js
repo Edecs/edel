@@ -280,6 +280,56 @@ function CoursePage() {
     }
   };
 
+  const handleDeleteMedia = async (mediaType, mediaId) => {
+    console.log(`Deleting ${mediaType} with ID: ${mediaId}`);
+    const mediaRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
+    );
+
+    try {
+      const snapshot = await get(mediaRef);
+      const existingMedia = snapshot.val();
+
+      if (!existingMedia) {
+        console.error("No media found");
+        setError("No media found");
+        return;
+      }
+
+      console.log("Existing media:", existingMedia);
+
+      // تحديد الوسائط الموجودة، وتعديل فقط النوع المحدد (images أو videos)
+      if (mediaType === "images" && existingMedia.images) {
+        existingMedia.images = existingMedia.images.filter(
+          (item) => item.id !== mediaId
+        );
+      } else if (mediaType === "videos" && existingMedia.videos) {
+        existingMedia.videos = existingMedia.videos.filter(
+          (item) => item.id !== mediaId
+        );
+      } else {
+        console.error("Invalid media type or no media to delete");
+        return;
+      }
+
+      console.log("Updated media:", existingMedia);
+
+      // تحديث البيانات في قاعدة البيانات
+      await set(mediaRef, existingMedia);
+
+      const newSnapshot = await get(mediaRef);
+      console.log("Media after update:", newSnapshot.val());
+
+      setMedia(existingMedia); // تحديث الحالة للواجهة الأمامية
+    } catch (error) {
+      console.error("Error during delete:", error);
+      setError("Failed to delete media: " + error.message);
+    }
+  };
+
+  // Rest of your code...
+
   useEffect(() => {
     if (selectedCourse && selectedSubCourse) {
       const mediaRef = ref(
@@ -294,6 +344,8 @@ function CoursePage() {
       return () => unsubscribe();
     }
   }, [db, selectedCourse, selectedSubCourse]);
+
+  // Rest of your JSX...
 
   return (
     <div className="course-page">
@@ -526,23 +578,36 @@ function CoursePage() {
                     {media.images &&
                       media.images
                         .sort((a, b) => a.id - b.id)
-                        .map((mediaItem, index) => (
-                          <img
-                            key={mediaItem.id}
-                            src={mediaItem.url}
-                            alt={`Media ${index}`}
-                          />
+                        .map((mediaItem) => (
+                          <div key={mediaItem.id} className="media-item">
+                            <img
+                              src={mediaItem.url}
+                              alt={`Media ${mediaItem.id}`}
+                            />
+                            <button
+                              onClick={() =>
+                                handleDeleteMedia("images", mediaItem.id)
+                              }
+                            >
+                              Delete
+                            </button>
+                          </div>
                         ))}
 
                     {media.videos &&
                       media.videos
                         .sort((a, b) => a.id - b.id)
-                        .map((mediaItem, index) => (
-                          <video
-                            key={mediaItem.id}
-                            src={mediaItem.url}
-                            controls
-                          />
+                        .map((mediaItem) => (
+                          <div key={mediaItem.id} className="media-item">
+                            <video src={mediaItem.url} controls />
+                            <button
+                              onClick={() =>
+                                handleDeleteMedia("videos", mediaItem.id)
+                              }
+                            >
+                              Delete
+                            </button>
+                          </div>
                         ))}
                   </div>{" "}
                 </details>
