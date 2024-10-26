@@ -795,7 +795,7 @@ button {
 }
 
 /* Section headers */
-h2 {
+.course-page h2 {
   font-size: 20px; /* Size for section headers */
   margin-bottom: 8px; /* Margin below section headers */
 }
