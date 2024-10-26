@@ -620,7 +620,6 @@ function CoursePage() {
                     placeholder="Add Video URL"
                   />
                   <button onClick={handleAddMedia}>Add Media</button>
-                  {/* عرض الوسائط المحملة */}
                   <div className="media-display">
                     {media.images &&
                       media.images
@@ -631,13 +630,16 @@ function CoursePage() {
                               src={mediaItem.url}
                               alt={`Media ${mediaItem.id}`}
                             />
-                            <button
-                              onClick={() =>
-                                handleDeleteMedia("images", mediaItem.id)
-                              }
-                            >
-                              Delete
-                            </button>
+                            <div className="delete-button-container">
+                              <button
+                                className="vim"
+                                onClick={() =>
+                                  handleDeleteMedia("images", mediaItem.id)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </div>
                         ))}
 
@@ -647,16 +649,19 @@ function CoursePage() {
                         .map((mediaItem) => (
                           <div key={mediaItem.id} className="media-item">
                             <video src={mediaItem.url} controls />
-                            <button
-                              onClick={() =>
-                                handleDeleteMedia("videos", mediaItem.id)
-                              }
-                            >
-                              Delete
-                            </button>
+                            <div className="delete-button-container">
+                              <button
+                                className="vim"
+                                onClick={() =>
+                                  handleDeleteMedia("videos", mediaItem.id)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </div>
                         ))}
-                  </div>{" "}
+                  </div>
                 </details>
               </div>
             )}
