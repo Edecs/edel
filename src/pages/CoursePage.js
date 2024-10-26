@@ -1,10 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getDatabase, ref, onValue, set, remove, get } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  remove,
+  get,
+  push,
+} from "firebase/database";
 import { getAuth } from "firebase/auth";
+
 import "./CoursePage.css";
 
 function CoursePage() {
   const [mainCourses, setMainCourses] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
+
   const [selectedCourse, setSelectedCourse] = useState("");
   const [subCourses, setSubCourses] = useState([]);
   const [selectedSubCourse, setSelectedSubCourse] = useState("");
@@ -125,30 +136,51 @@ function CoursePage() {
     }
   }, [db, selectedCourse, selectedSubCourse]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  // دالة لتحرير السؤال
   const handleEditQuestion = (question) => {
+    setIsEditMode(true);
     setNewQuestion(question.text);
     setAnswers(question.answers);
     setEditQuestionIndex(question.id);
+    setIsModalOpen(true);
   };
-
   const handleUpdateQuestion = async () => {
-    const questionRef = ref(
-      db,
-      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}`
-    );
+    if (!newQuestion.trim()) {
+      setError("Question text cannot be empty.");
+      return;
+    }
+
+    const questionData = {
+      text: newQuestion,
+      answers: answers,
+    };
 
     try {
-      await set(questionRef, {
-        text: newQuestion,
-        answers: answers,
-      });
+      if (isEditMode) {
+        // في حالة التحرير، نقوم بتحديث السؤال
+        const questionRef = ref(
+          db,
+          `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}`
+        );
+        await set(questionRef, questionData);
+      } else {
+        // في حالة الإضافة، نضيف سؤالاً جديدًا
+        const newQuestionRef = push(
+          ref(
+            db,
+            `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`
+          )
+        );
+        await set(newQuestionRef, questionData);
+      }
+
       setNewQuestion("");
       setAnswers([{ text: "", correct: false }]);
       setEditQuestionIndex(null);
       setError("");
+      setIsModalOpen(false);
     } catch (error) {
-      setError("Failed to update question: " + error.message);
+      setError("Failed to save question: " + error.message);
     }
   };
 
@@ -198,10 +230,10 @@ function CoursePage() {
         text: newQuestion,
         answers: answers,
       });
+      setIsEditMode(false);
       setNewQuestion("");
       setAnswers([{ text: "", correct: false }]);
-      setShowPopup(false);
-      setError("");
+      setIsModalOpen(true);
     } catch (error) {
       setError("Failed to add question: " + error.message);
     }
@@ -250,7 +282,9 @@ function CoursePage() {
 
     const newMedia = {
       images: newImageUrl ? [{ url: newImageUrl, id: Date.now() }] : [],
-      videos: newVideoUrl ? [{ url: newVideoUrl, id: Date.now() }] : [],
+      videos: newVideoUrl
+        ? [{ url: newVideoUrl, id: Date.now() + 100000 }]
+        : [], // زيادة ID الفيديوهات
     };
 
     if (newMedia.images.length > 0 || newMedia.videos.length > 0) {
@@ -283,7 +317,6 @@ function CoursePage() {
   };
 
   const handleDeleteMedia = async (mediaType, mediaId) => {
-    console.log(`Deleting ${mediaType} with ID: ${mediaId}`);
     const mediaRef = ref(
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
@@ -294,14 +327,10 @@ function CoursePage() {
       const existingMedia = snapshot.val();
 
       if (!existingMedia) {
-        console.error("No media found");
         setError("No media found");
         return;
       }
 
-      console.log("Existing media:", existingMedia);
-
-      // تحديد الوسائط الموجودة، وتعديل فقط النوع المحدد (images أو videos)
       if (mediaType === "images" && existingMedia.images) {
         existingMedia.images = existingMedia.images.filter(
           (item) => item.id !== mediaId
@@ -311,21 +340,12 @@ function CoursePage() {
           (item) => item.id !== mediaId
         );
       } else {
-        console.error("Invalid media type or no media to delete");
         return;
       }
 
-      console.log("Updated media:", existingMedia);
-
-      // تحديث البيانات في قاعدة البيانات
       await set(mediaRef, existingMedia);
-
-      const newSnapshot = await get(mediaRef);
-      console.log("Media after update:", newSnapshot.val());
-
-      setMedia(existingMedia); // تحديث الحالة للواجهة الأمامية
+      setMedia(existingMedia);
     } catch (error) {
-      console.error("Error during delete:", error);
       setError("Failed to delete media: " + error.message);
     }
   };
@@ -514,13 +534,14 @@ function CoursePage() {
                     </div>
 
                     <div>
-                      {/* الزر الذي يفتح النافذة المنبثقة */}
-
-                      {/* إذا كانت النافذة مفتوحة، نقوم بعرض الـ popup */}
                       {isModalOpen && (
-                        <div className="modal-overlay">
-                          <div className="modal-content">
-                            <h3>Edit</h3>
+                        <div className="popup-overlay">
+                          <div className="popup-content">
+                            <h3>
+                              {isEditMode
+                                ? "Edit Question"
+                                : "Add New Question"}
+                            </h3>
                             <input
                               type="text"
                               value={newQuestion}
@@ -540,7 +561,7 @@ function CoursePage() {
                                   }}
                                   placeholder="Enter answer"
                                 />
-                                <label>
+                                <label className="align-left">
                                   <input
                                     type="checkbox"
                                     checked={answer.correct}
@@ -549,7 +570,6 @@ function CoursePage() {
                                       newAnswers[index].correct =
                                         !newAnswers[index].correct;
 
-                                      // تأكد من أن هناك إجابة واحدة صحيحة على الأقل
                                       if (
                                         !newAnswers.some((ans) => ans.correct)
                                       ) {
@@ -569,11 +589,12 @@ function CoursePage() {
                             >
                               Add Answer
                             </button>
-                            <button onClick={handleUpdateQuestion}>Save</button>
+                            <button onClick={handleUpdateQuestion}>
+                              {isEditMode ? "Save Changes" : "Add Question"}
+                            </button>
                             <button onClick={() => setIsModalOpen(false)}>
                               Close
-                            </button>{" "}
-                            {/* زر لإغلاق الـ popup */}
+                            </button>
                             {error && <p className="error-message">{error}</p>}
                           </div>
                         </div>
