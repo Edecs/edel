@@ -283,17 +283,6 @@
   margin-right: 10px;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .course-page button {
-    width: auto; /* الأزرار تأخذ عرض تلقائي في الشاشات الصغيرة */
-  }
-
-  .course-page .section-container .section {
-    width: 100%; /* عند الشاشات الصغيرة، يأخذ كل قسم العرض الكامل */
-  }
-}
-
 /* Container for Sections */
 .course-page .section-container {
   display: flex;
@@ -301,73 +290,11 @@
   justify-content: space-between;
 }
 
-/* Each Section */
-.course-page .section-container .section {
-  width: 48%; /* كل قسم يأخذ تقريباً نصف العرض مع مساحة صغيرة بين الأقسام */
-  box-sizing: border-box; /* لتجنب مشاكل المسافات والحدود */
-  margin-bottom: 20px; /* مسافة بين الأقسام */
-}
-
 /* Course Media Container */
 .course-media-container {
   display: flex;
   flex-direction: column;
   gap: 20px; /* المسافة بين العناصر */
-}
-
-.media-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* المسافة بين العناصر داخل قسم الوسائط */
-}
-
-.images-container,
-.videos-container {
-  display: flex;
-  flex-wrap: wrap; /* يسمح بلف العناصر عندما تكون كبيرة جداً */
-  gap: 10px; /* المسافة بين العناصر */
-  margin: 10px 0;
-}
-
-.image-item,
-.video-item {
-  border: 1px solid #ccc; /* إطار للمربعات */
-  border-radius: 8px; /* زوايا دائرية */
-  padding: 10px; /* مساحة داخلية */
-  width: fit-content; /* عرض ثابت للمربعات */
-  text-align: center; /* توسيط المحتوى */
-  transition: transform 0.3s; /* تأثير انتقالي على الحجم */
-}
-
-.image-item:hover,
-.video-item:hover {
-  transform: scale(1.05); /* تأثير تكبير خفيف عند التحويم */
-}
-
-.image-item img {
-  max-width: 100%; /* يجعل الصورة تتناسب مع عرض المربع */
-  height: auto; /* يحافظ على نسبة الطول إلى العرض */
-}
-
-.video-item video {
-  max-width: 100%; /* يجعل الفيديو يتناسب مع عرض المربع */
-  height: auto; /* يحافظ على نسبة الطول إلى العرض */
-}
-
-/* General Course Button */
-.course-button {
-  color: white; /* لون النص */
-  border: none; /* إزالة الحدود */
-  padding: 10px 15px; /* هوامش الزر */
-  margin: 5px; /* المسافة بين الأزرار */
-  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
-  border-radius: 5px; /* زوايا دائرية */
-  transition: background-color 0.3s, transform 0.2s; /* تأثير انتقال لون الخلفية */
-}
-
-.course-button:hover {
-  background-color: #0056b3; /* لون الخلفية عند المرور */
-  transform: translateY(-2px); /* تأثير الرفع عند التحويم */
 }
 
 /* Delete Button */
@@ -434,11 +361,17 @@
 .answers-section {
   margin-top: 15px; /* مساحة علوية بين عنوان الإجابات والمحتوى */
 }
-
-h2,
-h3 {
-  color: #094d50; /* لون النص */
-  margin-bottom: 10px; /* مساحة سفلية بين العناوين والمحتوى */
+@media (max-width: 768px) {
+  .course-page {
+    margin: 20px;
+  }
+  .popup-content {
+    width: 90%;
+  }
+  .question-button,
+  .answer-button {
+    width: 100%; /* Full width for better accessibility */
+  }
 }
 
 /* تنسيق الحاوية للأزرار */
