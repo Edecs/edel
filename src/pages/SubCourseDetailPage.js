@@ -74,11 +74,7 @@ const SubCourseDetailPage = () => {
 
   const handleNextMedia = () => {
     if (subCourse?.media) {
-      const mediaKeys = [
-        ...Object.keys(subCourse.media.images || {}),
-        ...Object.keys(subCourse.media.videos || {}),
-      ];
-      if (currentMediaIndex < mediaKeys.length - 1) {
+      if (currentMediaIndex < mediaItems.length - 1) {
         setCurrentMediaIndex(currentMediaIndex + 1);
       }
     }
@@ -168,16 +164,23 @@ const SubCourseDetailPage = () => {
   if (error) return <p>Error: {error}</p>;
   if (!subCourse) return <p>Sub-course not found.</p>;
 
-  const mediaKeys = [
-    ...Object.keys(subCourse.media?.images || {}),
-    ...Object.keys(subCourse.media?.videos || {}),
-  ];
+  // Prepare media items
+  const mediaItems = [];
+  if (subCourse?.media) {
+    const imageEntries = Object.entries(subCourse.media.images || {}).map(
+      ([id, { url }]) => ({ id, url, type: "image" })
+    );
+    const videoEntries = Object.entries(subCourse.media.videos || {}).map(
+      ([id, { url }]) => ({ id, url, type: "video" })
+    );
 
-  const currentMediaKey = mediaKeys[currentMediaIndex];
-  const currentMedia = currentMediaKey
-    ? subCourse.media?.images?.[currentMediaKey]?.url ||
-      subCourse.media?.videos?.[currentMediaKey]?.url
-    : null;
+    mediaItems.push(...imageEntries, ...videoEntries);
+
+    // Sort media items by their IDs
+    mediaItems.sort((a, b) => a.id.localeCompare(b.id));
+  }
+
+  const currentMedia = mediaItems[currentMediaIndex];
 
   const currentQuestion = subCourse?.questions
     ? Object.values(subCourse.questions)[currentQuestionIndex]
@@ -195,25 +198,21 @@ const SubCourseDetailPage = () => {
       <div className="media-container">
         {currentMedia && (
           <div className="media-content">
-            {subCourse.media?.images?.[currentMediaKey] && (
+            {currentMedia.type === "image" && (
               <div className="media-item">
                 <img
-                  src={convertDropboxLink(
-                    subCourse.media.images[currentMediaKey].url
-                  )}
+                  src={convertDropboxLink(currentMedia.url)}
                   alt="Course Media"
                   style={{ width: "100%", height: "auto" }}
                 />
               </div>
             )}
-            {subCourse.media?.videos?.[currentMediaKey] && (
+            {currentMedia.type === "video" && (
               <div className="media-item">
                 <video controls style={{ width: "100%", height: "auto" }}>
                   <source
-                    src={convertDropboxLink(
-                      subCourse.media.videos[currentMediaKey].url
-                    )}
-                    type="video/mp4" // Ensure the video type is mp4 or a supported format
+                    src={convertDropboxLink(currentMedia.url)}
+                    type="video/mp4"
                   />
                   Your browser does not support the video tag.
                 </video>
@@ -228,8 +227,8 @@ const SubCourseDetailPage = () => {
               />
               <NavigationButton
                 onClick={handleNextMedia}
-                disabled={currentMediaIndex === mediaKeys.length - 1}
-                visible={currentMediaIndex < mediaKeys.length - 1}
+                disabled={currentMediaIndex === mediaItems.length - 1}
+                visible={currentMediaIndex < mediaItems.length - 1}
                 text="Next Media"
               />
             </div>
@@ -285,20 +284,21 @@ const SubCourseDetailPage = () => {
                 className={`question-square ${
                   isAnswered ? "answered" : "unanswered"
                 }`}
-                onClick={() => setCurrentQuestionIndex(index)} // Navigate to the question
+                onClick={() => setCurrentQuestionIndex(index)}
               >
                 {index + 1}
               </div>
             );
           })}
         </div>
+        <p>{`Answered: ${answeredQuestionsCount}/${totalQuestions}`}</p>
       </div>
       <button
         onClick={handleSubmit}
         className="submit-button"
-        disabled={answeredQuestionsCount < totalQuestions} // تعطيل الزر إذا لم يتم الإجابة على جميع الأسئلة
+        disabled={answeredQuestionsCount < totalQuestions}
       >
-        Submit
+        Submit Answers
       </button>
       {submissionResult && (
         <div className="submission-result">
