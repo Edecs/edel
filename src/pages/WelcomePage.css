@@ -17,6 +17,10 @@ body {
 
 h1,
 h2 {
+  font-size: 20px; /* Size for section headers */
+
+  margin-bottom: 40px;
+  color: #094d50; /* لون النص */
   margin: 0;
   /* إزالة المسافة العليا والسفلية */
   padding: 0;
@@ -42,7 +46,6 @@ h1 {
 h2 {
   margin-top: 60px;
   margin-bottom: 100px;
-  font-size: 60px; /* حجم النص */
   border-bottom: 2px solid #094d50; /* خط */
   padding-bottom: 8px; /* المسافة بين النص والخط */
   transition: color 0.3s ease, border-bottom 0.3s ease; /* تأثير انتقال سلس */
@@ -82,7 +85,6 @@ h2 {
 
 .task-card p {
   margin: 10px 0;
-  color: #333; /* لون النص */
   font-size: 1.1rem; /* حجم النص */
 }
 
