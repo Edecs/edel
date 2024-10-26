@@ -661,29 +661,58 @@
 }
 .media-display {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px; /* المسافة بين العناصر */
-  margin-top: 20px; /* المسافة العلوية */
+  flex-wrap: wrap; /* Allows wrapping of items to new lines */
+  gap: 20px; /* Space between media items */
+  justify-content: center; /* Center align items */
+  padding: 20px; /* Padding around the media display */
 }
 
-.media-display img,
-.media-display video {
-  max-width: 100%; /* لجعل الوسائط تتناسب مع العرض */
-  height: auto; /* للحفاظ على نسبة العرض إلى الارتفاع */
-  border-radius: 8px; /* زوايا دائرية */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* تأثير الظل */
+.media-item {
+  background-color: #f8f8f8; /* Light gray background for media items */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Hides overflow content */
+  width: 300px; /* Fixed width for media items */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+  position: relative; /* For positioning the delete button */
 }
 
-.media-display video {
-  width: 320px; /* عرض الفيديو */
-  height: 240px; /* ارتفاع الفيديو */
+.media-item img,
+.media-item video {
+  width: 100%; /* Full width */
+  height: auto; /* Maintain aspect ratio */
+  border-bottom: 1px solid #ccc; /* Divider between media and button */
 }
 
-.media-display img {
-  width: 320px; /* عرض الصورة */
-  height: 180px; /* ارتفاع الصورة */
-  object-fit: cover; /* لتغطية المنطقة المحددة */
+.vim {
+  background-color: #ff4d4d; /* Red background for delete button */
+  color: white; /* White text color */
+  border: none; /* No border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px 15px; /* Padding inside button */
+  cursor: pointer; /* Pointer cursor on hover */
+  position: absolute; /* Position button inside media item */
+  bottom: 10px; /* Position from bottom */
+  right: 10px; /* Position from right */
+  transition: background-color 0.3s ease; /* Smooth transition */
 }
+
+.vim:hover {
+  background-color: #ff1a1a; /* Darker red on hover */
+}
+.delete-button-container {
+  display: flex; /* Center the button */
+  justify-content: center; /* Center align the button */
+  padding: 10px 0; /* Space above and below the button */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .media-item {
+    width: 100%; /* Full width on small screens */
+  }
+}
+
 .forms-container {
   display: flex;
   gap: 20px; /* مسافة بين الجزأين */
@@ -858,6 +887,7 @@ input[type="text"] {
   margin-left: 110px;
 }
 .action-buttons button {
+  justify-content: center;
   text-align: center;
   width: 100%;
   display: flex;
