@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { db, ref, set, get, remove } from "../firebase";
+import { auth } from "../firebase"; // تأكد من استيراد Firebase Auth
 import "./CourseManagementPage.css";
 import rightArrowIcon from "../photos/right-arrow-svgrepo-com.svg";
 import leftArrowIcon from "../photos/left-arrow-svgrepo-com.svg";
@@ -16,6 +17,27 @@ function CourseManagementPage() {
   const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [selectedEnrolledUsers, setSelectedEnrolledUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [userDepartment, setUserDepartment] = useState("");
+  const [currentUser, setCurrentUser] = useState(null); // إضافة حالة المستخدم الحالي
+  const buttons = document.querySelectorAll("button");
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // إزالة الفئة active من جميع الأزرار
+      buttons.forEach((btn) => btn.classList.remove("active"));
+
+      // إضافة الفئة active للزر الذي تم الضغط عليه
+      this.classList.add("active");
+    });
+  });
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -26,14 +48,30 @@ function CourseManagementPage() {
       const coursesRef = ref(db, "courses/mainCourses");
       const snapshot = await get(coursesRef);
       if (snapshot.exists()) {
-        setCourses(snapshot.val());
+        const allCourses = snapshot.val();
+        const filteredCourses = Object.entries(allCourses).filter(
+          ([_, course]) => course.department === userDepartment
+        );
+        setCourses(Object.fromEntries(filteredCourses));
       } else {
         setCourses({});
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
-  }, []);
+  }, [userDepartment]);
+
+  const fetchUserDepartment = useCallback(async () => {
+    if (!currentUser) return; // تأكد من أن المستخدم موجود
+
+    const userRef = ref(db, `users/${sanitizeEmail(currentUser.email)}`);
+    const userSnapshot = await get(userRef);
+    if (userSnapshot.exists()) {
+      const department = userSnapshot.val().department;
+      setUserDepartment(department);
+      console.log("User Department: ", department);
+    }
+  }, [currentUser]);
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -90,6 +128,10 @@ function CourseManagementPage() {
       console.error("Error fetching enrolled users:", error);
     }
   }, []);
+
+  useEffect(() => {
+    fetchUserDepartment();
+  }, [fetchUserDepartment]);
 
   useEffect(() => {
     fetchCourses();
@@ -190,72 +232,69 @@ function CourseManagementPage() {
 
   return (
     <div className="course-management-page">
-      <h1>ِAssign Courses</h1>
-
-      <div className="search-bar">
+      <h1>Assign Courses</h1>
+      <div className="search-box">
         <input
           type="text"
-          placeholder="Search users..."
+          placeholder="Search Users..."
           value={searchTerm}
           onChange={handleSearchChange}
         />
       </div>
-
-      <div className="content">
-        <div className="courses-section">
-          <h2>Main Courses</h2>
+      <div className="management-grid">
+        <div className="column courses-column">
+          <h2>Available Courses</h2>
           <ul className="course-list">
-            {Object.keys(courses).length > 0 ? (
-              Object.keys(courses).map((courseId) => (
-                <li
-                  key={courseId}
-                  onClick={() => setSelectedCourse(courseId)}
-                  className={selectedCourse === courseId ? "selected" : ""}
+            {Object.entries(courses).map(([courseName]) => (
+              <li key={courseName}>
+                <button
+                  onClick={() => {
+                    setSelectedCourse(courseName);
+                    setSelectedEnrolledUsers([]);
+                  }}
                 >
-                  {courses[courseId]?.name || "No title"}
-                </li>
-              ))
-            ) : (
-              <p>No courses available</p>
-            )}
+                  {courseName}
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
-        <div className="details-section">
+
+        <div className="column enrolled-users-column">
           <h2>Enrolled Users</h2>
-          {selectedCourse && (
-            <div className="course-details-user-list1">
-              <ul className="user-list1">
-                {" "}
-                {/* تغيير هنا من enrolled-user-list1 إلى user-list1 */}
-                {enrolledUsersToDisplay.map((user) => (
-                  <li key={user.email}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={selectedEnrolledUsers.includes(user.email)}
-                        onChange={() => toggleEnrolledUserSelection(user.email)}
-                      />
-                      {user.name || "No name"} ({user.email || "No email"}) -{" "}
-                      {user.department || "No department"}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <ul className="user-list">
+            {enrolledUsersToDisplay.map((user) => (
+              <li key={user.email}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedEnrolledUsers.includes(user.email)}
+                    onChange={() => toggleEnrolledUserSelection(user.email)}
+                  />
+                  {user.name || "No name"} ({user.email || "No email"}) -{" "}
+                  {user.department || "No department"}
+                </label>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="actions">
-          <button onClick={handleRemoveUsersFromCourse}>
+        <div className="column buttons-column">
+          <button
+            className="Remove Users from Course"
+            onClick={handleRemoveUsersFromCourse}
+          >
             <img src={rightArrowIcon} alt="Remove Users from Course" />
           </button>
-
-          <button onClick={handleAddUsersToCourse}>
+          <button
+            className="Add Users to Course"
+            onClick={handleAddUsersToCourse}
+          >
             <img src={leftArrowIcon} alt="Add Users to Course" />
           </button>
         </div>
 
-        <div className="users-section">
+        <div className="column all-users-column">
           <h2>All Users</h2>
           <ul className="user-list1">
             {usersToDisplay.map((user) => (
