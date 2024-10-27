@@ -3,10 +3,9 @@
   margin: 100px;
 }
 .course-page .courses-container {
-  display: flex;
+  width: 50%;
   flex-direction: column;
   align-items: center;
-  max-width: 100%; /* عرض الحاوية */
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -16,7 +15,6 @@
 .course-page .course-buttons,
 .course-page .sub-course-buttons {
   margin-bottom: 20px;
-  display: flex;
   max-height: 450px; /* تعيين الحد الأقصى لارتفاع الحاوية */
   overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
   justify-content: center; /* توسيط الأزرار أفقياً */
@@ -166,7 +164,6 @@
 
 /* Course and Sub-Course Selectors */
 .course-page .course-selectors {
-  display: flex;
   justify-content: space-between; /* توزيع المساحة بين الأقسام */
   margin-top: 20px;
 }
@@ -180,7 +177,6 @@
 .add-sub-course {
   flex: 1; /* كل قسم يأخذ نفس المساحة */
   margin: 0 10px; /* مساحة بين الأقسام */
-  padding: 20px;
   border: 1px solid #ccc; /* حدود للأقسام */
   border-radius: 8px; /* زوايا مدورة */
   background-color: #f9f9f9; /* خلفية خفيفة */
@@ -202,7 +198,6 @@
 
 .sub-course-item {
   width: 100%;
-  display: flex;
   border: 1px solid #ccc; /* حدود */
   border-radius: 4px; /* زوايا مدورة */
   margin-bottom: 5px; /* مسافة بين العناصر */
@@ -364,18 +359,6 @@
 
 .answers-section {
   margin-top: 15px; /* مساحة علوية بين عنوان الإجابات والمحتوى */
-}
-@media (max-width: 768px) {
-  .course-page {
-    margin: 20px;
-  }
-  .popup-content {
-    width: 90%;
-  }
-  .question-button,
-  .answer-button {
-    width: 100%; /* Full width for better accessibility */
-  }
 }
 
 /* تنسيق الحاوية للأزرار */
@@ -702,15 +685,7 @@
   transition: background-color 0.3s ease; /* Smooth transition */
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
-  .media-item1 {
-    width: 100%; /* Full width on small screens */
-  }
-}
-
 .forms-container {
-  display: flex;
   gap: 20px; /* مسافة بين الجزأين */
   flex-wrap: wrap; /* يسمح بانتقال الجزأين للأسفل عند صغر الشاشة */
 }
@@ -718,8 +693,7 @@
 .course-form-box,
 .sub-course-box {
   height: 500px;
-  min-width: 570px; /* عرض أدنى للجزء */
-  max-width: 650px; /* عرض أقصى للجزء */
+
   flex: 1; /* Allow each container to take up equal space */
   padding: 16px;
   background-color: #f9f9f9; /* خلفية لفصل العناصر بصريًا */
@@ -853,11 +827,12 @@ input[type="text"] {
 /* Button group styling */
 
 .add-course-section {
-  width: 100%;
-  display: flex;
+  gap: 40px;
+  display: flex; /* استخدام flexbox */
+  flex-direction: row; /* الاتجاه الأفقي */
+  width: 100%; /* عرض كامل */
   justify-content: center; /* محاذاة المحتوى في منتصف الصفحة أفقياً */
-  gap: 100px; /* المسافة بين الأقسام داخل السكشن */
-  justify-content: center;
+  margin: 0 auto; /* محاذاة الحاوية في المنتصف */
 }
 
 .course-buttons,
@@ -881,14 +856,12 @@ input[type="text"] {
 }
 
 .add-course-form {
-  display: flex;
   flex-direction: column; /* Stack inputs and buttons vertically */
   gap: 8px; /* Space between input fields and buttons */
 }
 /* Sub-course section */
 
 .add-sub-course-form {
-  display: flex; /* Flexbox for input and button */
   gap: 8px; /* Space between input and button */
 }
 .answers-container {
@@ -923,7 +896,6 @@ input[type="text"] {
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
 .a1 {
-  display: flex; /* استخدم الفلكس لجعل الزر قابل للتوسيع */
   justify-content: center; /* توسيط المحتوى داخل الزر */
   align-items: center; /* محاذاة العناصر عموديًا */
   padding: 10px 20px; /* مساحة داخلية لجعل الزر أكبر */
