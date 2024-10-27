@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { db, ref, get, set } from "../firebase";
+import { db, ref, get, set } from "../firebase"; // استيراد فقط ما تحتاجه
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -91,7 +91,7 @@ function AdminPage() {
         ? currentAccessSnapshot.val().hasAccess
         : false;
       await set(userRoleRef, { hasAccess: !currentAccess });
-      await fetchData();
+      await fetchData(); // تحديث البيانات بعد تغيير حالة الوصول
     } catch (error) {
       console.error("Error toggling course access:", error);
     }
@@ -122,24 +122,28 @@ function AdminPage() {
 
   const handleAddUser = async () => {
     if (newUserEmail && newUserPassword && newUserName) {
-      const currentAdminUser = auth.currentUser;
+      const currentAdminUser = auth.currentUser; // حفظ المستخدم الحالي
       const adminEmail = currentAdminUser.email;
       const adminPassword = prompt(
         "Please enter your admin password to continue"
-      );
+      ); // طلب كلمة مرور المدير الحالي
 
       try {
+        // إنشاء المستخدم الجديد
         const { user } = await createUserWithEmailAndPassword(
           auth,
           newUserEmail,
           newUserPassword
         );
 
+        // تحويل البريد الإلكتروني لصيغة مناسبة للتخزين
         const sanitizedEmail = newUserEmail.replace(/\./g, ",");
 
+        // إعداد المرجعين لحفظ بيانات المستخدم الجديد
         const rolesRef = ref(db, `roles/${sanitizedEmail}`);
         const usersRef = ref(db, `users/${sanitizedEmail}`);
 
+        // إضافة المستخدم الجديد إلى قاعدة البيانات
         await set(rolesRef, { role: newUserRole, courses: {} });
         await set(usersRef, {
           email: newUserEmail,
@@ -148,14 +152,17 @@ function AdminPage() {
           department: newUserDepartment,
         });
 
+        // إعادة تسجيل الدخول بالحساب الإداري
         await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
 
+        // إعادة تعيين المدخلات
         setNewUserEmail("");
         setNewUserPassword("");
         setNewUserName("");
         setNewUserRole("user");
-        setNewUserDepartment("");
+        setNewUserDepartment(""); // إعادة تعيين قسم المستخدم الجديد
 
+        // تحديث البيانات وإغلاق النافذة المنبثقة
         await fetchData();
         setIsPopupOpen(false);
       } catch (error) {
@@ -199,7 +206,7 @@ function AdminPage() {
               <div
                 key={user.email}
                 className="user-item"
-                onClick={() => setSelectedUser(user)}
+                onClick={() => setSelectedUser(user)} // تعيين المستخدم المحدد هنا
               >
                 {user.name}
               </div>
@@ -233,71 +240,60 @@ function AdminPage() {
               />
               {Object.entries(courses)
                 .filter(([courseId, course]) => {
-                  const userCourses =
-                    roles[selectedUser.email.replace(/\./g, ",")]?.courses ||
-                    {};
-                  const hasMainCourseAccess = userCourses[courseId]?.hasAccess;
-
                   const isMainCourseMatch = course.name
                     .toLowerCase()
                     .includes(courseSearchQuery.toLowerCase());
-
                   const isSubCourseMatch =
                     course.subCourses &&
-                    Object.values(course.subCourses).some(
-                      (subCourse, subCourseId) =>
-                        userCourses[courseId]?.[subCourseId]?.hasAccess &&
-                        subCourse.name
-                          .toLowerCase()
-                          .includes(courseSearchQuery.toLowerCase())
+                    Object.values(course.subCourses).some((subCourse) =>
+                      subCourse.name
+                        .toLowerCase()
+                        .includes(courseSearchQuery.toLowerCase())
                     );
-
-                  return (
-                    hasMainCourseAccess &&
-                    (isMainCourseMatch || isSubCourseMatch)
-                  );
+                  return isMainCourseMatch || isSubCourseMatch;
                 })
-                .map(([courseId, course]) => (
-                  <div key={courseId}>
-                    <h4>{course.name}</h4>
-                    {course.subCourses &&
-                      Object.entries(course.subCourses).map(
-                        ([subCourseId, subCourse]) => (
-                          <div key={subCourseId}>
-                            <input
-                              type="checkbox"
-                              checked={
-                                !!roles[selectedUser.email.replace(/\./g, ",")]
-                                  ?.courses?.[courseId]?.[subCourseId]
-                                  ?.hasAccess
-                              }
-                              onChange={() =>
-                                handleToggleAccess(
-                                  selectedUser.email,
-                                  courseId,
-                                  subCourseId
-                                )
-                              }
-                            />
-                            {subCourse.name}
-                          </div>
-                        )
-                      )}
-                  </div>
-                ))}
+                .map(([courseId, course]) => {
+                  const hasMainCourseAccess =
+                    !!roles[selectedUser.email.replace(/\./g, ",")]?.courses?.[
+                      courseId
+                    ]?.hasAccess;
+                  return (
+                    <div key={courseId}>
+                      <h4>{course.name}</h4>
+                      {course.subCourses &&
+                        Object.entries(course.subCourses).map(
+                          ([subCourseId, subCourse]) => (
+                            <div key={subCourseId}>
+                              <input
+                                type="checkbox"
+                                checked={
+                                  !!roles[
+                                    selectedUser.email.replace(/\./g, ",")
+                                  ]?.courses?.[courseId]?.[subCourseId]
+                                    ?.hasAccess
+                                }
+                                onChange={() =>
+                                  handleToggleAccess(
+                                    selectedUser.email,
+                                    courseId,
+                                    subCourseId
+                                  )
+                                }
+                              />
+                              <label>
+                                {getSubCourseName(courseId, subCourseId)}
+                              </label>
+                            </div>
+                          )
+                        )}
+                    </div>
+                  );
+                })}
             </>
           )}
         </div>
-      </div>
-      {isPopupOpen && (
-        <div className="popup">
-          <div className="popup-content">
-            <button
-              className="close-popup-btn"
-              onClick={() => setIsPopupOpen(false)}
-            >
-              X
-            </button>
+        {isPopupOpen && (
+          <div className="popup">
             <h2>Create User</h2>
             <input
               type="text"
@@ -322,20 +318,41 @@ function AdminPage() {
               onChange={(e) => setNewUserRole(e.target.value)}
             >
               <option value="user">User</option>
-              <option value="admin">Admin</option>
+              {currentUserRole === "SuperAdmin" && (
+                <option value="admin">Admin</option>
+              )}
             </select>
-            <input
-              type="text"
-              placeholder="Department"
-              value={newUserDepartment}
-              onChange={(e) => setNewUserDepartment(e.target.value)}
-            />
-            <button className="add-user-btn" onClick={handleAddUser}>
-              Add User
-            </button>
+            {currentUserRole === "SuperAdmin" ? (
+              <select
+                value={newUserDepartment}
+                onChange={(e) => setNewUserDepartment(e.target.value)}
+              >
+                <option value="">Select Department</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={department.name}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <select
+                value={newUserDepartment}
+                onChange={(e) => setNewUserDepartment(e.target.value)}
+              >
+                <option value="">Select Department</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={department.name}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            <button onClick={handleAddUser}>Add User</button>
+            <button onClick={() => setIsPopupOpen(false)}>Close</button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
