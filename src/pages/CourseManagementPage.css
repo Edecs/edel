@@ -78,7 +78,7 @@ h1 {
   background-color: white; /* لون الزر عند المرور */
   color: #094d50; /* لون النص عند المرور */
 }
-.button-container {
+.course-management-page.button-container {
   flex-direction: column; /* ترتيب الزرين في عمود */
   justify-content: center; /* مركزية عمودية */
   align-items: center; /* مركزية أفقية */
@@ -86,7 +86,7 @@ h1 {
   margin: 0 auto; /* موازنة الحاوية في المنتصف */
 }
 
-.button-container button {
+.course-management-page.button-container button {
   width: 100%; /* اجعل الزر يأخذ عرض كامل */
   background-color: #094d50; /* اللون الافتراضي للزر */
   color: white; /* لون النص */
@@ -95,7 +95,7 @@ h1 {
   cursor: pointer; /* شكل المؤشر عند المرور */
 }
 
-.button-container button:hover {
+.course-management-page.button-container button:hover {
   background-color: white; /* لون الزر عند المرور */
   color: #094d50; /* لون النص عند المرور */
 }
