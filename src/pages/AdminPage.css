@@ -23,7 +23,6 @@
   font-weight: bold;
 }
 
-.open-popup-btn,
 .navigate-to-course-management-btn,
 .refresh-data-btn {
   background-color: #107f85;
@@ -220,46 +219,6 @@ span {
 .courses-table {
   margin-top: 10px; /* هامش أعلى */
 }
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 500px;
-  z-index: 1000;
-}
-
-.popup h2 {
-  margin-top: 0;
-}
-
-.popup button {
-  background-color: #107f85;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s;
-}
-
-.popup button:hover {
-  background-color: #0c595e;
-}
-
-.popup button:last-of-type {
-  background-color: #0b3d41;
-}
-
-.popup button:last-of-type:hover {
-  background-color: #1598a1;
-}
 
 h1,
 h2,
@@ -295,4 +254,115 @@ input[type="password"]::placeholder {
 
 input[type="checkbox"] {
   margin-right: 5px;
+}
+/* Admin Page Styles */
+.admin-page {
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* Popup Modal Styling */
+.admin-page .popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 450px;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.admin-page .popup-content h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #1a535c;
+  text-align: center;
+  font-weight: 600;
+}
+
+.admin-page .popup-content input,
+.admin-page .popup-content select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #d4d4d4;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.admin-page .popup-content button {
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.admin-page .popup-content .add-user-btn {
+  background-color: #1a535c;
+}
+
+.admin-page .popup-content .add-user-btn:hover {
+  background-color: #14434a;
+}
+
+/* Close Button Styling */
+.admin-page .popup-content .close-popup-btn {
+  background-color: #bcbcbc; /* Background color for the button */
+  color: rgb(0, 0, 0); /* Text color */
+  padding: 8px 12px; /* Padding for button */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer on hover */
+  position: absolute; /* Absolute positioning */
+  top: 10px; /* 10px from the top */
+  right: 10px; /* 10px from the right */
+  transition: transform 0.3s; /* Smooth scaling on hover */
+}
+
+/* Hover effect for the button */
+.admin-page .popup-content .close-popup-btn:hover {
+  transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+/* Open Popup Button */
+.admin-page .open-popup-btn {
+  background-color: #1a535c;
+  color: #ffffff;
+  padding: 10px 25px;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  margin-bottom: 15px;
+}
+
+.admin-page .open-popup-btn:hover {
+  background-color: #ffffff;
+  color: #1a535c;
+  border-color: #1a535c;
+}
+
+/* Responsive Adjustments for Smaller Screens */
+@media (max-width: 600px) {
+  .admin-page .popup {
+    width: 95%;
+    max-width: 400px;
+  }
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
