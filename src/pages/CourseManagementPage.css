@@ -6,8 +6,8 @@
   align-items: center;
 }
 
-.course-selection,
-.users-container {
+.course-management-page.course-selection,
+.course-management-page.users-container {
   margin-bottom: 20px;
   width: 100%;
   max-width: 800px; /* تحديد عرض أقصى للصفحة */
