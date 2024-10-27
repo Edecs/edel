@@ -16,11 +16,10 @@
 .course-page .sub-course-buttons {
   margin-bottom: 20px;
   max-height: 450px; /* تعيين الحد الأقصى لارتفاع الحاوية */
-  overflow-y: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
+  overflow-x: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
   justify-content: center; /* توسيط الأزرار أفقياً */
   align-items: center; /* توسيط الأزرار عمودياً */
   gap: 10px; /* الفجوة بين الأزرار */
-  flex-wrap: wrap; /* لف الأزرار إلى صفوف عند الحاجة */
   border: 1px solid #ccc; /* حدود للحاوية */
   padding: 10px; /* مسافة داخلية للحاوية */
   background-color: #f9f9f9; /* لون خلفية خفيف للحاوية */
