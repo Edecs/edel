@@ -394,7 +394,7 @@ function CoursePage() {
               </div>
               <div className="course-form-box">
                 <h2>Add New Course</h2>
-                <div className="add-course-form">
+                <div className="add-sub-course-form">
                   <input
                     type="text"
                     placeholder="Enter new course name"
@@ -405,14 +405,18 @@ function CoursePage() {
 
                 {/* مربع تحميل صورة الدورة */}
                 <h2>Upload Course Thumbnail</h2>
-                <div className="add-course-form">
+                <div className="add-sub-course-form">
                   <input
                     type="text"
                     value={thumbnail}
                     onChange={(e) => setThumbnail(e.target.value)}
                     placeholder="Enter thumbnail URL (Dropbox link)"
                   />
-                  <button onClick={handleAddCourse}>Add Course</button>
+                </div>
+                <div className="button-container">
+                  <button className="cinter" onClick={handleAddCourse}>
+                    Add Course
+                  </button>
                 </div>
               </div>
             </div>
@@ -441,9 +445,11 @@ function CoursePage() {
                       placeholder="Add new sub-course"
                     />
                   </div>
-                  <button className="a1" onClick={handleAddSubCourse}>
-                    Add Sub-Course
-                  </button>
+                  <div className="button-container">
+                    <button className="a1" onClick={handleAddSubCourse}>
+                      Add Sub-Course
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -497,7 +503,12 @@ function CoursePage() {
 
             {selectedSubCourse && (
               <div className="questions-list">
-                <h2>Questions </h2>
+                <div className="gg">
+                  <h2>Questions </h2>
+                  <button className="right" onClick={() => setShowPopup(true)}>
+                    Add New
+                  </button>
+                </div>
 
                 {questions.map((question) => (
                   <div key={question.id} className="question-item">
@@ -602,9 +613,6 @@ function CoursePage() {
                     </div>
                   </div>
                 ))}
-                <button onClick={() => setShowPopup(true)}>
-                  Add New Question
-                </button>
                 <details>
                   <summary>Media</summary>
                   <input
@@ -687,8 +695,10 @@ function CoursePage() {
               placeholder="Enter new question"
             />
             <div className="Add-answer">
-              <h4>Answers: </h4>
-              <button className="add-answer-btn" onClick={handleAddAnswer}>
+              <div className="gg">
+                <h4>Answers: </h4>
+              </div>
+              <button className="right" onClick={handleAddAnswer}>
                 Add Answer
               </button>
             </div>
