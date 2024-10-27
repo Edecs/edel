@@ -292,6 +292,12 @@ function AdminPage() {
       {isPopupOpen && (
         <div className="popup">
           <div className="popup-content">
+            <button
+              className="close-popup-btn"
+              onClick={() => setIsPopupOpen(false)}
+            >
+              X
+            </button>
             <h2>Create User</h2>
             <input
               type="text"
@@ -326,12 +332,6 @@ function AdminPage() {
             />
             <button className="add-user-btn" onClick={handleAddUser}>
               Add User
-            </button>
-            <button
-              className="close-popup-btn"
-              onClick={() => setIsPopupOpen(false)}
-            >
-              Close
             </button>
           </div>
         </div>
