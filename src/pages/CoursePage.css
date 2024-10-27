@@ -677,38 +677,31 @@
   position: relative; /* For positioning the delete button */
 }
 
-.media-item img,
-.media-item video {
+.media-item1 img,
+.media-item1 video {
   width: 100%; /* Full width */
   height: auto; /* Maintain aspect ratio */
   border-bottom: 1px solid #ccc; /* Divider between media and button */
 }
 
-.vim {
-  background-color: #ff4d4d; /* Red background for delete button */
-  color: white; /* White text color */
-  border: none; /* No border */
-  border-radius: 4px; /* Rounded corners */
-  padding: 10px 15px; /* Padding inside button */
-  cursor: pointer; /* Pointer cursor on hover */
-  position: absolute; /* Position button inside media item */
-  bottom: 10px; /* Position from bottom */
-  right: 10px; /* Position from right */
-  transition: background-color 0.3s ease; /* Smooth transition */
-}
-
-.vim:hover {
-  background-color: #ff1a1a; /* Darker red on hover */
-}
 .delete-button-container {
   display: flex; /* Center the button */
   justify-content: center; /* Center align the button */
   padding: 10px 0; /* Space above and below the button */
+  margin-top: 10px; /* Space between media and button */
+}
+
+.vim {
+  border: none; /* No border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px 15px; /* Padding inside button */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition */
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .media-item {
+  .media-item1 {
     width: 100%; /* Full width on small screens */
   }
 }
