@@ -38,7 +38,6 @@
   border: 1px solid #094d509a; /* تحديد لون الحدود وسماكتها */
   border-radius: 4px; /* زوايا مدورة */
   cursor: pointer; /* شكل المؤشر عند المرور على الزر */
-  width: 50%; /* تأكد من أن الأزرار تأخذ عرض تلقائي */
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
   &:hover {
     background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
@@ -110,12 +109,17 @@
 /* Course and Sub-Course Buttons Styling */
 .course-page .course-buttons button.selected,
 .course-page .sub-course-buttons button.selected {
-  width: 25%;
+  width: 50%;
   background-color: #ffffff; /* لون الخلفية عند التحديد */
   color: #094d50;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* إضافة ظل خفيف */
 }
-
+.sub-course-buttons button {
+  width: 50%;
+}
+.course-buttons button {
+  width: 50%;
+}
 .course-page .course-buttons button.selected:hover,
 .course-page .sub-course-buttons button.selected:hover {
   background-color: #d1d3cb; /* لون الخلفية عند التحويم مع التحديد */
@@ -147,11 +151,11 @@
 }
 
 .course-page summary {
-  margin-top: 20px;
+  margin-top: 60px;
   border: 1px solid #094d50;
   background-color: #094d50;
   color: white;
-  padding: 15px;
+  padding: 30px;
   border-radius: 8px;
   font-weight: bold;
   font-size: 18px;
@@ -582,7 +586,8 @@
 }
 /* زر "Add Answer" */
 .popup-content .add-answer-btn {
-  color: rgb(0, 0, 0);
+  width: fit-content;
+  height: fit-content;
 }
 .align-left {
   margin-left: 14px;
@@ -663,7 +668,6 @@
   display: flex;
   flex-wrap: wrap; /* Allows wrapping of items to new lines */
   gap: 20px; /* Space between media items */
-  justify-content: center; /* Center align items */
   padding: 20px; /* Padding around the media display */
 }
 
@@ -722,6 +726,27 @@
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
 }
 
+.gg {
+  margin-bottom: 50px;
+  display: flex; /* استخدم الفلكس لتوزيع العناصر أفقيًا */
+  align-items: center; /* محاذاة العناصر في المنتصف عموديًا */
+  gap: 10px; /* إضافة مسافة بين العنوان والزر */
+}
+
+.gg h2 {
+  margin: 0; /* إزالة الهوامش الافتراضية */
+  flex-grow: 1; /* جعل العنوان يأخذ المساحة المتاحة */
+}
+.gg.right {
+  margin-left: auto; /* دفع الزر إلى أقصى اليمين */
+  padding: 8px 12px; /* إضافة مساحة داخلية لجعل الزر أكبر قليلاً */
+  width: fit-content; /* جعل العرض يتناسب مع المحتوى */
+  height: fit-content; /* جعل الارتفاع يتناسب مع المحتوى */
+  border: none; /* بدون حدود */
+  border-radius: 4px; /* زوايا مدورة */
+  cursor: pointer; /* شكل المؤشر عند التحويم */
+  transition: background-color 0.3s; /* تأثير عند تغيير اللون */
+}
 .add-course-form,
 .add-sub-course-form {
   display: flex; /* عرض العناصر بجانب بعضها */
@@ -740,6 +765,7 @@
 /* Change background color when open */
 
 summary {
+  margin-bottom: 60px;
   cursor: pointer; /* Pointer cursor for summary */
   font-weight: bold; /* Bold text for summary */
   padding: 8px 0; /* Padding for summary */
@@ -765,8 +791,6 @@ button {
 
 /* Media display styling */
 .media-display {
-  display: flex; /* Flexbox layout for media items */
-  flex-wrap: wrap; /* Wrap items to next line */
   gap: 16px; /* Space between items */
 }
 
@@ -816,6 +840,7 @@ input[type="text"] {
 
 .course-buttons,
 .sub-course-buttons {
+  width: 50%;
   height: 569px;
   display: flex;
   flex-direction: column; /* Stack the course buttons vertically */
@@ -876,21 +901,27 @@ input[type="text"] {
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
 .a1 {
-  justify-content: center; /* توسيط الأزرار أفقياً */
-  margin-left: 110px;
+  display: flex; /* استخدم الفلكس لجعل الزر قابل للتوسيع */
+  justify-content: center; /* توسيط المحتوى داخل الزر */
+  align-items: center; /* محاذاة العناصر عموديًا */
+  padding: 10px 20px; /* مساحة داخلية لجعل الزر أكبر */
+  border: none; /* بدون حدود */
+  border-radius: 4px; /* زوايا مدورة */
+  cursor: pointer; /* شكل المؤشر عند التحويم */
+  transition: background-color 0.3s; /* تأثير عند تغيير اللون */
 }
+
 .action-buttons button {
+  border: 1px solid #094d509a;
   justify-content: center;
   text-align: center;
   width: 100%;
   display: flex;
-  margin-bottom: 30px;
+  margin-bottom: 14px;
   padding: 8px 16px;
-  border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 1em; /* This adjusts the text size relative to the button size */
 }
 
 .action-buttons button:hover {
