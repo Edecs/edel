@@ -625,7 +625,7 @@ function CoursePage() {
                       media.images
                         .sort((a, b) => a.id - b.id)
                         .map((mediaItem) => (
-                          <div key={mediaItem.id} className="media-item">
+                          <div key={mediaItem.id} className="media-item1">
                             <img
                               src={mediaItem.url}
                               alt={`Media ${mediaItem.id}`}
@@ -647,7 +647,7 @@ function CoursePage() {
                       media.videos
                         .sort((a, b) => a.id - b.id)
                         .map((mediaItem) => (
-                          <div key={mediaItem.id} className="media-item">
+                          <div key={mediaItem.id} className="media-item1">
                             <video src={mediaItem.url} controls />
                             <div className="delete-button-container">
                               <button
