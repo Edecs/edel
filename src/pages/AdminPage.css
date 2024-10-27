@@ -129,7 +129,26 @@
   color: #999; /* لون النص في عنصر المكان المخصص */
   opacity: 1; /* زيادة الوضوح */
 }
+.open-popup-btn,
+.admin-page button {
+  padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
+  background-color: #ffffff; /* لون الخلفية للأزرار */
+  color: #094d50; /* لون النص */
+  border: 1px solid #094d509a; /* تحديد لون الحدود وسماكتها */
+  border-radius: 4px; /* زوايا مدورة */
+  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
+  &:hover {
+    background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
+    color: #ffffff; /* تغيير لون النص عند التحويم */
+    transform: translateY(-2px); /* رفع خفيف عند التحويم */
+  }
 
+  /* تأثير عند الضغط على الزر */
+  &:active {
+    transform: translateY(1px); /* تأثير ضغط عند الضغط */
+  }
+}
 .admin-page .search-input {
   width: 100%;
   max-width: 400px;
