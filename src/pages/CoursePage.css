@@ -423,7 +423,6 @@
   }
 }
 .questions-list {
-  margin: 20px;
   padding: 10px;
   border-radius: 5px;
   background-color: #f9f9f9;
@@ -715,16 +714,19 @@
   gap: 20px; /* مسافة بين الجزأين */
   flex-wrap: wrap; /* يسمح بانتقال الجزأين للأسفل عند صغر الشاشة */
 }
+
 .course-form-box,
 .sub-course-box {
-  height: 525px;
-  width: 500px;
+  height: 500px;
+  min-width: 570px; /* عرض أدنى للجزء */
+  max-width: 650px; /* عرض أقصى للجزء */
   flex: 1; /* Allow each container to take up equal space */
   padding: 16px;
-  background-color: #f9f9f9; /* Background for visual separation */
-  border-radius: 8px; /* Optional: rounded corners */
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+  background-color: #f9f9f9; /* خلفية لفصل العناصر بصريًا */
+  border-radius: 8px; /* زوايا مدورة */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* ظل خفيف */
 }
+
 .gg {
   margin-bottom: 50px;
   display: flex; /* استخدم الفلكس لتوزيع العناصر أفقيًا */
