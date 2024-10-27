@@ -123,9 +123,10 @@ const SubCourseDetailPage = () => {
         }
       });
     }
-
     let percentageSuccess =
-      totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+      totalQuestions > 0
+        ? ((correctCount / totalQuestions) * 100).toFixed(2)
+        : "0.00";
 
     const submissionData = {
       email: user.email,
