@@ -32,9 +32,11 @@
   grid-template-columns: 1fr 1fr auto 1fr; /* 4 أعمدة */
   gap: 20px; /* المسافة بين الأعمدة */
 }
+
 h1 {
   width: 100%;
 }
+
 .search-box {
   margin-bottom: 20px;
   width: 100%; /* جعل صندوق البحث في العرض الكامل */
@@ -47,6 +49,7 @@ h1 {
   border: 1px solid #ccc;
   width: 100%; /* جعل القوائم تأخذ عرض كامل */
 }
+
 .column {
   width: 80%;
   flex-direction: column; /* ترتيب المحتوى عمودياً */
@@ -63,7 +66,6 @@ h1 {
   align-items: center; /* مركزية أفقية */
   height: 40%; /* ارتفاع محدد للزرارين */
 }
-
 .buttons-column button {
   width: 100%; /* اجعل الزر يأخذ عرض كامل */
   background-color: #094d50; /* اللون الافتراضي للزر */
@@ -78,27 +80,6 @@ h1 {
   background-color: white; /* لون الزر عند المرور */
   color: #094d50; /* لون النص عند المرور */
 }
-.course-management-page.button-container {
-  flex-direction: column; /* ترتيب الزرين في عمود */
-  justify-content: center; /* مركزية عمودية */
-  align-items: center; /* مركزية أفقية */
-  height: 100%; /* اجعل ارتفاع الحاوية 100% */
-  margin: 0 auto; /* موازنة الحاوية في المنتصف */
-}
-
-.course-management-page.button-container button {
-  width: 100%; /* اجعل الزر يأخذ عرض كامل */
-  background-color: #094d50; /* اللون الافتراضي للزر */
-  color: white; /* لون النص */
-  border: none; /* بدون إطار */
-  padding: 10px; /* تباعد داخلي */
-  cursor: pointer; /* شكل المؤشر عند المرور */
-}
-
-.course-management-page.button-container button:hover {
-  background-color: white; /* لون الزر عند المرور */
-  color: #094d50; /* لون النص عند المرور */
-}
 
 .user-list li,
 .user-list1 li {
@@ -106,7 +87,7 @@ h1 {
   border-bottom: 1px solid #eee;
 }
 
-.course-management-page.button {
+.butt {
   border-radius: 15px;
   width: 100%;
   background-color: #094d50;
@@ -116,11 +97,11 @@ h1 {
   cursor: pointer;
 }
 
-.course-management-page.button:hover {
+.butt:hover {
   background-color: #094d50;
 }
 
-button.active {
+.butt.active {
   background-color: #136c70; /* اللون الجديد */
   color: #ffffff; /* لون النص */
 }
@@ -178,4 +159,29 @@ img {
 .user-list li,
 .course-list li {
   margin: 5px 0;
+}
+
+/* استعلامات الوسائط لتعديل التصميم على الشاشات الصغيرة */
+@media (max-width: 768px) {
+  .course-management-page {
+    padding: 10px; /* تقليل padding */
+  }
+
+  .users-container {
+    grid-template-columns: 1fr; /* عمود واحد على الشاشات الصغيرة */
+  }
+
+  .buttons-column {
+    margin-top: 50px; /* تقليل المسافة العلوية للزرارين */
+    height: auto; /* جعل الارتفاع تلقائي */
+  }
+
+  .column {
+    width: 100%; /* جعل الأعمدة تأخذ عرض كامل */
+  }
+
+  .course-management-page.course-selection,
+  .course-management-page.users-container {
+    max-width: 100%; /* جعل العرض الأقصى 100% */
+  }
 }
