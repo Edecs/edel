@@ -422,34 +422,32 @@ function CoursePage() {
             </div>
 
             {/* حاوية المربعات */}
-            <div className="forms-container">
-              {/* مربع إضافة دورة جديدة */}
-              <div className="courses-container">
-                <h2>Sub Courses</h2>
-                <div className="sub-course-buttons">
-                  {subCourses.map((subCourse) => (
-                    <button key={subCourse.id} value={subCourse.id} disabled>
-                      {subCourse.name}
-                    </button>
-                  ))}
-                </div>
+            {/* مربع إضافة دورة جديدة */}
+            <div className="courses-container">
+              <h2>Sub Courses</h2>
+              <ul className="sub-course-buttons">
+                {subCourses.map((subCourse) => (
+                  <li key={subCourse.id} value={subCourse.id} disabled>
+                    {subCourse.name}
+                  </li>
+                ))}
+              </ul>
 
-                {/* مربع إضافة الدورات الفرعية */}
-                <div className="sub-course-box">
-                  <h2>Add Sub Courses</h2>
-                  <div className="add-sub-course-form">
-                    <input
-                      type="text"
-                      value={newSubCourseName}
-                      onChange={(e) => setNewSubCourseName(e.target.value)}
-                      placeholder="Add new sub-course"
-                    />
-                  </div>
-                  <div className="button-container">
-                    <button className="a1" onClick={handleAddSubCourse}>
-                      Add Sub-Course
-                    </button>
-                  </div>
+              {/* مربع إضافة الدورات الفرعية */}
+              <div className="sub-course-box">
+                <h2>Add Sub Courses</h2>
+                <div className="add-sub-course-form">
+                  <input
+                    type="text"
+                    value={newSubCourseName}
+                    onChange={(e) => setNewSubCourseName(e.target.value)}
+                    placeholder="Add new sub-course"
+                  />
+                </div>
+                <div className="button-container">
+                  <button className="a1" onClick={handleAddSubCourse}>
+                    Add Sub-Course
+                  </button>
                 </div>
               </div>
             </div>
@@ -463,7 +461,7 @@ function CoursePage() {
           <div className="course-selection-container">
             <div className="course-selection">
               <div className="course-dropdown">
-                <h2>Main Courses</h2>
+                <h2>ٍSelect Main Course</h2>
 
                 <select
                   value={selectedCourse}
@@ -482,7 +480,7 @@ function CoursePage() {
               </div>
 
               <div className="course-dropdown">
-                <h2>Sub Courses</h2>
+                <h2>Select Sub Course</h2>
                 <select
                   value={selectedSubCourse}
                   onChange={(e) => setSelectedSubCourse(e.target.value)}
@@ -503,7 +501,7 @@ function CoursePage() {
 
             {selectedSubCourse && (
               <div className="questions-list">
-                <div className="gg">
+                <div className="gg1">
                   <h2>Questions </h2>
                   <button className="right" onClick={() => setShowPopup(true)}>
                     Add New
@@ -548,11 +546,18 @@ function CoursePage() {
                       {isModalOpen && (
                         <div className="popup-overlay">
                           <div className="popup-content">
+                            <button
+                              className="close-popup-btn"
+                              onClick={() => setIsModalOpen(false)}
+                            >
+                              X{" "}
+                            </button>
                             <h3>
                               {isEditMode
                                 ? "Edit Question"
                                 : "Add New Question"}
                             </h3>
+
                             <input
                               type="text"
                               value={newQuestion}
@@ -603,9 +608,7 @@ function CoursePage() {
                             <button onClick={handleUpdateQuestion}>
                               {isEditMode ? "Save Changes" : "Add Question"}
                             </button>
-                            <button onClick={() => setIsModalOpen(false)}>
-                              Close
-                            </button>
+
                             {error && <p className="error-message">{error}</p>}
                           </div>
                         </div>
@@ -614,7 +617,7 @@ function CoursePage() {
                   </div>
                 ))}
                 <details>
-                  <summary>Media</summary>
+                  <summary>Upload Media for Selected Sub-course</summary>
                   <input
                     type="text"
                     value={newImageUrl}
@@ -701,7 +704,7 @@ function CoursePage() {
                 <h4>Answers: </h4>
               </div>
               <button className="right2" onClick={handleAddAnswer}>
-                Add Answer
+                Add New
               </button>
             </div>
             {answers.map((answer, index) => (
