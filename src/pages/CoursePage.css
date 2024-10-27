@@ -725,7 +725,6 @@
   border-radius: 8px; /* Optional: rounded corners */
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
 }
-
 .gg {
   margin-bottom: 50px;
   display: flex; /* استخدم الفلكس لتوزيع العناصر أفقيًا */
@@ -737,8 +736,27 @@
   margin: 0; /* إزالة الهوامش الافتراضية */
   flex-grow: 1; /* جعل العنوان يأخذ المساحة المتاحة */
 }
-.gg.right {
-  margin-left: auto; /* دفع الزر إلى أقصى اليمين */
+
+.right {
+  padding: 8px 12px; /* إضافة مساحة داخلية لجعل الزر أكبر قليلاً */
+  width: fit-content; /* جعل العرض يتناسب مع المحتوى */
+  height: fit-content; /* جعل الارتفاع يتناسب مع المحتوى */
+  border: none; /* بدون حدود */
+  border-radius: 4px; /* زوايا مدورة */
+  cursor: pointer; /* شكل المؤشر عند التحويم */
+  transition: background-color 0.3s; /* تأثير عند تغيير اللون */
+  display: flex; /* استخدم الفلكس لتوسيع الزر */
+  align-items: center; /* محاذاة العناصر في المنتصف عموديًا */
+  justify-content: center; /* توسيط المحتوى داخل الزر */
+}
+.Add-answer {
+  display: flex; /* استخدم الفلكس لتوزيع العناصر أفقيًا */
+  justify-content: space-between; /* توزيع المساحة بين العناصر */
+  align-items: center; /* محاذاة العناصر في المنتصف عموديًا */
+  margin-bottom: 20px; /* مسافة سفلية */
+}
+
+.right2 {
   padding: 8px 12px; /* إضافة مساحة داخلية لجعل الزر أكبر قليلاً */
   width: fit-content; /* جعل العرض يتناسب مع المحتوى */
   height: fit-content; /* جعل الارتفاع يتناسب مع المحتوى */
@@ -747,6 +765,7 @@
   cursor: pointer; /* شكل المؤشر عند التحويم */
   transition: background-color 0.3s; /* تأثير عند تغيير اللون */
 }
+
 .add-course-form,
 .add-sub-course-form {
   display: flex; /* عرض العناصر بجانب بعضها */
