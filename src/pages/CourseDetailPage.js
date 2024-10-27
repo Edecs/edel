@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ref, get } from "firebase/database";
-import { db, auth } from "../firebase"; // Ensure the path is correct, and bring in auth as well
+import { db, auth } from "../firebase";
 import "./CourseDetailPage.css";
 
 const CourseDetailPage = () => {
@@ -9,16 +9,16 @@ const CourseDetailPage = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userAccess, setUserAccess] = useState({}); // To manage user permissions
-  const [currentUser, setCurrentUser] = useState(null); // To store current user
+  const [userAccess, setUserAccess] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
   const fetchCourseDetails = useCallback(async () => {
     try {
-      const user = auth.currentUser; // Get current user
+      const user = auth.currentUser;
       if (!user) {
         throw new Error("User not authenticated");
       }
-      setCurrentUser(user); // Store current user
+      setCurrentUser(user);
 
       const courseRef = ref(db, `courses/mainCourses/${courseId}`);
       const courseSnapshot = await get(courseRef);
@@ -33,7 +33,7 @@ const CourseDetailPage = () => {
       setCourse(courseData);
 
       // Fetch user permissions from Firebase
-      const sanitizedEmail = user.email.replace(/\./g, ","); // Replace dots with commas in email
+      const sanitizedEmail = user.email.replace(/\./g, ",");
       const userAccessRef = ref(
         db,
         `roles/${sanitizedEmail}/courses/${courseId}`
@@ -69,24 +69,24 @@ const CourseDetailPage = () => {
       ) : course ? (
         <div className="course-detail-content">
           <h1 className="course-title">{course.name}</h1>
-          {Object.values(course.subCourses || {}).length > 0 ? (
+          {Object.values(course.subCourses || {}).filter(
+            (subCourse) => userAccess[subCourse.name]?.hasAccess
+          ).length > 0 ? (
             <ul className="sub-course-list">
-              {Object.entries(course.subCourses).map(
-                ([subCourseId, subCourse]) =>
-                  userAccess?.[subCourse.name]?.hasAccess ? (
-                    <li key={subCourseId} className="sub-course-item">
-                      <Link
-                        to={`/sub-courses/${subCourseId}?mainCourseId=${courseId}`}
-                      >
-                        {subCourse.name}
-                      </Link>
-                    </li>
-                  ) : (
-                    <li key={subCourseId} className="sub-course-item no-access">
-                      <span>{subCourse.name} (Access Denied)</span>
-                    </li>
-                  )
-              )}
+              {Object.entries(course.subCourses)
+                .filter(
+                  ([subCourseId, subCourse]) =>
+                    userAccess[subCourse.name]?.hasAccess
+                )
+                .map(([subCourseId, subCourse]) => (
+                  <li key={subCourseId} className="sub-course-item">
+                    <Link
+                      to={`/sub-courses/${subCourseId}?mainCourseId=${courseId}`}
+                    >
+                      {subCourse.name}
+                    </Link>
+                  </li>
+                ))}
             </ul>
           ) : (
             <p className="no-sub-courses">
