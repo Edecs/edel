@@ -147,25 +147,58 @@
 .course-page details {
   margin-bottom: 20px;
 }
-
+/* التنسيق العادي للـ summary */
 .course-page summary {
   margin-top: 60px;
   border: 1px solid #094d50;
-  background-color: #094d50;
-  color: white;
+  background-color: #ffffff;
+  color: #094d50;
   padding: 30px;
   border-radius: 8px;
   font-weight: bold;
   font-size: 18px;
   margin-bottom: 10px;
   cursor: pointer;
-  transition: background-color 0.3s; /* تأثير انتقال للخلفية */
+  transition: background-color 0.3s, color 0.3s; /* انتقال للألوان */
+}
+
+/* عندما يكون الـ details مفتوحًا */
+.course-page details[open] summary {
+  background-color: #094d50;
+  color: #ffffff;
+}
+
+/* عند التركيز أو الضغط */
+.course-page summary:focus,
+.course-page summary:active {
+  outline: none; /* إزالة الإطار الأزرق الافتراضي */
 }
 
 /* Course and Sub-Course Selectors */
 .course-page .course-selectors {
   justify-content: space-between; /* توزيع المساحة بين الأقسام */
   margin-top: 20px;
+}
+/* تنسيق زر للـ li */
+.course-page .sub-course-buttons li {
+  width: 50%;
+  display: inline-block; /* ليبدو كزر */
+  margin: 5px; /* مسافة خارجية بسيطة بين العناصر */
+  cursor: default; /* شكل المؤشر */
+  text-align: center; /* محاذاة النص داخل الزر */
+  user-select: none; /* منع التحديد */
+  padding: 12px 18px;
+  background-color: #ffffff;
+  color: #094d50;
+  border: 1px solid #094d509a;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s;
+}
+
+/* تأثير عند التحويم */
+.course-page .sub-course-buttons li:hover {
+  background-color: rgb(255, 255, 255) (255, 255, 255);
+  color: #094d50;
 }
 
 /* Media Section Styles */
@@ -193,7 +226,7 @@
   border-radius: 8px; /* زوايا مدورة */
   padding: 15px; /* مسافة داخلية للحاوية */
   background-color: #f9f9f9; /* لون خلفية خفيف */
-  margin: 10px 0; /* مسافة أعلى وأسفل */
+  margin-top: 32px;
 }
 
 .sub-course-item {
@@ -290,7 +323,6 @@
 }
 
 .course-media-container {
-  display: flex; /* استخدام flexbox */
   justify-content: center; /* توسيط العناصر أفقياً */
   align-items: center; /* توسيط العناصر عمودياً */
   width: 90%; /* تحديد عرض الحاوية */
@@ -557,7 +589,7 @@
 
 /* أزرار مخصصة للـ popup */
 .popup-content button {
-  border: none;
+  border: #094d50 3px;
   border-radius: 5px;
   padding: 10px 20px;
   cursor: pointer;
@@ -587,11 +619,14 @@
 
 /* زر "Save" */
 .popup-content .save-question-btn {
-  color: rgb(0, 0, 0);
+  color: #ffffff;
+  background-color: #094d50;
 }
 
 .popup-content .save-question-btn:hover {
   transform: scale(1.05);
+  color: #094d50;
+  background-color: #ffffff;
 }
 
 .popup-content .close-popup-btn {
@@ -704,7 +739,6 @@
 }
 
 .gg {
-  margin-bottom: 50px;
   display: flex; /* استخدم الفلكس لتوزيع العناصر أفقيًا */
   align-items: center; /* محاذاة العناصر في المنتصف عموديًا */
   gap: 10px; /* إضافة مسافة بين العنوان والزر */
@@ -715,10 +749,23 @@
   flex-grow: 1; /* جعل العنوان يأخذ المساحة المتاحة */
 }
 
+.gg1 {
+  margin-bottom: 15px;
+  display: flex; /* استخدم الفلكس لتوزيع العناصر أفقيًا */
+  align-items: center; /* محاذاة العناصر في المنتصف عموديًا */
+  gap: 10px; /* إضافة مسافة بين العنوان والزر */
+}
+
+.gg1 h2 {
+  margin: 0; /* إزالة الهوامش الافتراضية */
+  flex-grow: 1; /* جعل العنوان يأخذ المساحة المتاحة */
+}
 .right {
   margin-top: 20px;
+  background-color: #094d50 !important;
+  color: #ffffff !important;
   padding: 8px 12px; /* إضافة مساحة داخلية لجعل الزر أكبر قليلاً */
-  width: fit-content; /* جعل العرض يتناسب مع المحتوى */
+  width: 120px; /* جعل العرض يتناسب مع المحتوى */
   height: fit-content; /* جعل الارتفاع يتناسب مع المحتوى */
   border: none; /* بدون حدود */
   border-radius: 4px; /* زوايا مدورة */
@@ -728,19 +775,20 @@
   align-items: center; /* محاذاة العناصر في المنتصف عموديًا */
   justify-content: center; /* توسيط المحتوى داخل الزر */
 }
+.right:hover {
+  background-color: #ffffff !important;
+  color: #094d50 !important;
+}
 .Add-answer {
   display: flex; /* استخدم الفلكس لتوزيع العناصر أفقيًا */
   justify-content: space-between; /* توزيع المساحة بين العناصر */
-  align-items: center; /* محاذاة العناصر في المنتصف عموديًا */
-  margin-bottom: 20px; /* مسافة سفلية */
 }
 
-.right2 {
+.popup-content.right2 {
+  border: #094d50 !important;
   padding: 8px 12px; /* إضافة مساحة داخلية لجعل الزر أكبر قليلاً */
   width: fit-content; /* جعل العرض يتناسب مع المحتوى */
   height: fit-content; /* جعل الارتفاع يتناسب مع المحتوى */
-  border: none; /* بدون حدود */
-  border-radius: 4px; /* زوايا مدورة */
   cursor: pointer; /* شكل المؤشر عند التحويم */
   transition: background-color 0.3s; /* تأثير عند تغيير اللون */
 }
@@ -761,13 +809,6 @@
 }
 
 /* Change background color when open */
-
-summary {
-  margin-bottom: 60px;
-  cursor: pointer; /* Pointer cursor for summary */
-  font-weight: bold; /* Bold text for summary */
-  padding: 8px 0; /* Padding for summary */
-}
 
 /* Style for input fields */
 input[type="text"] {
@@ -802,11 +843,6 @@ button {
   max-width: 100%; /* Responsive video */
   height: auto; /* Maintain aspect ratio */
   border-radius: 4px; /* Rounded corners for videos */
-}
-
-/* Course management content */
-.course-management-content {
-  margin-top: 16px; /* Space above course management content */
 }
 
 /* Section headers */
@@ -849,7 +885,6 @@ input[type="text"] {
 .course-form-box,
 .sub-course-box {
   gap: 5px;
-  margin-bottom: 10px;
   flex: 1; /* Allow the form boxes to take up available space */
   background-color: #f9f9f9; /* Light background for separation */
   padding: 16px; /* Add some padding inside the boxes */
