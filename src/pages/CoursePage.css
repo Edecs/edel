@@ -289,11 +289,13 @@
   justify-content: space-between;
 }
 
-/* Course Media Container */
 .course-media-container {
-  display: flex;
-  flex-direction: column;
+  display: flex; /* استخدام flexbox */
+  justify-content: center; /* توسيط العناصر أفقياً */
+  align-items: center; /* توسيط العناصر عمودياً */
+  width: 90%; /* تحديد عرض الحاوية */
   gap: 20px; /* المسافة بين العناصر */
+  margin: 0 auto; /* توسيط الحاوية نفسها أفقياً */
 }
 
 /* Delete Button */
@@ -830,7 +832,7 @@ input[type="text"] {
   gap: 40px;
   display: flex; /* استخدام flexbox */
   flex-direction: row; /* الاتجاه الأفقي */
-  width: 100%; /* عرض كامل */
+  width: 90%; /* عرض كامل */
   justify-content: center; /* محاذاة المحتوى في منتصف الصفحة أفقياً */
   margin: 0 auto; /* محاذاة الحاوية في المنتصف */
 }
