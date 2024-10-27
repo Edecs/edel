@@ -14,14 +14,13 @@
 
 .course-page .course-buttons,
 .course-page .sub-course-buttons {
+  height: 642px;
+  margin-top: 20px;
   margin-bottom: 20px;
-  max-height: 450px; /* تعيين الحد الأقصى لارتفاع الحاوية */
   overflow-x: auto; /* إظهار شريط التمرير العمودي عند الحاجة */
-  justify-content: center; /* توسيط الأزرار أفقياً */
   align-items: center; /* توسيط الأزرار عمودياً */
   gap: 10px; /* الفجوة بين الأزرار */
   border: 1px solid #ccc; /* حدود للحاوية */
-  padding: 10px; /* مسافة داخلية للحاوية */
   background-color: #f9f9f9; /* لون خلفية خفيف للحاوية */
   border-radius: 8px; /* زوايا مدورة للحاوية */
   transition: background-color 0.3s ease; /* إضافة تأثير انتقالي للخلفية */
@@ -106,6 +105,7 @@
 /* Course and Sub-Course Buttons Styling */
 .course-page .course-buttons button.selected,
 .course-page .sub-course-buttons button.selected {
+  margin-top: 10px;
   width: 50%;
   background-color: #ffffff; /* لون الخلفية عند التحديد */
   color: #094d50;
@@ -116,6 +116,7 @@
 }
 .course-buttons button {
   width: 50%;
+  margin-top: 20px;
 }
 .course-page .course-buttons button.selected:hover,
 .course-page .sub-course-buttons button.selected:hover {
