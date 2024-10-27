@@ -116,7 +116,6 @@
 }
 .course-buttons button {
   width: 50%;
-  margin-top: 20px;
 }
 .course-page .course-buttons button.selected:hover,
 .course-page .sub-course-buttons button.selected:hover {
@@ -629,13 +628,13 @@
   background-color: #ffffff;
 }
 
-.popup-content .close-popup-btn {
+.course-page.popup-content .close-popup-btn {
   margin-left: 561px;
   width: fit-content;
   color: rgb(0, 0, 0);
 }
 
-.popup-content .close-popup-btn:hover {
+.course-page.popup-content .close-popup-btn:hover {
   transform: scale(1.05);
 }
 .question-item {
