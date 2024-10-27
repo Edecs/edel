@@ -738,6 +738,7 @@
 }
 
 .right {
+  margin-top: 20px;
   padding: 8px 12px; /* إضافة مساحة داخلية لجعل الزر أكبر قليلاً */
   width: fit-content; /* جعل العرض يتناسب مع المحتوى */
   height: fit-content; /* جعل الارتفاع يتناسب مع المحتوى */
