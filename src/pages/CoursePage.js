@@ -627,7 +627,9 @@ function CoursePage() {
                     onChange={(e) => setNewVideoUrl(e.target.value)}
                     placeholder="Add Video URL"
                   />
-                  <button onClick={handleAddMedia}>Add Media</button>
+                  <div className="a1">
+                    <button onClick={handleAddMedia}>Add Media</button>
+                  </div>
                   <div className="media-display">
                     {media.images &&
                       media.images
@@ -698,7 +700,7 @@ function CoursePage() {
               <div className="gg">
                 <h4>Answers: </h4>
               </div>
-              <button className="right" onClick={handleAddAnswer}>
+              <button className="right2" onClick={handleAddAnswer}>
                 Add Answer
               </button>
             </div>
