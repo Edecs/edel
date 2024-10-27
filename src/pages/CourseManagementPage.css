@@ -1,453 +1,181 @@
-/* أساسيات */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .course-management-page {
+  font-family: Arial, sans-serif;
   padding: 20px;
-  font-family: "Roboto", sans-serif;
-  max-width: 1200px; /* تعيين عرض أقصى للصفحة */
-  margin: auto; /* مركزة الصفحة */
-}
-/* تصميم قسم التفاصيل */
-.details-section {
-  padding: 20px;
-  background-color: #f9f9f9; /* لون خلفية فاتح للقسم */
-  border-radius: 8px; /* زوايا دائرية للقسم */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* ظل خفيف للقسم */
-}
-
-/* تصميم عنوان القسم */
-.details-section h2 {
-  font-size: 24px; /* حجم الخط */
-  color: #000000; /* لون العنوان */
-  margin-bottom: 15px; /* مسافة تحت العنوان */
-}
-/* قسم الكورسات */
-.courses-section {
-  background-color: #f9f9f9; /* لون خلفية فاتح للقسم */
-  padding: 20px; /* حشوة للقسم */
-  border-radius: 8px; /* زوايا دائرية للقسم */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف للقسم */
-  margin-bottom: 20px; /* مسافة تحت القسم */
-}
-
-.courses-section h2 {
-  font-size: 28px; /* حجم خط كبير للعنوان */
-  color: #333; /* لون النص */
-  margin-bottom: 15px; /* مسافة تحت العنوان */
-}
-
-/* تصميم قائمة الكورسات */
-.course-list {
-  list-style-type: none; /* إزالة النقاط من القائمة */
-  padding: 0; /* إزالة الحشوة من القائمة */
-  margin: 0; /* إزالة الهامش من القائمة */
-}
-
-.course-list li {
-  background-color: #fff; /* لون خلفية فاتح لعناصر القائمة */
-  border: 1px solid #ddd; /* لون الحدود */
-  border-radius: 5px; /* زوايا دائرية لعناصر القائمة */
-  padding: 15px; /* حشوة داخل العناصر */
-  cursor: pointer; /* تغيير شكل المؤشر عند التحويم */
-  transition: background-color 0.3s, transform 0.2s; /* تأثيرات عند التحويم */
-}
-
-/* تغيير لون العنصر عند التحويم */
-.course-list li:hover {
-  background-color: #e0f7fa; /* لون خلفية عند التحويم */
-  transform: translateY(-2px); /* رفع العنصر عند التحويم */
-}
-
-/* تصميم العنصر المحدد */
-.course-list li.selected {
-  background-color: #094d50; /* لون خلفية العنصر المحدد */
-  color: #fff; /* لون النص للعنصر المحدد */
-  font-weight: bold; /* جعل النص عريضًا للعنصر المحدد */
-}
-
-/* رسالة عدم توفر الكورسات */
-.courses-section p {
-  color: #888; /* لون النص للرسالة */
-  text-align: center; /* توسيط الرسالة */
-  font-size: 18px; /* حجم خط الرسالة */
-}
-
-/* تصميم قائمة المستخدمين المسجلين */
-.enrolled-user-list1 {
-  list-style-type: none; /* إزالة النقاط من القائمة */
-  padding: 0; /* إزالة الحشوة */
-  margin: 0; /* إزالة الهامش */
-}
-
-/* تصميم عناصر القائمة */
-.enrolled-user-list1 li {
-  display: flex; /* استخدام Flexbox لترتيب العناصر */
-  align-items: center; /* توسيط العناصر عمودياً */
-  padding: 10px 15px; /* حشوة داخل العنصر */
-  border-bottom: 1px solid #ddd; /* خط أسفل العنصر */
-  transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
-}
-
-/* تأثير التحويم لعناصر القائمة */
-.enrolled-user-list1 li:hover {
-  background-color: #e6f7ff; /* تغيير لون الخلفية عند التحويم */
-}
-
-/* تصميم التسمية داخل العناصر */
-.enrolled-user-list1 li label {
-  flex-grow: 1; /* السماح للنص بالتمدد لملء المساحة المتاحة */
-  color: #333; /* لون النص */
-  font-size: 1rem; /* حجم الخط */
-}
-
-/* تصميم الـ checkbox */
-.enrolled-user-list1 input[type="checkbox"] {
-  margin-bottom: 0px;
-  margin-right: 10px; /* مسافة بين الـ checkbox والنص */
-  width: 17px;
-  height: 17px; /* ارتفاع الـ checkbox */
-}
-
-/* تصميم الـ checkbox ليكون دائري */
-.enrolled-user-list1 input[type="checkbox"] {
-  appearance: none; /* إزالة التنسيق الافتراضي */
-  border: 2px solid #094d50; /* لون الحدود */
-  border-radius: 50%; /* جعلها دائرية */
-  background-color: #fff; /* لون الخلفية */
-  cursor: pointer; /* تغيير المؤشر عند التحويم */
-}
-
-/* تصميم الـ checkbox عند التحديد */
-.enrolled-user-list1 input[type="checkbox"]:checked {
-  background-color: #094d50; /* تغيير لون الخلفية عند التحديد */
-}
-
-/* إضافة نقطة زرقاء داخل الـ checkbox عند التحديد */
-.enrolled-user-list1 input[type="checkbox"]:checked::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px; /* عرض النقطة */
-  height: 8px; /* ارتفاع النقطة */
-  background: #fff; /* لون النقطة */
-  border-radius: 50%; /* جعلها دائرية */
-  transform: translate(-50%, -50%);
-}
-/* قسم المستخدمين */
-.users-section {
-  background-color: #f9f9f9; /* لون خلفية فاتح للقسم */
-  padding: 20px; /* حشوة للقسم */
-  border-radius: 8px; /* زوايا دائرية للقسم */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف للقسم */
-  margin-bottom: 20px; /* مسافة تحت القسم */
-}
-
-.users-section h2 {
-  font-size: 28px; /* حجم خط كبير للعنوان */
-  color: #333; /* لون النص */
-  margin-bottom: 15px; /* مسافة تحت العنوان */
-}
-
-/* تصميم قائمة المستخدمين */
-.user-list1 {
-  list-style-type: none; /* إزالة النقاط من القائمة */
-  padding: 0; /* إزالة الحشوة من القائمة */
-  margin: 0; /* إزالة الهامش من القائمة */
-}
-
-.user-list1 li {
-  background-color: #fff; /* لون خلفية فاتح لعناصر القائمة */
-  border: 1px solid #ddd; /* لون الحدود */
-  border-radius: 5px; /* زوايا دائرية لعناصر القائمة */
-  padding: 15px; /* حشوة داخل العناصر */
-  display: flex; /* استخدام Flexbox لتوزيع العناصر داخل القائمة */
-  align-items: center; /* محاذاة العناصر عمودياً */
-  transition: background-color 0.3s; /* تأثيرات عند التحويم */
-}
-
-/* تغيير لون العنصر عند التحويم */
-.user-list1 li:hover {
-  background-color: #e0f7fa; /* لون خلفية عند التحويم */
-}
-
-/* تصميم الـ checkbox ليكون دائري */
-.user-list1 input[type="checkbox"] {
-  margin-right: 10px; /* مسافة بين الـ checkbox والنص */
-  transform: scale(1.2); /* تكبير حجم الـ checkbox */
-}
-
-/* تصميم الرسالة عند عدم وجود مستخدمين */
-.users-section p {
-  color: #888; /* لون النص للرسالة */
-  text-align: center; /* توسيط الرسالة */
-  font-size: 18px; /* حجم خط الرسالة */
-}
-
-/* رسالة عدم توفر المستخدمين */
-.no-users-message {
-  text-align: center; /* توسيط الرسالة */
-  color: #888; /* لون رمادي */
-  font-size: 18px; /* حجم خط الرسالة */
-}
-
-.user-list1,
-.user-details {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  max-width: 100%;
-}
-
-.course-management-header {
-  display: flex; /* إضافة Flexbox لترتيب العناصر */
-  justify-content: space-between;
-  align-items: center;
-  color: #000;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 60px;
-  flex-wrap: wrap;
-}
-
-.course-management-header h1 {
-  font-size: 30px;
-  margin-top: 80px;
-  color: #080404;
-}
-
-/* التصميم الأساسي */
-.content {
   display: flex;
-  justify-content: space-between; /* توزيع العناصر بالتساوي بين الحواف */
-  flex-wrap: nowrap; /* منع الانتقال إلى سطر جديد */
-  gap: 20px; /* مسافة بين الأقسام */
+  flex-direction: column;
+  align-items: center;
 }
 
-/* تحسين التوافق مع الأجهزة الكبيرة */
-@media (max-width: 1200px) {
-  .courses-section {
-    flex: 1 1 100%; /* تعديل العرض لجعل القسم يتناسب مع الشاشات الصغيرة */
-    margin-bottom: 20px; /* إضافة مسافة تحت القسم */
-  }
-
-  .courses-section h2 {
-    font-size: 22px; /* تقليل حجم الخط للعنوان */
-  }
-
-  .course-list {
-    padding: 0; /* إزالة الحشوة من القائمة */
-    margin: 0; /* إزالة الهامش من القائمة */
-  }
-
-  .course-list li {
-    font-size: 0.9rem; /* تقليل حجم الخط لعناصر القائمة */
-    padding: 10px; /* تعديل الحشوة لعناصر القائمة */
-  }
+.course-selection,
+.users-container {
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px; /* تحديد عرض أقصى للصفحة */
 }
 
-/* تحسين التوافق مع الأجهزة الصغيرة */
-@media (max-width: 768px) {
-  .content {
-    flex-direction: column; /* ترتيب العناصر عموديًا على الشاشات الصغيرة */
-  }
-
-  .courses-section {
-    width: 100%; /* استخدام العرض الكامل على الشاشات الصغيرة */
-  }
-
-  .courses-section h2 {
-    font-size: 20px; /* تقليل حجم الخط أكثر على الشاشات الصغيرة */
-    margin-bottom: 10px; /* تقليل المسافة تحت العنوان */
-  }
-
-  .course-list li {
-    font-size: 0.8rem; /* تقليل حجم الخط أكثر لعناصر القائمة */
-    padding: 8px; /* تعديل الحشوة لعناصر القائمة */
-  }
+.course-list,
+.user-list,
+.user-list1 {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-/* تصميم قائمة الكورسات */
+.course-list li,
+.user-list li,
+.user-list1 li {
+  margin: 10px 0;
+}
+
+.users-container {
+  display: grid; /* استخدام grid بدلاً من flex */
+  grid-template-columns: 1fr 1fr auto 1fr; /* 4 أعمدة */
+  gap: 20px; /* المسافة بين الأعمدة */
+}
+h1 {
+  width: 100%;
+}
+.search-box {
+  margin-bottom: 20px;
+  width: 100%; /* جعل صندوق البحث في العرض الكامل */
+}
+
+.user-list,
+.user-list1 {
+  max-height: 550px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  width: 100%; /* جعل القوائم تأخذ عرض كامل */
+}
+.column {
+  width: 80%;
+  flex-direction: column; /* ترتيب المحتوى عمودياً */
+  justify-content: space-between; /* توزيع المساحة بين العناصر */
+  height: 100%; /* اجعل ارتفاع العمود 100% */
+}
+
+.buttons-column {
+  width: 100%;
+  margin-top: 200px; /* دفع الزرارين إلى الأسفل */
+  display: flex; /* استخدام flexbox */
+  flex-direction: column; /* ترتيب الزرارين في عمود */
+  justify-content: center; /* مركزية عمودية */
+  align-items: center; /* مركزية أفقية */
+  height: 40%; /* ارتفاع محدد للزرارين */
+}
+
+.buttons-column button {
+  width: 100%; /* اجعل الزر يأخذ عرض كامل */
+  background-color: #094d50; /* اللون الافتراضي للزر */
+  color: white; /* لون النص */
+  border: none; /* بدون إطار */
+  padding: 10px; /* تباعد داخلي */
+  cursor: pointer; /* شكل المؤشر عند المرور */
+  margin: 5px 0; /* مسافة بين الزرارين */
+}
+
+.buttons-column button:hover {
+  background-color: white; /* لون الزر عند المرور */
+  color: #094d50; /* لون النص عند المرور */
+}
+.button-container {
+  flex-direction: column; /* ترتيب الزرين في عمود */
+  justify-content: center; /* مركزية عمودية */
+  align-items: center; /* مركزية أفقية */
+  height: 100%; /* اجعل ارتفاع الحاوية 100% */
+  margin: 0 auto; /* موازنة الحاوية في المنتصف */
+}
+
+.button-container button {
+  width: 100%; /* اجعل الزر يأخذ عرض كامل */
+  background-color: #094d50; /* اللون الافتراضي للزر */
+  color: white; /* لون النص */
+  border: none; /* بدون إطار */
+  padding: 10px; /* تباعد داخلي */
+  cursor: pointer; /* شكل المؤشر عند المرور */
+}
+
+.button-container button:hover {
+  background-color: white; /* لون الزر عند المرور */
+  color: #094d50; /* لون النص عند المرور */
+}
+
+.user-list li,
+.user-list1 li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+button {
+  border-radius: 15px;
+  width: 100%;
+  background-color: #094d50;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #094d50;
+}
+
+button.active {
+  background-color: #1a8b91; /* اللون الجديد */
+  color: #ffffff; /* لون النص */
+}
+
+label {
+  cursor: pointer;
+}
+
+.enrolled-users-section,
+.add-users-section {
+  margin: 20px 0;
+  width: 100%; /* جعل كل قسم يأخذ عرض كامل */
+}
+
+img {
+  width: 20px; /* ضبط حجم أيقونات الأسهم */
+  height: 20px;
+}
+
+.enrolled-users-section,
+.add-users-section {
+  display: flex;
+  flex-direction: column; /* ترتيب العناصر في عمود */
+}
+
+.enrolled-users-section h2,
+.add-users-section h2 {
+  margin-bottom: 10px; /* إضافة مساحة بين العنوان والقائمة */
+}
+
+/* إضافة قواعد جديدة لتحسين التنسيق */
+.management-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto 1fr; /* 4 أعمدة */
+  gap: 20px; /* المسافة بين الأعمدة */
+}
+
+.column {
+  border: 2px solid #ccc; /* إطار للأعمدة */
+  padding: 10px;
+  border-radius: 10px; /* زوايا مدورة */
+  background-color: #f9f9f9; /* خلفية خفيفة */
+}
+
+.column h2 {
+  margin-bottom: 10px;
+}
+
+.user-list,
 .course-list {
   list-style-type: none;
   padding: 0;
-  margin: 0;
 }
 
+.user-list li,
 .course-list li {
-  border-radius: 18px;
-  margin: 10px auto; /* تحسين المحاذاة */
-  background-color: #094d50;
-  color: #f0f8ff;
-  padding: 15px; /* تعديل الحشوة لتحسين الاستجابة */
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-  font-size: 1rem; /* استخدام وحدة rem */
-  text-align: center;
-  transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
-}
-
-.course-list li.selected {
-  color: #000000;
-  background-color: #f0f8ff;
-  font-weight: bold;
-}
-
-/* تصميم قائمة المستخدمين */
-.user-list {
-  width: 100%;
-  list-style-type: none;
-}
-
-.user-list li {
-  border-bottom: 1px solid #ddd;
-  display: flex; /* استخدام flexbox لسهولة التوزيع */
-  align-items: center;
-  padding: 10px 0; /* إضافة حشوة للعناصر */
-}
-
-/* تصميم التفاصيل */
-.course-details {
-  margin-top: 20px;
-}
-
-.enrolled-users-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.enrolled-users-list li {
-  padding: 5px 0;
-}
-
-/* أزرار إدارة المستخدمين */
-.user-actions {
-  margin-top: 20px;
-}
-
-.user-actions button {
-  padding: 10px 20px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #dfe6ec;
-  color: #094d50; /* تغيير لون النص ليتناسب مع الخلفية */
-  font-size: 1rem; /* استخدام وحدة rem */
-  cursor: pointer;
-  transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
-}
-
-.user-actions button:hover {
-  background-color: #094d50;
-}
-
-/* تصميم الـ checkbox ليكون دائري */
-input[type="checkbox"] {
-  padding-top: 8px;
-  appearance: none; /* إزالة التنسيق الافتراضي */
-  background-color: #fff;
-  border: 2px solid #094d50; /* لون الحدود */
-  border-radius: 50%; /* جعلها دائرية */
-  width: 17px; /* عرض الـ checkbox */
-  height: 17px; /* ارتفاع الـ checkbox */
-  position: relative;
-  cursor: pointer;
-  outline: none;
-}
-
-/* تصميم الـ checkbox عند التحديد */
-input[type="checkbox"]:checked {
-  border-color: #094d50; /* لون الحدود عند التحديد */
-  background-color: #fff; /* لون الخلفية عند التحديد */
-}
-
-/* إضافة نقطة زرقاء داخل الـ checkbox */
-input[type="checkbox"]::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px; /* عرض النقطة */
-  height: 8px; /* ارتفاع النقطة */
-  background: #094d50; /* لون النقطة الزرقاء */
-  border-radius: 50%; /* جعلها دائرية */
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-/* جعل النقطة مرئية عند التحديد */
-input[type="checkbox"]:checked::after {
-  opacity: 1;
-}
-
-/* تحسين تصميم قائمة المستخدمين */
-.user-list input[type="checkbox"] {
-  margin-right: 8px;
-}
-
-/* تصميم شريط البحث */
-.search-bar {
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.search-bar input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem; /* استخدام وحدة rem */
-  outline: none;
-}
-
-.search-bar input[type="text"]::placeholder {
-  color: #888;
-}
-
-.search-bar input[type="text"]:focus {
-  border: 2px solid #007bff;
-}
-
-/* أزرار إدارة المستخدمين */
-.actions {
-  display: flex; /* استخدام Flexbox لترتيب الأزرار */
-  justify-content: center; /* توسيط الأزرار أفقياً */
-  align-items: center; /* توسيط الأزرار عمودياً */
-  flex-direction: column; /* ترتيب الأزرار عمودياً */
-  height: 100%; /* جعل الـ actions تأخذ كامل ارتفاع العمود */
-  margin-top: 30%;
-  margin-bottom: 30%;
-}
-
-.actions button {
-  height: 50px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #094d50;
-  color: #fff;
-  font-size: 1rem; /* استخدام وحدة rem */
-  cursor: pointer;
-  transition: background-color 0.3s; /* إضافة تأثيرات عند التحويم */
-}
-
-.actions button:hover {
-  background-color: #12848a; /* تغيير لون الخلفية عند التحويم */
-}
-
-.actions img {
-  width: 20px; /* عرض الأيقونة */
-  height: 20px; /* ارتفاع الأيقونة */
-  margin-right: 5px; /* إضافة مسافة بين الأيقونة والنص */
+  margin: 5px 0;
 }
