@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { db, ref, get, set } from "../firebase"; // استيراد فقط ما تحتاجه
+import { db, ref, get, set } from "../firebase"; // Import only what you need
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -91,7 +91,7 @@ function AdminPage() {
         ? currentAccessSnapshot.val().hasAccess
         : false;
       await set(userRoleRef, { hasAccess: !currentAccess });
-      await fetchData(); // تحديث البيانات بعد تغيير حالة الوصول
+      await fetchData(); // Update data after changing access state
     } catch (error) {
       console.error("Error toggling course access:", error);
     }
@@ -122,28 +122,28 @@ function AdminPage() {
 
   const handleAddUser = async () => {
     if (newUserEmail && newUserPassword && newUserName) {
-      const currentAdminUser = auth.currentUser; // حفظ المستخدم الحالي
+      const currentAdminUser = auth.currentUser; // Keep current user
       const adminEmail = currentAdminUser.email;
       const adminPassword = prompt(
         "Please enter your admin password to continue"
-      ); // طلب كلمة مرور المدير الحالي
+      ); // Prompt current admin password
 
       try {
-        // إنشاء المستخدم الجديد
+        // Create new user
         const { user } = await createUserWithEmailAndPassword(
           auth,
           newUserEmail,
           newUserPassword
         );
 
-        // تحويل البريد الإلكتروني لصيغة مناسبة للتخزين
+        // Sanitize email for storage
         const sanitizedEmail = newUserEmail.replace(/\./g, ",");
 
-        // إعداد المرجعين لحفظ بيانات المستخدم الجديد
+        // Prepare references to save new user data
         const rolesRef = ref(db, `roles/${sanitizedEmail}`);
         const usersRef = ref(db, `users/${sanitizedEmail}`);
 
-        // إضافة المستخدم الجديد إلى قاعدة البيانات
+        // Add new user to database
         await set(rolesRef, { role: newUserRole, courses: {} });
         await set(usersRef, {
           email: newUserEmail,
@@ -152,17 +152,17 @@ function AdminPage() {
           department: newUserDepartment,
         });
 
-        // إعادة تسجيل الدخول بالحساب الإداري
+        // Re-sign in with admin account
         await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
 
-        // إعادة تعيين المدخلات
+        // Reset inputs
         setNewUserEmail("");
         setNewUserPassword("");
         setNewUserName("");
         setNewUserRole("user");
-        setNewUserDepartment(""); // إعادة تعيين قسم المستخدم الجديد
+        setNewUserDepartment(""); // Reset new user department
 
-        // تحديث البيانات وإغلاق النافذة المنبثقة
+        // Update data and close popup
         await fetchData();
         setIsPopupOpen(false);
       } catch (error) {
@@ -197,16 +197,19 @@ function AdminPage() {
       <div className="main-content">
         <div className="user-list">
           {users
-            .filter(
-              (user) =>
-                user.name &&
-                user.name.toLowerCase().includes(searchQuery.toLowerCase())
-            )
+            .filter((user) => {
+              const lowerCaseQuery = searchQuery.toLowerCase();
+              return (
+                user.name?.toLowerCase().includes(lowerCaseQuery) ||
+                user.department?.toLowerCase().includes(lowerCaseQuery) ||
+                user.email.toLowerCase().includes(lowerCaseQuery)
+              );
+            })
             .map((user) => (
               <div
                 key={user.email}
                 className="user-item"
-                onClick={() => setSelectedUser(user)} // تعيين المستخدم المحدد هنا
+                onClick={() => setSelectedUser(user)} // Set selected user here
               >
                 {user.name}
               </div>
@@ -240,119 +243,118 @@ function AdminPage() {
               />
               {Object.entries(courses)
                 .filter(([courseId, course]) => {
-                  const isMainCourseMatch = course.name
-                    .toLowerCase()
-                    .includes(courseSearchQuery.toLowerCase());
-                  const isSubCourseMatch =
-                    course.subCourses &&
-                    Object.values(course.subCourses).some((subCourse) =>
-                      subCourse.name
-                        .toLowerCase()
-                        .includes(courseSearchQuery.toLowerCase())
-                    );
-                  return isMainCourseMatch || isSubCourseMatch;
-                })
-                .map(([courseId, course]) => {
+                  // Check if the user has access to the main course
                   const hasMainCourseAccess =
                     !!roles[selectedUser.email.replace(/\./g, ",")]?.courses?.[
                       courseId
                     ]?.hasAccess;
                   return (
-                    <div key={courseId}>
-                      <h4>{course.name}</h4>
-                      {course.subCourses &&
-                        Object.entries(course.subCourses).map(
-                          ([subCourseId, subCourse]) => (
-                            <div key={subCourseId}>
-                              <input
-                                type="checkbox"
-                                checked={
-                                  !!roles[
-                                    selectedUser.email.replace(/\./g, ",")
-                                  ]?.courses?.[courseId]?.[subCourseId]
-                                    ?.hasAccess
-                                }
-                                onChange={() =>
-                                  handleToggleAccess(
-                                    selectedUser.email,
-                                    courseId,
-                                    subCourseId
-                                  )
-                                }
-                              />
-                              <label>
-                                {getSubCourseName(courseId, subCourseId)}
-                              </label>
-                            </div>
-                          )
-                        )}
-                    </div>
+                    hasMainCourseAccess &&
+                    (course.name
+                      .toLowerCase()
+                      .includes(courseSearchQuery.toLowerCase()) ||
+                      (course.subCourses &&
+                        Object.values(course.subCourses).some((subCourse) =>
+                          subCourse.name
+                            .toLowerCase()
+                            .includes(courseSearchQuery.toLowerCase())
+                        )))
                   );
-                })}
+                })
+                .map(([courseId, course]) => (
+                  <div key={courseId}>
+                    <h4>{course.name}</h4>
+                    {course.subCourses &&
+                      Object.entries(course.subCourses).map(
+                        ([subCourseId, subCourse]) => (
+                          <div key={subCourseId}>
+                            <input
+                              type="checkbox"
+                              checked={
+                                !!roles[selectedUser.email.replace(/\./g, ",")]
+                                  ?.courses?.[courseId]?.[subCourseId]
+                                  ?.hasAccess
+                              }
+                              onChange={() =>
+                                handleToggleAccess(
+                                  selectedUser.email,
+                                  courseId,
+                                  subCourseId
+                                )
+                              }
+                            />
+                            <label>
+                              {getSubCourseName(courseId, subCourseId)}
+                            </label>
+                          </div>
+                        )
+                      )}
+                  </div>
+                ))}
             </>
           )}
         </div>
-        {isPopupOpen && (
-          <div className="popup">
-            <h2>Create User</h2>
-            <input
-              type="text"
-              placeholder="Email"
-              value={newUserEmail}
-              onChange={(e) => setNewUserEmail(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Name"
-              value={newUserName}
-              onChange={(e) => setNewUserName(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={newUserPassword}
-              onChange={(e) => setNewUserPassword(e.target.value)}
-            />
-            <select
-              value={newUserRole}
-              onChange={(e) => setNewUserRole(e.target.value)}
-            >
-              <option value="user">User</option>
-              {currentUserRole === "SuperAdmin" && (
-                <option value="admin">Admin</option>
-              )}
-            </select>
-            {currentUserRole === "SuperAdmin" ? (
-              <select
-                value={newUserDepartment}
-                onChange={(e) => setNewUserDepartment(e.target.value)}
-              >
-                <option value="">Select Department</option>
-                {departments.map((department) => (
-                  <option key={department.id} value={department.name}>
-                    {department.name}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <select
-                value={newUserDepartment}
-                onChange={(e) => setNewUserDepartment(e.target.value)}
-              >
-                <option value="">Select Department</option>
-                {departments.map((department) => (
-                  <option key={department.id} value={department.name}>
-                    {department.name}
-                  </option>
-                ))}
-              </select>
-            )}
-
-            <button onClick={handleAddUser}>Add User</button>
-            <button onClick={() => setIsPopupOpen(false)}>Close</button>
-          </div>
-        )}
       </div>
+      {isPopupOpen && (
+        <div className="popup">
+          <h2>Create User</h2>
+          <input
+            type="text"
+            placeholder="Email"
+            value={newUserEmail}
+            onChange={(e) => setNewUserEmail(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Name"
+            value={newUserName}
+            onChange={(e) => setNewUserName(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={newUserPassword}
+            onChange={(e) => setNewUserPassword(e.target.value)}
+          />
+          <select
+            value={newUserRole}
+            onChange={(e) => setNewUserRole(e.target.value)}
+          >
+            <option value="user">User</option>
+            {currentUserRole === "SuperAdmin" && (
+              <option value="admin">Admin</option>
+            )}
+          </select>
+          {currentUserRole === "SuperAdmin" ? (
+            <select
+              value={newUserDepartment}
+              onChange={(e) => setNewUserDepartment(e.target.value)}
+            >
+              <option value="">Select Department</option>
+              {departments.map((department) => (
+                <option key={department.id} value={department.name}>
+                  {department.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <select
+              value={newUserDepartment}
+              onChange={(e) => setNewUserDepartment(e.target.value)}
+            >
+              <option value="">Select Department</option>
+              {departments.map((department) => (
+                <option key={department.id} value={department.name}>
+                  {department.name}
+                </option>
+              ))}
+            </select>
+          )}
+
+          <button onClick={handleAddUser}>Add User</button>
+          <button onClick={() => setIsPopupOpen(false)}>Close</button>
+        </div>
+      )}{" "}
     </div>
   );
 }
