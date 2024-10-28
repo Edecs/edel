@@ -63,7 +63,7 @@ h1 {
   flex-direction: column; /* ترتيب الزرارين في عمود */
   justify-content: center; /* مركزية عمودية */
   align-items: center; /* مركزية أفقية */
-  height: 40%; /* ارتفاع محدد للزرارين */
+  height: 125px; /* ارتفاع محدد للزرارين */
 }
 .buttons-column button {
   width: 100%; /* اجعل الزر يأخذ عرض كامل */
