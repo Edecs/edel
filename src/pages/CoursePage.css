@@ -14,6 +14,7 @@
 
 .course-page .course-buttons,
 .course-page .sub-course-buttons {
+  padding-top: 20px;
   height: 642px;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -59,6 +60,22 @@
 .course-page h4 {
   margin-bottom: 40px;
   color: #094d50; /* لون النص */
+}
+.hh2 {
+  margin-left: 120px;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #094d50;
+  border-radius: 18px;
+  box-shadow: 2px 2px hsla(183, 50%, 10%, 0.506); /* إضافة الظل هنا */
+}
+
+.hh {
+  font-size: 30px;
+  width: 100%;
+  text-align: center;
 }
 
 .course-page h2 {
@@ -125,8 +142,8 @@
 
 /* Button Focus Effect */
 .course-page button:focus {
-  background-color: #ffffff; /* Highlight selected buttons */
-  color: #094d50;
+  background-color: #094d50; /* Highlight selected buttons */
+  color: #ffffff;
 }
 
 /* Button Active Effect */
@@ -370,7 +387,6 @@
   border-radius: 5px; /* زوايا مستديرة */
   padding: 10px 15px; /* حشوة داخلية */
   cursor: pointer; /* تغيير المؤشر عند التمرير فوق الزر */
-  font-size: 16px; /* حجم الخط */
   transition: background-color 0.3s, transform 0.2s; /* تأثير التغيير */
 }
 
@@ -628,13 +644,13 @@
   background-color: #ffffff;
 }
 
-.course-page.popup-content .close-popup-btn {
+.popup-content .close-popup-btn {
   margin-left: 561px;
   width: fit-content;
   color: rgb(0, 0, 0);
 }
 
-.course-page.popup-content .close-popup-btn:hover {
+.popup-content .close-popup-btn:hover {
   transform: scale(1.05);
 }
 .question-item {
@@ -815,16 +831,6 @@ input[type="text"] {
   padding: 8px; /* Padding inside input */
   margin-bottom: 8px; /* Space below inputs */
   border-radius: 4px; /* Slightly rounded corners */
-}
-
-/* Style for the button */
-button {
-  color: white; /* White text color */
-  border: none; /* No border */
-  border-radius: 4px; /* Rounded corners */
-  padding: 8px 16px; /* Padding inside the button */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth transition for hover */
 }
 
 /* Media display styling */
