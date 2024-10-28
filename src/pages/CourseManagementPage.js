@@ -248,6 +248,7 @@ function CourseManagementPage() {
             {Object.entries(courses).map(([courseName]) => (
               <li key={courseName}>
                 <button
+                  className="butt"
                   onClick={() => {
                     setSelectedCourse(courseName);
                     setSelectedEnrolledUsers([]);
@@ -280,16 +281,10 @@ function CourseManagementPage() {
         </div>
 
         <div className="column buttons-column">
-          <button
-            className="Remove Users from Course"
-            onClick={handleRemoveUsersFromCourse}
-          >
+          <button className="butt" onClick={handleRemoveUsersFromCourse}>
             <img src={rightArrowIcon} alt="Remove Users from Course" />
           </button>
-          <button
-            className="Add Users to Course"
-            onClick={handleAddUsersToCourse}
-          >
+          <button className="butt" onClick={handleAddUsersToCourse}>
             <img src={leftArrowIcon} alt="Add Users to Course" />
           </button>
         </div>
@@ -299,12 +294,13 @@ function CourseManagementPage() {
           <ul className="user-list1">
             {usersToDisplay.map((user) => (
               <li key={user.email}>
-                <label>
+                <label className="custom-checkbox">
                   <input
                     type="checkbox"
                     checked={selectedUsers.some((u) => u.email === user.email)}
                     onChange={() => toggleUserSelection(user)}
                   />
+                  <span className="checkmark"></span>
                   {user.name || "No name"} ({user.email || "No email"}) -{" "}
                   {user.department || "No department"}
                 </label>
