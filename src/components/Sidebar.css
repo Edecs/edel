@@ -4,7 +4,7 @@
   position: fixed;
   top: 64px; /* الشريط الجانبي يبدأ أسفل شريط التنقل */
   left: 0;
-  width: 80px; /* عرض الشريط الجانبي ثابت */
+  width: 70px; /* عرض الشريط الجانبي ثابت */
   height: calc(100% - 30px); /* يملأ الارتفاع المتبقي */
   background-color: #ffffff; /* لون الخلفية */
   color: #094d50; /* لون النص */
@@ -149,4 +149,3 @@
 .sidebar.open + .main-content {
   margin-left: 80px; /* عند فتح الشريط الجانبي، اجعل الهامش 80px */
 }
- 
