@@ -35,7 +35,7 @@
   .data-sections {
     margin-top: 20px;
 
-    details {
+    .user-progress-page details {
       margin-bottom: 20px;
       summary {
         margin-top: 20px;
@@ -71,7 +71,7 @@
     }
   }
 }
-details {
+.user-progress-page details {
   margin: 20px 0;
   padding: 10px;
   border: 1px solid #ddd;
