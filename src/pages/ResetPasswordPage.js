@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { ReactComponent as Logo } from "../photos/edecs logo white.svg";
+
 import "./ResetPasswordPage.css"; // Make sure you have created a CSS file for page styling
 
 const ResetPasswordPage = () => {
@@ -19,18 +21,23 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="reset-password-container">
-      <h2>Reset Password</h2>
-      <form onSubmit={handleResetPassword}>
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <button type="submit">Reset Password</button>
-      </form>
-      {message && <p>{message}</p>}
+      <nav className="navbar">
+        <Logo className="navbar-logo" />
+      </nav>
+      <div className="login-page">
+        <h2>Reset Password</h2>
+        <form onSubmit={handleResetPassword}>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button type="submit">Reset Password</button>
+        </form>
+        {message && <p>{message}</p>}
+      </div>
     </div>
   );
 };
