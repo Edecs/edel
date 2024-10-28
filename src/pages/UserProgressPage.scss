@@ -13,7 +13,8 @@
     border-radius: 5px;
   }
 
-  button {  display: flex; /* استخدم flexbox لترتيب العناصر بجانب بعضها */
+  button {
+    display: flex; /* استخدم flexbox لترتيب العناصر بجانب بعضها */
 
     display: block;
     margin: 20px auto;
@@ -39,8 +40,7 @@
       margin-bottom: 20px;
       summary {
         margin-top: 20px;
-        border: 1px solid ;
-        background-color: #094d50;
+        border: 1px solid;
         color: white;
         padding: 15px;
         border-radius: 8px;
@@ -49,20 +49,21 @@
         margin-bottom: 10px;
         cursor: pointer;
         transition: background-color 0.3s; /* تأثير انتقال للخلفية */
-      
       }
-
+.pro{
+  margin-top: 38px;
+  border-radius: 10px;
+}
       table.custom-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
+        margin-top: 30px;
 
         th,
         td {
           padding: 10px;
           text-align: left;
         }
-
 
         img {
           max-width: 100px;
@@ -72,18 +73,22 @@
   }
 }
 .user-progress-page details {
+  color: #fff;
+
   margin: 20px 0;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  background-color: #f9f9f9;
 
-  summary {
+  summary {  background-color: #094d50;
+
     font-weight: bold;
     font-size: 1.2em;
     cursor: pointer;
-    padding: 5px 0;
-    color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    color: #faf9f9;
+
   }
 
   table {
@@ -96,6 +101,7 @@
       color: #fff;
 
       th {
+        color: #e0f7fa;
         padding: 10px;
         text-align: left;
         font-weight: normal;
