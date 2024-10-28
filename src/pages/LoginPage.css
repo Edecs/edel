@@ -157,3 +157,24 @@ label {
     font-size: 14px;
   }
 }
+.reset-password-link {
+  display: flex; /* يجعل الرابط في وسط الحاوية */
+  justify-content: center; /* محاذاة المحتوى في المنتصف أفقياً */
+  margin-top: 20px; /* مسافة بين الرابط والعناصر أعلاه */
+}
+
+.reset-password-link a {
+  color: #094d50; /* لون النص */
+  text-decoration: none; /* إزالة التسطير */
+  font-weight: bold; /* زيادة سمك الخط */
+  font-size: 16px; /* تكبير حجم النص */
+  padding: 8px 16px; /* مسافة داخلية لتوسيع المساحة حول النص */
+  border: 1px solid #094d50; /* إطار حول الرابط */
+  border-radius: 8px; /* زوايا دائرية */
+  transition: all 0.3s ease; /* تأثير حركة للهوفر */
+}
+
+.reset-password-link a:hover {
+  background-color: #094d50; /* لون الخلفية عند المرور */
+  color: #ffffff; /* لون النص عند المرور */
+}
