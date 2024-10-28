@@ -55,6 +55,8 @@
   border-radius: 10px;
 }
       table.custom-table {
+        border: 1px solid #ddd;
+
         width: 100%;
         border-collapse: collapse;
         margin-top: 30px;
@@ -77,7 +79,6 @@
 
   margin: 20px 0;
   padding: 10px;
-  border: 1px solid #ddd;
   border-radius: 5px;
 
   summary {  background-color: #094d50;
