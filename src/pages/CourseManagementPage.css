@@ -1,7 +1,6 @@
 .course-management-page {
   font-family: Arial, sans-serif;
   padding: 20px;
-  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -54,13 +53,13 @@ h1 {
   width: 80%;
   flex-direction: column; /* ترتيب المحتوى عمودياً */
   justify-content: space-between; /* توزيع المساحة بين العناصر */
+  gap: 10px;
   height: 100%; /* اجعل ارتفاع العمود 100% */
 }
 
 .buttons-column {
   width: 100%;
   margin-top: 200px; /* دفع الزرارين إلى الأسفل */
-  display: flex; /* استخدام flexbox */
   flex-direction: column; /* ترتيب الزرارين في عمود */
   justify-content: center; /* مركزية عمودية */
   align-items: center; /* مركزية أفقية */
@@ -140,6 +139,7 @@ img {
 }
 
 .column {
+  box-shadow: #136c70 3px;
   border: 2px solid #ccc; /* إطار للأعمدة */
   padding: 10px;
   border-radius: 10px; /* زوايا مدورة */
