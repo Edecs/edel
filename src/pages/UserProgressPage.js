@@ -261,6 +261,25 @@ function UserProgressPage() {
         ) : (
           <>
             <details>
+              <summary>Users</summary>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user) => (
+                    <tr key={user.id}>
+                      <td>{user.email}</td>
+                      <td>{user.role}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
+            <details>
               <summary>Archived Tasks</summary>
               <table className="custom-table">
                 <thead>
