@@ -101,7 +101,7 @@ h2 {
 .course-card {
   border-radius: 28px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 440px;
+  width: 300px;
   /* عرض ثابت للبطاقات */
   height: 221px;
   /* ارتفاع ثابت للبطاقات */
@@ -126,9 +126,9 @@ h2 {
 }
 
 .course-card img {
-  border-radius: 28px;
+  border-radius: 18px;
   width: 100%;
-  height: 150px;
+  height: 100px;
   /* ارتفاع ثابت للصورة */
   object-fit: cover;
 }
