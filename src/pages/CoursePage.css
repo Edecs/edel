@@ -754,6 +754,7 @@
 }
 
 .gg {
+  margin-left: 15px;
   display: flex; /* استخدم الفلكس لتوزيع العناصر أفقيًا */
   align-items: center; /* محاذاة العناصر في المنتصف عموديًا */
   gap: 10px; /* إضافة مسافة بين العنوان والزر */
@@ -799,7 +800,9 @@
   justify-content: space-between; /* توزيع المساحة بين العناصر */
 }
 
-.popup-content.right2 {
+.right2 {
+  background-color: #094d50 !important;
+  color: #ffffff !important;
   border: #094d50 !important;
   padding: 8px 12px; /* إضافة مساحة داخلية لجعل الزر أكبر قليلاً */
   width: fit-content; /* جعل العرض يتناسب مع المحتوى */
@@ -807,7 +810,10 @@
   cursor: pointer; /* شكل المؤشر عند التحويم */
   transition: background-color 0.3s; /* تأثير عند تغيير اللون */
 }
-
+.right2:hover {
+  background-color: #ffffff !important;
+  color: #094d50 !important;
+}
 .add-course-form,
 .add-sub-course-form {
   display: flex; /* عرض العناصر بجانب بعضها */
