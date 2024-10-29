@@ -196,7 +196,7 @@ const AddTaskPage = () => {
             {/* Do not show anything if there is no search term */}
             {/* Display the selected users */}
             {assignedEmails.length > 0 && (
-              <div>
+              <div className="assigned-users">
                 <h3>Assigned Users:</h3>
                 <ul>
                   {assignedEmails.map((email) => {
