@@ -1,20 +1,19 @@
 .user-progress-page {
   h1 {
     text-align: center;
-    margin-bottom: 20px;
   }
 
   input {
     display: block;
-    margin: 0 auto;
+    margin: 20px auto;
     padding: 10px;
-    width: 300px;
+    width: 90%;
     border: 2px solid #ccc;
     border-radius: 5px;
   }
 
   button {
-
+margin-left: 95px;
     padding: 10px 20px;
     background-color: #094d50;
     color: white;
@@ -32,9 +31,9 @@
     margin-top: 20px;
 
     details {
+      margin: auto;
+      width: 90%;
       color: #fff;
-      margin: 20px 0;
-      padding: 10px;
       border-radius: 5px;
 
       summary {
