@@ -631,7 +631,9 @@ function CoursePage() {
                     placeholder="Add Video URL"
                   />
                   <div className="a1">
-                    <button onClick={handleAddMedia}>Add Media</button>
+                    <button className="a2" onClick={handleAddMedia}>
+                      Add Media
+                    </button>
                   </div>
                   <div className="media-display">
                     {media.images &&
