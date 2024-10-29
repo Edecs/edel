@@ -1,4 +1,6 @@
 .admin-page {
+  margin-top: 45px !important;
+
   font-family: "Arial", sans-serif;
   color: #333;
   padding: 20px;
@@ -6,6 +8,7 @@
   margin: 0 auto;
 }
 .admin-header {
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,6 +16,19 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   gap: 34%; /* ضبط المسافة بين العناصر */
+}
+.popup-container {
+  position: relative; /* يضمن أن الزر يستند إلى حدود الحاوية */
+}
+
+.wa {
+  position: absolute;
+  top: 10px; /* المسافة من الأعلى */
+  right: 10px; /* المسافة من اليمين */
+  background-color: transparent; /* اختياري: يمكن تعديل خلفية الزر */
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 .admin-header h1 {
@@ -36,7 +52,7 @@
 .admin-page .main-content {
   margin: auto;
   display: flex;
-  gap: 40px; /* تحديد المسافة بين العناصر */
+  gap: 6%; /* تحديد المسافة بين العناصر */
   flex-wrap: wrap; /* لضمان استجابة التخطيط في الأجهزة الصغيرة */
 }
 .subcourses-container {
@@ -45,10 +61,15 @@
   overflow-y: auto; /* لإضافة شريط تمرير عمودي إذا كانت المحتويات تتجاوز الطول المحدد */
   border: 1px solid #ccc; /* يمكنك إضافة حدود لتحسين العرض */
   padding: 10px; /* إضافة مساحة داخلية */
+  margin-bottom: 5px;
   background-color: #f9f9f9; /* يمكنك تغيير الخلفية حسب الحاجة */
 }
 
-.admin-page .user-list {
+.sup {
+  margin-bottom: 10px; /* يمكنك تغيير القيمة حسب المسافة التي تريدها */
+}
+
+.admin-page .user-list4 {
   max-height: 600px;
   overflow-y: auto;
 }
@@ -70,12 +91,18 @@
   padding-bottom: 10px;
   margin-bottom: 20px;
 }
-
+.admin-page .user-list4 h2 {
+  margin-top: 80px;
+  font-size: 22px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
 .admin-page .user-details p {
   margin: 10px 0;
 }
 
-.admin-page .user-list,
+.admin-page .user-list4,
 .admin-page .user-details {
   background-color: #fff;
   border-radius: 8px;
@@ -116,7 +143,7 @@
 }
 
 .admin-page input[type="text"] {
-  width: 98%; /* يأخذ عرض كامل الحاوية */
+  width: 100%; /* يأخذ عرض كامل الحاوية */
   padding: 12px; /* مساحة داخلية */
   margin: 10px 0; /* مسافة أعلى وأسفل */
   border: 1px solid #ccc; /* لون الحدود */
@@ -139,7 +166,6 @@
 }
 .open-popup-btn,
 .admin-page button {
-  margin-left: 10px;
   padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
   background-color: #ffffff !important; /* لون الخلفية للأزرار */
   color: #094d50 !important; /* لون النص */
@@ -254,7 +280,15 @@ h4 {
   color: #333;
   margin-bottom: 10px;
 }
-
+h3 {
+  margin-top: 60px;
+  margin-bottom: 30px;
+  color: #094d50;
+}
+h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
 input[type="text"],
 input[type="password"],
 select {
