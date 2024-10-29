@@ -30,7 +30,7 @@ h1 {
 }
 
 .search-container button {
-  padding: 10px 15px; /* Padding for the button */
+  padding: 10px 25px; /* Padding for the button */
   background-color: #094d50; /* Bootstrap primary color */
   color: white; /* Text color */
   border: none; /* No border */
