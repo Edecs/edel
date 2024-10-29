@@ -272,3 +272,47 @@ input#message:focus {
     font-size: 14px; /* تقليل حجم خط label على الشاشات الصغيرة */
   }
 }
+.assigned-users {
+  margin: 20px 0;
+
+  h3 {
+    font-size: 1.5em;
+    color: #094d50;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+
+    li {
+      display: flex; /* Use flexbox to align items */
+      justify-content: space-between; /* Space between user name and button */
+      align-items: center; /* Center items vertically */
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f9f9f9; /* Light background for list items */
+      border: 1px solid #ddd; /* Light border for definition */
+      border-radius: 5px; /* Rounded corners */
+      transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+      &:hover {
+        background-color: #e0f7fa; /* Change background on hover */
+      }
+
+      .remove-button {
+        background-color: #d9534f; /* Bootstrap danger color */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #c9302c; /* Darker shade on hover */
+        }
+      }
+    }
+  }
+}
