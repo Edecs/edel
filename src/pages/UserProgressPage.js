@@ -63,6 +63,7 @@ function UserProgressPage() {
           id,
           email: data.email || "Unknown",
           role: data.role || "Not available",
+          name: data.name || "Name not available",
         }));
         setUsers(usersList);
       }
@@ -212,6 +213,7 @@ function UserProgressPage() {
   const filteredUsers = users.filter(
     (user) =>
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -266,6 +268,7 @@ function UserProgressPage() {
               <table>
                 <thead>
                   <tr>
+                    <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
                   </tr>
@@ -273,6 +276,7 @@ function UserProgressPage() {
                 <tbody>
                   {filteredUsers.map((user) => (
                     <tr key={user.id}>
+                      <td>{user.name}</td>
                       <td>{user.email}</td>
                       <td>{user.role}</td>
                     </tr>
