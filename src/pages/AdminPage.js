@@ -195,7 +195,8 @@ function AdminPage() {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       <div className="main-content">
-        <div className="user-list">
+        <div className="user-list4">
+          <h2>Users</h2>
           {users
             .filter((user) => {
               const lowerCaseQuery = searchQuery.toLowerCase();
@@ -234,7 +235,7 @@ function AdminPage() {
                 <strong>Role:</strong>{" "}
                 {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
               </p>
-              <h3>Course Access</h3>
+              <h3>Sub-course Access</h3>
               <input
                 type="text"
                 placeholder="Search courses..."
@@ -264,31 +265,37 @@ function AdminPage() {
                 .map(([courseId, course]) => (
                   <div key={courseId}>
                     <h4>{course.name}</h4>
-                    {course.subCourses &&
-                      Object.entries(course.subCourses).map(
-                        ([subCourseId, subCourse]) => (
-                          <div key={subCourseId}>
-                            <input
-                              type="checkbox"
-                              checked={
-                                !!roles[selectedUser.email.replace(/\./g, ",")]
-                                  ?.courses?.[courseId]?.[subCourseId]
-                                  ?.hasAccess
-                              }
-                              onChange={() =>
-                                handleToggleAccess(
-                                  selectedUser.email,
-                                  courseId,
-                                  subCourseId
-                                )
-                              }
-                            />
-                            <label>
-                              {getSubCourseName(courseId, subCourseId)}
-                            </label>
-                          </div>
-                        )
-                      )}
+                    {course.subCourses && (
+                      <div className="subcourses-container">
+                        {" "}
+                        {/* إضافة الفئة هنا */}
+                        {Object.entries(course.subCourses).map(
+                          ([subCourseId, subCourse]) => (
+                            <div className="sup" key={subCourseId}>
+                              <input
+                                type="checkbox"
+                                checked={
+                                  !!roles[
+                                    selectedUser.email.replace(/\./g, ",")
+                                  ]?.courses?.[courseId]?.[subCourseId]
+                                    ?.hasAccess
+                                }
+                                onChange={() =>
+                                  handleToggleAccess(
+                                    selectedUser.email,
+                                    courseId,
+                                    subCourseId
+                                  )
+                                }
+                              />
+                              <label>
+                                {getSubCourseName(courseId, subCourseId)}
+                              </label>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
             </>
@@ -297,7 +304,12 @@ function AdminPage() {
       </div>
       {isPopupOpen && (
         <div className="popup">
+          <button className="wa" onClick={() => setIsPopupOpen(false)}>
+            X
+          </button>
+
           <h2>Create User</h2>
+
           <input
             type="text"
             placeholder="Email"
@@ -352,7 +364,6 @@ function AdminPage() {
           )}
 
           <button onClick={handleAddUser}>Add User</button>
-          <button onClick={() => setIsPopupOpen(false)}>Close</button>
         </div>
       )}{" "}
     </div>
