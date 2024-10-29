@@ -8,7 +8,7 @@ import leftArrowIcon from "../photos/left-arrow-svgrepo-com.svg";
 const sanitizeEmail = (email) => {
   return email.replace(/[.]/g, ",");
 };
- 
+
 function CourseManagementPage() {
   const [courses, setCourses] = useState({});
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -281,10 +281,10 @@ function CourseManagementPage() {
         </div>
 
         <div className="column buttons-column">
-          <button className="butt" onClick={handleRemoveUsersFromCourse}>
+          <button className="butt1" onClick={handleRemoveUsersFromCourse}>
             <img src={rightArrowIcon} alt="Remove Users from Course" />
           </button>
-          <button className="butt" onClick={handleAddUsersToCourse}>
+          <button className="butt1" onClick={handleAddUsersToCourse}>
             <img src={leftArrowIcon} alt="Add Users to Course" />
           </button>
         </div>
