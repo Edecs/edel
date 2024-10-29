@@ -99,7 +99,7 @@
 /* Input Fields */
 .course-page input[type="text"],
 .course-page textarea {
-  width: 90%;
+  width: 100%;
   padding: 12px; /* زيادة المساحة داخل حقول الإدخال */
   margin-bottom: 15px;
   border: 1px solid #ccc;
@@ -944,13 +944,23 @@ input[type="text"] {
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
 .a1 {
-  justify-content: center; /* توسيط المحتوى داخل الزر */
-  align-items: center; /* محاذاة العناصر عموديًا */
+  display: flex; /* استخدام flexbox */
+  justify-content: center; /* توسيط المحتوى أفقياً */
+  align-items: center; /* محاذاة العناصر عمودياً */
+}
+
+.a2 {
   padding: 10px 20px; /* مساحة داخلية لجعل الزر أكبر */
   border: none; /* بدون حدود */
   border-radius: 4px; /* زوايا مدورة */
   cursor: pointer; /* شكل المؤشر عند التحويم */
   transition: background-color 0.3s; /* تأثير عند تغيير اللون */
+  background-color: #094d50; /* لون الخلفية */
+  color: white; /* لون النص */
+}
+
+.a2:hover {
+  background-color: #0f7277; /* لون الخلفية عند التحويم */
 }
 
 .action-buttons button {
