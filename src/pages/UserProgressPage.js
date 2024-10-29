@@ -129,6 +129,7 @@ function UserProgressPage() {
           ([userId, courses]) =>
             Object.entries(courses).map(([courseId, submission]) => ({
               email: submission.email || "Unknown",
+              userName: submission.userName || "Unknown",
               courseId: courseId,
               startTime: formatDate(submission.startTime) || "Not available",
               endTime: formatDate(submission.endTime) || "Not completed",
@@ -376,7 +377,7 @@ function UserProgressPage() {
                 <tbody>
                   {filteredSubmissions.map((submission) => (
                     <tr key={`${submission.email}-${submission.courseId}`}>
-                      <td>{submission.email}</td>
+                      <td>{submission.userName}</td>
                       <td>{submission.courseId}</td>
                       <td>{submission.startTime}</td>
                       <td>{submission.endTime}</td>
