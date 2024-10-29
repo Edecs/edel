@@ -28,7 +28,9 @@
   color: #333;
   margin-bottom: 5px;
 }
-
+.dd {
+  margin-top: 30px;
+}
 .add-task-container input[type="text"],
 .add-task-container input[type="email"],
 .add-task-container textarea {
@@ -36,7 +38,7 @@
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 40px;
   width: 100%;
   box-sizing: border-box;
   transition: border 0.3s ease;
@@ -278,19 +280,20 @@ input#message:focus {
   h3 {
     font-size: 1.5em;
     color: #094d50;
-    margin-bottom: 10px;
   }
 
   ul {
     list-style-type: none; /* Remove bullet points */
     padding: 0;
+    margin: auto;
 
     li {
+      max-width: 400px;
       display: flex; /* Use flexbox to align items */
       justify-content: space-between; /* Space between user name and button */
       align-items: center; /* Center items vertically */
       padding: 10px;
-      margin: 5px 0;
+      margin: auto;
       background-color: #f9f9f9; /* Light background for list items */
       border: 1px solid #ddd; /* Light border for definition */
       border-radius: 5px; /* Rounded corners */
