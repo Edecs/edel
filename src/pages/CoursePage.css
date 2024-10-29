@@ -865,7 +865,7 @@ input[type="text"] {
 /* Button styles */
 
 /* Input fields */
-input[type="text"] {
+.course-page input[type="text"] {
   width: calc(100% - 20px); /* Full width minus padding */
   padding: 8px; /* Padding inside input */
   margin-bottom: 16px; /* Space below inputs */
