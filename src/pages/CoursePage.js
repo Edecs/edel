@@ -692,7 +692,7 @@ function CoursePage() {
               X
             </button>
             <h3>Add New Question</h3>
-            <h4>Question:</h4>
+            <h4 className="gg">Question:</h4>
             <input
               type="text"
               value={newQuestion}
