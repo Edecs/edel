@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ref, get, set } from "firebase/database";
 import { db } from "../firebase";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./SubCourseDetailPage.css";
 
 // Reusable Button Component
@@ -21,6 +21,7 @@ const NavigationButton = ({ onClick, disabled, visible, text }) => {
 const SubCourseDetailPage = () => {
   const { subCourseId } = useParams();
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
   const [subCourse, setSubCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,11 +31,55 @@ const SubCourseDetailPage = () => {
   const [userAnswers, setUserAnswers] = useState([]);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [submissionResult, setSubmissionResult] = useState(null);
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
 
   const auth = getAuth();
   const user = auth.currentUser;
 
   useEffect(() => {
+    const getCurrentUser = () => {
+      return new Promise((resolve, reject) => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            resolve(user);
+          } else {
+            reject(new Error("User is not authenticated."));
+          }
+        });
+      });
+    };
+
+    const fetchUserData = async () => {
+      try {
+        const user = await getCurrentUser();
+        if (!user) {
+          throw new Error("User is not authenticated.");
+        }
+
+        const email = user.email;
+        const safeEmailPath = email.replace(/\./g, ",");
+
+        // Fetch user name
+        const userRef = ref(db, `users/${safeEmailPath}`);
+        const userSnapshot = await get(userRef);
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.val();
+          setUserName(userData.name || "User");
+          console.log("User Name Fetched:", userData.name); // تأكد من قيمة اسم المستخدم هنا
+        } else {
+          setUserName("User");
+        }
+      } catch (error) {
+        console.error("Data entry error:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+
     setStartTime(new Date());
 
     const fetchSubCourseDetails = async () => {
@@ -107,6 +152,11 @@ const SubCourseDetailPage = () => {
   };
 
   const handleSubmit = async () => {
+    if (!userName) {
+      alert("User name not loaded. Please try again.");
+      return;
+    }
+
     let endTime = new Date();
     const totalTime = (endTime - startTime) / 1000;
 
@@ -123,6 +173,7 @@ const SubCourseDetailPage = () => {
         }
       });
     }
+
     let percentageSuccess =
       totalQuestions > 0
         ? ((correctCount / totalQuestions) * 100).toFixed(2)
@@ -131,6 +182,7 @@ const SubCourseDetailPage = () => {
     const submissionData = {
       email: user.email,
       userId: user ? user.uid : "Anonymous",
+      userName: userName,
       courseId: subCourseId,
       startTime: startTime.toISOString(),
       endTime: endTime.toISOString(),
@@ -236,6 +288,7 @@ const SubCourseDetailPage = () => {
           </div>
         )}
       </div>
+
       {currentQuestion && (
         <div className="question-container">
           <div className="question">
@@ -257,57 +310,36 @@ const SubCourseDetailPage = () => {
               </div>
             ))}
           </div>
-          <div className="question-navigation">
-            <NavigationButton
-              onClick={handlePrevQuestion}
-              disabled={currentQuestionIndex === 0}
-              visible={currentQuestionIndex > 0}
-              text="Previous Question"
-            />
-            <NavigationButton
-              onClick={handleNextQuestion}
-              disabled={currentQuestionIndex === totalQuestions - 1}
-              visible={currentQuestionIndex < totalQuestions - 1}
-              text="Next Question"
-            />
+          <div className="question-overview">
+            <h3>Question Overview</h3>
+            <div className="question-squares">
+              {Array.from({ length: totalQuestions }).map((_, index) => {
+                const isAnswered = userAnswers[index] !== undefined;
+                return (
+                  <div
+                    key={index}
+                    className={`question-square ${
+                      isAnswered ? "answered" : "unanswered"
+                    }`}
+                    onClick={() => setCurrentQuestionIndex(index)}
+                  >
+                    {index + 1}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
-      {/* Question overview with clickable squares */}
-      <div className="question-overview">
-        <h3>Question Overview</h3>
-        <div className="question-squares">
-          {Array.from({ length: totalQuestions }).map((_, index) => {
-            const isAnswered = userAnswers[index] !== undefined;
-            return (
-              <div
-                key={index}
-                className={`question-square ${
-                  isAnswered ? "answered" : "unanswered"
-                }`}
-                onClick={() => setCurrentQuestionIndex(index)}
-              >
-                {index + 1}
-              </div>
-            );
-          })}
-        </div>
-        <p>{`Answered: ${answeredQuestionsCount}/${totalQuestions}`}</p>
-      </div>
-      <button
-        onClick={handleSubmit}
-        className="submit-button"
-        disabled={answeredQuestionsCount < totalQuestions}
-      >
-        Submit Answers
-      </button>
+
       {submissionResult && (
         <div className="submission-result">
           <h3>Submission Result</h3>
+          <p>Name: {submissionResult.userName}</p>
           <p>Email: {submissionResult.email}</p>
           <p>Course ID: {submissionResult.courseId}</p>
+          <p>Score: {submissionResult.percentageSuccess}%</p>
           <p>Total Time: {submissionResult.totalTime} seconds</p>
-          <p>Success Percentage: {submissionResult.percentageSuccess}%</p>
         </div>
       )}
     </div>
