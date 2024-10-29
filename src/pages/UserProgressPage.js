@@ -265,7 +265,7 @@ function UserProgressPage() {
           <>
             <details>
               <summary>Users</summary>
-              <table>
+              <table className="custom-table">
                 <thead>
                   <tr>
                     <th>Name</th>
