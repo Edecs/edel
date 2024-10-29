@@ -37,8 +37,9 @@ h1 {
 }
 
 .search-box {
+  margin: auto;
   margin-bottom: 20px;
-  width: 100%; /* جعل صندوق البحث في العرض الكامل */
+  width: 93%; /* جعل صندوق البحث في العرض الكامل */
 }
 
 .user-list,
@@ -50,7 +51,6 @@ h1 {
 }
 
 .column {
-  width: 80%;
   flex-direction: column; /* ترتيب المحتوى عمودياً */
   justify-content: space-between; /* توزيع المساحة بين العناصر */
   gap: 10px;
@@ -87,7 +87,7 @@ h1 {
 }
 
 .butt {
-  border-radius: 15px;
+  border-radius: 4px;
   width: 100%;
   background-color: #094d50;
   color: white;
@@ -101,10 +101,27 @@ h1 {
 }
 
 .butt.active {
-  background-color: #198b91; /* اللون الجديد */
-  color: #ffffff; /* لون النص */
+  background-color: #ffffff; /* اللون الجديد */
+  color: #094d50; /* لون النص */
+}
+.butt1 {
+  border-radius: 15px;
+  width: 100%;
+  background-color: #094d50;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
 }
 
+.butt1:hover {
+  background-color: #158e94;
+}
+
+.butt1.active {
+  background-color: #158e94; /* اللون الجديد */
+  color: #ffffff; /* لون النص */
+}
 label {
   cursor: pointer;
 }
@@ -133,13 +150,14 @@ img {
 
 /* إضافة قواعد جديدة لتحسين التنسيق */
 .management-grid {
+  margin: auto;
+  width: 90%;
   display: grid;
   grid-template-columns: 1fr 1fr auto 1fr; /* 4 أعمدة */
   gap: 20px; /* المسافة بين الأعمدة */
 }
 
 .column {
-  box-shadow: #136c70 3px;
   border: 2px solid #ccc; /* إطار للأعمدة */
   padding: 10px;
   border-radius: 10px; /* زوايا مدورة */
