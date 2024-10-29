@@ -14,8 +14,6 @@
   }
 
   button {
-    display: flex; /* استخدم flexbox لترتيب العناصر بجانب بعضها */
-
     display: block;
     margin: 20px auto;
     padding: 10px 20px;
@@ -24,8 +22,6 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    align-items: center; /* لمركز العناصر عموديًا */
-
     transition: background-color 0.3s;
 
     &:hover {
@@ -36,30 +32,41 @@
   .data-sections {
     margin-top: 20px;
 
-    .user-progress-page details {
-      margin-bottom: 20px;
+    details {
+      color: #fff;
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 5px;
+
       summary {
-        margin-top: 20px;
-        border: 1px solid;
-        color: white;
-        padding: 15px;
+        margin-top: 60px;
+        border: 1px solid #094d50;
+        background-color: #ffffff;
+        color: #094d50;
+        padding: 30px;
         border-radius: 8px;
         font-weight: bold;
         font-size: 18px;
         margin-bottom: 10px;
         cursor: pointer;
-        transition: background-color 0.3s; /* تأثير انتقال للخلفية */
-      }
-.pro{
-  margin-top: 38px;
-  border-radius: 10px;
-}
-      table.custom-table {
-        border: 1px solid #ddd;
+        transition: background-color 0.3s, color 0.3s;
 
+        &:focus,
+        &:active {
+          outline: none; 
+        }
+      }
+
+      &[open] summary {
+        background-color: #094d50;
+        color: #ffffff;
+      }
+
+      table.custom-table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 30px;
+        border: 1px solid #ddd;
 
         th,
         td {
@@ -70,62 +77,36 @@
         img {
           max-width: 100px;
         }
-      }
-    }
-  }
-}
-.user-progress-page details {
-  color: #fff;
 
-  margin: 20px 0;
-  padding: 10px;
-  border-radius: 5px;
+        thead {
+          background-color: #094d50;
+          color: #fff;
 
-  summary {  background-color: #094d50;
-
-    font-weight: bold;
-    font-size: 1.2em;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 10px;
-    color: #faf9f9;
-
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-
-    thead {
-      background-color: #094d50;
-      color: #fff;
-
-      th {
-        color: #e0f7fa;
-        padding: 10px;
-        text-align: left;
-        font-weight: normal;
-        font-size: 1em;
-        border-bottom: 2px solid #ddd;
-      }
-    }
-
-    tbody {
-      tr {
-        &:nth-child(even) {
-          background-color: #f4f4f4;
+          th {
+            color: #e0f7fa;
+            font-weight: normal;
+            font-size: 1em;
+            border-bottom: 2px solid #ddd;
+          }
         }
 
-        &:hover {
-          background-color: #e0f7fa;
-        }
+        tbody {
+          tr {
+            &:nth-child(even) {
+              background-color: #f4f4f4;
+            }
 
-        td {
-          padding: 10px;
-          border-bottom: 1px solid #ddd;
-          font-size: 0.9em;
-          color: #333;
+            &:hover {
+              background-color: #e0f7fa;
+            }
+
+            td {
+              padding: 10px;
+              border-bottom: 1px solid #ddd;
+              font-size: 0.9em;
+              color: #333;
+            }
+          }
         }
       }
     }
