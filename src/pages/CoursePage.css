@@ -283,7 +283,7 @@
 /* Media Section Images and Links */
 .course-page .media-section img {
   width: 100px;
-  height: auto;
+  height: 100px;
   margin-right: 10px;
 }
 
@@ -846,7 +846,7 @@ input[type="text"] {
 
 .media-display img {
   max-width: 100%; /* Responsive image */
-  height: auto; /* Maintain aspect ratio */
+  height: 170px; /* Maintain aspect ratio */
   border-radius: 4px; /* Rounded corners for images */
 }
 
