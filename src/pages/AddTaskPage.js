@@ -126,7 +126,7 @@ const AddTaskPage = () => {
       <div className="add-task-container">
         <h1>Add New Task</h1>
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className="dd">
             <label htmlFor="dropboxLink">Dropbox File Link:</label>
             <input
               type="text"
