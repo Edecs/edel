@@ -1,12 +1,10 @@
 .admin-page {
   font-family: "Arial", sans-serif;
   color: #333;
-  background-color: #f4f4f4;
   padding: 20px;
   max-width: 90%;
   margin: 0 auto;
 }
-
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -14,16 +12,17 @@
   color: #343a40;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 34%; /* ضبط المسافة بين العناصر */
 }
 
 .admin-header h1 {
-  margin: 0;
   font-size: 30px;
   font-weight: bold;
 }
 
 .navigate-to-course-management-btn,
 .refresh-data-btn {
+  margin-right: 10px;
   background-color: #107f85;
   color: #ffffff;
   padding: 10px 20px;
@@ -35,19 +34,18 @@
 }
 
 .admin-page .main-content {
+  margin: auto;
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 40px; /* تحديد المسافة بين العناصر */
   flex-wrap: wrap; /* لضمان استجابة التخطيط في الأجهزة الصغيرة */
 }
-
-.admin-page .user-list,
-.admin-page .user-details {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  width: 45%; /* عرض كل قسم بنسبة 45% ليظهروا بجانب بعضهم */
+.subcourses-container {
+  border-radius: 10px;
+  max-height: 200px; /* تحديد الطول الأقصى */
+  overflow-y: auto; /* لإضافة شريط تمرير عمودي إذا كانت المحتويات تتجاوز الطول المحدد */
+  border: 1px solid #ccc; /* يمكنك إضافة حدود لتحسين العرض */
+  padding: 10px; /* إضافة مساحة داخلية */
+  background-color: #f9f9f9; /* يمكنك تغيير الخلفية حسب الحاجة */
 }
 
 .admin-page .user-list {
@@ -65,7 +63,6 @@
 .admin-page .user-item:hover {
   background-color: #f0f0f0;
 }
-
 .admin-page .user-details h2 {
   margin-top: 80px;
   font-size: 22px;
@@ -76,6 +73,17 @@
 
 .admin-page .user-details p {
   margin: 10px 0;
+}
+
+.admin-page .user-list,
+.admin-page .user-details {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 47%; /* عرض كل قسم بنسبة 47% ليظهروا بجانب بعضهم */
+  max-height: 800px; /* الطول الأقصى للقسم */
+  overflow-y: auto; /* إضافة شريط تمرير عمودي إذا تجاوز المحتوى الطول المحدد */
 }
 
 .admin-page .user-actions {
@@ -131,16 +139,17 @@
 }
 .open-popup-btn,
 .admin-page button {
+  margin-left: 10px;
   padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
-  background-color: #ffffff; /* لون الخلفية للأزرار */
-  color: #094d50; /* لون النص */
-  border: 1px solid #094d509a; /* تحديد لون الحدود وسماكتها */
+  background-color: #ffffff !important; /* لون الخلفية للأزرار */
+  color: #094d50 !important; /* لون النص */
+  border: 1px solid #094d509a !important; /* تحديد لون الحدود وسماكتها */
   border-radius: 4px; /* زوايا مدورة */
   cursor: pointer; /* شكل المؤشر عند المرور على الزر */
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
   &:hover {
-    background-color: #094d50; /* تغيير لون الخلفية عند التحويم */
-    color: #ffffff; /* تغيير لون النص عند التحويم */
+    background-color: #094d50 !important; /* تغيير لون الخلفية عند التحويم */
+    color: #ffffff !important; /* تغيير لون النص عند التحويم */
     transform: translateY(-2px); /* رفع خفيف عند التحويم */
   }
 
@@ -358,7 +367,6 @@ input[type="checkbox"] {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s, border-color 0.3s;
-  margin-bottom: 15px;
 }
 
 .admin-page .open-popup-btn:hover {
