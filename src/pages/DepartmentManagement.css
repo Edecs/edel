@@ -31,7 +31,7 @@
   display: block;
   width: 100%;
   padding: 10px;
-  background-color: #007bff; /* لون أزرق للزر */
+  background-color: #094d50; /* لون أزرق للزر */
   color: white;
   border: none;
   border-radius: 4px; /* زوايا مستديرة */
@@ -42,7 +42,7 @@
 
 /* تغيير لون الزر عند التمرير عليه */
 .department-management button:hover {
-  background-color: #0056b3; /* لون أغمق عند التمرير */
+  background-color: #11858b; /* لون أغمق عند التمرير */
 }
 
 /* تنسيق قائمة الأقسام */
