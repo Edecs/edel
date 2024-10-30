@@ -139,7 +139,7 @@ const WelcomePage = () => {
   return (
     <div className="container-welcome">
       <header>
-        <h1 className="header-h1">Welcome, {userName}</h1>
+        <h1 className="header-h1">Welcome {userName}</h1>
       </header>
       <div className="container">
         <h2>Courses</h2>
