@@ -32,10 +32,6 @@
   gap: 20px; /* المسافة بين الأعمدة */
 }
 
-h1 {
-  width: 100%;
-}
-
 .search-box {
   margin: auto;
   margin-bottom: 20px;
