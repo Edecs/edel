@@ -89,7 +89,7 @@ const AddTaskPage = () => {
 
       const newCreatorNotificationRef = push(notificationsRef);
       await set(newCreatorNotificationRef, {
-        message: `You have created a new task: ${message}`,
+        message: `You Created new task: ${message}`,
         dropboxLink: dropboxLink || null, // Include link if provided
         assignedEmails: assignedEmails.join(", "),
         createdBy: user.email,
