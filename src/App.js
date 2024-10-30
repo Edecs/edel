@@ -23,7 +23,7 @@ import "./App.css";
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const { user, isAdmin, isSuperAdmin, loading, logout } = useAuth();
-  const timeoutDuration = 43200000; // 12 ساعة
+  const timeoutDuration = 5400000; // 90 دقيقة بالميلي ثانية (60 دقيقة * 60 ثانية * 1000 ميلي ثانية)
   const [isModalOpen, setIsModalOpen] = useState(false); // حالة النافذة المنبثقة
   const [logoutTimer, setLogoutTimer] = useState(null); // لتخزين معرف المؤقت
 
