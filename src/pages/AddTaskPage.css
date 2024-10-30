@@ -7,16 +7,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.add-task-container h1 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #000;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 80px;
-  flex-wrap: wrap;
-}
+
 
 .add-task-container form {
   display: flex;
@@ -107,9 +98,7 @@
     padding: 15px;
   }
 
-  .add-task-container h1 {
-    font-size: 30px;
-  }
+
 
   .add-task-container button[type="submit"] {
     font-size: 14px;
