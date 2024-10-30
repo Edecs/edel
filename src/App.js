@@ -52,11 +52,6 @@ const App = () => {
     setIsModalOpen(false); // إغلاق النافذة المنبثقة
   };
 
-  const handleLogoutCancel = () => {
-    setIsModalOpen(false); // إغلاق النافذة المنبثقة
-    clearTimeout(logoutTimer); // إلغاء المؤقت
-  };
-
   if (loading) {
     return <LoadingScreen />;
   }
@@ -108,21 +103,21 @@ const App = () => {
       <Modal
         isOpen={isModalOpen}
         contentLabel="تأكيد تسجيل الخروج"
-        ariaHideApp={false} // للتأكد من عدم إخفاء التطبيق
+        ariaHideApp={false}
         className="modal"
-        overlayClassName="overlay" // إضافة CSS للنافذة المنبثقة
+        overlayClassName="overlay"
+        shouldCloseOnOverlayClick={false} // لا يمكن إغلاق النافذة المنبثقة بالنقر خارجها
       >
         <h2>تأكيد تسجيل الخروج / Logout Confirmation</h2>
         <p>
           لقد كنت غير نشط لمدة 12 ساعة. هل ترغب في تسجيل الخروج؟ / You have been
-          inactive for 12 hours. Do you want to log out?
+          inactive for one minute. Do you want to log out?
         </p>
-        <button onClick={handleLogoutConfirm}>
-          نعم، تسجيل الخروج / Yes, log out
-        </button>
-        <button onClick={handleLogoutCancel}>
-          لا، ابقيني متصلاً / No, keep me logged in
-        </button>
+        <div>
+          <button onClick={handleLogoutConfirm}>
+            نعم، تسجيل الخروج / Yes, log out
+          </button>
+        </div>
       </Modal>
     </div>
   );
