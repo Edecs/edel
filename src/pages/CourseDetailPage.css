@@ -1,228 +1,98 @@
-/* Main container styling */
-.sub-course-detail-container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 25px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
-}
-
-/* Media container styling */
-.media-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.media-content {
+/* General container styling */
+.course-detail-container {
   width: 100%;
-  max-width: 850px;
-  margin-bottom: 20px;
+  margin: 40px auto;
+  background-color: #f8f9fa; /* Light background for better readability */
+  border: 1px solid #ddd; /* Light border for separation */
+  border-radius: 8px; /* Rounded corners for a softer look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Loading and error messages styling */
+.course-detail-container p {
   text-align: center;
+  font-size: 18px;
+  color: #333;
 }
 
-.media-content img,
-.media-content video {
-  width: 100%;
-  max-height: 500px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.error-message {
+  color: #d9534f; /* Red color for error message */
+  background-color: #f2dede; /* Light red background */
+  padding: 10px;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
 }
 
-/* Media navigation styling */
-.media-navigation {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
+/* Course title styling */
+.course-title {
+  font-size: 28px;
+  color: #094d50; /* Darker color to make the title stand out */
+  margin-bottom: 20px;
+  text-align: center; /* Center the title for a balanced look */
+  border-bottom: 2px solid #0e6d72; /* Accent line under the title */
+  padding-bottom: 10px;
 }
 
-.media-navigation button {
-  padding: 12px 25px;
-  background-color: #094d50;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  font-size: 16px;
+/* Sub-course list styling */
+.sub-course-list {
+  list-style: none; /* Remove default list styling */
+  padding: 0;
+  margin: 20px 0;
 }
 
-.media-navigation button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.media-navigation button:hover:not(:disabled) {
-  background-color: #13898f;
-  transform: translateY(-2px);
-}
-
-/* Question container styling */
-.question-container {
-  margin-top: 30px;
-}
-.question-navigation {
-  display: flex;
-  justify-content: space-between; /* يضع Next في اليمين و Previous في اليسار */
-  margin-bottom: 15px;
-}
-
-.question-navigation button {
-  padding: 12px 20px;
-  background-color: #094d50;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  font-size: 16px;
-}
-
-.question-navigation button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.question-navigation button:hover:not(:disabled) {
-  background-color: #13898f;
-  transform: translateY(-2px);
-}
-
-.question {
+.sub-course-item {
+  text-align: center;
+  margin-bottom: 20px;
+  background-color: #ffffff; /* White background for each item */
+  border: 1px solid #ddd;
+  border-radius: 4px;
   padding: 15px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.answer-option {
-  margin-bottom: 8px;
-}
-
-.answer-option input {
-  margin-right: 10px;
-}
-
-/* Submission result styling */
-.submission-result {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #f0f4f8;
-  border: 1px solid #d1e3f0;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.submission-result h2 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-.submission-result p {
-  margin: 5px 0;
-}
-
-/* Styling for the Submit button */
-.submit-button {
-  padding: 12px 30px;
-  background-color: #094d50;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 18px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto; /* To center the button */
-}
-
-/* Hover effect for the button */
-.submit-button:hover {
-  background-color: #198c92;
-  transform: translateY(-2px);
-}
-
-/* Active effect for the button */
-.submit-button:active {
-  background-color: #0f8086;
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Disabled state for the button */
-.submit-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* Question overview with clickable squares */
-.question-overview {
-  margin-top: 30px;
-}
-
-.question-squares {
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effect */
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.question-square {
-  width: 40px;
-  height: 40px;
-  display: flex;
+  justify-content: space-between; /* Align items properly */
   align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: white;
-  border-radius: 5px;
+}
+
+.sub-course-item:hover {
+  transform: translateY(-2px); /* Slightly raise the item on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+}
+.sub-course-item {
   cursor: pointer;
-  transition: transform 0.2s;
 }
 
-.question-square:hover {
-  transform: scale(1.1);
+.sub-course-item a {
+  text-align: center;
+  margin: auto;
+  text-decoration: none;
+  color: #0e6d72;
 }
 
-.answered {
-  background-color: green;
+.sub-course-item a:hover {
+  color: #007bff;
 }
 
-.unanswered {
-  background-color: red;
-}
-/* Media navigation styling */
-.media-navigation {
-  display: flex;
-  justify-content: space-between; /* Ensure buttons are spaced to left and right */
-  gap: 15px; /* Space between buttons */
-  margin-top: 10px;
+.no-access {
+  background-color: #f9f9f9; /* Greyed out background for no access */
+  color: #999; /* Light grey text */
+  cursor: not-allowed; /* Change cursor to indicate non-clickable */
 }
 
-.media-navigation button {
-  padding: 12px 25px;
-  background-color: #094d50;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  font-size: 16px;
+/* No sub-courses message styling */
+.no-sub-courses {
+  color: #777;
+  text-align: center;
+  font-style: italic;
 }
 
-.media-navigation button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-title {
+    font-size: 24px;
+  }
 
-.media-navigation button:hover:not(:disabled) {
-  background-color: #13898f;
-  transform: translateY(-2px); /* Slight lift effect on hover */
+  .sub-course-item {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    text-align: center;
+  }
 }
