@@ -862,7 +862,7 @@
   width: calc(100% - 20px); /* Full width minus padding */
   padding: 8px; /* Padding inside input */
   margin-bottom: 16px; /* Space below inputs */
-  border: 1px solid #007bff; /* Blue border */
+  border: 1px solid #094d50; /* Blue border */
   border-radius: 4px; /* Slightly rounded corners */
 }
 
