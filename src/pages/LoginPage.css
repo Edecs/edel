@@ -122,8 +122,8 @@ body {
 /* أيقونة التبديل لرؤية كلمة المرور */
 .password-toggle {
   position: absolute;
-  top: 38%;
-  right: 8px;
+  top: 49%;
+  right: 15px;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 14px;
