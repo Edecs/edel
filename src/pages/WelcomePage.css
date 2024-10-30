@@ -1,9 +1,3 @@
-/* src/pages/WelcomePage.css */
-
-body {
-  font-family: "Roboto", sans-serif;
-}
-
 .container {
   border-radius: 30px;
   margin: 50px 20px;
@@ -73,10 +67,6 @@ h2 {
   font-size: 1.1rem; /* حجم النص */
 }
 
-.task-card strong {
-  font-weight: bold;
-}
-
 .task-card img {
   max-width: 100%;
   border-radius: 8px; /* تقليل زاوية حواف الصورة */
@@ -98,7 +88,6 @@ h2 {
   color: #333;
   font-size: 1rem;
   /* حجم الخط */
-  font-weight: bold;
   position: relative;
   overflow: hidden;
   text-decoration: none;
