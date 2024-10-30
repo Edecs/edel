@@ -110,12 +110,12 @@ const App = () => {
       >
         <h2>تأكيد تسجيل الخروج / Logout Confirmation</h2>
         <p>
-          لقد كنت غير نشط لمدة 12 ساعة. هل ترغب في تسجيل الخروج؟ / You have been
-          inactive for one minute. Do you want to log out?
+        لقد كنت غير نشط  / You have been not
+          inactive
         </p>
         <div>
           <button onClick={handleLogoutConfirm}>
-            نعم، تسجيل الخروج / Yes, log out
+           تسجيل الخروج /  log out
           </button>
         </div>
       </Modal>
