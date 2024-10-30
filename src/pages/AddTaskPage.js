@@ -130,7 +130,7 @@ const AddTaskPage = () => {
         <div className="add-task-container">
           <form onSubmit={handleSubmit}>
             <div className="dd">
-              <label htmlFor="dropboxLink">Dropbox File Link:</label>
+              <label htmlFor="dropboxLink">Dropbox File Link</label>
               <input
                 type="text"
                 id="dropboxLink"
@@ -140,7 +140,7 @@ const AddTaskPage = () => {
               />
             </div>
             <div>
-              <label htmlFor="message">Message:</label>
+              <label htmlFor="message">Message</label>
               <input
                 type="text"
                 id="message"
@@ -152,7 +152,7 @@ const AddTaskPage = () => {
 
             <div className="search-container">
               <div className="search-field">
-                <label htmlFor="search">Search by Email or Name:</label>
+                <label htmlFor="search">Search by Email or Name</label>
                 <input
                   type="text"
                   id="search"
@@ -162,7 +162,7 @@ const AddTaskPage = () => {
                 />
               </div>
               <div className="search-field">
-                <label htmlFor="searchDepartment">Search by Department:</label>
+                <label htmlFor="searchDepartment">Search by Department</label>
                 <input
                   type="text"
                   id="searchDepartment"
