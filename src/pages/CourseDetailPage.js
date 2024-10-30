@@ -61,42 +61,57 @@ const CourseDetailPage = () => {
   }, [fetchCourseDetails]);
 
   return (
-    <div className="course-detail-container">
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p className="error-message">Error: {error}</p>
-      ) : course ? (
-        <div className="course-detail-content">
-          <h1 className="course-title">{course.name}</h1>
-          {Object.values(course.subCourses || {}).filter(
-            (subCourse) => userAccess[subCourse.name]?.hasAccess
-          ).length > 0 ? (
-            <ul className="sub-course-list">
-              {Object.entries(course.subCourses)
-                .filter(
-                  ([subCourseId, subCourse]) =>
-                    userAccess[subCourse.name]?.hasAccess
-                )
-                .map(([subCourseId, subCourse]) => (
-                  <li key={subCourseId} className="sub-course-item">
-                    <Link
-                      to={`/sub-courses/${subCourseId}?mainCourseId=${courseId}`}
+    <div className="course-detail">
+      <header>
+        <h1 className="header-h1">{course ? course.name : "Loading..."}</h1>
+      </header>
+      <div className="course-detail-container">
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p className="error-message">Error: {error}</p>
+        ) : course ? (
+          <div className="course-detail-content">
+            {Object.values(course.subCourses || {}).filter(
+              (subCourse) => userAccess[subCourse.name]?.hasAccess
+            ).length > 0 ? (
+              <ul className="sub-course-list">
+                {Object.entries(course.subCourses)
+                  .filter(
+                    ([subCourseId, subCourse]) =>
+                      userAccess[subCourse.name]?.hasAccess
+                  )
+                  .map(([subCourseId, subCourse]) => (
+                    <li
+                      key={subCourseId}
+                      className="sub-course-item"
+                      onClick={() =>
+                        (window.location.href = `/sub-courses/${subCourseId}?mainCourseId=${courseId}`)
+                      }
                     >
-                      {subCourse.name}
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          ) : (
-            <p className="no-sub-courses">
-              No sub-courses available for this course.
-            </p>
-          )}
-        </div>
-      ) : (
-        <p>No course details available.</p>
-      )}
+                      <Link
+                        to={`/sub-courses/${subCourseId}?mainCourseId=${courseId}`}
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          height: "100%",
+                        }} // يغطي الرابط كامل مساحة العنصر
+                      >
+                        {subCourse.name}
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p className="no-sub-courses">
+                No sub-courses available for this course.
+              </p>
+            )}
+          </div>
+        ) : (
+          <p>No course details available.</p>
+        )}
+      </div>
     </div>
   );
 };
