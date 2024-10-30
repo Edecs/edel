@@ -316,23 +316,21 @@ const SubCourseDetailPage = () => {
               ))}{" "}
             </div>
             <div className="question-navigation">
-              <button
+              <NavigationButton
                 onClick={handlePrevQuestion}
                 disabled={currentQuestionIndex === 0}
-                style={{
-                  display: currentQuestionIndex > 0 ? "inline-block" : "none",
-                }}
-              >
-                Previous Question
-              </button>
+                visible={currentQuestionIndex > 0} // يظهر فقط عند وجود أسئلة سابقة
+                text="Previous Question"
+              />
 
-              <button
+              <NavigationButton
                 onClick={handleNextQuestion}
                 disabled={currentQuestionIndex === totalQuestions - 1}
-              >
-                Next Question
-              </button>
+                visible={currentQuestionIndex < totalQuestions - 1} // يظهر فقط عند وجود أسئلة تالية
+                text="Next Question"
+              />
             </div>
+
             <div className="question-overview">
               <h3>Question Overview</h3>
               <div className="question-squares">
@@ -356,7 +354,11 @@ const SubCourseDetailPage = () => {
         )}
 
         <div className="submission-container">
-          <button className="submit-button" onClick={handleSubmit}>
+          <button
+            className="submit-button"
+            onClick={handleSubmit}
+            disabled={answeredQuestionsCount < totalQuestions} // يتم التفعيل عند اكتمال الإجابة على كل الأسئلة
+          >
             Submit Answers
           </button>
         </div>
@@ -367,7 +369,10 @@ const SubCourseDetailPage = () => {
             <p>Name: {submissionResult.userName}</p>
             <p>Email: {submissionResult.email}</p>
             <p>Course ID: {submissionResult.courseId}</p>
-            <p>Score: {submissionResult.percentageSuccess}%</p>
+            <p>
+              Score: {parseFloat(submissionResult.percentageSuccess).toFixed(2)}
+              %
+            </p>
             <p>Total Time: {submissionResult.totalTime} seconds</p>
           </div>
         )}
