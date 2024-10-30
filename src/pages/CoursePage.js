@@ -368,384 +368,406 @@ function CoursePage() {
   }, [db, selectedCourse, selectedSubCourse]);
 
   // Rest of your JSX...
-
+  // تأكد من أن دالة clearPopupFields مكتوبة بشكل صحيح
+  const clearPopupFields = () => {
+    setNewQuestion(""); // تصفير السؤال
+    setAnswers([]); // مسح قائمة الإجابات
+    setIsEditMode(false); // تصفير وضع التحرير
+  };
   return (
-    <div className="course-page">
-      <h1>Courses Management</h1>
+    <div className="course">
+      <header>
+        <h1 className="header-h1">Courses Management</h1>
+      </header>
+      <div className="course-page">
+        <details>
+          <summary>Add New</summary>
+          <div className="course-management-content">
+            <div className="add-course-section">
+              <div className="courses-container">
+                <h2>Main Courses</h2>
 
-      <details>
-        <summary>Add New</summary>
-        <div className="course-management-content">
-          <div className="add-course-section">
-            <div className="courses-container">
-              <h2>Main Courses</h2>
-
-              <div className="course-buttons">
-                {filteredCourses.map((course) => (
-                  <button
-                    key={course.id}
-                    onClick={() => {
-                      setSelectedCourse(course.id);
-                    }}
-                  >
-                    {course.name}
-                  </button>
-                ))}
-              </div>
-              <div className="course-form-box">
-                <h2>Add New Course</h2>
-                <div className="add-sub-course-form">
-                  <input
-                    type="text"
-                    placeholder="Enter new course name"
-                    value={newCourseName}
-                    onChange={(e) => setNewCourseName(e.target.value)}
-                  />
-                </div>
-
-                {/* مربع تحميل صورة الدورة */}
-                <h2>Upload Course Thumbnail</h2>
-                <div className="add-sub-course-form">
-                  <input
-                    type="text"
-                    value={thumbnail}
-                    onChange={(e) => setThumbnail(e.target.value)}
-                    placeholder="Enter thumbnail URL (Dropbox link)"
-                  />
-                </div>
-                <div className="button-container">
-                  <button className="cinter" onClick={handleAddCourse}>
-                    Add Course
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* حاوية المربعات */}
-            {/* مربع إضافة دورة جديدة */}
-            <div className="courses-container">
-              <h2>Sub Courses</h2>
-              <ul className="sub-course-buttons">
-                {subCourses.map((subCourse) => (
-                  <li key={subCourse.id} value={subCourse.id} disabled>
-                    {subCourse.name}
-                  </li>
-                ))}
-              </ul>
-
-              {/* مربع إضافة الدورات الفرعية */}
-              <div className="sub-course-box">
-                <h2>Add Sub Courses</h2>
-                <div className="add-sub-course-form">
-                  <input
-                    type="text"
-                    value={newSubCourseName}
-                    onChange={(e) => setNewSubCourseName(e.target.value)}
-                    placeholder="Add new sub-course"
-                  />
-                </div>
-                <div className="button-container">
-                  <button className="a1" onClick={handleAddSubCourse}>
-                    Add Sub-Course
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details>
-        <summary>Manage Content</summary>
-        <div className="course-media-container">
-          <div className="course-selection-container">
-            <div className="course-selection">
-              <div className="course-dropdown">
-                <h2>ٍSelect Main Course</h2>
-
-                <select
-                  value={selectedCourse}
-                  onChange={(e) => setSelectedCourse(e.target.value)}
-                  className="dropdown"
-                >
-                  <option value="" disabled>
-                    Select a main course
-                  </option>
+                <div className="course-buttons">
                   {filteredCourses.map((course) => (
-                    <option key={course.id} value={course.id}>
+                    <button
+                      key={course.id}
+                      onClick={() => {
+                        setSelectedCourse(course.id);
+                      }}
+                    >
                       {course.name}
-                    </option>
+                    </button>
                   ))}
-                </select>
-              </div>
-
-              <div className="course-dropdown">
-                <h2>Select Sub Course</h2>
-                <select
-                  value={selectedSubCourse}
-                  onChange={(e) => setSelectedSubCourse(e.target.value)}
-                  className="dropdown"
-                  disabled={!selectedCourse}
-                >
-                  <option value="" disabled>
-                    Select a sub-course
-                  </option>
-                  {subCourses.map((subCourse) => (
-                    <option key={subCourse.id} value={subCourse.id}>
-                      {subCourse.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {selectedSubCourse && (
-              <div className="questions-list">
-                <div className="gg1">
-                  <h2>Questions </h2>
-                  <button className="right" onClick={() => setShowPopup(true)}>
-                    Add New
-                  </button>
                 </div>
-
-                {questions.map((question) => (
-                  <div key={question.id} className="question-item">
-                    <div className="question-content">
-                      <h4>{question.text}</h4>
-
-                      {/* عرض الإجابات تحت السؤال */}
-                      <div className="answers-container">
-                        <div className="answer-list">
-                          {question.answers.map((answer) => (
-                            <div key={answer.id} className="answer-content">
-                              <p>{answer.text}</p>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="action-buttons">
-                          <button
-                            onClick={() => {
-                              setIsModalOpen(true);
-                              handleEditQuestion(question);
-                            }}
-                          >
-                            Edit
-                          </button>
-
-                          <button
-                            onClick={() => handleDeleteQuestion(question.id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      {isModalOpen && (
-                        <div className="popup-overlay">
-                          <div className="popup-content">
-                            <button
-                              className="close-popup-btn"
-                              onClick={() => setIsModalOpen(false)}
-                            >
-                              X{" "}
-                            </button>
-                            <h3>
-                              {isEditMode
-                                ? "Edit Question"
-                                : "Add New Question"}
-                            </h3>
-
-                            <input
-                              type="text"
-                              value={newQuestion}
-                              onChange={(e) => setNewQuestion(e.target.value)}
-                              placeholder="Enter question"
-                            />
-                            <h4>Answers:</h4>
-                            {answers.map((answer, index) => (
-                              <div key={index}>
-                                <input
-                                  type="text"
-                                  value={answer.text}
-                                  onChange={(e) => {
-                                    const newAnswers = [...answers];
-                                    newAnswers[index].text = e.target.value;
-                                    setAnswers(newAnswers);
-                                  }}
-                                  placeholder="Enter answer"
-                                />
-                                <label className="align-left">
-                                  <input
-                                    type="checkbox"
-                                    checked={answer.correct}
-                                    onChange={() => {
-                                      const newAnswers = [...answers];
-                                      newAnswers[index].correct =
-                                        !newAnswers[index].correct;
-
-                                      if (
-                                        !newAnswers.some((ans) => ans.correct)
-                                      ) {
-                                        newAnswers[index].correct = true;
-                                      }
-
-                                      setAnswers(newAnswers);
-                                    }}
-                                  />
-                                  Correct Answer
-                                </label>
-                              </div>
-                            ))}
-                            <button
-                              className="add-answer-btn"
-                              onClick={handleAddAnswer}
-                            >
-                              Add Answer
-                            </button>
-                            <button onClick={handleUpdateQuestion}>
-                              {isEditMode ? "Save Changes" : "Add Question"}
-                            </button>
-
-                            {error && <p className="error-message">{error}</p>}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                <div className="course-form-box">
+                  <h2>Add New Course</h2>
+                  <div className="add-sub-course-form">
+                    <input
+                      type="text"
+                      placeholder="Enter new course name"
+                      value={newCourseName}
+                      onChange={(e) => setNewCourseName(e.target.value)}
+                    />
                   </div>
-                ))}
-                <details>
-                  <summary>Upload Media for Selected Sub-course</summary>
-                  <input
-                    type="text"
-                    value={newImageUrl}
-                    onChange={(e) => setNewImageUrl(e.target.value)}
-                    placeholder="Add Image URL"
-                  />
-                  <input
-                    type="text"
-                    value={newVideoUrl}
-                    onChange={(e) => setNewVideoUrl(e.target.value)}
-                    placeholder="Add Video URL"
-                  />
-                  <div className="a1">
-                    <button className="a2" onClick={handleAddMedia}>
-                      Add Media
+
+                  {/* مربع تحميل صورة الدورة */}
+                  <h2>Upload Course Thumbnail</h2>
+                  <div className="add-sub-course-form">
+                    <input
+                      type="text"
+                      value={thumbnail}
+                      onChange={(e) => setThumbnail(e.target.value)}
+                      placeholder="Enter thumbnail URL (Dropbox link)"
+                    />
+                  </div>
+                  <div className="button-container">
+                    <button className="cinter" onClick={handleAddCourse}>
+                      Add Course
                     </button>
                   </div>
-                  <div className="media-display">
-                    {media.images &&
-                      media.images
-                        .sort((a, b) => a.id - b.id)
-                        .map((mediaItem) => (
-                          <div key={mediaItem.id} className="media-item1">
-                            <img
-                              src={mediaItem.url}
-                              alt={`Media ${mediaItem.id}`}
-                            />
-                            <div className="delete-button-container">
-                              <button
-                                className="vim"
-                                onClick={() =>
-                                  handleDeleteMedia("images", mediaItem.id)
-                                }
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                </div>
+              </div>
 
-                    {media.videos &&
-                      media.videos
-                        .sort((a, b) => a.id - b.id)
-                        .map((mediaItem) => (
-                          <div key={mediaItem.id} className="media-item1">
-                            <video src={mediaItem.url} controls />
-                            <div className="delete-button-container">
-                              <button
-                                className="vim"
-                                onClick={() =>
-                                  handleDeleteMedia("videos", mediaItem.id)
-                                }
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+              {/* حاوية المربعات */}
+              {/* مربع إضافة دورة جديدة */}
+              <div className="courses-container">
+                <h2>Sub Courses</h2>
+                <ul className="sub-course-buttons">
+                  {subCourses.map((subCourse) => (
+                    <li key={subCourse.id} value={subCourse.id} disabled>
+                      {subCourse.name}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* مربع إضافة الدورات الفرعية */}
+                <div className="sub-course-box">
+                  <h2>Add Sub Courses</h2>
+                  <div className="add-sub-course-form">
+                    <input
+                      type="text"
+                      value={newSubCourseName}
+                      onChange={(e) => setNewSubCourseName(e.target.value)}
+                      placeholder="Add new sub-course"
+                    />
                   </div>
-                </details>
+                  <div className="button-container">
+                    <button className="a1" onClick={handleAddSubCourse}>
+                      Add Sub-Course
+                    </button>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      </details>
-
-      {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <button
-              className="close-popup-btn"
-              onClick={() => setShowPopup(false)}
-            >
-              X
-            </button>
-            <h3>Add New Question</h3>
-            <h4 className="gg">Question:</h4>
-            <input
-              type="text"
-              value={newQuestion}
-              onChange={(e) => setNewQuestion(e.target.value)}
-              placeholder="Enter new question"
-            />
-            <div className="Add-answer">
-              <div className="gg">
-                <h4>Answers: </h4>
-              </div>
-              <button className="right2" onClick={handleAddAnswer}>
-                Add New
-              </button>
             </div>
-            {answers.map((answer, index) => (
-              <div key={index}>
-                <input
-                  type="text"
-                  value={answer.text}
-                  onChange={(e) => {
-                    const newAnswers = [...answers];
-                    newAnswers[index].text = e.target.value;
-                    setAnswers(newAnswers);
-                  }}
-                  placeholder="Enter answer"
-                />
-                <label className="align-left">
+          </div>
+        </details>
+
+        <details>
+          <summary>Manage Content</summary>
+          <div className="course-media-container">
+            <div className="course-selection-container">
+              <div className="course-selection">
+                <div className="course-dropdown">
+                  <h2>ٍSelect Main Course</h2>
+
+                  <select
+                    value={selectedCourse}
+                    onChange={(e) => setSelectedCourse(e.target.value)}
+                    className="dropdown"
+                  >
+                    <option value="" disabled>
+                      Select a main course
+                    </option>
+                    {filteredCourses.map((course) => (
+                      <option key={course.id} value={course.id}>
+                        {course.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="course-dropdown">
+                  <h2>Select Sub Course</h2>
+                  <select
+                    value={selectedSubCourse}
+                    onChange={(e) => setSelectedSubCourse(e.target.value)}
+                    className="dropdown"
+                    disabled={!selectedCourse}
+                  >
+                    <option value="" disabled>
+                      Select a sub-course
+                    </option>
+                    {subCourses.map((subCourse) => (
+                      <option key={subCourse.id} value={subCourse.id}>
+                        {subCourse.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {selectedSubCourse && (
+                <div className="questions-list">
+                  <div className="gg1">
+                    <h2>Questions </h2>
+                    <button
+                      className="right"
+                      onClick={() => setShowPopup(true)}
+                    >
+                      Add New
+                    </button>
+                  </div>
+
+                  {questions.map((question) => (
+                    <div key={question.id} className="question-item">
+                      <div className="question-content">
+                        <h4>{question.text}</h4>
+
+                        {/* عرض الإجابات تحت السؤال */}
+                        <div className="answers-container">
+                          <div className="answer-list">
+                            {question.answers.map((answer) => (
+                              <div key={answer.id} className="answer-content">
+                                <p>{answer.text}</p>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="action-buttons">
+                            <button
+                              onClick={() => {
+                                setIsModalOpen(true);
+                                handleEditQuestion(question);
+                              }}
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              onClick={() => handleDeleteQuestion(question.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        {isModalOpen && (
+                          <div className="popup-overlay">
+                            <div className="popup-content">
+                              <button
+                                className="close-popup-btn"
+                                onClick={() => {
+                                  setIsModalOpen(false);
+                                  clearPopupFields(); // تنظيف الحقول عند الإغلاق
+                                }}
+                              >
+                                X
+                              </button>
+                              <h3>
+                                {isEditMode
+                                  ? "Edit Question"
+                                  : "Add New Question"}
+                              </h3>
+
+                              <input
+                                type="text"
+                                value={newQuestion}
+                                onChange={(e) => setNewQuestion(e.target.value)}
+                                placeholder="Enter question"
+                              />
+                              <h4>Answers:</h4>
+                              {answers.map((answer, index) => (
+                                <div key={index}>
+                                  <input
+                                    type="text"
+                                    value={answer.text}
+                                    onChange={(e) => {
+                                      const newAnswers = [...answers];
+                                      newAnswers[index].text = e.target.value;
+                                      setAnswers(newAnswers);
+                                    }}
+                                    placeholder="Enter answer"
+                                  />
+                                  <label className="align-left">
+                                    <input
+                                      type="checkbox"
+                                      checked={answer.correct}
+                                      onChange={() => {
+                                        const newAnswers = [...answers];
+                                        newAnswers[index].correct =
+                                          !newAnswers[index].correct;
+
+                                        if (
+                                          !newAnswers.some((ans) => ans.correct)
+                                        ) {
+                                          newAnswers[index].correct = true;
+                                        }
+
+                                        setAnswers(newAnswers);
+                                      }}
+                                    />
+                                    Correct Answer
+                                  </label>
+                                </div>
+                              ))}
+                              <button
+                                className="add-answer-btn"
+                                onClick={handleAddAnswer}
+                              >
+                                Add Answer
+                              </button>
+                              <button
+                                onClick={() => {
+                                  handleUpdateQuestion();
+                                  clearPopupFields(); // تنظيف الحقول بعد الحفظ
+                                }}
+                              >
+                                {isEditMode ? "Save Changes" : "Add Question"}
+                              </button>
+
+                              {error && (
+                                <p className="error-message">{error}</p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  <details>
+                    <summary>Upload Media for Selected Sub-course</summary>
+                    <input
+                      type="text"
+                      value={newImageUrl}
+                      onChange={(e) => setNewImageUrl(e.target.value)}
+                      placeholder="Add Image URL"
+                    />
+                    <input
+                      type="text"
+                      value={newVideoUrl}
+                      onChange={(e) => setNewVideoUrl(e.target.value)}
+                      placeholder="Add Video URL"
+                    />
+                    <div className="a1">
+                      <button className="a2" onClick={handleAddMedia}>
+                        Add Media
+                      </button>
+                    </div>
+                    <div className="media-display">
+                      {media.images &&
+                        media.images
+                          .sort((a, b) => a.id - b.id)
+                          .map((mediaItem) => (
+                            <div key={mediaItem.id} className="media-item1">
+                              <img
+                                src={mediaItem.url}
+                                alt={`Media ${mediaItem.id}`}
+                              />
+                              <div className="delete-button-container">
+                                <button
+                                  className="vim"
+                                  onClick={() =>
+                                    handleDeleteMedia("images", mediaItem.id)
+                                  }
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+
+                      {media.videos &&
+                        media.videos
+                          .sort((a, b) => a.id - b.id)
+                          .map((mediaItem) => (
+                            <div key={mediaItem.id} className="media-item1">
+                              <video src={mediaItem.url} controls />
+                              <div className="delete-button-container">
+                                <button
+                                  className="vim"
+                                  onClick={() =>
+                                    handleDeleteMedia("videos", mediaItem.id)
+                                  }
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                    </div>
+                  </details>
+                </div>
+              )}
+            </div>
+          </div>
+        </details>
+
+        {showPopup && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <button
+                className="close-popup-btn"
+                onClick={() => setShowPopup(false)}
+              >
+                X
+              </button>
+              <h3>Add New Question</h3>
+              <h4 className="gg">Question:</h4>
+              <input
+                type="text"
+                value={newQuestion}
+                onChange={(e) => setNewQuestion(e.target.value)}
+                placeholder="Enter new question"
+              />
+              <div className="Add-answer">
+                <div className="gg">
+                  <h4>Answers: </h4>
+                </div>
+                <button className="right2" onClick={handleAddAnswer}>
+                  Add New
+                </button>
+              </div>
+              {answers.map((answer, index) => (
+                <div key={index}>
                   <input
-                    type="checkbox"
-                    checked={answer.correct}
-                    onChange={() => {
+                    type="text"
+                    value={answer.text}
+                    onChange={(e) => {
                       const newAnswers = [...answers];
-                      newAnswers[index].correct = !newAnswers[index].correct;
+                      newAnswers[index].text = e.target.value;
                       setAnswers(newAnswers);
                     }}
+                    placeholder="Enter answer"
                   />
-                  Correct Answer
-                </label>
-              </div>
-            ))}
-            <button
-              className="save-question-btn"
-              onClick={handleAddNewQuestion}
-            >
-              Save
-            </button>
+                  <label className="align-left">
+                    <input
+                      type="checkbox"
+                      checked={answer.correct}
+                      onChange={() => {
+                        const newAnswers = [...answers];
+                        newAnswers[index].correct = !newAnswers[index].correct;
+                        setAnswers(newAnswers);
+                      }}
+                    />
+                    Correct Answer
+                  </label>
+                </div>
+              ))}
+              <button
+                className="save-question-btn"
+                onClick={handleAddNewQuestion}
+              >
+                Save
+              </button>
 
-            {error && <p className="error-message">{error}</p>}
+              {error && <p className="error-message">{error}</p>}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
