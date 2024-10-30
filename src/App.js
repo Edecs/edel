@@ -107,16 +107,22 @@ const App = () => {
       {/* نافذة منبثقة لتأكيد تسجيل الخروج */}
       <Modal
         isOpen={isModalOpen}
-        onRequestClose={handleLogoutCancel}
-        contentLabel="Logout Confirmation"
+        contentLabel="تأكيد تسجيل الخروج"
         ariaHideApp={false} // للتأكد من عدم إخفاء التطبيق
         className="modal"
         overlayClassName="overlay" // إضافة CSS للنافذة المنبثقة
       >
-        <h2>تأكيد تسجيل الخروج</h2>
-        <p>لقد كنت غير نشط لمدة 12 ساعة. هل ترغب في تسجيل الخروج؟</p>
-        <button onClick={handleLogoutConfirm}>نعم، تسجيل الخروج</button>
-        <button onClick={handleLogoutCancel}>لا، ابقيني متصلاً</button>
+        <h2>تأكيد تسجيل الخروج / Logout Confirmation</h2>
+        <p>
+          لقد كنت غير نشط لمدة 12 ساعة. هل ترغب في تسجيل الخروج؟ / You have been
+          inactive for 12 hours. Do you want to log out?
+        </p>
+        <button onClick={handleLogoutConfirm}>
+          نعم، تسجيل الخروج / Yes, log out
+        </button>
+        <button onClick={handleLogoutCancel}>
+          لا، ابقيني متصلاً / No, keep me logged in
+        </button>
       </Modal>
     </div>
   );
