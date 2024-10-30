@@ -44,6 +44,27 @@
   transition: background-color 0.3s, color 0.3s;
   margin: 10px 0; /* إضافة هامش لتجنب التداخل في الشاشات الصغيرة */
 }
+.addus {
+  margin-top: 20px !important;
+  text-align: center;
+  width: 90px;
+  margin: auto;
+  display: flex;
+  justify-content: center; /* توسيط أفقي */
+  align-items: center; /* توسيط عمودي */
+  background-color: #ffffff !important; /* لون الخلفية للأزرار */
+  color: #094d50 !important; /* لون النص */
+  border: 1px solid #094d509a !important; /* تحديد لون الحدود وسماكتها */
+  border-radius: 4px; /* زوايا مدورة */
+  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
+}
+
+.addus:hover {
+  background-color: #094d50 !important; /* تغيير لون الخلفية عند التحويم */
+  color: #ffffff !important; /* تغيير لون النص عند التحويم */
+  transform: translateY(-2px); /* رفع خفيف عند التحويم */
+}
 
 .admin-page .main-content {
   margin: auto;
