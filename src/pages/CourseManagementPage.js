@@ -231,8 +231,12 @@ function CourseManagementPage() {
   const enrolledUsersToDisplay = selectedCourse ? filteredEnrolledUsers : [];
 
   return (
-    <div className="course-management-page">
-      <h1>Assign Courses</h1>
+    <div className="course-management">
+      <header>
+        <h1 className="header-h1">Assign Courses</h1>
+      </header>
+      <div className="course-management-page">
+
       <div className="search-box">
         <input
           type="text"
@@ -310,6 +314,8 @@ function CourseManagementPage() {
         </div>
       </div>
     </div>
+    </div>
+
   );
 }
 
