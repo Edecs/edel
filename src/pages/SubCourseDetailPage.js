@@ -245,8 +245,11 @@ const SubCourseDetailPage = () => {
   ).length;
 
   return (
-    <div className="sub-course-detail-container">
-      <h1>{subCourse.name}</h1>
+    <div className="sub-course-detail">
+      <header>
+        <h1 className="header-h1">{subCourse.name}</h1>
+      </header>    <div className="sub-course-detail-container">
+
       <p>{subCourse.description}</p>
       <div className="media-container">
         {currentMedia && (
@@ -342,7 +345,11 @@ const SubCourseDetailPage = () => {
           <p>Total Time: {submissionResult.totalTime} seconds</p>
         </div>
       )}
-    </div>
+
+</div>
+</div>
+
+
   );
 };
 
