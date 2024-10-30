@@ -368,7 +368,7 @@ function AdminPage() {
               </select>
             )}
 
-            <button onClick={handleAddUser}>Add User</button>
+            <button className="addus" onClick={handleAddUser}>Add</button>
           </div>
         )}{" "}
       </div>
