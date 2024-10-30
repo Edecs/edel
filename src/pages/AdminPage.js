@@ -172,200 +172,206 @@ function AdminPage() {
   };
 
   return (
-    <div className="admin-page">
-      <h1>Admin Dashboard</h1>
-      <header className="admin-header">
-        <button className="open-popup-btn" onClick={() => setIsPopupOpen(true)}>
-          Create User
-        </button>
-        <button
-          className="navigate-to-course-management-btn"
-          onClick={navigateToCourseManagementPage}
-        >
-          Assign Courses
-        </button>
-        <button className="refresh-data-btn" onClick={handleRefreshData}>
-          Refresh Data
-        </button>
+    <div className="admin-page-all">
+      <header>
+        <h1 className="header-h1">Admin Dashboard</h1>
       </header>
-      <input
-        type="text"
-        placeholder="Search users..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <div className="main-content">
-        <div className="user-list4">
-          <h2>Users</h2>
-          {users
-            .filter((user) => {
-              const lowerCaseQuery = searchQuery.toLowerCase();
-              return (
-                user.name?.toLowerCase().includes(lowerCaseQuery) ||
-                user.department?.toLowerCase().includes(lowerCaseQuery) ||
-                user.email.toLowerCase().includes(lowerCaseQuery)
-              );
-            })
-            .map((user) => (
-              <div
-                key={user.email}
-                className="user-item"
-                onClick={() => setSelectedUser(user)} // Set selected user here
-              >
-                {user.name}
-              </div>
-            ))}
-        </div>
-
-        <div className="user-details">
-          {selectedUser && (
-            <>
-              <h2>User Details</h2>
-              <p>
-                <strong>Email:</strong> {selectedUser.email}
-              </p>
-              <p>
-                <strong>Name:</strong> {selectedUser.name}
-              </p>
-              <p>
-                <strong>Department:</strong>{" "}
-                {selectedUser.department || "Not assigned"}
-              </p>
-              <p>
-                <strong>Role:</strong>{" "}
-                {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
-              </p>
-              <h3>Sub-course Access</h3>
-              <input
-                type="text"
-                placeholder="Search courses..."
-                value={courseSearchQuery}
-                onChange={(e) => setCourseSearchQuery(e.target.value)}
-              />
-              {Object.entries(courses)
-                .filter(([courseId, course]) => {
-                  // Check if the user has access to the main course
-                  const hasMainCourseAccess =
-                    !!roles[selectedUser.email.replace(/\./g, ",")]?.courses?.[
-                      courseId
-                    ]?.hasAccess;
-                  return (
-                    hasMainCourseAccess &&
-                    (course.name
-                      .toLowerCase()
-                      .includes(courseSearchQuery.toLowerCase()) ||
-                      (course.subCourses &&
-                        Object.values(course.subCourses).some((subCourse) =>
-                          subCourse.name
-                            .toLowerCase()
-                            .includes(courseSearchQuery.toLowerCase())
-                        )))
-                  );
-                })
-                .map(([courseId, course]) => (
-                  <div key={courseId}>
-                    <h4>{course.name}</h4>
-                    {course.subCourses && (
-                      <div className="subcourses-container">
-                        {" "}
-                        {/* إضافة الفئة هنا */}
-                        {Object.entries(course.subCourses).map(
-                          ([subCourseId, subCourse]) => (
-                            <div className="sup" key={subCourseId}>
-                              <input
-                                type="checkbox"
-                                checked={
-                                  !!roles[
-                                    selectedUser.email.replace(/\./g, ",")
-                                  ]?.courses?.[courseId]?.[subCourseId]
-                                    ?.hasAccess
-                                }
-                                onChange={() =>
-                                  handleToggleAccess(
-                                    selectedUser.email,
-                                    courseId,
-                                    subCourseId
-                                  )
-                                }
-                              />
-                              <label>
-                                {getSubCourseName(courseId, subCourseId)}
-                              </label>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-            </>
-          )}
-        </div>
-      </div>
-      {isPopupOpen && (
-        <div className="popup">
-          <button className="wa" onClick={() => setIsPopupOpen(false)}>
-            X
-          </button>
-
-          <h2>Create User</h2>
-
-          <input
-            type="text"
-            placeholder="Email"
-            value={newUserEmail}
-            onChange={(e) => setNewUserEmail(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Name"
-            value={newUserName}
-            onChange={(e) => setNewUserName(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={newUserPassword}
-            onChange={(e) => setNewUserPassword(e.target.value)}
-          />
-          <select
-            value={newUserRole}
-            onChange={(e) => setNewUserRole(e.target.value)}
+      <div className="admin-page">
+        <header className="admin-header">
+          <button
+            className="open-popup-btn"
+            onClick={() => setIsPopupOpen(true)}
           >
-            <option value="user">User</option>
-            {currentUserRole === "SuperAdmin" && (
-              <option value="admin">Admin</option>
-            )}
-          </select>
-          {currentUserRole === "SuperAdmin" ? (
-            <select
-              value={newUserDepartment}
-              onChange={(e) => setNewUserDepartment(e.target.value)}
-            >
-              <option value="">Select Department</option>
-              {departments.map((department) => (
-                <option key={department.id} value={department.name}>
-                  {department.name}
-                </option>
+            Create User
+          </button>
+          <button
+            className="navigate-to-course-management-btn"
+            onClick={navigateToCourseManagementPage}
+          >
+            Assign Courses
+          </button>
+          <button className="refresh-data-btn" onClick={handleRefreshData}>
+            Refresh Data
+          </button>
+        </header>
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <div className="main-content">
+          <div className="user-list4">
+            <h2>Users</h2>
+            {users
+              .filter((user) => {
+                const lowerCaseQuery = searchQuery.toLowerCase();
+                return (
+                  user.name?.toLowerCase().includes(lowerCaseQuery) ||
+                  user.department?.toLowerCase().includes(lowerCaseQuery) ||
+                  user.email.toLowerCase().includes(lowerCaseQuery)
+                );
+              })
+              .map((user) => (
+                <div
+                  key={user.email}
+                  className="user-item"
+                  onClick={() => setSelectedUser(user)} // Set selected user here
+                >
+                  {user.name}
+                </div>
               ))}
-            </select>
-          ) : (
-            <select
-              value={newUserDepartment}
-              onChange={(e) => setNewUserDepartment(e.target.value)}
-            >
-              <option value="">Select Department</option>
-              {departments.map((department) => (
-                <option key={department.id} value={department.name}>
-                  {department.name}
-                </option>
-              ))}
-            </select>
-          )}
+          </div>
 
-          <button onClick={handleAddUser}>Add User</button>
+          <div className="user-details">
+            {selectedUser && (
+              <>
+                <h2>User Details</h2>
+                <p>
+                  <strong>Email:</strong> {selectedUser.email}
+                </p>
+                <p>
+                  <strong>Name:</strong> {selectedUser.name}
+                </p>
+                <p>
+                  <strong>Department:</strong>{" "}
+                  {selectedUser.department || "Not assigned"}
+                </p>
+                <p>
+                  <strong>Role:</strong>{" "}
+                  {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
+                </p>
+                <h3>Sub-course Access</h3>
+                <input
+                  type="text"
+                  placeholder="Search courses..."
+                  value={courseSearchQuery}
+                  onChange={(e) => setCourseSearchQuery(e.target.value)}
+                />
+                {Object.entries(courses)
+                  .filter(([courseId, course]) => {
+                    // Check if the user has access to the main course
+                    const hasMainCourseAccess =
+                      !!roles[selectedUser.email.replace(/\./g, ",")]
+                        ?.courses?.[courseId]?.hasAccess;
+                    return (
+                      hasMainCourseAccess &&
+                      (course.name
+                        .toLowerCase()
+                        .includes(courseSearchQuery.toLowerCase()) ||
+                        (course.subCourses &&
+                          Object.values(course.subCourses).some((subCourse) =>
+                            subCourse.name
+                              .toLowerCase()
+                              .includes(courseSearchQuery.toLowerCase())
+                          )))
+                    );
+                  })
+                  .map(([courseId, course]) => (
+                    <div key={courseId}>
+                      <h4>{course.name}</h4>
+                      {course.subCourses && (
+                        <div className="subcourses-container">
+                          {" "}
+                          {/* إضافة الفئة هنا */}
+                          {Object.entries(course.subCourses).map(
+                            ([subCourseId, subCourse]) => (
+                              <div className="sup" key={subCourseId}>
+                                <input
+                                  type="checkbox"
+                                  checked={
+                                    !!roles[
+                                      selectedUser.email.replace(/\./g, ",")
+                                    ]?.courses?.[courseId]?.[subCourseId]
+                                      ?.hasAccess
+                                  }
+                                  onChange={() =>
+                                    handleToggleAccess(
+                                      selectedUser.email,
+                                      courseId,
+                                      subCourseId
+                                    )
+                                  }
+                                />
+                                <label>
+                                  {getSubCourseName(courseId, subCourseId)}
+                                </label>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+              </>
+            )}
+          </div>
         </div>
-      )}{" "}
+        {isPopupOpen && (
+          <div className="popup">
+            <button className="wa" onClick={() => setIsPopupOpen(false)}>
+              X
+            </button>
+
+            <h2>Create User</h2>
+
+            <input
+              type="text"
+              placeholder="Email"
+              value={newUserEmail}
+              onChange={(e) => setNewUserEmail(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Name"
+              value={newUserName}
+              onChange={(e) => setNewUserName(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={newUserPassword}
+              onChange={(e) => setNewUserPassword(e.target.value)}
+            />
+            <select
+              value={newUserRole}
+              onChange={(e) => setNewUserRole(e.target.value)}
+            >
+              <option value="user">User</option>
+              {currentUserRole === "SuperAdmin" && (
+                <option value="admin">Admin</option>
+              )}
+            </select>
+            {currentUserRole === "SuperAdmin" ? (
+              <select
+                value={newUserDepartment}
+                onChange={(e) => setNewUserDepartment(e.target.value)}
+              >
+                <option value="">Select Department</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={department.name}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <select
+                value={newUserDepartment}
+                onChange={(e) => setNewUserDepartment(e.target.value)}
+              >
+                <option value="">Select Department</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={department.name}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            <button onClick={handleAddUser}>Add User</button>
+          </div>
+        )}{" "}
+      </div>
     </div>
   );
 }
