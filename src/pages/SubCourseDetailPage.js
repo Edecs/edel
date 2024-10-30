@@ -313,7 +313,25 @@ const SubCourseDetailPage = () => {
                     {answer.text}
                   </label>
                 </div>
-              ))}
+              ))}{" "}
+            </div>
+            <div className="question-navigation">
+              <button
+                onClick={handlePrevQuestion}
+                disabled={currentQuestionIndex === 0}
+                style={{
+                  display: currentQuestionIndex > 0 ? "inline-block" : "none",
+                }}
+              >
+                Previous Question
+              </button>
+
+              <button
+                onClick={handleNextQuestion}
+                disabled={currentQuestionIndex === totalQuestions - 1}
+              >
+                Next Question
+              </button>
             </div>
             <div className="question-overview">
               <h3>Question Overview</h3>
