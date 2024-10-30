@@ -55,20 +55,24 @@ const DepartmentManagement = () => {
   };
 
   return (
-    <div className="department-management">
-      <h2>Department Management</h2>
-      <input
-        type="text"
-        placeholder="Enter department name"
-        value={newDepartment}
-        onChange={(e) => setNewDepartment(e.target.value)}
-      />
-      <button onClick={handleAddDepartment}>Add Department</button>
-      <ul>
-        {departments.map((department, index) => (
-          <li key={index}>{department}</li>
-        ))}
-      </ul>
+    <div className="department">
+      <header>
+        <h1 className="header-h1">Department Management</h1>
+      </header>
+      <div className="department-management">
+        <input
+          type="text"
+          placeholder="Enter department name"
+          value={newDepartment}
+          onChange={(e) => setNewDepartment(e.target.value)}
+        />
+        <button onClick={handleAddDepartment}>Add Department</button>
+        <ul>
+          {departments.map((department, index) => (
+            <li key={index}>{department}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
