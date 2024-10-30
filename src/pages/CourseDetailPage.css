@@ -2,7 +2,6 @@
 .course-detail-container {
   width: 100%;
   margin: 40px auto;
-  padding: 20px;
   background-color: #f8f9fa; /* Light background for better readability */
   border: 1px solid #ddd; /* Light border for separation */
   border-radius: 8px; /* Rounded corners for a softer look */
@@ -43,7 +42,7 @@
 
 .sub-course-item {
   text-align: center;
-  margin: auto;
+  margin-bottom: 20px;
   background-color: #ffffff; /* White background for each item */
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -88,10 +87,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .course-detail-container {
-    padding: 15px;
-  }
-
   .course-title {
     font-size: 24px;
   }
