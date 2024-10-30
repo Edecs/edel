@@ -137,104 +137,107 @@ const WelcomePage = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Welcome, {userName}</h1>
-      <h2>Courses</h2>
-      {loading ? (
-        <p>Loading ...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
-      ) : courses.length > 0 ? (
-        <div className="course-container">
-          {courses.map((course) => (
-            <Link
-              key={course.id}
-              to={`/courses/${course.id}`}
-              className="course-card"
-            >
-              {course.thumbnail ? (
-                <a
-                  href={course.thumbnail}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={course.thumbnail} alt={course.name} />
-                </a>
-              ) : (
-                <div
-                  className="default-image"
-                  style={{
-                    backgroundColor: `hsl(${Math.random() * 360}, 70%, 80%)`,
-                  }}
-                >
-                  <p>No Available Courses</p>
+    <div className="container-welcome">
+      <header>
+        <h1 className="header-h1">Welcome, {userName}</h1>
+      </header>
+      <div className="container">
+        <h2>Courses</h2>
+        {loading ? (
+          <p>Loading ...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : courses.length > 0 ? (
+          <div className="course-container">
+            {courses.map((course) => (
+              <Link
+                key={course.id}
+                to={`/courses/${course.id}`}
+                className="course-card"
+              >
+                {course.thumbnail ? (
+                  <a
+                    href={course.thumbnail}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={course.thumbnail} alt={course.name} />
+                  </a>
+                ) : (
+                  <div
+                    className="default-image"
+                    style={{
+                      backgroundColor: `hsl(${Math.random() * 360}, 70%, 80%)`,
+                    }}
+                  >
+                    <p>No Available Courses</p>
+                  </div>
+                )}
+                <h3>{course.name}</h3>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p>No Available Courses</p>
+        )}
+
+        <h2>Tasks</h2>
+        {loading ? (
+          <p>Loading tasks...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : tasks.length > 0 ? (
+          <div className="task-container">
+            {tasks.map((task) => (
+              <div key={task.id} className="task-card">
+                <p>{task.message}</p>
+                {/* عرض "Assigned to" فقط للشخص الذي أنشأ المهمة */}
+                {task.createdBy === currentUserEmail && (
+                  <p>
+                    Assigned to:{" "}
+                    {task.assignedEmails && task.assignedEmails.length > 0
+                      ? task.assignedEmails.join(", ")
+                      : "No one assigned"}
+                  </p>
+                )}
+                <p>Created by: {task.createdBy}</p>
+                <p>Date: {new Date(task.createdAt).toLocaleString()}</p>
+                <button onClick={() => openTaskModal(task)}>View Task</button>
+                {task.createdBy === currentUserEmail && (
+                  <button onClick={() => endTask(task.id)}>End Task</button>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No Tasks Available</p>
+        )}
+
+        {/* Modal Popup for Viewing Task */}
+        {showModal && selectedTask && (
+          <div className="modal">
+            <div className="modal-content">
+              <span className="close" onClick={closeTaskModal}>
+                &times;
+              </span>
+              <h2>Task Details</h2>
+              <p>{selectedTask.message}</p>
+              {selectedTask.dropboxLink && (
+                <div>
+                  <p>Dropbox Link:</p>
+                  <a
+                    href={selectedTask.dropboxLink.replace("dl=1", "dl=0")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View Dropbox File
+                  </a>
                 </div>
               )}
-              <h3>{course.name}</h3>
-            </Link>
-          ))}
-        </div>
-      ) : (
-        <p>No Available Courses</p>
-      )}
-
-      <h2>Tasks</h2>
-      {loading ? (
-        <p>Loading tasks...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
-      ) : tasks.length > 0 ? (
-        <div className="task-container">
-          {tasks.map((task) => (
-  <div key={task.id} className="task-card">
-    <p>{task.message}</p>
-    {/* عرض "Assigned to" فقط للشخص الذي أنشأ المهمة */}
-    {task.createdBy === currentUserEmail && (
-      <p>
-        Assigned to:{" "}
-        {task.assignedEmails && task.assignedEmails.length > 0
-          ? task.assignedEmails.join(", ")
-          : "No one assigned"}
-      </p>
-    )}
-    <p>Created by: {task.createdBy}</p>
-    <p>Date: {new Date(task.createdAt).toLocaleString()}</p>
-    <button onClick={() => openTaskModal(task)}>View Task</button>
-    {task.createdBy === currentUserEmail && (
-      <button onClick={() => endTask(task.id)}>End Task</button>
-    )}
-  </div>
-))}
-
-        </div>
-      ) : (
-        <p>No Tasks Available</p>
-      )}
-
-      {/* Modal Popup for Viewing Task */}
-      {showModal && selectedTask && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeTaskModal}>
-              &times;
-            </span>
-            <h2>Task Details</h2>
-            <p>{selectedTask.message}</p>
-            {selectedTask.dropboxLink && (
-              <div>
-                <p>Dropbox Link:</p>
-                <a
-                  href={selectedTask.dropboxLink.replace("dl=1", "dl=0")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Dropbox File
-                </a>
-              </div>
-            )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
