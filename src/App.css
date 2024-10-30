@@ -1,3 +1,15 @@
-.body{
-    background-color: #094d50;
+.header-h1 {
+  font-size: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #dbb42c;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 56px;
+  flex-wrap: wrap;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #094d50;
 }
