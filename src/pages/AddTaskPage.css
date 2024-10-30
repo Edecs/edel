@@ -59,6 +59,9 @@
 }
 
 .add-task-container button[type="submit"] {
+  width: 20%;
+  text-align: center;
+  margin: auto;
   padding: 12px 20px;
   background-color: #094d50;
   color: #fff;
@@ -158,7 +161,6 @@ input#message:focus {
 
 /* Styles for the label */
 .user-selection label {
-  font-weight: bold; /* جعل الخط سميكًا */
   color: #094d50; /* لون النص */
   display: block; /* جعل النص يشغل السطر بالكامل */
 }
@@ -195,7 +197,6 @@ input#message:focus {
 /* Optional: Styles for the checked state */
 .user-selection input[type="checkbox"]:checked + label {
   color: #0e6d72; /* تغيير لون النص إذا كان محددًا */
-  font-weight: bold; /* جعل النص سميكًا عند التحديد */
 }
 /* General styles for the user selection */
 .user-selection {
@@ -243,7 +244,6 @@ input#message:focus {
 
 /* Optional: Styles for checked state */
 .user-selection input[type="checkbox"]:checked + label {
-  font-weight: bold; /* جعل النص سميكًا عند التحديد */
   color: #0e6d72; /* تغيير لون النص عند التحديد */
 }
 
