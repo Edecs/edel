@@ -248,108 +248,113 @@ const SubCourseDetailPage = () => {
     <div className="sub-course-detail">
       <header>
         <h1 className="header-h1">{subCourse.name}</h1>
-      </header>    <div className="sub-course-detail-container">
-
-      <p>{subCourse.description}</p>
-      <div className="media-container">
-        {currentMedia && (
-          <div className="media-content">
-            {currentMedia.type === "image" && (
-              <div className="media-item">
-                <img
-                  src={convertDropboxLink(currentMedia.url)}
-                  alt="Course Media"
-                  style={{ width: "100%", height: "auto" }}
+      </header>
+      <div className="sub-course-detail-container">
+        <p>{subCourse.description}</p>
+        <div className="media-container">
+          {currentMedia && (
+            <div className="media-content">
+              {currentMedia.type === "image" && (
+                <div className="media-item">
+                  <img
+                    src={convertDropboxLink(currentMedia.url)}
+                    alt="Course Media"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                </div>
+              )}
+              {currentMedia.type === "video" && (
+                <div className="media-item">
+                  <video controls style={{ width: "100%", height: "auto" }}>
+                    <source
+                      src={convertDropboxLink(currentMedia.url)}
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
+              <div className="media-navigation">
+                <NavigationButton
+                  onClick={handlePrevMedia}
+                  disabled={currentMediaIndex === 0}
+                  visible={currentMediaIndex > 0}
+                  text="Previous Media"
+                />
+                <NavigationButton
+                  onClick={handleNextMedia}
+                  disabled={currentMediaIndex === mediaItems.length - 1}
+                  visible={currentMediaIndex < mediaItems.length - 1}
+                  text="Next Media"
                 />
               </div>
-            )}
-            {currentMedia.type === "video" && (
-              <div className="media-item">
-                <video controls style={{ width: "100%", height: "auto" }}>
-                  <source
-                    src={convertDropboxLink(currentMedia.url)}
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
+            </div>
+          )}
+        </div>
+
+        {currentQuestion && (
+          <div className="question-container">
+            <div className="question">
+              <h3>{currentQuestion.text}</h3>
+              {currentQuestion.answers.map((answer, index) => (
+                <div className="answer-option" key={index}>
+                  <label>
+                    <input
+                      type="radio"
+                      name={`question-${currentQuestionIndex}`}
+                      value={answer.text}
+                      checked={
+                        userAnswers[currentQuestionIndex] === answer.text
+                      }
+                      onChange={() =>
+                        handleAnswerChange(currentQuestionIndex, answer.text)
+                      }
+                    />
+                    {answer.text}
+                  </label>
+                </div>
+              ))}
+            </div>
+            <div className="question-overview">
+              <h3>Question Overview</h3>
+              <div className="question-squares">
+                {Array.from({ length: totalQuestions }).map((_, index) => {
+                  const isAnswered = userAnswers[index] !== undefined;
+                  return (
+                    <div
+                      key={index}
+                      className={`question-square ${
+                        isAnswered ? "answered" : "unanswered"
+                      }`}
+                      onClick={() => setCurrentQuestionIndex(index)}
+                    >
+                      {index + 1}
+                    </div>
+                  );
+                })}
               </div>
-            )}
-            <div className="media-navigation">
-              <NavigationButton
-                onClick={handlePrevMedia}
-                disabled={currentMediaIndex === 0}
-                visible={currentMediaIndex > 0}
-                text="Previous Media"
-              />
-              <NavigationButton
-                onClick={handleNextMedia}
-                disabled={currentMediaIndex === mediaItems.length - 1}
-                visible={currentMediaIndex < mediaItems.length - 1}
-                text="Next Media"
-              />
             </div>
           </div>
         )}
+
+        <div className="submission-container">
+          <button className="submit-button" onClick={handleSubmit}>
+            Submit Answers
+          </button>
+        </div>
+
+        {submissionResult && (
+          <div className="submission-result">
+            <h3>Submission Result</h3>
+            <p>Name: {submissionResult.userName}</p>
+            <p>Email: {submissionResult.email}</p>
+            <p>Course ID: {submissionResult.courseId}</p>
+            <p>Score: {submissionResult.percentageSuccess}%</p>
+            <p>Total Time: {submissionResult.totalTime} seconds</p>
+          </div>
+        )}
       </div>
-
-      {currentQuestion && (
-        <div className="question-container">
-          <div className="question">
-            <h3>{currentQuestion.text}</h3>
-            {currentQuestion.answers.map((answer, index) => (
-              <div className="answer-option" key={index}>
-                <label>
-                  <input
-                    type="radio"
-                    name={`question-${currentQuestionIndex}`}
-                    value={answer.text}
-                    checked={userAnswers[currentQuestionIndex] === answer.text}
-                    onChange={() =>
-                      handleAnswerChange(currentQuestionIndex, answer.text)
-                    }
-                  />
-                  {answer.text}
-                </label>
-              </div>
-            ))}
-          </div>
-          <div className="question-overview">
-            <h3>Question Overview</h3>
-            <div className="question-squares">
-              {Array.from({ length: totalQuestions }).map((_, index) => {
-                const isAnswered = userAnswers[index] !== undefined;
-                return (
-                  <div
-                    key={index}
-                    className={`question-square ${
-                      isAnswered ? "answered" : "unanswered"
-                    }`}
-                    onClick={() => setCurrentQuestionIndex(index)}
-                  >
-                    {index + 1}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {submissionResult && (
-        <div className="submission-result">
-          <h3>Submission Result</h3>
-          <p>Name: {submissionResult.userName}</p>
-          <p>Email: {submissionResult.email}</p>
-          <p>Course ID: {submissionResult.courseId}</p>
-          <p>Score: {submissionResult.percentageSuccess}%</p>
-          <p>Total Time: {submissionResult.totalTime} seconds</p>
-        </div>
-      )}
-
-</div>
-</div>
-
-
+    </div>
   );
 };
 
