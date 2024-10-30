@@ -36,13 +36,57 @@
   /* إزالة المسافة العليا والسفلية */
 }
 .modal {
-  background-color: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
   padding: 20px;
   border-radius: 10px;
-  width: 300px;
-  margin: auto;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 450px;
+  max-height: fit-content;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+  text-align: center; /* محاذاة النص في المركز */
 }
 
 .overlay {
-  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+}
+
+.modal h2 {
+  margin-top: 0;
+  font-size: 2rem; /* زيادة حجم الخط */
+  color: #1a535c;
+  font-weight: 600;
+}
+
+.modal p {
+  font-size: 1rem; /* حجم الخط للنص */
+  margin: 10px 0; /* تباعد أعلى وأسفل */
+}
+
+.modal button {
+  display: block; /* اجعل الزر عنصر كتلة */
+  margin: 20px auto 0; /* توسيط الزر وإضافة مسافة بينه وبين النص */
+  padding: 10px 15px; /* حشوة الأزرار */
+  border: none; /* إزالة الحدود */
+  border-radius: 5px; /* حواف دائرية */
+  background-color: #1a535c; /* لون خلفية الزر */
+  color: white; /* لون النص */
+  font-size: 1rem; /* حجم الخط للزر */
+  cursor: pointer; /* تغيير شكل المؤشر عند المرور فوق الزر */
+  transition: background-color 0.3s; /* تأثير الانتقال عند تغيير الخلفية */
+}
+
+.modal button:hover {
+  background-color: #0f3b43; /* لون خلفية الزر عند التمرير */
 }
