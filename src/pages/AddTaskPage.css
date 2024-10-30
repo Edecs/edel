@@ -7,8 +7,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-
 .add-task-container form {
   display: flex;
   flex-direction: column;
@@ -17,7 +15,7 @@
 .add-task-container label {
   font-size: 16px;
   color: #333;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 .dd {
   margin-top: 30px;
@@ -25,6 +23,7 @@
 .add-task-container input[type="text"],
 .add-task-container input[type="email"],
 .add-task-container textarea {
+  margin-top: 40px;
   padding: 10px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -97,8 +96,6 @@
   .add-task-container {
     padding: 15px;
   }
-
-
 
   .add-task-container button[type="submit"] {
     font-size: 14px;
