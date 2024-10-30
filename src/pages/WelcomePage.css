@@ -15,7 +15,6 @@ body {
   /* التأكد من أن الحاوية تأخذ عرضها الكامل بما في ذلك الحشو */
 }
 
-h1,
 h2 {
   font-size: 20px; /* Size for section headers */
 
@@ -27,20 +26,6 @@ h2 {
   /* إزالة المسافة الداخلية */
   text-align: left;
   /* محاذاة النصوص إلى أقصى اليسار */
-}
-
-h1 {
-  font-size: 20px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 60px;
-  flex-wrap: wrap;
 }
 
 h2 {
