@@ -48,13 +48,6 @@
   }
 }
 
-/* Title Styles */
-.course-page h1 {
-  color: #000000;
-  font-size: 30px;
-  margin-top: 80px;
-}
-
 .course-page h2,
 .course-page h3,
 .course-page h4 {
@@ -832,7 +825,7 @@
 /* Change background color when open */
 
 /* Style for input fields */
-input[type="text"] {
+.course-page input[type="text"] {
   width: calc(100% - 20px); /* Full width minus padding */
   padding: 8px; /* Padding inside input */
   margin-bottom: 8px; /* Space below inputs */
