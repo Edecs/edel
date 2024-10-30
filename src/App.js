@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
@@ -17,12 +17,15 @@ import DepartmentManagement from "./pages/DepartmentManagement";
 import LoadingScreen from "./components/LoadingScreen";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import { useAuth } from "./context/AuthContext";
+import Modal from "react-modal";
 import "./App.css";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const { user, isAdmin, isSuperAdmin, loading, logout } = useAuth();
   const timeoutDuration = 43200000; // 12 ساعة
+  const [isModalOpen, setIsModalOpen] = useState(false); // حالة النافذة المنبثقة
+  const [logoutTimer, setLogoutTimer] = useState(null); // لتخزين معرف المؤقت
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -35,13 +38,24 @@ const App = () => {
   useEffect(() => {
     if (user) {
       const timer = setTimeout(() => {
-        logout(); // تسجيل الخروج بعد 10 دقائق
-        alert("تم تسجيل الخروج بسبب inactivity بعد 10 دقائق.");
+        setIsModalOpen(true); // افتح النافذة المنبثقة بعد الوقت المحدد
       }, timeoutDuration);
+
+      setLogoutTimer(timer); // تخزين معرف المؤقت
 
       return () => clearTimeout(timer);
     }
-  }, [user, logout]);
+  }, [user]);
+
+  const handleLogoutConfirm = () => {
+    logout(); // تسجيل الخروج
+    setIsModalOpen(false); // إغلاق النافذة المنبثقة
+  };
+
+  const handleLogoutCancel = () => {
+    setIsModalOpen(false); // إغلاق النافذة المنبثقة
+    clearTimeout(logoutTimer); // إلغاء المؤقت
+  };
 
   if (loading) {
     return <LoadingScreen />;
@@ -89,6 +103,21 @@ const App = () => {
           <Route path="/" element={<LoginPage />} />
         </Routes>
       </main>
+
+      {/* نافذة منبثقة لتأكيد تسجيل الخروج */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={handleLogoutCancel}
+        contentLabel="Logout Confirmation"
+        ariaHideApp={false} // للتأكد من عدم إخفاء التطبيق
+        className="modal"
+        overlayClassName="overlay" // إضافة CSS للنافذة المنبثقة
+      >
+        <h2>تأكيد تسجيل الخروج</h2>
+        <p>لقد كنت غير نشط لمدة 12 ساعة. هل ترغب في تسجيل الخروج؟</p>
+        <button onClick={handleLogoutConfirm}>نعم، تسجيل الخروج</button>
+        <button onClick={handleLogoutCancel}>لا، ابقيني متصلاً</button>
+      </Modal>
     </div>
   );
 };
