@@ -1,21 +1,13 @@
 .archived-tasks-container {
   padding: 20px;
   padding-top: 0px;
-  max-width: 1200px; /* Optional: sets a maximum width for the container */
+  width: 90%; /* Optional: sets a maximum width for the container */
   margin: auto; /* Centers the container */
   background-color: #ffffff; /* Background color for the entire page */
   border-radius: 8px; /* Rounds the corners of the main container */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow effect for depth */
 }
 
-h1 {
-  color: #343a40;
-  padding-left: 5px;
-  text-align: left;
-  margin-bottom: 15px;
-  margin-top: 80px;
-  font-size: 30px;
-}
 .search-container {
   align-items: center; /* Centers items vertically */
 }
@@ -30,7 +22,8 @@ h1 {
 }
 
 .search-container button {
-  padding: 10px 25px; /* Padding for the button */
+  width: 9%;
+  padding: 10px; /* Padding for the button */
   background-color: #094d50; /* Bootstrap primary color */
   color: white; /* Text color */
   border: none; /* No border */
