@@ -20,24 +20,18 @@
   margin-bottom: 60px;
   margin-left: 0%;
 }
-
-.body {
-  background-color: #094d50;
-  margin-left: 0%;
-  font-family: "Kanit", sans-serif;
-}
+.body,
 .h3,
 .h2,
 .h4,
 .label,
 .details,
 .summary,
-.button {
+.button,
+* {
   font-family: "Poppins", sans-serif !important;
   font-weight: 300 !important;
   font-style: normal !important;
-  padding-top: 17px;
-  font-size: 20px;
-  margin: 0;
+
   /* إزالة المسافة العليا والسفلية */
 }
