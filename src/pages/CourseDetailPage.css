@@ -1,13 +1,12 @@
 /* General container styling */
 .course-detail-container {
-  max-width: 900px;
+  width: 100%;
   margin: 40px auto;
   padding: 20px;
   background-color: #f8f9fa; /* Light background for better readability */
   border: 1px solid #ddd; /* Light border for separation */
   border-radius: 8px; /* Rounded corners for a softer look */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  font-family: Arial, sans-serif;
 }
 
 /* Loading and error messages styling */
@@ -43,10 +42,11 @@
 }
 
 .sub-course-item {
+  text-align: center;
+  margin: auto;
   background-color: #ffffff; /* White background for each item */
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin: 10px 0;
   padding: 15px;
   transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effect */
   display: flex;
@@ -58,15 +58,19 @@
   transform: translateY(-2px); /* Slightly raise the item on hover */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
 }
+.sub-course-item {
+  cursor: pointer;
+}
 
 .sub-course-item a {
-  text-decoration: none; /* Remove underline from links */
-  color: #0e6d72; /* Link color to match the theme */
-  font-weight: bold;
+  text-align: center;
+  margin: auto;
+  text-decoration: none;
+  color: #0e6d72;
 }
 
 .sub-course-item a:hover {
-  color: #007bff; /* Change color on hover for better UX */
+  color: #007bff;
 }
 
 .no-access {
