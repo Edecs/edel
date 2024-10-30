@@ -244,9 +244,14 @@ function UserProgressPage() {
   );
 
   return (
-    <div className="user-progress-page">
+    <div className="user-progress">
+      
+      <header>
+        <h1 className="header-h1">User Progress Page</h1>
+      </header>
+      <div className="user-progress-page">
+
       <div>
-        <h1>User Progress Page</h1>
         <button onClick={exportToExcel}>Export to Excel</button>
       </div>
       <input
@@ -397,6 +402,8 @@ function UserProgressPage() {
         )}
       </div>
     </div>
+    </div>
+
   );
 }
 
