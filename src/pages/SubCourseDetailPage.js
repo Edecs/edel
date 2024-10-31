@@ -16,7 +16,7 @@ const NavigationButton = ({ onClick, disabled, visible, text }) => {
       {text}
     </button>
   );
-};
+}; 
 
 const SubCourseDetailPage = () => {
   const { subCourseId } = useParams();
