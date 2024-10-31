@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { db, ref, set, get, remove } from "../firebase";
-import { auth } from "../firebase"; // تأكد من استيراد Firebase Auth
+import { auth } from "../firebase";
 import "./CourseManagementPage.css";
 import rightArrowIcon from "../photos/right-arrow-svgrepo-com.svg";
 import leftArrowIcon from "../photos/left-arrow-svgrepo-com.svg";
@@ -18,18 +18,8 @@ function CourseManagementPage() {
   const [selectedEnrolledUsers, setSelectedEnrolledUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [userDepartment, setUserDepartment] = useState("");
-  const [currentUser, setCurrentUser] = useState(null); // إضافة حالة المستخدم الحالي
-  const buttons = document.querySelectorAll("button");
-
-  buttons.forEach((button) => {
-    button.addEventListener("click", function () {
-      // إزالة الفئة active من جميع الأزرار
-      buttons.forEach((btn) => btn.classList.remove("active"));
-
-      // إضافة الفئة active للزر الذي تم الضغط عليه
-      this.classList.add("active");
-    });
-  });
+  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUserRole, setCurrentUserRole] = useState(""); // إضافة حالة الدور الحالي
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -49,27 +39,35 @@ function CourseManagementPage() {
       const snapshot = await get(coursesRef);
       if (snapshot.exists()) {
         const allCourses = snapshot.val();
-        const filteredCourses = Object.entries(allCourses).filter(
-          ([_, course]) => course.department === userDepartment
-        );
-        setCourses(Object.fromEntries(filteredCourses));
+
+        // إذا كان الدور هو "SuperAdmin"، لا تطبق تصفية القسم
+        if (currentUserRole === "SuperAdmin") {
+          setCourses(allCourses);
+        } else {
+          const filteredCourses = Object.entries(allCourses).filter(
+            ([_, course]) => course.department === userDepartment
+          );
+          setCourses(Object.fromEntries(filteredCourses));
+        }
       } else {
         setCourses({});
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
-  }, [userDepartment]);
+  }, [userDepartment, currentUserRole]);
 
-  const fetchUserDepartment = useCallback(async () => {
-    if (!currentUser) return; // تأكد من أن المستخدم موجود
+  const fetchUserDepartmentAndRole = useCallback(async () => {
+    if (!currentUser) return;
 
     const userRef = ref(db, `users/${sanitizeEmail(currentUser.email)}`);
     const userSnapshot = await get(userRef);
     if (userSnapshot.exists()) {
-      const department = userSnapshot.val().department;
-      setUserDepartment(department);
-      console.log("User Department: ", department);
+      const userData = userSnapshot.val();
+      setUserDepartment(userData.department);
+      setCurrentUserRole(userData.role); // حفظ الدور
+      console.log("User Department:", userData.department);
+      console.log("User Role:", userData.role);
     }
   }, [currentUser]);
 
@@ -130,8 +128,8 @@ function CourseManagementPage() {
   }, []);
 
   useEffect(() => {
-    fetchUserDepartment();
-  }, [fetchUserDepartment]);
+    fetchUserDepartmentAndRole();
+  }, [fetchUserDepartmentAndRole]);
 
   useEffect(() => {
     fetchCourses();
@@ -236,86 +234,83 @@ function CourseManagementPage() {
         <h1 className="header-h1">Assign Courses</h1>
       </header>
       <div className="course-management-page">
-
-      <div className="search-box">
-        <input
-          type="text"
-          placeholder="Search Users..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </div>
-      <div className="management-grid">
-        <div className="column courses-column">
-          <h2>Available Courses</h2>
-          <ul className="course-list">
-            {Object.entries(courses).map(([courseName]) => (
-              <li key={courseName}>
-                <button
-                  className="butt"
-                  onClick={() => {
-                    setSelectedCourse(courseName);
-                    setSelectedEnrolledUsers([]);
-                  }}
-                >
-                  {courseName}
-                </button>
-              </li>
-            ))}
-          </ul>
+        <div className="search-box">
+          <input
+            type="text"
+            placeholder="Search Users..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
         </div>
+        <div className="management-grid">
+          <div className="column courses-column">
+            <h2>Available Courses</h2>
+            <ul className="course-list">
+              {Object.entries(courses).map(([courseName]) => (
+                <li key={courseName}>
+                  <button
+                    className="butt"
+                    onClick={() => {
+                      setSelectedCourse(courseName);
+                      setSelectedEnrolledUsers([]);
+                    }}
+                  >
+                    {courseName}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <div className="column enrolled-users-column">
-          <h2>Enrolled Users</h2>
-          <ul className="user-list">
-            {enrolledUsersToDisplay.map((user) => (
-              <li key={user.email}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={selectedEnrolledUsers.includes(user.email)}
-                    onChange={() => toggleEnrolledUserSelection(user.email)}
-                  />
-                  {user.name || "No name"} ({user.email || "No email"}) -{" "}
-                  {user.department || "No department"}
-                </label>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div className="column enrolled-users-column">
+            <h2>Enrolled Users</h2>
+            <ul className="user-list">
+              {enrolledUsersToDisplay.map((user) => (
+                <li key={user.email}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={selectedEnrolledUsers.includes(user.email)}
+                      onChange={() => toggleEnrolledUserSelection(user.email)}
+                    />
+                    {user.name || "No name"} ({user.department})
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <div className="column buttons-column">
-          <button className="butt1" onClick={handleRemoveUsersFromCourse}>
-            <img src={rightArrowIcon} alt="Remove Users from Course" />
-          </button>
-          <button className="butt1" onClick={handleAddUsersToCourse}>
-            <img src={leftArrowIcon} alt="Add Users to Course" />
-          </button>
-        </div>
+          <div className="column buttons-column">
+            <button className="butt1" onClick={handleRemoveUsersFromCourse}>
+              <img src={rightArrowIcon} alt="Remove Users from Course" />
+            </button>
+            <button className="butt1" onClick={handleAddUsersToCourse}>
+              <img src={leftArrowIcon} alt="Add Users to Course" />
+            </button>
+          </div>
 
-        <div className="column all-users-column">
-          <h2>All Users</h2>
-          <ul className="user-list1">
-            {usersToDisplay.map((user) => (
-              <li key={user.email}>
-                <label className="custom-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.some((u) => u.email === user.email)}
-                    onChange={() => toggleUserSelection(user)}
-                  />
-                  <span className="checkmark"></span>
-                  {user.name || "No name"} ({user.email || "No email"}) -{" "}
-                  {user.department || "No department"}
-                </label>
-              </li>
-            ))}
-          </ul>
+          <div className="column users-column">
+            <h2>Users</h2>
+            <ul className="user-list">
+              {usersToDisplay.map((user) => (
+                <li key={user.email}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={selectedUsers.some(
+                        (u) => u.email === user.email
+                      )}
+                      onChange={() => toggleUserSelection(user)}
+                    />
+                    {user.name || "No name"} ({user.department})
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-    </div>
-
   );
 }
 
