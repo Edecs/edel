@@ -134,6 +134,7 @@
   transition: color 0.3s, transform 0.3s; /* إضافة تأثير انتقال */
 }
 input#message {
+  margin-top: 40px;
   width: 100%;
   height: 60px;
   padding: 10px;
@@ -141,7 +142,6 @@ input#message {
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box; /* لضمان أن padding يحسب داخل العرض */
-  margin-top: 5px; /* مسافة بين التسمية و input */
   transition: border-color 0.3s ease; /* تأثير انتقالي عند التفاعل مع الحقل */
 }
 
