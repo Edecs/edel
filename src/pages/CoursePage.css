@@ -558,13 +558,15 @@
 }
 
 .popup-content {
+  max-height: 700px; /* الطول الأقصى قبل ظهور شريط التمرير */
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   width: 650px;
   max-width: 90%;
   text-align: center;
+  overflow-y: auto; /* لإظهار شريط التمرير عند تجاوز الطول المحدد */
 }
 
 .popup-content h2 {
