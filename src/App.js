@@ -21,11 +21,11 @@ import Modal from "react-modal";
 import "./App.css";
 
 const App = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, isAdmin, isSuperAdmin, loading, logout } = useAuth();
-  const timeoutDuration = 5400000; // 90 دقيقة بالميلي ثانية (60 دقيقة * 60 ثانية * 1000 ميلي ثانية)
-  const [isModalOpen, setIsModalOpen] = useState(false); // حالة النافذة المنبثقة
-  const [logoutTimer, setLogoutTimer] = useState(null); // لتخزين معرف المؤقت
+  const timeoutDuration = 5400000; // 1 دقيقة بالميلي ثانية
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [logoutTimer, setLogoutTimer] = useState(null); // تعريف معرف المؤقت
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -43,13 +43,16 @@ const App = () => {
 
       setLogoutTimer(timer); // تخزين معرف المؤقت
 
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer); // تنظيف المؤقت عند التحديث
     }
-  }, [user]);
+  }, [user, timeoutDuration]);
 
   const handleLogoutConfirm = () => {
     logout(); // تسجيل الخروج
     setIsModalOpen(false); // إغلاق النافذة المنبثقة
+    if (logoutTimer) {
+      clearTimeout(logoutTimer); // تنظيف المؤقت عند تأكيد تسجيل الخروج
+    }
   };
 
   if (loading) {
@@ -99,24 +102,18 @@ const App = () => {
         </Routes>
       </main>
 
-      {/* نافذة منبثقة لتأكيد تسجيل الخروج */}
       <Modal
         isOpen={isModalOpen}
         contentLabel="تأكيد تسجيل الخروج"
         ariaHideApp={false}
         className="modal"
         overlayClassName="overlay"
-        shouldCloseOnOverlayClick={false} // لا يمكن إغلاق النافذة المنبثقة بالنقر خارجها
+        shouldCloseOnOverlayClick={false}
       >
         <h2>تأكيد تسجيل الخروج / Logout Confirmation</h2>
-        <p>
-        لقد كنت غير نشط  / You have been not
-          inactive
-        </p>
+        <p>لقد كنت غير نشط / You have been inactive</p>
         <div>
-          <button onClick={handleLogoutConfirm}>
-           تسجيل الخروج /  log out
-          </button>
+          <button onClick={handleLogoutConfirm}>تسجيل الخروج / Log Out</button>
         </div>
       </Modal>
     </div>
