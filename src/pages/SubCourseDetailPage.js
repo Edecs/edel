@@ -16,7 +16,7 @@ const NavigationButton = ({ onClick, disabled, visible, text }) => {
       {text}
     </button>
   );
-}; 
+};
 
 const SubCourseDetailPage = () => {
   const { subCourseId } = useParams();
@@ -66,7 +66,7 @@ const SubCourseDetailPage = () => {
         if (userSnapshot.exists()) {
           const userData = userSnapshot.val();
           setUserName(userData.name || "User");
-          console.log("User Name Fetched:", userData.name); // تأكد من قيمة اسم المستخدم هنا
+          console.log("User Name Fetched:", userData.name);
         } else {
           setUserName("User");
         }
@@ -118,18 +118,17 @@ const SubCourseDetailPage = () => {
   }, [subCourseId]);
 
   const handleNextMedia = () => {
-    if (subCourse?.media) {
-      if (currentMediaIndex < mediaItems.length - 1) {
-        setCurrentMediaIndex(currentMediaIndex + 1);
-      }
+    if (currentMediaIndex < mediaItems.length - 1) {
+      setCurrentMediaIndex((prevIndex) => prevIndex + 1);
     }
   };
-
+  
   const handlePrevMedia = () => {
     if (currentMediaIndex > 0) {
-      setCurrentMediaIndex(currentMediaIndex - 1);
+      setCurrentMediaIndex((prevIndex) => prevIndex - 1);
     }
   };
+  
 
   const handleAnswerChange = (questionIndex, answer) => {
     setUserAnswers((prevAnswers) => {
@@ -206,12 +205,11 @@ const SubCourseDetailPage = () => {
 
   const convertDropboxLink = (link) => {
     if (link.includes("dropbox.com")) {
-      return link
-        .replace("www.dropbox.com", "dl.dropboxusercontent.com")
-        .replace("?dl=1", "");
+      return link.replace("www.dropbox.com", "dl.dropboxusercontent.com").replace("?dl=1", "");
     }
     return link;
   };
+  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -239,7 +237,7 @@ const SubCourseDetailPage = () => {
     ? Object.values(subCourse.questions)[currentQuestionIndex]
     : null;
 
-  // عدد الأسئلة التي تم الإجابة عليها
+  // Number of questions answered
   const answeredQuestionsCount = userAnswers.filter(
     (answer) => answer !== undefined
   ).length;
@@ -263,17 +261,22 @@ const SubCourseDetailPage = () => {
                   />
                 </div>
               )}
-              {currentMedia.type === "video" && (
-                <div className="media-item">
-                  <video controls style={{ width: "100%", height: "auto" }}>
-                    <source
-                      src={convertDropboxLink(currentMedia.url)}
-                      type="video/mp4"
-                    />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              )}
+       {currentMedia.type === "video" && (
+  <div className="media-item">
+    <video 
+      key={currentMedia.id} // أضف المفتاح هنا لإجبار إعادة التحميل
+      controls 
+      style={{ width: "100%", height: "auto" }}
+    >
+      <source
+        src={convertDropboxLink(currentMedia.url)}
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+)}
+
               <div className="media-navigation">
                 <NavigationButton
                   onClick={handlePrevMedia}
@@ -313,20 +316,20 @@ const SubCourseDetailPage = () => {
                     {answer.text}
                   </label>
                 </div>
-              ))}{" "}
+              ))}
             </div>
             <div className="question-navigation">
               <NavigationButton
                 onClick={handlePrevQuestion}
                 disabled={currentQuestionIndex === 0}
-                visible={currentQuestionIndex > 0} // يظهر فقط عند وجود أسئلة سابقة
+                visible={currentQuestionIndex > 0}
                 text="Previous Question"
               />
 
               <NavigationButton
                 onClick={handleNextQuestion}
                 disabled={currentQuestionIndex === totalQuestions - 1}
-                visible={currentQuestionIndex < totalQuestions - 1} // يظهر فقط عند وجود أسئلة تالية
+                visible={currentQuestionIndex < totalQuestions - 1}
                 text="Next Question"
               />
             </div>
@@ -357,7 +360,7 @@ const SubCourseDetailPage = () => {
           <button
             className="submit-button"
             onClick={handleSubmit}
-            disabled={answeredQuestionsCount < totalQuestions} // يتم التفعيل عند اكتمال الإجابة على كل الأسئلة
+            disabled={answeredQuestionsCount < totalQuestions} // Enabled when all questions are answered
           >
             Submit Answers
           </button>
