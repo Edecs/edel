@@ -35,7 +35,8 @@
 
   /* إزالة المسافة العليا والسفلية */
 }
-.modal {
+/* Modal Styles */
+.modal1 {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -46,12 +47,15 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   width: 90%;
   max-width: 450px;
-  max-height: fit-content;
   z-index: 1000;
   animation: fadeIn 0.3s ease-in-out;
-  text-align: center; /* محاذاة النص في المركز */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack children vertically */
+  align-items: center; /* Center align children horizontally */
+  text-align: center; /* Center text alignment */
 }
 
+/* Overlay Styles */
 .overlay {
   position: fixed;
   top: 0;
@@ -62,31 +66,48 @@
   z-index: 999;
 }
 
-.modal h2 {
-  margin-top: 0;
-  font-size: 2rem; /* زيادة حجم الخط */
+/* Modal Title Styles */
+.modal1 h2 {
+  margin: 0; /* Remove top margin */
+  font-size: 1.8rem; /* Font size for title */
   color: #1a535c;
   font-weight: 600;
 }
 
-.modal p {
-  font-size: 1rem; /* حجم الخط للنص */
-  margin: 10px 0; /* تباعد أعلى وأسفل */
+/* Modal Paragraph Styles */
+.modal1 p {
+  font-size: 1rem; /* Font size for the text */
+  margin: 15px 0; /* Increased vertical spacing */
+  line-height: 1.5; /* Improved line height for readability */
 }
 
-.modal button {
-  display: block; /* اجعل الزر عنصر كتلة */
-  margin: 20px auto 0; /* توسيط الزر وإضافة مسافة بينه وبين النص */
-  padding: 10px 15px; /* حشوة الأزرار */
-  border: none; /* إزالة الحدود */
-  border-radius: 5px; /* حواف دائرية */
-  background-color: #1a535c; /* لون خلفية الزر */
-  color: white; /* لون النص */
-  font-size: 1rem; /* حجم الخط للزر */
-  cursor: pointer; /* تغيير شكل المؤشر عند المرور فوق الزر */
-  transition: background-color 0.3s; /* تأثير الانتقال عند تغيير الخلفية */
+/* Button Styles */
+.modal1 button {
+  display: block; /* Make the button a block element */
+  margin-top: 20px; /* Add top margin for spacing */
+  padding: 10px 20px; /* Increased padding for better touch target */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #1a535c; /* Button background color */
+  color: white; /* Text color */
+  font-size: 1rem; /* Button font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, transform 0.2s; /* Transition for background color and scale */
 }
 
-.modal button:hover {
-  background-color: #0f3b43; /* لون خلفية الزر عند التمرير */
+/* Button Hover Styles */
+.modal1 button:hover {
+  background-color: #0f3b43; /* Button background on hover */
+  transform: scale(1.05); /* Slightly enlarge button on hover */
 }
+
+/* Animation for Modal */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
