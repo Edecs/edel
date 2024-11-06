@@ -24,7 +24,7 @@ const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, isAdmin, isSuperAdmin, loading, logout } = useAuth();
   const timeoutDuration = 5400000; // 1 دقيقة بالميلي ثانية
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [logoutTimer, setLogoutTimer] = useState(null); // تعريف معرف المؤقت
 
   const handleSidebarToggle = () => {
@@ -75,15 +75,24 @@ const App = () => {
               <Route path="/welcome" element={<WelcomePage />} />
               <Route path="/courses" element={<CoursePage />} />
               <Route path="/courses/:courseId" element={<CourseDetailPage />} />
-              <Route path="/sub-courses/:subCourseId" element={<SubCourseDetailPage />} />
+              <Route
+                path="/sub-courses/:subCourseId"
+                element={<SubCourseDetailPage />}
+              />
               <Route path="/user-progress" element={<UserProgressPage />} />
               <Route path="/add-task" element={<AddTaskPage />} />
               <Route path="/archived-tasks" element={<ArchivedTasksPage />} />
               {(isAdmin || isSuperAdmin) && (
                 <>
                   <Route path="/admin" element={<AdminPage />} />
-                  <Route path="/course-management" element={<CourseManagementPage />} />
-                  <Route path="/department-management" element={<DepartmentManagement />} />
+                  <Route
+                    path="/course-management"
+                    element={<CourseManagementPage />}
+                  />
+                  <Route
+                    path="/department-management"
+                    element={<DepartmentManagement />}
+                  />
                 </>
               )}
               <Route path="*" element={<NotFoundPage />} />
@@ -99,14 +108,12 @@ const App = () => {
         ariaHideApp={false}
         className="modal1"
         overlayClassName="overlay"
-        shouldCloseOnOverlayClick={false} 
+        shouldCloseOnOverlayClick={false}
       >
         <h2>تأكيد تسجيل الخروج / Logout Confirmation</h2>
         <p>لقد كنت غير نشط / You have been inactive</p>
         <div>
-          <button onClick={handleLogoutConfirm}>
-            تسجيل الخروج / Log Out
-          </button>
+          <button onClick={handleLogoutConfirm}>تسجيل الخروج / Log Out</button>
         </div>
       </Modal>
     </div>
