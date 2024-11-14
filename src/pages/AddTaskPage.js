@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { ref, set, push, get } from "firebase/database";
-import { db } from "../firebase"; // No need for Firebase Storage now
+import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+import emailjs from "emailjs-com";
 import "./AddTaskPage.css";
 
 const AddTaskPage = () => {
-  const [dropboxLink, setDropboxLink] = useState(""); // Dropbox link instead of file
+  const [dropboxLink, setDropboxLink] = useState("");
   const [message, setMessage] = useState("");
-  const [assignedEmails, setAssignedEmails] = useState([]); // Keep track of selected users
+  const [assignedEmails, setAssignedEmails] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
@@ -36,6 +37,36 @@ const AddTaskPage = () => {
     });
   };
 
+  const sendEmailNotifications = () => {
+    assignedEmails.forEach((email) => {
+      const templateParams = {
+        to_email: email,
+        message: message,
+        dropbox_link: dropboxLink ? `Dropbox File Link: ${dropboxLink}` : null, // إضافة الرابط هنا
+        subject: "You have a new task from E-learning EDECS",
+      };
+
+      emailjs
+        .send(
+          "service_b0yzx2o",
+          "template_zz1ruij",
+          templateParams,
+          "PXS_cTqdGTjx-W0yE"
+        )
+        .then((response) => {
+          console.log(
+            "Email sent successfully to",
+            email,
+            response.status,
+            response.text
+          );
+        })
+        .catch((error) => {
+          console.error("Error sending email to", email, error);
+        });
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -56,30 +87,27 @@ const AddTaskPage = () => {
       return;
     }
 
-    // Make the Dropbox link optional
-    if (!dropboxLink) {
-      setError("Dropbox link is optional. Proceeding without it.");
-    }
-
     try {
       const taskRef = ref(db, "tasks");
       const newTaskRef = push(taskRef);
 
       await set(newTaskRef, {
         message,
-        dropboxLink: dropboxLink || null, // Store as null if not provided
+        dropboxLink: dropboxLink || null,
         assignedEmails,
         createdBy: user.email,
         createdAt: new Date().toISOString(),
       });
 
+      sendEmailNotifications();
+
       const notificationsRef = ref(db, "notifications");
 
-      assignedEmails.forEach(async (email) => {
+      assignedEmails.forEach((email) => {
         const newNotificationRef = push(notificationsRef);
-        await set(newNotificationRef, {
+        set(newNotificationRef, {
           message: `New task assigned to you: ${message}`,
-          dropboxLink: dropboxLink || null, // Include link if provided
+          dropboxLink: dropboxLink || null,
           assignedEmail: email,
           createdBy: user.email,
           createdAt: new Date().toISOString(),
@@ -88,9 +116,9 @@ const AddTaskPage = () => {
       });
 
       const newCreatorNotificationRef = push(notificationsRef);
-      await set(newCreatorNotificationRef, {
-        message: `You Created new task: ${message}`,
-        dropboxLink: dropboxLink || null, // Include link if provided
+      set(newCreatorNotificationRef, {
+        message: `You created a new task: ${message}`,
+        dropboxLink: dropboxLink || null,
         assignedEmails: assignedEmails.join(", "),
         createdBy: user.email,
         createdAt: new Date().toISOString(),
@@ -100,7 +128,7 @@ const AddTaskPage = () => {
       setSuccess("Task added successfully!");
       setDropboxLink("");
       setMessage("");
-      // Keep the assigned emails as they are
+      setAssignedEmails([]);
     } catch (error) {
       setError("Error adding task: " + error.message);
     } finally {
@@ -111,13 +139,13 @@ const AddTaskPage = () => {
   const filteredUsers = allUsers.filter((user) => {
     const email = user.email ? user.email.toLowerCase() : "";
     const department = user.department ? user.department.toLowerCase() : "";
-    const name = user.name ? user.name.toLowerCase() : ""; // إضافة الاسم
+    const name = user.name ? user.name.toLowerCase() : "";
 
     return (
-      (email.includes(searchTerm.toLowerCase()) || // البحث بالبريد الإلكتروني
-        name.includes(searchTerm.toLowerCase())) && // البحث بالاسم
+      (email.includes(searchTerm.toLowerCase()) ||
+        name.includes(searchTerm.toLowerCase())) &&
       department.includes(searchDepartment.toLowerCase()) &&
-      !assignedEmails.includes(user.email) // استثناء المستخدمين المعينين
+      !assignedEmails.includes(user.email)
     );
   });
 
@@ -130,13 +158,13 @@ const AddTaskPage = () => {
         <div className="add-task-container">
           <form onSubmit={handleSubmit}>
             <div className="dd">
-              <label htmlFor="dropboxLink">Dropbox File Link</label>
+              <label htmlFor="dropboxLink">Dropbox File Link (Optional)</label>
               <input
                 type="text"
                 id="dropboxLink"
                 value={dropboxLink}
                 onChange={(e) => setDropboxLink(e.target.value)}
-                placeholder="Paste Dropbox file link"
+                placeholder="Paste Dropbox file link (Optional)"
               />
             </div>
             <div>
@@ -174,7 +202,7 @@ const AddTaskPage = () => {
             </div>
 
             <div>
-              {searchTerm || searchDepartment ? ( // Show users only if there is a search term
+              {searchTerm || searchDepartment ? (
                 filteredUsers.length > 0 ? (
                   <div className="user-selection">
                     <label>Select Users to Assign:</label>
@@ -195,9 +223,7 @@ const AddTaskPage = () => {
                 ) : (
                   <p>No users found.</p>
                 )
-              ) : null}{" "}
-              {/* Do not show anything if there is no search term */}
-              {/* Display the selected users */}
+              ) : null}
               {assignedEmails.length > 0 && (
                 <div className="assigned-users">
                   <h3>Assigned Users:</h3>
