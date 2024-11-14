@@ -8,6 +8,8 @@ import { ReactComponent as AdminIcon } from "../photos/user-add-outlined.svg";
 import { ReactComponent as AddTaskIcon } from "../photos/add task.svg";
 import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-com.svg";
 import { ReactComponent as DepartmentIcon } from "../photos/open-data-square.svg"; // تأكد من وجود أيقونة للقسم
+import { ReactComponent as EmailFormIcon } from "../photos/email-essential-letter-svgrepo-com.svg"; // تأكد من وجود أيقونة للقسم
+
 import "./Sidebar.css";
 
 function Sidebar({ isOpen, onClose }) {
@@ -82,7 +84,12 @@ function Sidebar({ isOpen, onClose }) {
               >
                 <ArchiveIcon className="sidebar-icon" />
               </Link>
-            </li>
+              
+            </li><li>
+            <Link to="/Email-Form" onClick={onClose} title="Email Form">
+  <EmailFormIcon className="sidebar-icon" />
+</Link></li>
+
           </>
         )}
         {/* يظهر رابط قسم إدارة الأقسام فقط إذا كان المستخدم سوبر أدمن */}
