@@ -16,6 +16,8 @@ import ArchivedTasksPage from "./pages/ArchivedTasksPage";
 import DepartmentManagement from "./pages/DepartmentManagement";
 import LoadingScreen from "./components/LoadingScreen";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import EmailForm from "./pages/EmailForm";
+
 import { useAuth } from "./context/AuthContext";
 import Modal from "react-modal";
 import "./App.css";
@@ -82,6 +84,8 @@ const App = () => {
               <Route path="/user-progress" element={<UserProgressPage />} />
               <Route path="/add-task" element={<AddTaskPage />} />
               <Route path="/archived-tasks" element={<ArchivedTasksPage />} />
+              <Route path="/Email-Form" element={<EmailForm />} />
+
               {(isAdmin || isSuperAdmin) && (
                 <>
                   <Route path="/admin" element={<AdminPage />} />
