@@ -83,7 +83,7 @@ function EmailForm() {
       reply_to: senderEmail,
     };
 
-    emailjs.send('service_b0yzx2o', 'template_zz1ruij', templateParams, 'PXS_cTqdGTjx-W0yE')
+    emailjs.send('service_33nrb0q', 'template_zz1ruij', templateParams, 'PXS_cTqdGTjx-W0yE')
       .then((response) => {
         setStatusMessage('Emails sent successfully!');
         console.log('SUCCESS!', response.status, response.text);
