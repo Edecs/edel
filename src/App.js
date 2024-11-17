@@ -25,9 +25,12 @@ import "./App.css";
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, isAdmin, isSuperAdmin, loading, logout } = useAuth();
-  const timeoutDuration = 5400000; // 1 دقيقة بالميلي ثانية
+  const timeoutDuration = 5400000; // 1.5 ساعة
+  const warningDuration = 60000; // دقيقة واحدة للتحذير
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [logoutTimer, setLogoutTimer] = useState(null); // تعريف معرف المؤقت
+  const [logoutTimer, setLogoutTimer] = useState(null);
+  const [countdown, setCountdown] = useState(0);
+  const [countdownInterval, setCountdownInterval] = useState(null); // لحفظ معرف العد التنازلي
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen((prevState) => !prevState);
@@ -40,20 +43,67 @@ const App = () => {
   useEffect(() => {
     if (user) {
       const timer = setTimeout(() => {
-        setIsModalOpen(true); // افتح النافذة المنبثقة بعد الوقت المحدد
-      }, timeoutDuration);
+        startWarningCountdown();
+      }, timeoutDuration - warningDuration);
 
-      setLogoutTimer(timer); // تخزين معرف المؤقت
+      setLogoutTimer(timer);
 
-      return () => clearTimeout(timer); // تنظيف المؤقت عند التحديث
+      return () => clearTimeout(timer);
     }
   }, [user, timeoutDuration]);
 
-  const handleLogoutConfirm = () => {
-    logout(); // تسجيل الخروج
-    setIsModalOpen(false); // إغلاق النافذة المنبثقة
+  const startWarningCountdown = () => {
+    setCountdown(warningDuration / 1000); // بدء العد التنازلي
+    setIsModalOpen(true);
+
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleLogoutConfirm(); // تسجيل الخروج عند انتهاء الوقت
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    setCountdownInterval(interval); // حفظ معرف العد التنازلي لإيقافه عند الحاجة
+  };
+
+  const resetTimer = () => {
+    // إلغاء العد التنازلي الحالي
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      setCountdownInterval(null);
+    }
+
+    // إغلاق النافذة وإعادة تعيين المؤقت
+    setIsModalOpen(false);
+    setCountdown(0);
+
+    // إلغاء المؤقت السابق
     if (logoutTimer) {
-      clearTimeout(logoutTimer); // تنظيف المؤقت عند تأكيد تسجيل الخروج
+      clearTimeout(logoutTimer);
+    }
+
+    // تعيين مؤقت جديد
+    const timer = setTimeout(() => {
+      startWarningCountdown();
+    }, timeoutDuration);
+
+    setLogoutTimer(timer);
+  };
+
+  const handleLogoutConfirm = () => {
+    // تسجيل الخروج
+    logout();
+    setIsModalOpen(false);
+
+    // تنظيف جميع المؤقتات
+    if (logoutTimer) {
+      clearTimeout(logoutTimer);
+    }
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
     }
   };
 
@@ -115,8 +165,12 @@ const App = () => {
         shouldCloseOnOverlayClick={false}
       >
         <h2>تأكيد تسجيل الخروج / Logout Confirmation</h2>
-        <p>لقد كنت غير نشط / You have been inactive</p>
+        <p>
+          لقد كنت غير نشط. سيتم تسجيل خروجك خلال <strong>{countdown}</strong>{" "}
+          ثانية.
+        </p>
         <div>
+          <button onClick={resetTimer}>أنا هنا / I'm here</button>
           <button onClick={handleLogoutConfirm}>تسجيل الخروج / Log Out</button>
         </div>
       </Modal>
