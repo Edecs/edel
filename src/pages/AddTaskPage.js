@@ -6,7 +6,7 @@ import emailjs from "emailjs-com";
 import "./AddTaskPage.css";
 
 const AddTaskPage = () => {
-  const [dropboxLink, setDropboxLink] = useState("");
+  const [link, setLink] = useState(""); // حقل عام للروابط
   const [message, setMessage] = useState("");
   const [assignedEmails, setAssignedEmails] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,8 +41,9 @@ const AddTaskPage = () => {
     assignedEmails.forEach((email) => {
       const templateParams = {
         to_email: email,
-        message: message,
-        dropbox_link: dropboxLink ? `Dropbox File Link: ${dropboxLink}` : null, // إضافة الرابط هنا
+        message: link
+          ? `${message}\n\nLink: ${link}` // دمج الرابط مع الرسالة
+          : message,
         subject: "You have a new task from E-learning EDECS",
       };
 
@@ -91,9 +92,12 @@ const AddTaskPage = () => {
       const taskRef = ref(db, "tasks");
       const newTaskRef = push(taskRef);
 
+      const fullMessage = link
+        ? `${message}\n\nLink: ${link}` // دمج الرابط مع الرسالة
+        : message;
+
       await set(newTaskRef, {
-        message,
-        dropboxLink: dropboxLink || null,
+        message: fullMessage,
         assignedEmails,
         createdBy: user.email,
         createdAt: new Date().toISOString(),
@@ -106,8 +110,7 @@ const AddTaskPage = () => {
       assignedEmails.forEach((email) => {
         const newNotificationRef = push(notificationsRef);
         set(newNotificationRef, {
-          message: `New task assigned to you: ${message}`,
-          dropboxLink: dropboxLink || null,
+          message: `New task assigned to you: ${fullMessage}`,
           assignedEmail: email,
           createdBy: user.email,
           createdAt: new Date().toISOString(),
@@ -117,8 +120,7 @@ const AddTaskPage = () => {
 
       const newCreatorNotificationRef = push(notificationsRef);
       set(newCreatorNotificationRef, {
-        message: `You created a new task: ${message}`,
-        dropboxLink: dropboxLink || null,
+        message: `You created a new task: ${fullMessage}`,
         assignedEmails: assignedEmails.join(", "),
         createdBy: user.email,
         createdAt: new Date().toISOString(),
@@ -126,7 +128,7 @@ const AddTaskPage = () => {
       });
 
       setSuccess("Task added successfully!");
-      setDropboxLink("");
+      setLink("");
       setMessage("");
       setAssignedEmails([]);
     } catch (error) {
@@ -158,13 +160,13 @@ const AddTaskPage = () => {
         <div className="add-task-container">
           <form onSubmit={handleSubmit}>
             <div className="dd">
-              <label htmlFor="dropboxLink">Dropbox File Link (Optional)</label>
+              <label htmlFor="link">Task Link (Optional)</label>
               <input
                 type="text"
-                id="dropboxLink"
-                value={dropboxLink}
-                onChange={(e) => setDropboxLink(e.target.value)}
-                placeholder="Paste Dropbox file link (Optional)"
+                id="link"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                placeholder="Paste any link (Optional)"
               />
             </div>
             <div>
