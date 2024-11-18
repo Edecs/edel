@@ -12,6 +12,7 @@
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   transition: all 0.3s ease;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .notification-popup .close-button {
@@ -39,8 +40,9 @@
 
 .notifications-list {
   max-height: 400px;
-  overflow-y: auto; /* Enable scrolling */
+  overflow-y: auto; /* Enable scrolling vertically */
   margin-top: 10px; /* Spacing above the notifications */
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .notification-item {
@@ -52,6 +54,7 @@
   border-radius: 5px; /* Rounded corners */
   margin-bottom: 10px; /* Space between notifications */
   transition: background-color 0.2s; /* Smooth background color transition */
+  word-wrap: break-word; /* Prevent text overflow */
 }
 
 .notification-item:hover {
