@@ -49,7 +49,7 @@ const AddTaskPage = () => {
 
       emailjs
         .send(
-          "service_b0yzx2o",
+          "service_33nrb0q",
           "template_zz1ruij",
           templateParams,
           "PXS_cTqdGTjx-W0yE"
