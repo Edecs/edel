@@ -85,15 +85,16 @@ function Sidebar({ isOpen, onClose }) {
                 <ArchiveIcon className="sidebar-icon" />
               </Link>
               
-            </li><li>
-            <Link to="/Email-Form" onClick={onClose} title="Email Form">
-  <EmailFormIcon className="sidebar-icon" />
-</Link></li>
+            </li>
 
           </>
         )}
         {/* يظهر رابط قسم إدارة الأقسام فقط إذا كان المستخدم سوبر أدمن */}
         {isSuperAdmin && (
+          <li>
+            <Link to="/Email-Form" onClick={onClose} title="Email Form">
+  <EmailFormIcon className="sidebar-icon" />
+</Link></li>
           <li>
             <Link
               to="/department-management"
