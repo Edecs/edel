@@ -17,6 +17,7 @@ import DepartmentManagement from "./pages/DepartmentManagement";
 import LoadingScreen from "./components/LoadingScreen";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EmailForm from "./pages/EmailForm";
+import BulkUserUpload from "./pages/BulkUserUpload";
 
 import { useAuth } from "./context/AuthContext";
 import Modal from "react-modal";
@@ -143,6 +144,9 @@ const App = () => {
                     path="/course-management"
                     element={<CourseManagementPage />}
                   />
+
+                  <Route path="/BulkUser-Upload" element={<BulkUserUpload />} />
+
                   <Route
                     path="/department-management"
                     element={<DepartmentManagement />}
