@@ -1,0 +1,52 @@
+.bulk-upload-page {
+  margin: 20px auto;
+  max-width: 600px;
+  text-align: center;
+}
+
+.bulk-upload-page input {
+  margin: 10px 0;
+}
+
+.bulk-upload-page button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.bulk-upload-page button:hover {
+  background-color: #45a049;
+}
+
+.bulk-upload-page p {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.uploaded-users {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.uploaded-users ul {
+  list-style: none;
+  padding: 0;
+}
+
+.uploaded-users li {
+  margin: 10px 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.delete-all-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-all-btn:hover {
+  background-color: #d32f2f;
+}
