@@ -27,7 +27,7 @@
 .media-content img,
 .media-content video {
   width: 100%;
-  max-height: 500px;
+  max-height: 800px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -35,8 +35,8 @@
 /* Media navigation styling */
 .media-navigation {
   display: flex;
-  justify-content: center;
-  gap: 15px;
+  justify-content: space-between; /* Ensure buttons are spaced to left and right */
+  gap: 15px; /* Space between buttons */
   margin-top: 10px;
 }
 
@@ -58,7 +58,7 @@
 
 .media-navigation button:hover:not(:disabled) {
   background-color: #13898f;
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* Slight lift effect on hover */
 }
 
 /* Question container styling */
@@ -200,32 +200,4 @@
 
 .unanswered {
   background-color: red;
-}
-/* Media navigation styling */
-.media-navigation {
-  display: flex;
-  justify-content: space-between; /* Ensure buttons are spaced to left and right */
-  gap: 15px; /* Space between buttons */
-  margin-top: 10px;
-}
-
-.media-navigation button {
-  padding: 12px 25px;
-  background-color: #094d50;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  font-size: 16px;
-}
-
-.media-navigation button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.media-navigation button:hover:not(:disabled) {
-  background-color: #13898f;
-  transform: translateY(-2px); /* Slight lift effect on hover */
 }
