@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
 import { db, ref, set } from "../firebase"; // تأكد من مسار ملف firebase.js
+import "./BulkUserUpload.css";
 
 function BulkUserUpload() {
   const [csvFile, setCsvFile] = useState(null);
