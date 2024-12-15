@@ -9,6 +9,7 @@ import { ReactComponent as AddTaskIcon } from "../photos/add task.svg";
 import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-com.svg";
 import { ReactComponent as DepartmentIcon } from "../photos/open-data-square.svg"; // تأكد من وجود أيقونة للقسم
 import { ReactComponent as EmailFormIcon } from "../photos/email-essential-letter-svgrepo-com.svg"; // تأكد من وجود أيقونة للقسم
+import { ReactComponent as BulkUserUpload } from "../photos/upload-svgrepo-com.svg"; // تأكد من وجود أيقونة للقسم
 
 import "./Sidebar.css";
 
@@ -102,7 +103,7 @@ function Sidebar({ isOpen, onClose }) {
                 onClick={onClose}
                 title="BulkUserUpload"
               >
-                <EmailFormIcon className="sidebar-icon" />
+                <BulkUserUpload className="sidebar-icon" />
               </Link>
             </li>
 
