@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
-import { db, ref, set } from "../firebase"; // تأكد من مسار ملف firebase.js
-import "./BulkUserUpload.css";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { db, ref, set } from "../firebase"; // تأكد من استيراد Firebase بشكل صحيح
+import "./BulkUserUpload.css"; // اختياري: يمكنك تخصيص CSS إذا لزم الأمر
 
 function BulkUserUpload() {
   const [csvFile, setCsvFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
+
+  const auth = getAuth();
 
   const handleFileChange = (event) => {
     setCsvFile(event.target.files[0]);
@@ -18,21 +21,44 @@ function BulkUserUpload() {
     }
 
     Papa.parse(csvFile, {
-      header: true, // يقرأ الصف الأول كعناوين
+      header: true,
       skipEmptyLines: true,
       complete: async (results) => {
-        const users = results.data; // تحويل البيانات إلى كائنات
+        const users = results.data; // بيانات المستخدمين من CSV
         try {
-          for (let user of users) {
-            const { Name, Email } = user; // تأكد أن العناوين في الشيت تتطابق مع هذه
-            const sanitizedEmail = Email.replace(/\./g, ","); // معالجة النقطة لقاعدة البيانات
+          const adminEmail = auth.currentUser.email;
+          const adminPassword = prompt("Enter your admin password:");
 
-            // رفع البيانات إلى Firebase
+          for (let user of users) {
+            const { email, name, password, role, department } = user;
+
+            // إنشاء مستخدم جديد
+            const newUser = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+            const sanitizedEmail = email.replace(/\./g, ",");
+
+            // حفظ بيانات المستخدم في قاعدة البيانات
+            await set(ref(db, `roles/${sanitizedEmail}`), {
+              role: role || "user",
+              department: department || "",
+              courses: {},
+            });
+
             await set(ref(db, `users/${sanitizedEmail}`), {
-              name: Name,
-              email: Email,
+              email,
+              name,
+              role: role || "user",
+              department: department || "",
             });
           }
+
+          // إعادة تسجيل الدخول بالحساب الإداري
+          await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+
           setUploadStatus("Users uploaded successfully!");
         } catch (error) {
           console.error("Error uploading users:", error);
@@ -47,7 +73,7 @@ function BulkUserUpload() {
   };
 
   return (
-    <div>
+    <div className="bulk-upload-page">
       <h2>Upload Users in Bulk</h2>
       <input type="file" accept=".csv" onChange={handleFileChange} />
       <button onClick={handleFileUpload}>Upload Users</button>
