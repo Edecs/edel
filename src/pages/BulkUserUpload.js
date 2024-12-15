@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { db, ref, set } from "../firebase"; // تأكد من استيراد Firebase بشكل صحيح
-import "./BulkUserUpload.css"; // اختياري: يمكنك تخصيص CSS إذا لزم الأمر
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+} from "firebase/auth";
+import { db, ref, set } from "../firebase";
+import "./BulkUserUpload.css";
 
 function BulkUserUpload() {
   const [csvFile, setCsvFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
+  const [uploadedUsers, setUploadedUsers] = useState([]);
 
   const auth = getAuth();
 
@@ -14,7 +20,7 @@ function BulkUserUpload() {
     setCsvFile(event.target.files[0]);
   };
 
-  const handleFileUpload = () => {
+  const handleFileUpload = async () => {
     if (!csvFile) {
       alert("Please select a CSV file.");
       return;
@@ -24,7 +30,10 @@ function BulkUserUpload() {
       header: true,
       skipEmptyLines: true,
       complete: async (results) => {
-        const users = results.data; // بيانات المستخدمين من CSV
+        const users = results.data;
+        const addedUsers = [];
+        const errors = [];
+
         try {
           const adminEmail = auth.currentUser.email;
           const adminPassword = prompt("Enter your admin password:");
@@ -32,34 +41,55 @@ function BulkUserUpload() {
           for (let user of users) {
             const { email, name, password, role, department } = user;
 
-            // إنشاء مستخدم جديد
-            const newUser = await createUserWithEmailAndPassword(
-              auth,
-              email,
-              password
-            );
+            try {
+              // تحقق من وجود المستخدم مسبقًا
+              const signInMethods = await fetchSignInMethodsForEmail(
+                auth,
+                email
+              );
 
-            const sanitizedEmail = email.replace(/\./g, ",");
+              if (signInMethods.length > 0) {
+                console.warn(
+                  `User with email ${email} already exists. Skipping.`
+                );
+                continue;
+              }
 
-            // حفظ بيانات المستخدم في قاعدة البيانات
-            await set(ref(db, `roles/${sanitizedEmail}`), {
-              role: role || "user",
-              department: department || "",
-              courses: {},
-            });
+              // إنشاء المستخدم الجديد
+              const newUser = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+              );
 
-            await set(ref(db, `users/${sanitizedEmail}`), {
-              email,
-              name,
-              role: role || "user",
-              department: department || "",
-            });
+              const sanitizedEmail = email.replace(/\./g, ",");
+
+              await set(ref(db, `roles/${sanitizedEmail}`), {
+                role: role || "user",
+                department: department || "",
+                courses: {},
+              });
+
+              await set(ref(db, `users/${sanitizedEmail}`), {
+                email,
+                name: name || "Unknown",
+                role: role || "user",
+                department: department || "",
+              });
+
+              addedUsers.push({ email, name, role, department });
+            } catch (userError) {
+              console.error(`Error processing user ${email}:`, userError);
+              errors.push({ email, error: userError.message });
+            }
           }
 
-          // إعادة تسجيل الدخول بالحساب الإداري
           await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
 
-          setUploadStatus("Users uploaded successfully!");
+          setUploadedUsers(addedUsers);
+          setUploadStatus(
+            `Processed ${addedUsers.length}/${users.length} users. Check console for errors.`
+          );
         } catch (error) {
           console.error("Error uploading users:", error);
           setUploadStatus("Failed to upload users.");
@@ -78,6 +108,21 @@ function BulkUserUpload() {
       <input type="file" accept=".csv" onChange={handleFileChange} />
       <button onClick={handleFileUpload}>Upload Users</button>
       {uploadStatus && <p>{uploadStatus}</p>}
+
+      {uploadedUsers.length > 0 && (
+        <div className="uploaded-users">
+          <h3>Uploaded Users</h3>
+          <ul>
+            {uploadedUsers.map((user, index) => (
+              <li key={index}>
+                <strong>Name:</strong> {user.name} | <strong>Email:</strong>{" "}
+                {user.email} | <strong>Role:</strong> {user.role} |{" "}
+                <strong>Department:</strong> {user.department || "None"}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
