@@ -6,6 +6,9 @@
 
 .bulk-upload-page input {
   margin: 10px 0;
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .bulk-upload-page button {
@@ -15,6 +18,7 @@
   border: none;
   cursor: pointer;
   margin: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .bulk-upload-page button:hover {
@@ -45,8 +49,27 @@
 .delete-all-btn {
   background-color: #f44336;
   color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .delete-all-btn:hover {
   background-color: #d32f2f;
+}
+
+.progress-bar {
+  display: inline-block;
+  width: 100%;
+  height: 5px;
+  background-color: #ddd;
+  margin-left: 10px;
+}
+
+.progress-bar span {
+  display: block;
+  height: 100%;
+  background-color: #4caf50;
 }
