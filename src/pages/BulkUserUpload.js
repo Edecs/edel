@@ -20,6 +20,16 @@ function BulkUserUpload() {
     setCsvFile(event.target.files[0]);
   };
 
+  const handleFileDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    setCsvFile(file);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
   const handleFileUpload = async () => {
     if (!csvFile) {
       alert("Please select a CSV file.");
@@ -102,11 +112,29 @@ function BulkUserUpload() {
     });
   };
 
+  const calculatePercentage = (processed, total) => {
+    return Math.round((processed / total) * 100);
+  };
+
   return (
     <div className="bulk-upload-page">
       <h2>Upload Users in Bulk</h2>
-      <input type="file" accept=".csv" onChange={handleFileChange} />
-      <button onClick={handleFileUpload}>Upload Users</button>
+      <input
+        type="file"
+        accept=".csv"
+        onChange={handleFileChange}
+        style={{ display: csvFile ? "none" : "block" }}
+      />
+      <div
+        className={`dropzone ${csvFile ? "hidden" : ""}`}
+        onDrop={handleFileDrop}
+        onDragOver={handleDragOver}
+      >
+        Drag and Drop CSV File Here
+      </div>
+      <button onClick={handleFileUpload} disabled={!csvFile}>
+        Upload Users
+      </button>
       {uploadStatus && <p>{uploadStatus}</p>}
 
       {uploadedUsers.length > 0 && (
@@ -117,7 +145,16 @@ function BulkUserUpload() {
               <li key={index}>
                 <strong>Name:</strong> {user.name} | <strong>Email:</strong>{" "}
                 {user.email} | <strong>Role:</strong> {user.role} |{" "}
-                <strong>Department:</strong> {user.department || "None"}
+                <strong>Department:</strong> {user.department || "None"} |{" "}
+                <strong>Percentage Processed:</strong>{" "}
+                <span className="progress-bar">
+                  <span
+                    style={{
+                      width: `${calculatePercentage(index + 1, uploadedUsers.length)}%`
+                    }}
+                  ></span>
+                </span>
+                {calculatePercentage(index + 1, uploadedUsers.length)}%
               </li>
             ))}
           </ul>
