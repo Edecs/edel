@@ -48,7 +48,6 @@
 .notification-item {
   border-bottom: 1px solid #ddd;
   padding: 12px; /* Increased padding */
-  display: flex; /* Flexbox layout */
   align-items: center; /* Center items vertically */
   background-color: #f9f9f9; /* Light gray background */
   border-radius: 5px; /* Rounded corners */
