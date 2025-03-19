@@ -217,19 +217,28 @@ const SubCourseDetailPage = () => {
 
   // Prepare media items
   const mediaItems = [];
+
   if (subCourse?.media) {
-    const imageEntries = Object.entries(subCourse.media.images || {}).map(
-      ([id, { url }]) => ({ id, url, type: "image" })
-    );
-    const videoEntries = Object.entries(subCourse.media.videos || {}).map(
-      ([id, { url }]) => ({ id, url, type: "video" })
-    );
-
-    mediaItems.push(...imageEntries, ...videoEntries);
-
-    // Sort media items by their IDs
-    mediaItems.sort((a, b) => a.id.localeCompare(b.id));
+    // استخدم Object.keys بدلاً من Object.entries للحفاظ على ترتيب Firebase
+    const imageKeys = Object.keys(subCourse.media.images || {});
+    imageKeys.forEach((key) => {
+      mediaItems.push({
+        id: key,
+        url: subCourse.media.images[key].url,
+        type: "image",
+      });
+    });
+  
+    const videoKeys = Object.keys(subCourse.media.videos || {});
+    videoKeys.forEach((key) => {
+      mediaItems.push({
+        id: key,
+        url: subCourse.media.videos[key].url,
+        type: "video",
+      });
+    });
   }
+  
 
   const currentMedia = mediaItems[currentMediaIndex];
 
