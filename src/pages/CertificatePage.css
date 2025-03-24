@@ -36,16 +36,7 @@ margin-top:60px;
   .certificate-content p:last-of-type {
     margin-top: 40px; /* أضف مسافة 40px فوق الفقرة الأخيرة */
   }
-    
-  button {
-    margin-top: 20px;
-    padding: 10px 15px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+
   
   button:hover {
     background: #0056b3;
