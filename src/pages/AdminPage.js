@@ -401,58 +401,66 @@ function AdminPage() {
           </div>
 
           {isSubCoursePopupOpen && (
-            <div
-              className="subcourse-modal"
-              ref={popupRef}
-              onMouseDown={handleDragStart}
-            >
-              <h2 className="subcourse-moda0">Assign SubCourses</h2>
+  <div
+    className="subcourse-modal"
+    ref={popupRef}
+    onMouseDown={handleDragStart}
+  >
+    <h2 className="subcourse-moda0">Assign SubCourses</h2>
 
-              {Object.entries(courses).map(([courseId, course]) => (
-                <div key={courseId}>
-                  <h4>{course.name}</h4>
-                  {course.subCourses &&
-                    Object.entries(course.subCourses).map(
-                      ([subCourseId, subCourse]) => (
-                        <div key={subCourseId}>
-                          <input
-                            type="datetime-local"
-                            onChange={(e) =>
-                              setExpirationTimes({
-                                ...expirationTimes,
-                                [subCourseId]: e.target.value
-                                  ? new Date(e.target.value).getTime()
-                                  : null,
-                              })
-                            }
-                          />
-                          <input
-                            type="checkbox"
-                            checked={selectedSubCourses.includes(subCourseId)}
-                            onChange={() =>
-                              toggleSubCourseSelection(subCourseId)
-                            }
-                          />
-                          <label>{subCourse.name}</label>
-                        </div>
-                      )
-                    )}
+    {Object.entries(courses).map(([courseId, course]) => {
+      // عرض الدورة فقط لو صلاحية الكورس الرئيسي مفتوحة لجميع المستخدمين المحددين
+      const isAccessibleForAll = selectedUsers.every((userEmail) => {
+        const sanitizedEmail = userEmail.replace(/\./g, ",");
+        return roles[sanitizedEmail]?.courses?.[courseId]?.hasAccess;
+      });
+      if (!isAccessibleForAll) return null;
+
+      return (
+        <div key={courseId}>
+          <h4>{course.name}</h4>
+          {course.subCourses &&
+            Object.entries(course.subCourses).map(
+              ([subCourseId, subCourse]) => (
+                <div key={subCourseId}>
+                  <input
+                    type="datetime-local"
+                    onChange={(e) =>
+                      setExpirationTimes({
+                        ...expirationTimes,
+                        [subCourseId]: e.target.value
+                          ? new Date(e.target.value).getTime()
+                          : null,
+                      })
+                    }
+                  />
+                  <input
+                    type="checkbox"
+                    checked={selectedSubCourses.includes(subCourseId)}
+                    onChange={() => toggleSubCourseSelection(subCourseId)}
+                  />
+                  <label>{subCourse.name}</label>
                 </div>
-              ))}
+              )
+            )}
+        </div>
+      );
+    })}
 
-              <div className="modal-buttons1">
-                <button className="modal-apply-btn1" onClick={handleBulkAssign}>
-                  Apply
-                </button>
-                <button
-                  className="modal-cancel-btn1"
-                  onClick={() => setIsSubCoursePopupOpen(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
+    <div className="modal-buttons1">
+      <button className="modal-apply-btn1" onClick={handleBulkAssign}>
+        Apply
+      </button>
+      <button
+        className="modal-cancel-btn1"
+        onClick={() => setIsSubCoursePopupOpen(false)}
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
+
 
           <div className="user-details">
             {selectedUser && (
