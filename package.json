@@ -22,7 +22,10 @@
     "sass-loader": "^16.0.2",
     "typeface-roboto": "^0.0.75",
     "uuid": "^9.0.1",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "html2canvas": "^1.4.1",
+"jspdf": "^2.5.1"
+
   },
   "scripts": {
     "start": "react-scripts start",
