@@ -21,7 +21,6 @@ import EmailForm from "./pages/EmailForm";
 import BulkUserUpload from "./pages/BulkUserUpload";
 import CertificatePage from "./pages/CertificatePage"; // استيراد الصفحة الجديدة
 
-import Dashboard from "./pages/Dashboard";
 
 import { useAuth } from "./context/AuthContext";
 import Modal from "react-modal";
@@ -73,7 +72,7 @@ const App = () => {
 
     setCountdownInterval(interval); // حفظ معرف العد التنازلي لإيقافه عند الحاجة
   };
- 
+
   const resetTimer = () => {
     // إلغاء العد التنازلي الحالي
     if (countdownInterval) {
@@ -153,7 +152,6 @@ const App = () => {
 
                   <Route path="/BulkUser-Upload" element={<BulkUserUpload />} />
 
-                  <Route path="/Dashboard" element={<Dashboard />} />
 
                   <Route
                     path="/department-management"
