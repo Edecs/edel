@@ -73,7 +73,7 @@ const App = () => {
 
     setCountdownInterval(interval); // حفظ معرف العد التنازلي لإيقافه عند الحاجة
   };
-
+ 
   const resetTimer = () => {
     // إلغاء العد التنازلي الحالي
     if (countdownInterval) {
