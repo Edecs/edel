@@ -55,8 +55,8 @@ const CertificatePage = () => {
 
       </div>
 
-      <button onClick={handleDownloadPDF}>Download as PDF</button>
-      <button onClick={() => navigate("/welcome")}>Go to Home</button>
+      <button  className="submit-button" onClick={handleDownloadPDF}>Download as PDF</button>
+      <button  className="submit-button" onClick={() => navigate("/welcome")}>Go to Home</button>
     </div>
   );
 };
