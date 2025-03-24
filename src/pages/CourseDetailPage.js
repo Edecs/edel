@@ -10,7 +10,7 @@ const CourseDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userAccess, setUserAccess] = useState({});
-  const [currentUser, setCurrentUser] = useState(null);
+  const [subCourseExpirations, setSubCourseExpirations] = useState({});
 
   const fetchCourseDetails = useCallback(async () => {
     try {
@@ -18,7 +18,6 @@ const CourseDetailPage = () => {
       if (!user) {
         throw new Error("User not authenticated");
       }
-      setCurrentUser(user);
 
       const courseRef = ref(db, `courses/mainCourses/${courseId}`);
       const courseSnapshot = await get(courseRef);
@@ -32,7 +31,7 @@ const CourseDetailPage = () => {
       const courseData = courseSnapshot.val();
       setCourse(courseData);
 
-      // Fetch user permissions from Firebase
+      // جلب صلاحيات المستخدم من Firebase
       const sanitizedEmail = user.email.replace(/\./g, ",");
       const userAccessRef = ref(
         db,
@@ -41,14 +40,31 @@ const CourseDetailPage = () => {
       const userAccessSnapshot = await get(userAccessRef);
 
       if (userAccessSnapshot.exists()) {
-        setUserAccess(userAccessSnapshot.val());
+        const accessData = userAccessSnapshot.val();
+        setUserAccess(accessData);
+
+        console.log("📌 Fetched User Access Data:", accessData); // ✅ تحقق من البيانات المسترجعة
+
+        // إعداد توقيتات كل SubCourse
+        const expirations = {};
+        Object.entries(accessData).forEach(([key, value]) => {
+          if (value.expirationTime) {
+            const remainingTime = value.expirationTime - Date.now();
+            console.log(
+              `🔍 SubCourse: ${key}, Expiration Time: ${value.expirationTime}, Remaining: ${remainingTime}`
+            );
+            expirations[key] = remainingTime > 0 ? remainingTime : 0;
+          }
+        });
+
+        setSubCourseExpirations(expirations);
       } else {
         setUserAccess({});
       }
 
       setError(null);
     } catch (error) {
-      console.error("Error fetching course details:", error);
+      console.error("❌ Error fetching course details:", error);
       setError("Error fetching course details.");
       setCourse(null);
     } finally {
@@ -59,6 +75,45 @@ const CourseDetailPage = () => {
   useEffect(() => {
     fetchCourseDetails();
   }, [fetchCourseDetails]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSubCourseExpirations((prevExpirations) => {
+        let hasActiveTimers = false;
+        const updatedExpirations = {};
+
+        Object.keys(prevExpirations).forEach((key) => {
+          if (prevExpirations[key] > 1000) {
+            updatedExpirations[key] = prevExpirations[key] - 1000;
+            hasActiveTimers = true;
+          } else {
+            updatedExpirations[key] = 0;
+          }
+        });
+
+        // إذا لم يكن هناك أي عداد نشط، أوقف الـ interval
+        if (!hasActiveTimers) {
+          clearInterval(interval);
+        }
+
+        return updatedExpirations;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // تحويل الوقت إلى hh:mm:ss
+  const formatTimeLeft = (milliseconds) => {
+    if (milliseconds <= 0) return "00:00:00";
+    const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+    const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}:${String(seconds).padStart(2, "0")}`;
+  };
 
   return (
     <div className="course-detail">
@@ -81,26 +136,42 @@ const CourseDetailPage = () => {
                     ([subCourseId, subCourse]) =>
                       userAccess[subCourse.name]?.hasAccess
                   )
-                  .map(([subCourseId, subCourse]) => (
-                    <li
-                      key={subCourseId}
-                      className="sub-course-item"
-                      onClick={() =>
-                        (window.location.href = `/sub-courses/${subCourseId}?mainCourseId=${courseId}`)
-                      }
-                    >
-                      <Link
-                        to={`/sub-courses/${subCourseId}?mainCourseId=${courseId}`}
-                        style={{
-                          display: "block",
-                          width: "100%",
-                          height: "100%",
-                        }} // يغطي الرابط كامل مساحة العنصر
-                      >
-                        {subCourse.name}
-                      </Link>
-                    </li>
-                  ))}
+                  .map(([subCourseId, subCourse]) => {
+                    const expirationTime =
+                      userAccess[subCourse.name]?.expirationTime;
+                    const timeLeft = expirationTime
+                      ? Math.max(expirationTime - Date.now(), 0)
+                      : Infinity; // 🔹 إذا لم يكن هناك وقت انتهاء، اعتبره غير محدود
+
+                    const isExpired = timeLeft === 0;
+
+                    return (
+                      <li key={subCourseId} className="sub-course-item">
+                        {isExpired ? (
+                          <span
+                            style={{ color: "gray", cursor: "not-allowed" }}
+                          >
+                            {subCourse.name}{" "}
+                            <span className="sub-course-timer">
+                              {formatTimeLeft(timeLeft)}
+                            </span>
+                          </span>
+                        ) : (
+                          <Link
+                            to={`/sub-courses/${subCourseId}?mainCourseId=${courseId}`}
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <span>{subCourse.name}</span>
+                            {expirationTime && (
+                              <span className="sub-course-timer">
+                                {formatTimeLeft(timeLeft)}
+                              </span>
+                            )}
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
               </ul>
             ) : (
               <p className="no-sub-courses">
