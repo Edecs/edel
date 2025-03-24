@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import LoginPage from "./pages/LoginPage";
 import WelcomePage from "./pages/WelcomePage";
 import AdminPage from "./pages/AdminPage";
+
 import CoursePage from "./pages/CoursePage";
 import CourseDetailPage from "./pages/CourseDetailPage";
 import SubCourseDetailPage from "./pages/SubCourseDetailPage";
@@ -18,6 +19,9 @@ import LoadingScreen from "./components/LoadingScreen";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EmailForm from "./pages/EmailForm";
 import BulkUserUpload from "./pages/BulkUserUpload";
+import CertificatePage from "./pages/CertificatePage"; // استيراد الصفحة الجديدة
+
+import Dashboard from "./pages/Dashboard";
 
 import { useAuth } from "./context/AuthContext";
 import Modal from "react-modal";
@@ -127,6 +131,8 @@ const App = () => {
             <>
               <Route path="/welcome" element={<WelcomePage />} />
               <Route path="/courses" element={<CoursePage />} />
+              <Route path="/certificates" element={<CertificatePage />} />
+
               <Route path="/courses/:courseId" element={<CourseDetailPage />} />
               <Route
                 path="/sub-courses/:subCourseId"
@@ -146,6 +152,8 @@ const App = () => {
                   />
 
                   <Route path="/BulkUser-Upload" element={<BulkUserUpload />} />
+
+                  <Route path="/Dashboard" element={<Dashboard />} />
 
                   <Route
                     path="/department-management"
