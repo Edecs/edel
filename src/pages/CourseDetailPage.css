@@ -12,7 +12,6 @@
 .course-detail-container p {
   text-align: center;
   font-size: 18px;
-  color: #333;
 }
 
 .error-message {
@@ -61,7 +60,7 @@
   cursor: pointer;
 }
 
-.sub-course-item a {
+.sub-course-item a span {
   text-align: center;
   margin: auto;
   text-decoration: none;
@@ -95,4 +94,44 @@
     flex-direction: column; /* Stack items vertically on smaller screens */
     text-align: center;
   }
+}
+.sub-course-item {
+  display: flex;
+  justify-content: space-between; /* توزيع العناصر بالتساوي */
+  align-items: center;
+  padding: 15px;
+  background-color: #ffffff; /* خلفية بيضاء */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sub-course-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sub-course-item a {
+  display: flex;
+  justify-content: space-between; /* محاذاة الاسم والتوقيت */
+  align-items: center;
+  width: 100%; /* يأخذ المساحة الكاملة */
+  text-decoration: none;
+  color: #0e6d72;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sub-course-item a:hover {
+  color: #007bff;
+}
+
+.sub-course-timer {
+  font-size: 16px;
+  color: #d9534f; /* لون أحمر للعد التنازلي */
+  font-weight: bold;
+  margin-left: 10px;
+  background-color: #f2dede; /* خلفية خفيفة للوضوح */
+  padding: 5px 10px;
+  border-radius: 4px;
 }
