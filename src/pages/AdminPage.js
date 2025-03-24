@@ -1,5 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { db, ref, get, set } from "../firebase"; // Import only what you need
+import React, { useState, useEffect, useCallback, useRef } from "react"; // إضافة useRef هنا مباشرة
+import { db } from "../firebase"; // استيراد قاعدة البيانات فقط
+import { ref as dbRef } from "firebase/database"; // إضافة dbRef
+import { get, set, remove } from "firebase/database";
+import { update } from "firebase/database"; // إضافة update هنا
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -9,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import "./AdminPage.css";
 
 function AdminPage() {
+  const [expirationTimes, setExpirationTimes] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState({});
@@ -24,38 +29,44 @@ function AdminPage() {
   const [currentUserRole, setCurrentUserRole] = useState(null);
   const [currentUserDepartment, setCurrentUserDepartment] = useState("");
   const [courseSearchQuery, setCourseSearchQuery] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedSubCourses, setSelectedSubCourses] = useState([]);
+  const [isSubCoursePopupOpen, setIsSubCoursePopupOpen] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
 
   const auth = getAuth();
   const navigate = useNavigate();
 
   const fetchData = useCallback(async () => {
     try {
-      const rolesRef = ref(db, "roles");
-      const rolesSnapshot = await get(rolesRef);
+      const rolesSnapshot = await get(dbRef(db, "roles"));
       const rolesData = rolesSnapshot.exists() ? rolesSnapshot.val() : {};
 
-      const usersRef = ref(db, "users");
-      const usersSnapshot = await get(usersRef);
+      const usersSnapshot = await get(dbRef(db, "users"));
       const usersData = usersSnapshot.exists()
         ? Object.entries(usersSnapshot.val()).reduce((acc, [email, user]) => {
-            const formattedEmail = email.replace(/,/g, ".");
-            acc[formattedEmail] = { ...user, email: formattedEmail };
+            acc[email.replace(/,/g, ".")] = {
+              ...user,
+              email: email.replace(/,/g, "."),
+            };
             return acc;
           }, {})
         : {};
 
-      const departmentsRef = ref(db, "departments");
-      const departmentsSnapshot = await get(departmentsRef);
+      const departmentsSnapshot = await get(dbRef(db, "departments"));
       const departmentsData = departmentsSnapshot.exists()
         ? Object.values(departmentsSnapshot.val())
         : [];
 
+      const coursesSnapshot = await get(dbRef(db, "courses/mainCourses"));
+      const coursesData = coursesSnapshot.exists() ? coursesSnapshot.val() : {};
+
       setRoles(rolesData);
       setUsers(Object.values(usersData));
       setDepartments(departmentsData);
-      setCourses((await get(ref(db, "courses/mainCourses"))).val() || {});
+      setCourses(coursesData);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("❌ Error fetching data:", error);
     }
   }, []);
 
@@ -64,8 +75,8 @@ function AdminPage() {
       const user = auth.currentUser;
       if (user) {
         const sanitizedEmail = user.email.replace(/\./g, ",");
-        const roleRef = ref(db, `roles/${sanitizedEmail}`);
-        const roleSnapshot = await get(roleRef);
+        const roledbRef = dbRef(db, `roles/${sanitizedEmail}`);
+        const roleSnapshot = await get(roledbRef);
         if (roleSnapshot.exists()) {
           const roleData = roleSnapshot.val();
           setCurrentUserRole(roleData.role);
@@ -78,24 +89,88 @@ function AdminPage() {
       console.error("Error fetching current user role:", error);
     }
   }, [auth]);
-
-  const handleToggleAccess = async (email, courseId, subCourseName) => {
+  const handleToggleAccess = async (
+    email,
+    courseId,
+    subCourseName,
+    expirationTime
+  ) => {
     try {
       const sanitizedEmail = email.replace(/\./g, ",");
-      const userRoleRef = ref(
+      const userRoledbRef = dbRef(
         db,
         `roles/${sanitizedEmail}/courses/${courseId}/${subCourseName}`
       );
-      const currentAccessSnapshot = await get(userRoleRef);
+
+      const currentAccessSnapshot = await get(userRoledbRef);
       const currentAccess = currentAccessSnapshot.exists()
         ? currentAccessSnapshot.val().hasAccess
         : false;
-      await set(userRoleRef, { hasAccess: !currentAccess });
-      await fetchData(); // Update data after changing access state
+
+      if (currentAccess) {
+        // 🔴 إزالة الصلاحية عند إيقافها
+        await remove(userRoledbRef);
+      } else {
+        const accessData = { hasAccess: true };
+        if (expirationTime) {
+          accessData.expirationTime = expirationTime; // فقط أضف وقت الصلاحية إذا كان موجودًا
+        }
+
+        await set(userRoledbRef, accessData);
+      }
+
+      await fetchData(); // تحديث البيانات بعد التغيير
     } catch (error) {
       console.error("Error toggling course access:", error);
     }
   };
+
+  useEffect(() => {
+    const checkAndRemoveExpiredAccess = async () => {
+      try {
+        const rolesdbRef = dbRef(db, "roles"); // قاعدة بيانات الأدوار
+        const rolesSnapshot = await get(rolesdbRef);
+
+        if (rolesSnapshot.exists()) {
+          const rolesData = rolesSnapshot.val();
+          const now = Date.now();
+
+          for (const userEmail in rolesData) {
+            if (rolesData[userEmail].courses) {
+              for (const courseId in rolesData[userEmail].courses) {
+                for (const subCourseId in rolesData[userEmail].courses[
+                  courseId
+                ]) {
+                  const subCourseData =
+                    rolesData[userEmail].courses[courseId][subCourseId];
+
+                  if (subCourseData.hasAccess && subCourseData.expirationTime) {
+                    if (now >= subCourseData.expirationTime) {
+                      // إزالة الصلاحية عند انتهاء الوقت
+                      const expireddbRef = dbRef(
+                        db,
+                        `roles/${userEmail}/courses/${courseId}/${subCourseId}`
+                      );
+                      await remove(expireddbRef);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error("❌ Error checking expired access:", error);
+      }
+    };
+
+    // تشغيل الفحص كل دقيقة
+    const interval = setInterval(() => {
+      checkAndRemoveExpiredAccess();
+    }, 60 * 1000); // كل 60 ثانية
+
+    return () => clearInterval(interval); // تنظيف التايمر عند تفكيك الكومبوننت
+  }, []);
 
   const getSubCourseName = (courseId, subCourseId) => {
     return (
@@ -139,13 +214,12 @@ function AdminPage() {
         // Sanitize email for storage
         const sanitizedEmail = newUserEmail.replace(/\./g, ",");
 
-        // Prepare references to save new user data
-        const rolesRef = ref(db, `roles/${sanitizedEmail}`);
-        const usersRef = ref(db, `users/${sanitizedEmail}`);
-
-        // Add new user to database
-        await set(rolesRef, { role: newUserRole, courses: {} });
-        await set(usersRef, {
+        // Prepare dbReferences to save new user data
+        const roledbRef = dbRef(db, `roles/${sanitizedEmail}`);
+        const usersdbRef = dbRef(db, `users/${sanitizedEmail}`);
+        // إضافة المستخدم الجديد إلى قاعدة البيانات
+        await set(roledbRef, { role: newUserRole, courses: {} });
+        await set(usersdbRef, {
           email: newUserEmail,
           name: newUserName,
           role: newUserRole,
@@ -169,6 +243,93 @@ function AdminPage() {
         console.error("Error adding user:", error);
       }
     }
+  };
+  const handleBulkAssign = async () => {
+    if (selectedUsers.length === 0 || selectedSubCourses.length === 0) {
+      alert("يرجى تحديد المستخدمين والدورات الفرعية!");
+      return;
+    }
+
+    const updates = {};
+
+    selectedUsers.forEach((userEmail) => {
+      const sanitizedEmail = userEmail.replace(/\./g, ",");
+
+      selectedSubCourses.forEach((subCourseId) => {
+        // ✅ إيجاد الـ mainCourseId لهذا الـ subCourseId
+        let mainCourseId = null;
+        Object.entries(courses).forEach(([courseId, course]) => {
+          if (course.subCourses && course.subCourses[subCourseId]) {
+            mainCourseId = courseId;
+          }
+        });
+
+        if (!mainCourseId) {
+          console.error(`❌ لم يتم العثور على كورس رئيسي لـ ${subCourseId}`);
+          return;
+        }
+
+        const expirationTime = expirationTimes[subCourseId] || null;
+
+        updates[
+          `roles/${sanitizedEmail}/courses/${mainCourseId}/${subCourseId}`
+        ] = {
+          hasAccess: true,
+          ...(expirationTime ? { expirationTime } : {}),
+        };
+      });
+    });
+
+    try {
+      await update(dbRef(db), updates);
+      alert("✅ تم تحديث الصلاحيات بنجاح!");
+    } catch (error) {
+      console.error("❌ خطأ في حفظ الصلاحيات:", error);
+      alert("❌ حدث خطأ أثناء تحديث الصلاحيات.");
+    }
+
+    setIsSubCoursePopupOpen(false);
+  };
+
+  const toggleUserSelection = (email) => {
+    setSelectedUsers((prev) =>
+      prev.includes(email)
+        ? prev.filter((user) => user !== email)
+        : [...prev, email]
+    );
+  };
+
+  const toggleSubCourseSelection = (subCourseId) => {
+    setSelectedSubCourses((prev) =>
+      prev.includes(subCourseId)
+        ? prev.filter((id) => id !== subCourseId)
+        : [...prev, subCourseId]
+    );
+  };
+  const [position, setPosition] = useState({ x: 200, y: 100 });
+  const popupRef = useRef(null);
+
+  const handleDragStart = (e) => {
+    const element = popupRef.current;
+    if (!element) return;
+
+    const shiftX = e.clientX - element.getBoundingClientRect().left;
+    const shiftY = e.clientY - element.getBoundingClientRect().top;
+
+    const handleMouseMove = (event) => {
+      setPosition({
+        x: event.clientX - shiftX,
+        y: event.clientY - shiftY,
+      });
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
   return (
@@ -203,6 +364,14 @@ function AdminPage() {
         <div className="main-content">
           <div className="user-list4">
             <h2>Users</h2>
+            <button
+              className="assign-subcourses-btn"
+              onClick={() => setIsSubCoursePopupOpen(true)}
+              disabled={selectedUsers.length === 0} // تعطيل الزر إذا لم يتم تحديد أي مستخدم
+            >
+              Assign SubCourses
+            </button>
+
             {users
               .filter((user) => {
                 const lowerCaseQuery = searchQuery.toLowerCase();
@@ -215,17 +384,79 @@ function AdminPage() {
               .map((user) => (
                 <div
                   key={user.email}
-                  className="user-item"
-                  onClick={() => setSelectedUser(user)} // Set selected user here
+                  className={`user-item ${
+                    selectedUser?.email === user.email ? "active" : ""
+                  }`}
+                  onClick={() => setSelectedUser(user)} // تحديد المستخدم عند النقر
                 >
+                  <input
+                    type="checkbox"
+                    checked={selectedUsers.includes(user.email)}
+                    onChange={() => toggleUserSelection(user.email)}
+                    onClick={(e) => e.stopPropagation()} // منع التفاعل غير المقصود مع التحديد
+                  />
                   {user.name}
                 </div>
               ))}
           </div>
 
+          {isSubCoursePopupOpen && (
+            <div
+              className="subcourse-modal"
+              ref={popupRef}
+              onMouseDown={handleDragStart}
+            >
+              <h2 className="subcourse-moda0">Assign SubCourses</h2>
+
+              {Object.entries(courses).map(([courseId, course]) => (
+                <div key={courseId}>
+                  <h4>{course.name}</h4>
+                  {course.subCourses &&
+                    Object.entries(course.subCourses).map(
+                      ([subCourseId, subCourse]) => (
+                        <div key={subCourseId}>
+                          <input
+                            type="datetime-local"
+                            onChange={(e) =>
+                              setExpirationTimes({
+                                ...expirationTimes,
+                                [subCourseId]: e.target.value
+                                  ? new Date(e.target.value).getTime()
+                                  : null,
+                              })
+                            }
+                          />
+                          <input
+                            type="checkbox"
+                            checked={selectedSubCourses.includes(subCourseId)}
+                            onChange={() =>
+                              toggleSubCourseSelection(subCourseId)
+                            }
+                          />
+                          <label>{subCourse.name}</label>
+                        </div>
+                      )
+                    )}
+                </div>
+              ))}
+
+              <div className="modal-buttons1">
+                <button className="modal-apply-btn1" onClick={handleBulkAssign}>
+                  Apply
+                </button>
+                <button
+                  className="modal-cancel-btn1"
+                  onClick={() => setIsSubCoursePopupOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="user-details">
             {selectedUser && (
-              <>
+              <div className="user-details1">
                 <h2>User Details</h2>
                 <p>
                   <strong>Email:</strong> {selectedUser.email}
@@ -241,6 +472,7 @@ function AdminPage() {
                   <strong>Role:</strong>{" "}
                   {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
                 </p>
+
                 <h3>Sub-course Access</h3>
                 <input
                   type="text"
@@ -248,9 +480,9 @@ function AdminPage() {
                   value={courseSearchQuery}
                   onChange={(e) => setCourseSearchQuery(e.target.value)}
                 />
+
                 {Object.entries(courses)
                   .filter(([courseId, course]) => {
-                    // Check if the user has access to the main course
                     const hasMainCourseAccess =
                       !!roles[selectedUser.email.replace(/\./g, ",")]
                         ?.courses?.[courseId]?.hasAccess;
@@ -272,38 +504,48 @@ function AdminPage() {
                       <h4>{course.name}</h4>
                       {course.subCourses && (
                         <div className="subcourses-container">
-                          {" "}
-                          {/* إضافة الفئة هنا */}
                           {Object.entries(course.subCourses).map(
-                            ([subCourseId, subCourse]) => (
-                              <div className="sup" key={subCourseId}>
-                                <input
-                                  type="checkbox"
-                                  checked={
-                                    !!roles[
-                                      selectedUser.email.replace(/\./g, ",")
-                                    ]?.courses?.[courseId]?.[subCourseId]
-                                      ?.hasAccess
-                                  }
-                                  onChange={() =>
-                                    handleToggleAccess(
-                                      selectedUser.email,
-                                      courseId,
-                                      subCourseId
-                                    )
-                                  }
-                                />
-                                <label>
-                                  {getSubCourseName(courseId, subCourseId)}
-                                </label>
-                              </div>
-                            )
+                            ([subCourseId, subCourse]) => {
+                              const accessData =
+                                roles[selectedUser.email.replace(/\./g, ",")]
+                                  ?.courses?.[courseId]?.[subCourseId];
+
+                              return (
+                                <div className="sup" key={subCourseId}>
+                                  <input
+                                    type="datetime-local"
+                                    onChange={(e) =>
+                                      setExpirationTimes({
+                                        ...expirationTimes,
+                                        [subCourseId]: e.target.value
+                                          ? new Date(e.target.value).getTime()
+                                          : null,
+                                      })
+                                    }
+                                  />
+
+                                  <input
+                                    type="checkbox"
+                                    checked={!!accessData?.hasAccess}
+                                    onChange={() =>
+                                      handleToggleAccess(
+                                        selectedUser.email,
+                                        courseId,
+                                        subCourseId,
+                                        expirationTimes[subCourseId]
+                                      )
+                                    }
+                                  />
+                                  <label>{subCourse.name}</label>
+                                </div>
+                              );
+                            }
                           )}
                         </div>
                       )}
                     </div>
                   ))}
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -368,7 +610,9 @@ function AdminPage() {
               </select>
             )}
 
-            <button className="addus" onClick={handleAddUser}>Add</button>
+            <button className="addus" onClick={handleAddUser}>
+              Add
+            </button>
           </div>
         )}{" "}
       </div>
