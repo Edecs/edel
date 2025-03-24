@@ -1,0 +1,53 @@
+.certificate-container {
+margin-top:60px;
+    
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #000;
+    max-width: 600px;
+    margin: 50px auto;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    color: #2c3e50;
+  }
+  .certificate-logo {
+    width: 150px; /* عرض الصورة */
+    height: auto; /* الحفاظ على نسبة الأبعاد */
+    margin-bottom: 20px; /* إضافة مسافة بين الشعار والنص */
+  }
+  .certificate-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* توسيط عمودي */
+    align-items: center; /* توسيط أفقي */
+    height: 100%; /* اجعل الحاوية تأخذ كامل الارتفاع */
+    text-align: center; /* توسيط النص */
+  }
+  
+  .certificate-content h2 {
+    font-size: 24px; /* تكبير حجم الخط */
+    font-weight: bold; /* جعله عريضًا */
+    margin-top: 20px; /* هامش علوي بسيط */
+  }
+  .certificate-content p:last-of-type {
+    margin-top: 40px; /* أضف مسافة 40px فوق الفقرة الأخيرة */
+  }
+    
+  button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #0056b3;
+  }
+  
