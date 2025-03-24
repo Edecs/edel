@@ -155,12 +155,12 @@ const SubCourseDetailPage = () => {
       alert("User name not loaded. Please try again.");
       return;
     }
-
+  
     let endTime = new Date();
     const totalTime = (endTime - startTime) / 1000;
-
+  
     let correctCount = 0;
-
+  
     if (subCourse?.questions) {
       Object.values(subCourse.questions).forEach((question, index) => {
         const userAnswer = userAnswers[index];
@@ -172,12 +172,12 @@ const SubCourseDetailPage = () => {
         }
       });
     }
-
+  
     let percentageSuccess =
       totalQuestions > 0
         ? ((correctCount / totalQuestions) * 100).toFixed(2)
         : "0.00";
-
+  
     const submissionData = {
       email: user.email,
       userId: user ? user.uid : "Anonymous",
@@ -189,19 +189,23 @@ const SubCourseDetailPage = () => {
       percentageSuccess,
       userAnswers,
     };
-
+  
     try {
-      await set(
-        ref(db, `submissions/${user.uid}/${subCourseId}`),
-        submissionData
-      );
+      await set(ref(db, `submissions/${user.uid}/${subCourseId}`), submissionData);
       setSubmissionResult(submissionData);
-      navigate("/welcome");
+  
+      if (percentageSuccess >= 80) {
+        navigate("/certificates", { state: { userName, courseId: subCourseId, percentageSuccess } });
+      } else {
+        navigate("/welcome", { replace: true }); // استخدم replace لتجنب الرجوع للخلف بالمتصفح
+      }
+      
     } catch (error) {
       console.error("Error submitting data:", error);
       alert("Failed to submit data.");
     }
   };
+  
 
   const convertDropboxLink = (link) => {
     if (link.includes("dropbox.com")) {
