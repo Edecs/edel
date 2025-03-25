@@ -541,75 +541,76 @@ function AdminPage() {
                   onChange={(e) => setCourseSearchQuery(e.target.value)}
                 />
 
-                {Object.entries(courses).map(([courseId, course]) => (
-                  <div key={courseId}>
-                    <h4>{course.name}</h4>
-                    {course.subCourses && (
-                      <div className="subcourses-container">
-                        {Object.entries(course.subCourses).map(
-                          ([subCourseId, subCourse]) => (
-                            <div className="sup" key={subCourseId}>
-                              <input
-                                type="datetime-local"
-                                value={
-                                  // نعطي الأولوية للقيمة المخزنة في حالة expirationTimes إذا تم تعديلها،
-                                  // وإن لم تتغير نستخدم القيمة المخزنة في الـ roles (إن وُجدت)
-                                  expirationTimes[subCourseId]
-                                    ? new Date(expirationTimes[subCourseId])
-                                        .toISOString()
-                                        .slice(0, 16)
-                                    : roles[
-                                        selectedUser.email.replace(/\./g, ",")
-                                      ]?.courses?.[courseId]?.[subCourseId]
-                                        ?.expirationTime
-                                    ? new Date(
-                                        roles[
-                                          selectedUser.email.replace(/\./g, ",")
-                                        ]?.courses?.[courseId]?.[
-                                          subCourseId
-                                        ]?.expirationTime
-                                      )
-                                        .toISOString()
-                                        .slice(0, 16)
-                                    : ""
-                                }
-                                onChange={(e) => {
-                                  const newTime = e.target.value
-                                    ? new Date(e.target.value).getTime()
-                                    : null;
-                                  setExpirationTimes({
-                                    ...expirationTimes,
-                                    [subCourseId]: newTime,
-                                  });
-                                }}
-                              />
-                              <input
-                                type="checkbox"
-                                checked={
-                                  !!roles[
-                                    selectedUser.email.replace(/\./g, ",")
-                                  ]?.courses?.[courseId]?.[subCourseId]
-                                    ?.hasAccess
-                                }
-                                onChange={() =>
-                                  handleToggleAccess(
-                                    selectedUser.email,
-                                    courseId,
-                                    subCourseId,
+                {Object.entries(courses).map(([courseId, course]) => {
+                  // الحصول على بيانات صلاحيات المستخدم
+                  const userCourses =
+                    roles[selectedUser.email.replace(/\./g, ",")]?.courses;
+                  // إذا لم يمتلك المستخدم صلاحية الـ main course، لا نقوم بعرض هذا الكورس
+                  if (!userCourses || !userCourses[courseId]) {
+                    return null;
+                  }
+                  return (
+                    <div key={courseId}>
+                      <h4>{course.name}</h4>
+                      {course.subCourses && (
+                        <div className="subcourses-container">
+                          {Object.entries(course.subCourses).map(
+                            ([subCourseId, subCourse]) => (
+                              <div className="sup" key={subCourseId}>
+                                <input
+                                  type="datetime-local"
+                                  value={
                                     expirationTimes[subCourseId]
-                                  )
-                                }
-                              />
-                              <label>
-                                {getSubCourseName(courseId, subCourseId)}
-                              </label>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                                      ? new Date(expirationTimes[subCourseId])
+                                          .toISOString()
+                                          .slice(0, 16)
+                                      : userCourses[courseId][subCourseId]
+                                          ?.expirationTime
+                                      ? new Date(
+                                          userCourses[courseId][
+                                            subCourseId
+                                          ].expirationTime
+                                        )
+                                          .toISOString()
+                                          .slice(0, 16)
+                                      : ""
+                                  }
+                                  onChange={(e) => {
+                                    const newTime = e.target.value
+                                      ? new Date(e.target.value).getTime()
+                                      : null;
+                                    setExpirationTimes({
+                                      ...expirationTimes,
+                                      [subCourseId]: newTime,
+                                    });
+                                  }}
+                                />
+                                <input
+                                  type="checkbox"
+                                  checked={
+                                    !!userCourses[courseId][subCourseId]
+                                      ?.hasAccess
+                                  }
+                                  onChange={() =>
+                                    handleToggleAccess(
+                                      selectedUser.email,
+                                      courseId,
+                                      subCourseId,
+                                      expirationTimes[subCourseId]
+                                    )
+                                  }
+                                />
+                                <label>
+                                  {getSubCourseName(courseId, subCourseId)}
+                                </label>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
