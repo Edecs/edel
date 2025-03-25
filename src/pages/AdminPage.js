@@ -365,6 +365,42 @@ function AdminPage() {
           <div className="user-list4">
             <h2>Users</h2>
             <button
+              className="select-all-btn"
+              onClick={() => {
+                const filteredUserEmails = users
+                  .filter(
+                    (user) =>
+                      user.name
+                        ?.toLowerCase()
+                        .includes(searchQuery.toLowerCase()) ||
+                      user.department
+                        ?.toLowerCase()
+                        .includes(searchQuery.toLowerCase()) ||
+                      user.email
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())
+                  )
+                  .map((user) => user.email);
+
+                // إذا كان جميعهم محددين، قم بإلغاء التحديد، وإلا قم بتحديدهم
+                if (
+                  filteredUserEmails.every((email) =>
+                    selectedUsers.includes(email)
+                  )
+                ) {
+                  setSelectedUsers([]);
+                } else {
+                  setSelectedUsers(filteredUserEmails);
+                }
+              }}
+            >
+              {users.length > 0 &&
+              users.every((user) => selectedUsers.includes(user.email))
+                ? "Deselect All"
+                : "Select All"}
+            </button>
+
+            <button
               className="assign-subcourses-btn"
               onClick={() => setIsSubCoursePopupOpen(true)}
               disabled={selectedUsers.length === 0} // تعطيل الزر إذا لم يتم تحديد أي مستخدم
@@ -401,66 +437,67 @@ function AdminPage() {
           </div>
 
           {isSubCoursePopupOpen && (
-  <div
-    className="subcourse-modal"
-    ref={popupRef}
-    onMouseDown={handleDragStart}
-  >
-    <h2 className="subcourse-moda0">Assign SubCourses</h2>
+            <div
+              className="subcourse-modal"
+              ref={popupRef}
+              onMouseDown={handleDragStart}
+            >
+              <h2 className="subcourse-moda0">Assign SubCourses</h2>
 
-    {Object.entries(courses).map(([courseId, course]) => {
-      // عرض الدورة فقط لو صلاحية الكورس الرئيسي مفتوحة لجميع المستخدمين المحددين
-      const isAccessibleForAll = selectedUsers.every((userEmail) => {
-        const sanitizedEmail = userEmail.replace(/\./g, ",");
-        return roles[sanitizedEmail]?.courses?.[courseId]?.hasAccess;
-      });
-      if (!isAccessibleForAll) return null;
+              {Object.entries(courses).map(([courseId, course]) => {
+                // عرض الدورة فقط لو صلاحية الكورس الرئيسي مفتوحة لجميع المستخدمين المحددين
+                const isAccessibleForAll = selectedUsers.every((userEmail) => {
+                  const sanitizedEmail = userEmail.replace(/\./g, ",");
+                  return roles[sanitizedEmail]?.courses?.[courseId]?.hasAccess;
+                });
+                if (!isAccessibleForAll) return null;
 
-      return (
-        <div key={courseId}>
-          <h4>{course.name}</h4>
-          {course.subCourses &&
-            Object.entries(course.subCourses).map(
-              ([subCourseId, subCourse]) => (
-                <div key={subCourseId}>
-                  <input
-                    type="datetime-local"
-                    onChange={(e) =>
-                      setExpirationTimes({
-                        ...expirationTimes,
-                        [subCourseId]: e.target.value
-                          ? new Date(e.target.value).getTime()
-                          : null,
-                      })
-                    }
-                  />
-                  <input
-                    type="checkbox"
-                    checked={selectedSubCourses.includes(subCourseId)}
-                    onChange={() => toggleSubCourseSelection(subCourseId)}
-                  />
-                  <label>{subCourse.name}</label>
-                </div>
-              )
-            )}
-        </div>
-      );
-    })}
+                return (
+                  <div key={courseId}>
+                    <h4>{course.name}</h4>
+                    {course.subCourses &&
+                      Object.entries(course.subCourses).map(
+                        ([subCourseId, subCourse]) => (
+                          <div key={subCourseId}>
+                            <input
+                              type="datetime-local"
+                              onChange={(e) =>
+                                setExpirationTimes({
+                                  ...expirationTimes,
+                                  [subCourseId]: e.target.value
+                                    ? new Date(e.target.value).getTime()
+                                    : null,
+                                })
+                              }
+                            />
+                            <input
+                              type="checkbox"
+                              checked={selectedSubCourses.includes(subCourseId)}
+                              onChange={() =>
+                                toggleSubCourseSelection(subCourseId)
+                              }
+                            />
+                            <label>{subCourse.name}</label>
+                          </div>
+                        )
+                      )}
+                  </div>
+                );
+              })}
 
-    <div className="modal-buttons1">
-      <button className="modal-apply-btn1" onClick={handleBulkAssign}>
-        Apply
-      </button>
-      <button
-        className="modal-cancel-btn1"
-        onClick={() => setIsSubCoursePopupOpen(false)}
-      >
-        Cancel
-      </button>
-    </div>
-  </div>
-)}
-
+              <div className="modal-buttons1">
+                <button className="modal-apply-btn1" onClick={handleBulkAssign}>
+                  Apply
+                </button>
+                <button
+                  className="modal-cancel-btn1"
+                  onClick={() => setIsSubCoursePopupOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="user-details">
             {selectedUser && (
