@@ -199,73 +199,48 @@ function CoursePage() {
       setError("Failed to delete question: " + error.message);
     }
   };
-  const handleAddCourse = async () => {
-    if (!newCourseName.trim()) {
-      alert("Course name cannot be empty.");
-      return;
-    }
 
-    const coursesRef = ref(db, "courses/mainCourses"); // استخدم المسار الصحيح
-    const snapshot = await get(coursesRef);
-
-    if (snapshot.exists()) {
-      const courses = snapshot.val();
-      const courseExists = Object.values(courses).some(
-        (course) => course.name.toLowerCase() === newCourseName.toLowerCase()
-      );
-
-      if (courseExists) {
-        alert(
-          "This course name already exists. Please choose a different name."
-        );
-        return;
-      }
-    }
-
-    // إضافة الدورة فقط إذا لم تكن موجودة مسبقًا
-    const newCourseRef = push(coursesRef);
-    await set(newCourseRef, {
-      id: newCourseRef.key,
+  const handleAddCourse = () => {
+    const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
+    set(courseRef, {
       name: newCourseName,
-      thumbnail: thumbnail || "",
+      thumbnail: thumbnail,
+      department: currentUserDepartment,
     });
 
-    setNewCourseName(""); // إعادة تعيين الحقل بعد الإضافة
-    setThumbnail(""); // إعادة تعيين الصورة
-    alert("Course added successfully!");
+    setNewCourseName("");
+    setThumbnail("");
   };
 
   const [duration, setDuration] = useState(""); // إضافة التعريف
 
   const handleAddSubCourse = async () => {
-    if (!newSubCourseName.trim() || !selectedCourse) {
-      alert("Please select a main course and enter a sub-course name.");
+    if (!newSubCourseName || !duration) {
+      alert("Please enter both the sub-course name and duration.");
       return;
     }
 
-    const subCoursesRef = ref(db, `subCourses/${selectedCourse}`);
-    const snapshot = await get(subCoursesRef);
-
-    if (snapshot.exists()) {
-      const subCourses = snapshot.val();
-      const subCourseExists = Object.values(subCourses).some(
-        (sub) => sub.name.toLowerCase() === newSubCourseName.toLowerCase()
-      );
-
-      if (subCourseExists) {
-        alert("This sub-course name already exists for the selected course.");
-        return;
-      }
-    }
-
-    const newSubCourseRef = push(subCoursesRef);
-    set(newSubCourseRef, {
-      id: newSubCourseRef.key,
+    const startDate = new Date(); // تاريخ بداية الكورس (وقت الإضافة)
+    const newSubCourse = {
       name: newSubCourseName,
-    });
+      duration: duration, // المدة بالأيام
+      startDate: startDate.toISOString(), // تحويل التاريخ إلى نص
+    };
 
-    setNewSubCourseName("");
-    alert("Sub-course added successfully!");
+    try {
+      const subCoursesRef = ref(db, "subCourses");
+      const newSubCourseRef = push(subCoursesRef);
+      await set(newSubCourseRef, newSubCourse);
+      setSubCourses([
+        ...subCourses,
+        { id: newSubCourseRef.key, ...newSubCourse },
+      ]);
+
+      setNewSubCourseName("");
+      setDuration(""); // إعادة ضبط المدخلات
+    } catch (error) {
+      console.error("Error adding sub-course: ", error);
+    }
   };
 
   const handleAddNewQuestion = async () => {
