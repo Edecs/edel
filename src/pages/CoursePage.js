@@ -9,13 +9,16 @@ import {
   push,
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import { getFirestore, getDocs, collection } from "firebase/firestore";
 
 import "./CoursePage.css";
 
 function CoursePage() {
   const [mainCourses, setMainCourses] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
-
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [subCourses, setSubCourses] = useState([]);
   const [selectedSubCourse, setSelectedSubCourse] = useState("");
@@ -196,27 +199,73 @@ function CoursePage() {
       setError("Failed to delete question: " + error.message);
     }
   };
+  const handleAddCourse = async () => {
+    if (!newCourseName.trim()) {
+      alert("Course name cannot be empty.");
+      return;
+    }
 
-  const handleAddCourse = () => {
-    const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
-    set(courseRef, {
+    const coursesRef = ref(db, "courses/mainCourses"); // استخدم المسار الصحيح
+    const snapshot = await get(coursesRef);
+
+    if (snapshot.exists()) {
+      const courses = snapshot.val();
+      const courseExists = Object.values(courses).some(
+        (course) => course.name.toLowerCase() === newCourseName.toLowerCase()
+      );
+
+      if (courseExists) {
+        alert(
+          "This course name already exists. Please choose a different name."
+        );
+        return;
+      }
+    }
+
+    // إضافة الدورة فقط إذا لم تكن موجودة مسبقًا
+    const newCourseRef = push(coursesRef);
+    await set(newCourseRef, {
+      id: newCourseRef.key,
       name: newCourseName,
-      thumbnail: thumbnail,
-      department: currentUserDepartment,
+      thumbnail: thumbnail || "",
     });
 
-    setNewCourseName("");
-    setThumbnail("");
+    setNewCourseName(""); // إعادة تعيين الحقل بعد الإضافة
+    setThumbnail(""); // إعادة تعيين الصورة
+    alert("Course added successfully!");
   };
 
-  const handleAddSubCourse = () => {
-    const subCourseRef = ref(
-      db,
-      `courses/mainCourses/${selectedCourse}/subCourses/${newSubCourseName}`
-    );
-    set(subCourseRef, { name: newSubCourseName });
+  const [duration, setDuration] = useState(""); // إضافة التعريف
+
+  const handleAddSubCourse = async () => {
+    if (!newSubCourseName.trim() || !selectedCourse) {
+      alert("Please select a main course and enter a sub-course name.");
+      return;
+    }
+
+    const subCoursesRef = ref(db, `subCourses/${selectedCourse}`);
+    const snapshot = await get(subCoursesRef);
+
+    if (snapshot.exists()) {
+      const subCourses = snapshot.val();
+      const subCourseExists = Object.values(subCourses).some(
+        (sub) => sub.name.toLowerCase() === newSubCourseName.toLowerCase()
+      );
+
+      if (subCourseExists) {
+        alert("This sub-course name already exists for the selected course.");
+        return;
+      }
+    }
+
+    const newSubCourseRef = push(subCoursesRef);
+    set(newSubCourseRef, {
+      id: newSubCourseRef.key,
+      name: newSubCourseName,
+    });
 
     setNewSubCourseName("");
+    alert("Sub-course added successfully!");
   };
 
   const handleAddNewQuestion = async () => {
@@ -351,6 +400,24 @@ function CoursePage() {
   };
 
   // Rest of your code...
+  useEffect(() => {
+    if (selectedCourse && selectedSubCourse) {
+      const durationRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/duration`
+      );
+
+      const unsubscribe = onValue(durationRef, (snapshot) => {
+        if (snapshot.exists()) {
+          setDuration(snapshot.val()); // تحديث المدة تلقائيًا من الريل تايم داتابيز
+        } else {
+          setDuration(""); // إعادة التصفير في حال عدم وجود مدة مسجلة
+        }
+      });
+
+      return () => unsubscribe();
+    }
+  }, [db, selectedCourse, selectedSubCourse]);
 
   useEffect(() => {
     if (selectedCourse && selectedSubCourse) {
@@ -374,6 +441,71 @@ function CoursePage() {
     setAnswers([]); // مسح قائمة الإجابات
     setIsEditMode(false); // تصفير وضع التحرير
   };
+  useEffect(() => {
+    const fetchSubCourses = async () => {
+      const subCoursesRef = ref(db, "subCourses");
+      try {
+        const snapshot = await get(subCoursesRef);
+        if (snapshot.exists()) {
+          const subCoursesData = snapshot.val();
+          const currentDate = new Date();
+
+          const loadedSubCourses = Object.keys(subCoursesData)
+            .map((key) => {
+              const data = subCoursesData[key];
+              const startDate = new Date(data.startDate);
+
+              // حساب وقت الانتهاء بالساعات
+              const endDate = new Date(
+                startDate.getTime() + Number(data.duration) * 60 * 60 * 1000
+              );
+
+              return {
+                id: key,
+                ...data,
+                isExpired: currentDate > endDate,
+              };
+            })
+            .filter((subCourse) => !subCourse.isExpired);
+
+          setSubCourses(loadedSubCourses);
+        }
+      } catch (error) {
+        console.error("Error fetching subCourses:", error);
+      }
+    };
+
+    fetchSubCourses();
+  }, [db]);
+  const handleSaveDuration = async () => {
+    const totalSeconds =
+      Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
+
+    if (totalSeconds <= 0) {
+      alert("الرجاء إدخال مدة صالحة!");
+      return;
+    }
+
+    // تأكد من وجود كورس فرعي محدد
+    if (!selectedCourse || !selectedSubCourse) {
+      alert("يرجى اختيار الكورس والكورس الفرعي أولا!");
+      return;
+    }
+
+    try {
+      const durationRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/duration`
+      );
+
+      await set(durationRef, totalSeconds); // حفظ المدة في الريل تايم داتابيز
+      setDuration(totalSeconds); // تحديث الحالة محليًا
+      alert(`تم حفظ المدة: ${totalSeconds} ثانية`);
+    } catch (error) {
+      console.error("خطأ في حفظ المدة:", error);
+    }
+  };
+
   return (
     <div className="course">
       <header>
@@ -490,16 +622,25 @@ function CoursePage() {
                   <h2>Select Sub Course</h2>
                   <select
                     value={selectedSubCourse}
-                    onChange={(e) => setSelectedSubCourse(e.target.value)}
+                    onChange={(e) => {
+                      const selected = subCourses.find(
+                        (sc) => sc.id === e.target.value
+                      );
+                      if (selected.isExpired) {
+                        alert("This sub-course has expired.");
+                      } else {
+                        setSelectedSubCourse(e.target.value);
+                      }
+                    }}
                     className="dropdown"
-                    disabled={!selectedCourse}
                   >
                     <option value="" disabled>
                       Select a sub-course
                     </option>
                     {subCourses.map((subCourse) => (
                       <option key={subCourse.id} value={subCourse.id}>
-                        {subCourse.name}
+                        {subCourse.name}{" "}
+                        {subCourse.isExpired ? "(Expired)" : ""}
                       </option>
                     ))}
                   </select>
@@ -517,7 +658,38 @@ function CoursePage() {
                       Add New
                     </button>
                   </div>
+                  <div className="duration-container">
+                    <label>Hours:</label>
+                    <input
+                      type="number"
+                      value={hours}
+                      onChange={(e) => setHours(e.target.value)}
+                      placeholder="Enter hours"
+                      min="0"
+                    />
 
+                    <label>Minutes:</label>
+                    <input
+                      type="number"
+                      value={minutes}
+                      onChange={(e) => setMinutes(e.target.value)}
+                      placeholder="Enter minutes"
+                      min="0"
+                    />
+
+                    <label>Seconds:</label>
+                    <input
+                      type="number"
+                      value={seconds}
+                      onChange={(e) => setSeconds(e.target.value)}
+                      placeholder="Enter seconds"
+                      min="0"
+                    />
+
+                    <button onClick={handleSaveDuration}>Save Duration</button>
+
+                    <p>Saved Duration: {duration} seconds</p>
+                  </div>
                   {questions.map((question) => (
                     <div key={question.id} className="question-item">
                       <div className="question-content">
