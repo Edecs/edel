@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from "react"; // إضافة useRef هنا مباشرة
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { db } from "../firebase"; // استيراد قاعدة البيانات فقط
-import { ref as dbRef } from "firebase/database"; // إضافة dbRef
+import { ref as dbRef } from "firebase/database";
 import { get, ref, set, remove } from "firebase/database";
 import { update } from "firebase/database"; // إضافة update هنا
 
@@ -62,11 +62,6 @@ function AdminPage() {
       const coursesRef = ref(db, "courses/mainCourses");
       const coursesSnapshot = await get(coursesRef);
       const coursesData = coursesSnapshot.exists() ? coursesSnapshot.val() : {};
-
-      console.log("Fetched Roles:", rolesData);
-      console.log("Fetched Users:", usersData);
-      console.log("Fetched Departments:", departmentsData);
-      console.log("Fetched Courses:", coursesData);
 
       setRoles(rolesData);
       setUsers(Object.values(usersData));
@@ -201,10 +196,6 @@ function AdminPage() {
     fetchCurrentUserRole();
     fetchData();
   }, [fetchCurrentUserRole, fetchData]);
-  useEffect(() => {
-    console.log("Roles Data:", roles);
-    console.log("Courses Data:", courses);
-  }, [roles, courses]);
 
   const handleAddUser = async () => {
     if (newUserEmail && newUserPassword && newUserName) {
@@ -456,7 +447,6 @@ function AdminPage() {
               <h2 className="subcourse-moda0">Assign SubCourses</h2>
 
               {Object.entries(courses).map(([courseId, course]) => {
-                // عرض الدورة فقط لو صلاحية الكورس الرئيسي مفتوحة لجميع المستخدمين المحددين
                 const isAccessibleForAll = selectedUsers.every((userEmail) => {
                   const sanitizedEmail = userEmail.replace(/\./g, ",");
                   return roles[sanitizedEmail]?.courses?.[courseId]?.hasAccess;
@@ -469,26 +459,40 @@ function AdminPage() {
                     {course.subCourses &&
                       Object.entries(course.subCourses).map(
                         ([subCourseId, subCourse]) => (
-                          <div key={subCourseId}>
+                          <div key={subCourseId} className="subcourse-item">
+                            {/* حقل تعديل التاريخ */}
                             <input
                               type="datetime-local"
-                              onChange={(e) =>
-                                setExpirationTimes({
-                                  ...expirationTimes,
-                                  [subCourseId]: e.target.value
-                                    ? new Date(e.target.value).getTime()
-                                    : null,
-                                })
+                              className="timer-input"
+                              value={
+                                expirationTimes[subCourseId]
+                                  ? new Date(expirationTimes[subCourseId])
+                                      .toISOString()
+                                      .slice(0, 16)
+                                  : ""
                               }
+                              onChange={(e) => {
+                                const newTime = e.target.value
+                                  ? new Date(e.target.value).getTime()
+                                  : null;
+                                setExpirationTimes((prev) => ({
+                                  ...prev,
+                                  [subCourseId]: newTime,
+                                }));
+                              }}
                             />
+                            {/* خانة اختيار الدورة الفرعية */}
                             <input
                               type="checkbox"
+                              className="access-checkbox"
                               checked={selectedSubCourses.includes(subCourseId)}
                               onChange={() =>
                                 toggleSubCourseSelection(subCourseId)
                               }
                             />
-                            <label>{subCourse.name}</label>
+                            <label className="subcourse-label">
+                              {subCourse.name}
+                            </label>
                           </div>
                         )
                       )}
@@ -546,6 +550,40 @@ function AdminPage() {
                           ([subCourseId, subCourse]) => (
                             <div className="sup" key={subCourseId}>
                               <input
+                                type="datetime-local"
+                                value={
+                                  // نعطي الأولوية للقيمة المخزنة في حالة expirationTimes إذا تم تعديلها،
+                                  // وإن لم تتغير نستخدم القيمة المخزنة في الـ roles (إن وُجدت)
+                                  expirationTimes[subCourseId]
+                                    ? new Date(expirationTimes[subCourseId])
+                                        .toISOString()
+                                        .slice(0, 16)
+                                    : roles[
+                                        selectedUser.email.replace(/\./g, ",")
+                                      ]?.courses?.[courseId]?.[subCourseId]
+                                        ?.expirationTime
+                                    ? new Date(
+                                        roles[
+                                          selectedUser.email.replace(/\./g, ",")
+                                        ]?.courses?.[courseId]?.[
+                                          subCourseId
+                                        ]?.expirationTime
+                                      )
+                                        .toISOString()
+                                        .slice(0, 16)
+                                    : ""
+                                }
+                                onChange={(e) => {
+                                  const newTime = e.target.value
+                                    ? new Date(e.target.value).getTime()
+                                    : null;
+                                  setExpirationTimes({
+                                    ...expirationTimes,
+                                    [subCourseId]: newTime,
+                                  });
+                                }}
+                              />
+                              <input
                                 type="checkbox"
                                 checked={
                                   !!roles[
@@ -557,7 +595,8 @@ function AdminPage() {
                                   handleToggleAccess(
                                     selectedUser.email,
                                     courseId,
-                                    subCourseId
+                                    subCourseId,
+                                    expirationTimes[subCourseId]
                                   )
                                 }
                               />
