@@ -288,13 +288,17 @@ function CourseManagementPage() {
 
           <div className="column enrolled-users-column">
             <h2>Enrolled Users</h2>
-            <button onClick={handleSelectAllEnrolled}>
+            <button
+              className="select-all-enrolled-btn"
+              onClick={handleSelectAllEnrolled}
+            >
               {filteredEnrolledUsers.every((user) =>
                 selectedEnrolledUsers.includes(user.email)
               )
                 ? "Deselect All"
                 : "Select All"}
             </button>
+
             <ul className="user-list">
               {enrolledUsersToDisplay.map((user) => (
                 <li key={user.email}>
@@ -322,13 +326,14 @@ function CourseManagementPage() {
 
           <div className="column users-column">
             <h2>Users</h2>
-            <button onClick={handleSelectAll}>
+            <button className="select-all-btn" onClick={handleSelectAll}>
               {filteredUsers.every((user) =>
                 selectedUsers.some((u) => u.email === user.email)
               )
                 ? "Deselect All"
                 : "Select All"}
             </button>
+
             <ul className="user-list">
               {usersToDisplay.map((user) => (
                 <li key={user.email}>
