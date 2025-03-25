@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react"; // إضافة useRef هنا مباشرة
 import { db } from "../firebase"; // استيراد قاعدة البيانات فقط
 import { ref as dbRef } from "firebase/database"; // إضافة dbRef
-import { get, set, remove } from "firebase/database";
+import { get, ref, set, remove } from "firebase/database";
 import { update } from "firebase/database"; // إضافة update هنا
 
 import {
@@ -39,28 +39,41 @@ function AdminPage() {
 
   const fetchData = useCallback(async () => {
     try {
-      const usersSnapshot = await get(dbRef(db, "users"));
+      const rolesRef = ref(db, "roles");
+      const rolesSnapshot = await get(rolesRef);
+      const rolesData = rolesSnapshot.exists() ? rolesSnapshot.val() : {};
+
+      const usersRef = ref(db, "users");
+      const usersSnapshot = await get(usersRef);
       const usersData = usersSnapshot.exists()
         ? Object.entries(usersSnapshot.val()).reduce((acc, [email, user]) => {
-            acc[email.replace(/,/g, ".")] = {
-              ...user,
-              email: email.replace(/,/g, "."),
-            };
+            const formattedEmail = email.replace(/,/g, ".");
+            acc[formattedEmail] = { ...user, email: formattedEmail };
             return acc;
           }, {})
         : {};
 
-      const newUsers = Object.values(usersData);
+      const departmentsRef = ref(db, "departments");
+      const departmentsSnapshot = await get(departmentsRef);
+      const departmentsData = departmentsSnapshot.exists()
+        ? Object.values(departmentsSnapshot.val())
+        : [];
 
-      // ✅ احتفاظ بالمستخدمين المختارين
-      setUsers(newUsers);
-      setSelectedUsers((prevSelected) =>
-        prevSelected.filter((email) =>
-          newUsers.some((user) => user.email === email)
-        )
-      );
+      const coursesRef = ref(db, "courses/mainCourses");
+      const coursesSnapshot = await get(coursesRef);
+      const coursesData = coursesSnapshot.exists() ? coursesSnapshot.val() : {};
+
+      console.log("Fetched Roles:", rolesData);
+      console.log("Fetched Users:", usersData);
+      console.log("Fetched Departments:", departmentsData);
+      console.log("Fetched Courses:", coursesData);
+
+      setRoles(rolesData);
+      setUsers(Object.values(usersData));
+      setDepartments(departmentsData);
+      setCourses(coursesData);
     } catch (error) {
-      console.error("❌ Error fetching data:", error);
+      console.error("Error fetching data:", error);
     }
   }, []);
 
@@ -188,6 +201,10 @@ function AdminPage() {
     fetchCurrentUserRole();
     fetchData();
   }, [fetchCurrentUserRole, fetchData]);
+  useEffect(() => {
+    console.log("Roles Data:", roles);
+    console.log("Courses Data:", courses);
+  }, [roles, courses]);
 
   const handleAddUser = async () => {
     if (newUserEmail && newUserPassword && newUserName) {
@@ -520,70 +537,40 @@ function AdminPage() {
                   onChange={(e) => setCourseSearchQuery(e.target.value)}
                 />
 
-                {Object.entries(courses)
-                  .filter(([courseId, course]) => {
-                    const hasMainCourseAccess =
-                      !!roles[selectedUser.email.replace(/\./g, ",")]
-                        ?.courses?.[courseId]?.hasAccess;
-                    return (
-                      hasMainCourseAccess &&
-                      (course.name
-                        .toLowerCase()
-                        .includes(courseSearchQuery.toLowerCase()) ||
-                        (course.subCourses &&
-                          Object.values(course.subCourses).some((subCourse) =>
-                            subCourse.name
-                              .toLowerCase()
-                              .includes(courseSearchQuery.toLowerCase())
-                          )))
-                    );
-                  })
-                  .map(([courseId, course]) => (
-                    <div key={courseId}>
-                      <h4>{course.name}</h4>
-                      {course.subCourses && (
-                        <div className="subcourses-container">
-                          {Object.entries(course.subCourses).map(
-                            ([subCourseId, subCourse]) => {
-                              const accessData =
-                                roles[selectedUser.email.replace(/\./g, ",")]
-                                  ?.courses?.[courseId]?.[subCourseId];
-
-                              return (
-                                <div className="sup" key={subCourseId}>
-                                  <input
-                                    type="datetime-local"
-                                    onChange={(e) =>
-                                      setExpirationTimes({
-                                        ...expirationTimes,
-                                        [subCourseId]: e.target.value
-                                          ? new Date(e.target.value).getTime()
-                                          : null,
-                                      })
-                                    }
-                                  />
-
-                                  <input
-                                    type="checkbox"
-                                    checked={!!accessData?.hasAccess}
-                                    onChange={() =>
-                                      handleToggleAccess(
-                                        selectedUser.email,
-                                        courseId,
-                                        subCourseId,
-                                        expirationTimes[subCourseId]
-                                      )
-                                    }
-                                  />
-                                  <label>{subCourse.name}</label>
-                                </div>
-                              );
-                            }
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                {Object.entries(courses).map(([courseId, course]) => (
+                  <div key={courseId}>
+                    <h4>{course.name}</h4>
+                    {course.subCourses && (
+                      <div className="subcourses-container">
+                        {Object.entries(course.subCourses).map(
+                          ([subCourseId, subCourse]) => (
+                            <div className="sup" key={subCourseId}>
+                              <input
+                                type="checkbox"
+                                checked={
+                                  !!roles[
+                                    selectedUser.email.replace(/\./g, ",")
+                                  ]?.courses?.[courseId]?.[subCourseId]
+                                    ?.hasAccess
+                                }
+                                onChange={() =>
+                                  handleToggleAccess(
+                                    selectedUser.email,
+                                    courseId,
+                                    subCourseId
+                                  )
+                                }
+                              />
+                              <label>
+                                {getSubCourseName(courseId, subCourseId)}
+                              </label>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
           </div>
