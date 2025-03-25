@@ -19,6 +19,30 @@
   padding: 0;
   margin: 0;
 }
+.select-all-btn,
+.select-all-enrolled-btn {
+  padding: 8px 16px;
+  margin-bottom: 10px;
+  background-color: #094d50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+}
+
+/* تأثير hover لتغيير لون الخلفية */
+.select-all-btn:hover,
+.select-all-enrolled-btn:hover {
+  background-color: #148c92;
+}
+
+/* يمكن إضافة تأثير عند الضغط */
+.select-all-btn:active,
+.select-all-enrolled-btn:active {
+  background-color: #148c92;
+}
 
 .course-list li,
 .user-list li,
