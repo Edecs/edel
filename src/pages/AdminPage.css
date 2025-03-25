@@ -21,6 +21,25 @@
 .popup-container {
   position: relative; /* يضمن أن الزر يستند إلى حدود الحاوية */
 }
+.user-list4:empty::before {
+  content: "لا يوجد مستخدمون متاحون";
+  display: block;
+  text-align: center;
+  color: #999;
+  padding: 10px;
+}
+.subcourses-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.subcourses-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+input.error {
+  border-color: red;
+  background-color: #ffebeb;
+}
 
 .wa {
   position: absolute;
