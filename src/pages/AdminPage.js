@@ -39,9 +39,6 @@ function AdminPage() {
 
   const fetchData = useCallback(async () => {
     try {
-      const rolesSnapshot = await get(dbRef(db, "roles"));
-      const rolesData = rolesSnapshot.exists() ? rolesSnapshot.val() : {};
-
       const usersSnapshot = await get(dbRef(db, "users"));
       const usersData = usersSnapshot.exists()
         ? Object.entries(usersSnapshot.val()).reduce((acc, [email, user]) => {
@@ -53,18 +50,15 @@ function AdminPage() {
           }, {})
         : {};
 
-      const departmentsSnapshot = await get(dbRef(db, "departments"));
-      const departmentsData = departmentsSnapshot.exists()
-        ? Object.values(departmentsSnapshot.val())
-        : [];
+      const newUsers = Object.values(usersData);
 
-      const coursesSnapshot = await get(dbRef(db, "courses/mainCourses"));
-      const coursesData = coursesSnapshot.exists() ? coursesSnapshot.val() : {};
-
-      setRoles(rolesData);
-      setUsers(Object.values(usersData));
-      setDepartments(departmentsData);
-      setCourses(coursesData);
+      // ✅ احتفاظ بالمستخدمين المختارين
+      setUsers(newUsers);
+      setSelectedUsers((prevSelected) =>
+        prevSelected.filter((email) =>
+          newUsers.some((user) => user.email === email)
+        )
+      );
     } catch (error) {
       console.error("❌ Error fetching data:", error);
     }
