@@ -67,45 +67,6 @@ input[type="datetime-local"]:focus {
   border-color: #0056b3; /* لون أزرق غامق عند التركيز */
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* ظل ناعم */
 }
-/* تنسيق الحاوية العامة */
-.subcourse-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* تنسيق اسم الكورس */
-.subcourse-label {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-}
-
-/* تصميم حقل إدخال الوقت */
-.timer-input {
-  background-color: #f8f9fa;
-  border: 2px solid #007bff;
-  border-radius: 8px;
-  padding: 6px;
-  font-size: 14px;
-  color: #333;
-  outline: none;
-  transition: 0.3s;
-}
-
-.timer-input:focus {
-  border-color: #0056b3;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-}
-
-/* تنسيق زر الـ Checkbox */
-.access-checkbox {
-  width: 18px;
-  height: 18px;
-  accent-color: #007bff;
-}
 
 /* تنسيق مخصص للحاوية */
 .timer-container {
@@ -537,25 +498,6 @@ input[type="checkbox"] {
   }
 }
 
-.subcourse-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 70%;
-  height: 70%;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  transition: all 0.3s ease-in-out;
-}
-.subcourse-moda0 {
-  padding-top: 0px;
-}
 .assign-subcourses-btn {
   margin-left: 10px; /* المسافة بين الزرارين */
 }
@@ -577,27 +519,67 @@ input[type="checkbox"] {
 .modal-close-btn1:hover {
   color: red;
 }
+.subcourse-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 1000; /* تأكد من ظهور النافذة فوق باقي المحتويات */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* عند كثرة المحتوى تظهر شريط تمرير */
+  max-height: 80vh; /* لا تتجاوز النافذة 80% من ارتفاع الشاشة */
+}
+
+.subcourse-modal h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.subcourse-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* مسافة بين العناصر */
+}
+
+.timer-input {
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.access-checkbox {
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+.subcourse-label {
+  flex: 1;
+  word-wrap: break-word; /* كسر الكلمات الطويلة */
+}
 
 .modal-buttons1 {
   display: flex;
-  justify-content: space-between;
-  margin-top: auto;
-  padding-top: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 
 .modal-apply-btn1,
 .modal-cancel-btn1 {
-  padding: 10px 15px;
+  padding: 8px 16px;
+  margin-left: 10px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-  transition: background 0.2s ease-in-out;
+  transition: background-color 0.3s ease;
 }
 
 .modal-apply-btn1 {
   background-color: #28a745;
-  color: white;
+  color: #fff;
 }
 
 .modal-apply-btn1:hover {
@@ -606,7 +588,7 @@ input[type="checkbox"] {
 
 .modal-cancel-btn1 {
   background-color: #dc3545;
-  color: white;
+  color: #fff;
 }
 
 .modal-cancel-btn1:hover {
