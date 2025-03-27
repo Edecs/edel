@@ -334,6 +334,18 @@ function AdminPage() {
     document.addEventListener("mouseup", handleMouseUp);
   };
 
+  const toLocalDatetimeString = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+  
+  
   return (
     <div className="admin-page-all">
       <header>
@@ -462,25 +474,24 @@ function AdminPage() {
                           <div key={subCourseId} className="subcourse-item">
                             {/* حقل تعديل التاريخ */}
                             <input
-                              type="datetime-local"
-                              className="timer-input"
-                              value={
-                                expirationTimes[subCourseId]
-                                  ? new Date(expirationTimes[subCourseId])
-                                      .toISOString()
-                                      .slice(0, 16)
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                const newTime = e.target.value
-                                  ? new Date(e.target.value).getTime()
-                                  : null;
-                                setExpirationTimes((prev) => ({
-                                  ...prev,
-                                  [subCourseId]: newTime,
-                                }));
-                              }}
-                            />
+  type="datetime-local"
+  className="timer-input"
+  value={
+    expirationTimes[subCourseId]
+      ? toLocalDatetimeString(expirationTimes[subCourseId])
+      : ""
+  }
+  onChange={(e) => {
+    const newTime = e.target.value
+      ? new Date(e.target.value).getTime()
+      : null;
+    setExpirationTimes((prev) => ({
+      ...prev,
+      [subCourseId]: newTime,
+    }));
+  }}
+/>
+
                             {/* خانة اختيار الدورة الفرعية */}
                             <input
                               type="checkbox"
@@ -557,34 +568,25 @@ function AdminPage() {
                           {Object.entries(course.subCourses).map(
                             ([subCourseId, subCourse]) => (
                               <div className="sup" key={subCourseId}>
-                                <input
-                                  type="datetime-local"
-                                  value={
-                                    expirationTimes[subCourseId]
-                                      ? new Date(expirationTimes[subCourseId])
-                                          .toISOString()
-                                          .slice(0, 16)
-                                      : userCourses[courseId][subCourseId]
-                                          ?.expirationTime
-                                      ? new Date(
-                                          userCourses[courseId][
-                                            subCourseId
-                                          ].expirationTime
-                                        )
-                                          .toISOString()
-                                          .slice(0, 16)
-                                      : ""
-                                  }
-                                  onChange={(e) => {
-                                    const newTime = e.target.value
-                                      ? new Date(e.target.value).getTime()
-                                      : null;
-                                    setExpirationTimes({
-                                      ...expirationTimes,
-                                      [subCourseId]: newTime,
-                                    });
-                                  }}
-                                />
+<input
+  type="datetime-local"
+  className="timer-input"
+  value={
+    expirationTimes[subCourseId]
+      ? toLocalDatetimeString(expirationTimes[subCourseId])
+      : ""
+  }
+  onChange={(e) => {
+    const newTime = e.target.value
+      ? new Date(e.target.value).getTime()
+      : null;
+    setExpirationTimes((prev) => ({
+      ...prev,
+      [subCourseId]: newTime,
+    }));
+  }}
+/>
+
                                 <input
                                   type="checkbox"
                                   checked={
