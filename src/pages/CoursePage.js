@@ -1,691 +1,804 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { db } from "../firebase"; // استيراد قاعدة البيانات فقط
-import { ref as dbRef } from "firebase/database";
-import { get, ref, set, remove } from "firebase/database";
-import { update } from "firebase/database"; // إضافة update هنا
-
+import React, { useState, useEffect, useRef } from "react";
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import "./AdminPage.css";
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  remove,
+  get,
+  push,
+} from "firebase/database";
+import { getAuth } from "firebase/auth";
 
-function AdminPage() {
-  const [expirationTimes, setExpirationTimes] = useState({});
-  const [searchQuery, setSearchQuery] = useState("");
-  const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState({});
-  const [courses, setCourses] = useState({});
-  const [departments, setDepartments] = useState([]);
-  const [newUserEmail, setNewUserEmail] = useState("");
-  const [newUserName, setNewUserName] = useState("");
-  const [newUserPassword, setNewUserPassword] = useState("");
-  const [newUserRole, setNewUserRole] = useState("user");
-  const [newUserDepartment, setNewUserDepartment] = useState("");
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [currentUserRole, setCurrentUserRole] = useState(null);
+import "./CoursePage.css";
+
+function CoursePage() {
+  const [mainCourses, setMainCourses] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [subCourses, setSubCourses] = useState([]);
+  const [selectedSubCourse, setSelectedSubCourse] = useState("");
+  const selectedSubCourseRef = useRef(""); // Use ref to store the selected sub-course
+  const [error, setError] = useState("");
+  const [newQuestion, setNewQuestion] = useState("");
+  const [answers, setAnswers] = useState([{ text: "", correct: false }]);
+  const [editQuestionIndex, setEditQuestionIndex] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [newCourseName, setNewCourseName] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
+  const [newSubCourseName, setNewSubCourseName] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState("");
   const [currentUserDepartment, setCurrentUserDepartment] = useState("");
-  const [courseSearchQuery, setCourseSearchQuery] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [selectedSubCourses, setSelectedSubCourses] = useState([]);
-  const [isSubCoursePopupOpen, setIsSubCoursePopupOpen] = useState(false);
-  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [media, setMedia] = useState({ images: [], videos: [] });
+  const [newImageUrl, setNewImageUrl] = useState("");
+  const filteredCourses = mainCourses.filter(
+    (course) => course.department === currentUserDepartment
+  );
 
-  const auth = getAuth();
-  const navigate = useNavigate();
+  const [newVideoUrl, setNewVideoUrl] = useState("");
 
-  const fetchData = useCallback(async () => {
-    try {
-      const rolesRef = ref(db, "roles");
-      const rolesSnapshot = await get(rolesRef);
-      const rolesData = rolesSnapshot.exists() ? rolesSnapshot.val() : {};
+  const db = getDatabase();
 
+  useEffect(() => {
+    selectedSubCourseRef.current = selectedSubCourse;
+  }, [selectedSubCourse]);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      const userEmail = user.email;
       const usersRef = ref(db, "users");
-      const usersSnapshot = await get(usersRef);
-      const usersData = usersSnapshot.exists()
-        ? Object.entries(usersSnapshot.val()).reduce((acc, [email, user]) => {
-            const formattedEmail = email.replace(/,/g, ".");
-            acc[formattedEmail] = { ...user, email: formattedEmail };
-            return acc;
-          }, {})
-        : {};
-
-      const departmentsRef = ref(db, "departments");
-      const departmentsSnapshot = await get(departmentsRef);
-      const departmentsData = departmentsSnapshot.exists()
-        ? Object.values(departmentsSnapshot.val())
-        : [];
-
-      const coursesRef = ref(db, "courses/mainCourses");
-      const coursesSnapshot = await get(coursesRef);
-      const coursesData = coursesSnapshot.exists() ? coursesSnapshot.val() : {};
-
-      setRoles(rolesData);
-      setUsers(Object.values(usersData));
-      setDepartments(departmentsData);
-      setCourses(coursesData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }, []);
-
-  const fetchCurrentUserRole = useCallback(async () => {
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const sanitizedEmail = user.email.replace(/\./g, ",");
-        const roledbRef = dbRef(db, `roles/${sanitizedEmail}`);
-        const roleSnapshot = await get(roledbRef);
-        if (roleSnapshot.exists()) {
-          const roleData = roleSnapshot.val();
-          setCurrentUserRole(roleData.role);
-          setCurrentUserDepartment(roleData.department || "");
-        } else {
-          setCurrentUserDepartment("");
+      onValue(
+        usersRef,
+        (snapshot) => {
+          const usersData = snapshot.val();
+          const userData = Object.values(usersData).find(
+            (u) => u.email === userEmail
+          );
+          if (userData) {
+            setCurrentUserRole(userData.role);
+            setCurrentUserDepartment(userData.department || "");
+          } else {
+            console.error("User data not found for email:", userEmail);
+          }
+        },
+        (error) => {
+          console.error("Error fetching user data:", error);
         }
-      }
-    } catch (error) {
-      console.error("Error fetching current user role:", error);
+      );
     }
-  }, [auth]);
-  const handleToggleAccess = async (
-    email,
-    courseId,
-    subCourseName,
-    expirationTime
-  ) => {
-    try {
-      const sanitizedEmail = email.replace(/\./g, ",");
-      const userRoledbRef = dbRef(
+  }, [db]);
+
+  useEffect(() => {
+    const coursesRef = ref(db, "courses/mainCourses");
+    const unsubscribe = onValue(coursesRef, (snapshot) => {
+      const coursesData = snapshot.val();
+      const coursesArray = coursesData
+        ? Object.keys(coursesData).map((key) => ({
+            id: key,
+            ...coursesData[key],
+          }))
+        : [];
+      setMainCourses(coursesArray);
+    });
+
+    return () => unsubscribe();
+  }, [db]);
+
+  useEffect(() => {
+    if (selectedCourse) {
+      const subCoursesRef = ref(
         db,
-        `roles/${sanitizedEmail}/courses/${courseId}/${subCourseName}`
+        `courses/mainCourses/${selectedCourse}/subCourses`
+      );
+      const unsubscribe = onValue(subCoursesRef, (snapshot) => {
+        const subCoursesData = snapshot.val();
+        const subCoursesArray = subCoursesData
+          ? Object.keys(subCoursesData).map((key) => ({
+              id: key,
+              ...subCoursesData[key],
+            }))
+          : [];
+        setSubCourses(subCoursesArray);
+
+        // Re-set selectedSubCourse from the ref to avoid losing the selected sub-course
+        if (selectedSubCourseRef.current) {
+          setSelectedSubCourse(selectedSubCourseRef.current);
+        }
+      });
+
+      return () => unsubscribe();
+    }
+  }, [db, selectedCourse]);
+
+  useEffect(() => {
+    if (selectedCourse && selectedSubCourse) {
+      const questionsRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`
       );
 
-      const currentAccessSnapshot = await get(userRoledbRef);
-      const currentAccess = currentAccessSnapshot.exists()
-        ? currentAccessSnapshot.val().hasAccess
-        : false;
+      const unsubscribeQuestions = onValue(questionsRef, (snapshot) => {
+        const questionsData = snapshot.val();
+        const questionsArray = questionsData
+          ? Object.keys(questionsData).map((key) => ({
+              id: key,
+              ...questionsData[key],
+            }))
+          : [];
+        setQuestions(questionsArray);
+      });
 
-      if (currentAccess) {
-        // 🔴 إزالة الصلاحية عند إيقافها
-        await remove(userRoledbRef);
-      } else {
-        const accessData = { hasAccess: true };
-        if (expirationTime) {
-          accessData.expirationTime = expirationTime; // فقط أضف وقت الصلاحية إذا كان موجودًا
-        }
-
-        await set(userRoledbRef, accessData);
-      }
-
-      await fetchData(); // تحديث البيانات بعد التغيير
-    } catch (error) {
-      console.error("Error toggling course access:", error);
+      return () => unsubscribeQuestions();
     }
+  }, [db, selectedCourse, selectedSubCourse]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // دالة لتحرير السؤال
+  const handleEditQuestion = (question) => {
+    setIsEditMode(true);
+    setNewQuestion(question.text);
+    setAnswers(question.answers);
+    setEditQuestionIndex(question.id);
+    setIsModalOpen(true);
   };
-
-  useEffect(() => {
-    const checkAndRemoveExpiredAccess = async () => {
-      try {
-        const rolesdbRef = dbRef(db, "roles"); // قاعدة بيانات الأدوار
-        const rolesSnapshot = await get(rolesdbRef);
-
-        if (rolesSnapshot.exists()) {
-          const rolesData = rolesSnapshot.val();
-          const now = Date.now();
-
-          for (const userEmail in rolesData) {
-            if (rolesData[userEmail].courses) {
-              for (const courseId in rolesData[userEmail].courses) {
-                for (const subCourseId in rolesData[userEmail].courses[
-                  courseId
-                ]) {
-                  const subCourseData =
-                    rolesData[userEmail].courses[courseId][subCourseId];
-
-                  if (subCourseData.hasAccess && subCourseData.expirationTime) {
-                    if (now >= subCourseData.expirationTime) {
-                      // إزالة الصلاحية عند انتهاء الوقت
-                      const expireddbRef = dbRef(
-                        db,
-                        `roles/${userEmail}/courses/${courseId}/${subCourseId}`
-                      );
-                      await remove(expireddbRef);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      } catch (error) {
-        console.error("❌ Error checking expired access:", error);
-      }
-    };
-
-    // تشغيل الفحص كل دقيقة
-    const interval = setInterval(() => {
-      checkAndRemoveExpiredAccess();
-    }, 60 * 1000); // كل 60 ثانية
-
-    return () => clearInterval(interval); // تنظيف التايمر عند تفكيك الكومبوننت
-  }, []);
-
-  const getSubCourseName = (courseId, subCourseId) => {
-    return (
-      courses[courseId]?.subCourses?.[subCourseId]?.name || "Unknown SubCourse"
-    );
-  };
-
-  const navigateToCourseManagementPage = () => {
-    navigate("/course-management");
-  };
-
-  const handleRefreshData = async () => {
-    try {
-      await fetchData();
-    } catch (error) {
-      console.error("Error refreshing data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCurrentUserRole();
-    fetchData();
-  }, [fetchCurrentUserRole, fetchData]);
-
-  const handleAddUser = async () => {
-    if (newUserEmail && newUserPassword && newUserName) {
-      const currentAdminUser = auth.currentUser; // Keep current user
-      const adminEmail = currentAdminUser.email;
-      const adminPassword = prompt(
-        "Please enter your admin password to continue"
-      ); // Prompt current admin password
-
-      try {
-        // Create new user
-        const { user } = await createUserWithEmailAndPassword(
-          auth,
-          newUserEmail,
-          newUserPassword
-        );
-
-        // Sanitize email for storage
-        const sanitizedEmail = newUserEmail.replace(/\./g, ",");
-
-        // Prepare dbReferences to save new user data
-        const roledbRef = dbRef(db, `roles/${sanitizedEmail}`);
-        const usersdbRef = dbRef(db, `users/${sanitizedEmail}`);
-        // إضافة المستخدم الجديد إلى قاعدة البيانات
-        await set(roledbRef, { role: newUserRole, courses: {} });
-        await set(usersdbRef, {
-          email: newUserEmail,
-          name: newUserName,
-          role: newUserRole,
-          department: newUserDepartment,
-        });
-
-        // Re-sign in with admin account
-        await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
-
-        // Reset inputs
-        setNewUserEmail("");
-        setNewUserPassword("");
-        setNewUserName("");
-        setNewUserRole("user");
-        setNewUserDepartment(""); // Reset new user department
-
-        // Update data and close popup
-        await fetchData();
-        setIsPopupOpen(false);
-      } catch (error) {
-        console.error("Error adding user:", error);
-      }
-    }
-  };
-  const handleBulkAssign = async () => {
-    if (selectedUsers.length === 0 || selectedSubCourses.length === 0) {
-      alert("يرجى تحديد المستخدمين والدورات الفرعية!");
+  const handleUpdateQuestion = async () => {
+    if (!newQuestion.trim()) {
+      setError("⚠️ لا يمكن أن يكون نص السؤال فارغًا.");
       return;
     }
 
-    const updates = {};
-
-    selectedUsers.forEach((userEmail) => {
-      const sanitizedEmail = userEmail.replace(/\./g, ",");
-
-      selectedSubCourses.forEach((subCourseId) => {
-        // ✅ إيجاد الـ mainCourseId لهذا الـ subCourseId
-        let mainCourseId = null;
-        Object.entries(courses).forEach(([courseId, course]) => {
-          if (course.subCourses && course.subCourses[subCourseId]) {
-            mainCourseId = courseId;
-          }
-        });
-
-        if (!mainCourseId) {
-          console.error(`❌ لم يتم العثور على كورس رئيسي لـ ${subCourseId}`);
-          return;
-        }
-
-        const expirationTime = expirationTimes[subCourseId] || null;
-
-        updates[
-          `roles/${sanitizedEmail}/courses/${mainCourseId}/${subCourseId}`
-        ] = {
-          hasAccess: true,
-          ...(expirationTime ? { expirationTime } : {}),
-        };
-      });
-    });
-
-    try {
-      await update(dbRef(db), updates);
-      alert("✅ تم تحديث الصلاحيات بنجاح!");
-    } catch (error) {
-      console.error("❌ خطأ في حفظ الصلاحيات:", error);
-      alert("❌ حدث خطأ أثناء تحديث الصلاحيات.");
+    if (
+      answers.length === 0 ||
+      answers.every((answer) => !answer.text.trim())
+    ) {
+      setError("⚠️ يجب إدخال إجابة واحدة على الأقل.");
+      return;
     }
 
-    setIsSubCoursePopupOpen(false);
+    const questionData = {
+      text: newQuestion,
+      answers: answers,
+    };
+
+    try {
+      if (isEditMode) {
+        // تحديث السؤال
+        const questionRef = ref(
+          db,
+          `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}`
+        );
+        await set(questionRef, questionData);
+      } else {
+        // إضافة سؤال جديد
+        const newQuestionRef = push(
+          ref(
+            db,
+            `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`
+          )
+        );
+        await set(newQuestionRef, questionData);
+      }
+
+      // إعادة تعيين القيم بعد الحفظ
+      setNewQuestion("");
+      setAnswers([{ text: "", correct: false }]);
+      setEditQuestionIndex(null);
+      setError("");
+      setIsModalOpen(false);
+    } catch (error) {
+      setError("❌ فشل حفظ السؤال: " + error.message);
+    }
   };
 
-  const toggleUserSelection = (email) => {
-    setSelectedUsers((prev) =>
-      prev.includes(email)
-        ? prev.filter((user) => user !== email)
-        : [...prev, email]
+  const handleDeleteQuestion = async (questionId) => {
+    const questionRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${questionId}`
     );
+
+    try {
+      await remove(questionRef);
+    } catch (error) {
+      setError("Failed to delete question: " + error.message);
+    }
   };
 
-  const toggleSubCourseSelection = (subCourseId) => {
-    setSelectedSubCourses((prev) =>
-      prev.includes(subCourseId)
-        ? prev.filter((id) => id !== subCourseId)
-        : [...prev, subCourseId]
+  const handleAddCourse = () => {
+    const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
+    set(courseRef, {
+      name: newCourseName,
+      thumbnail: thumbnail,
+      department: currentUserDepartment,
+    });
+
+    setNewCourseName("");
+    setThumbnail("");
+  };
+
+  const handleAddSubCourse = () => {
+    const subCourseRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${newSubCourseName}`
     );
+    set(subCourseRef, { name: newSubCourseName });
+
+    setNewSubCourseName("");
   };
-  const [position, setPosition] = useState({ x: 200, y: 100 });
-  const popupRef = useRef(null);
 
-  const handleDragStart = (e) => {
-    const element = popupRef.current;
-    if (!element) return;
+  const handleAddNewQuestion = async () => {
+    // تحقق من أن السؤال غير فارغ
+    if (!newQuestion.trim()) {
+      setError("⚠️ لا يمكن إضافة سؤال فارغ.");
+      return;
+    }
 
-    const shiftX = e.clientX - element.getBoundingClientRect().left;
-    const shiftY = e.clientY - element.getBoundingClientRect().top;
+    // تحقق من أن هناك إجابة واحدة على الأقل
+    if (
+      answers.length === 0 ||
+      answers.every((answer) => !answer.text.trim())
+    ) {
+      setError("⚠️ يجب إدخال إجابة واحدة على الأقل.");
+      return;
+    }
 
-    const handleMouseMove = (event) => {
-      setPosition({
-        x: event.clientX - shiftX,
-        y: event.clientY - shiftY,
+    const questionData = {
+      text: newQuestion,
+      answers: answers,
+    };
+
+    try {
+      const newQuestionRef = push(
+        ref(
+          db,
+          `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions`
+        )
+      );
+      await set(newQuestionRef, questionData);
+
+      // مسح الحقول بعد الحفظ
+      setNewQuestion("");
+      setAnswers([{ text: "", correct: false }]);
+      setIsModalOpen(false);
+      setError(""); // مسح أي خطأ موجود
+    } catch (error) {
+      setError("❌ حدث خطأ أثناء إضافة السؤال: " + error.message);
+    }
+  };
+
+  const handleEditAnswer = (answer) => {
+    const questionToEdit = questions.find((q) =>
+      q.answers.some((a) => a.id === answer.id)
+    );
+    if (questionToEdit) {
+      setNewQuestion(questionToEdit.text); // Set the question being edited
+      const answerIndex = questionToEdit.answers.findIndex(
+        (a) => a.id === answer.id
+      );
+      const answerToEdit = questionToEdit.answers[answerIndex];
+      setAnswers((prevAnswers) => {
+        const updatedAnswers = [...prevAnswers];
+        updatedAnswers[answerIndex] = answerToEdit; // Update the specific answer being edited
+        return updatedAnswers;
       });
-    };
-
-    const handleMouseUp = () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+      setEditQuestionIndex(questionToEdit.id); // You might need to adjust this depending on how you structure editing
+    }
   };
 
-  const toLocalDatetimeString = (timestamp) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  const handleAddAnswer = () => {
+    setAnswers([...answers, { text: "", correct: false }]);
   };
-  
-  
+  const handleDeleteAnswer = async (answerId) => {
+    const questionRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}/answers/${answerId}`
+    );
+
+    try {
+      await remove(questionRef);
+    } catch (error) {
+      setError("Failed to delete answer: " + error.message);
+    }
+  };
+
+  const handleAddMedia = async () => {
+    const mediaRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
+    );
+
+    const newMedia = {
+      images: newImageUrl ? [{ url: newImageUrl, id: Date.now() }] : [],
+      videos: newVideoUrl
+        ? [{ url: newVideoUrl, id: Date.now() + 100000 }]
+        : [], // زيادة ID الفيديوهات
+    };
+
+    if (newMedia.images.length > 0 || newMedia.videos.length > 0) {
+      try {
+        const snapshot = await get(mediaRef);
+        const existingMedia = snapshot.val() || { images: [], videos: [] };
+
+        const currentMedia = {
+          images: Array.isArray(existingMedia.images)
+            ? existingMedia.images
+            : [],
+          videos: Array.isArray(existingMedia.videos)
+            ? existingMedia.videos
+            : [],
+        };
+
+        currentMedia.images.push(...newMedia.images);
+        currentMedia.videos.push(...newMedia.videos);
+
+        await set(mediaRef, currentMedia);
+        setNewImageUrl("");
+        setNewVideoUrl("");
+        setMedia(currentMedia);
+      } catch (error) {
+        setError("Failed to add media: " + error.message);
+      }
+    } else {
+      setError("Please provide at least one image or video URL.");
+    }
+  };
+
+  const handleDeleteMedia = async (mediaType, mediaId) => {
+    const mediaRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
+    );
+
+    try {
+      const snapshot = await get(mediaRef);
+      const existingMedia = snapshot.val();
+
+      if (!existingMedia) {
+        setError("No media found");
+        return;
+      }
+
+      if (mediaType === "images" && existingMedia.images) {
+        existingMedia.images = existingMedia.images.filter(
+          (item) => item.id !== mediaId
+        );
+      } else if (mediaType === "videos" && existingMedia.videos) {
+        existingMedia.videos = existingMedia.videos.filter(
+          (item) => item.id !== mediaId
+        );
+      } else {
+        return;
+      }
+
+      await set(mediaRef, existingMedia);
+      setMedia(existingMedia);
+    } catch (error) {
+      setError("Failed to delete media: " + error.message);
+    }
+  };
+
+  // Rest of your code...
+
+  useEffect(() => {
+    if (selectedCourse && selectedSubCourse) {
+      const mediaRef = ref(
+        db,
+        `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
+      );
+      const unsubscribe = onValue(mediaRef, (snapshot) => {
+        const mediaData = snapshot.val() || { images: [], videos: [] };
+        setMedia(mediaData);
+      });
+
+      return () => unsubscribe();
+    }
+  }, [db, selectedCourse, selectedSubCourse]);
+
+  // Rest of your JSX...
+  // تأكد من أن دالة clearPopupFields مكتوبة بشكل صحيح
+  const clearPopupFields = () => {
+    setNewQuestion(""); // تصفير السؤال
+    setAnswers([]); // مسح قائمة الإجابات
+    setIsEditMode(false); // تصفير وضع التحرير
+  };
   return (
-    <div className="admin-page-all">
+    <div className="course">
       <header>
-        <h1 className="header-h1">Admin Dashboard</h1>
+        <h1 className="header-h1">Courses Management</h1>
       </header>
-      <div className="admin-page">
-        <header className="admin-header">
-          <button
-            className="open-popup-btn"
-            onClick={() => setIsPopupOpen(true)}
-          >
-            Create User
-          </button>
-          <button
-            className="navigate-to-course-management-btn"
-            onClick={navigateToCourseManagementPage}
-          >
-            Assign Courses
-          </button>
-          <button className="refresh-data-btn" onClick={handleRefreshData}>
-            Refresh Data
-          </button>
-        </header>
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <div className="main-content">
-          <div className="user-list4">
-            <h2>Users</h2>
-            <button
-              className="select-all-btn"
-              onClick={() => {
-                const filteredUserEmails = users
-                  .filter(
-                    (user) =>
-                      user.name
-                        ?.toLowerCase()
-                        .includes(searchQuery.toLowerCase()) ||
-                      user.department
-                        ?.toLowerCase()
-                        .includes(searchQuery.toLowerCase()) ||
-                      user.email
-                        .toLowerCase()
-                        .includes(searchQuery.toLowerCase())
-                  )
-                  .map((user) => user.email);
+      <div className="course-page">
+        <details>
+          <summary>Add New</summary>
+          <div className="course-management-content">
+            <div className="add-course-section">
+              <div className="courses-container">
+                <h2>Main Courses</h2>
 
-                // إذا كان جميعهم محددين، قم بإلغاء التحديد، وإلا قم بتحديدهم
-                if (
-                  filteredUserEmails.every((email) =>
-                    selectedUsers.includes(email)
-                  )
-                ) {
-                  setSelectedUsers([]);
-                } else {
-                  setSelectedUsers(filteredUserEmails);
-                }
-              }}
-            >
-              {users.length > 0 &&
-              users.every((user) => selectedUsers.includes(user.email))
-                ? "Deselect All"
-                : "Select All"}
-            </button>
-
-            <button
-              className="assign-subcourses-btn"
-              onClick={() => setIsSubCoursePopupOpen(true)}
-              disabled={selectedUsers.length === 0} // تعطيل الزر إذا لم يتم تحديد أي مستخدم
-            >
-              Assign SubCourses
-            </button>
-
-            {users
-              .filter((user) => {
-                const lowerCaseQuery = searchQuery.toLowerCase();
-                return (
-                  user.name?.toLowerCase().includes(lowerCaseQuery) ||
-                  user.department?.toLowerCase().includes(lowerCaseQuery) ||
-                  user.email.toLowerCase().includes(lowerCaseQuery)
-                );
-              })
-              .map((user) => (
-                <div
-                  key={user.email}
-                  className={`user-item ${
-                    selectedUser?.email === user.email ? "active" : ""
-                  }`}
-                  onClick={() => setSelectedUser(user)} // تحديد المستخدم عند النقر
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.includes(user.email)}
-                    onChange={() => toggleUserSelection(user.email)}
-                    onClick={(e) => e.stopPropagation()} // منع التفاعل غير المقصود مع التحديد
-                  />
-                  {user.name}
+                <div className="course-buttons">
+                  {filteredCourses.map((course) => (
+                    <button
+                      key={course.id}
+                      onClick={() => {
+                        setSelectedCourse(course.id);
+                      }}
+                    >
+                      {course.name}
+                    </button>
+                  ))}
                 </div>
-              ))}
-          </div>
-
-          {isSubCoursePopupOpen && (
-            <div
-              className="subcourse-modal"
-              ref={popupRef}
-              onMouseDown={handleDragStart}
-            >
-              <h2 className="subcourse-moda0">Assign SubCourses</h2>
-
-              {Object.entries(courses).map(([courseId, course]) => {
-                const isAccessibleForAll = selectedUsers.every((userEmail) => {
-                  const sanitizedEmail = userEmail.replace(/\./g, ",");
-                  return roles[sanitizedEmail]?.courses?.[courseId]?.hasAccess;
-                });
-                if (!isAccessibleForAll) return null;
-
-                return (
-                  <div key={courseId}>
-                    <h4>{course.name}</h4>
-                    {course.subCourses &&
-                      Object.entries(course.subCourses).map(
-                        ([subCourseId, subCourse]) => (
-                          <div key={subCourseId} className="subcourse-item">
-                            {/* حقل تعديل التاريخ */}
-                            <input
-  type="datetime-local"
-  className="timer-input"
-  value={
-    expirationTimes[subCourseId]
-      ? toLocalDatetimeString(expirationTimes[subCourseId])
-      : ""
-  }
-  onChange={(e) => {
-    const newTime = e.target.value
-      ? new Date(e.target.value).getTime()
-      : null;
-    setExpirationTimes((prev) => ({
-      ...prev,
-      [subCourseId]: newTime,
-    }));
-  }}
-/>
-
-                            {/* خانة اختيار الدورة الفرعية */}
-                            <input
-                              type="checkbox"
-                              className="access-checkbox"
-                              checked={selectedSubCourses.includes(subCourseId)}
-                              onChange={() =>
-                                toggleSubCourseSelection(subCourseId)
-                              }
-                            />
-                            <label className="subcourse-label">
-                              {subCourse.name}
-                            </label>
-                          </div>
-                        )
-                      )}
+                <div className="course-form-box">
+                  <h2>Add New Course</h2>
+                  <div className="add-sub-course-form">
+                    <input
+                      type="text"
+                      placeholder="Enter new course name"
+                      value={newCourseName}
+                      onChange={(e) => setNewCourseName(e.target.value)}
+                    />
                   </div>
-                );
-              })}
 
-              <div className="modal-buttons1">
-                <button className="modal-apply-btn1" onClick={handleBulkAssign}>
-                  Apply
-                </button>
-                <button
-                  className="modal-cancel-btn1"
-                  onClick={() => setIsSubCoursePopupOpen(false)}
-                >
-                  Cancel
-                </button>
+                  {/* مربع تحميل صورة الدورة */}
+                  <h2>Upload Course Thumbnail</h2>
+                  <div className="add-sub-course-form">
+                    <input
+                      type="text"
+                      value={thumbnail}
+                      onChange={(e) => setThumbnail(e.target.value)}
+                      placeholder="Enter thumbnail URL (Dropbox link)"
+                    />
+                  </div>
+                  <div className="button-container">
+                    <button className="cinter" onClick={handleAddCourse}>
+                      Add Course
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* حاوية المربعات */}
+              {/* مربع إضافة دورة جديدة */}
+              <div className="courses-container">
+                <h2>Sub Courses</h2>
+                <ul className="sub-course-buttons">
+                  {subCourses.map((subCourse) => (
+                    <li key={subCourse.id} value={subCourse.id} disabled>
+                      {subCourse.name}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* مربع إضافة الدورات الفرعية */}
+                <div className="sub-course-box">
+                  <h2>Add Sub Courses</h2>
+                  <div className="add-sub-course-form">
+                    <input
+                      type="text"
+                      value={newSubCourseName}
+                      onChange={(e) => setNewSubCourseName(e.target.value)}
+                      placeholder="Add new sub-course"
+                    />
+                  </div>
+                  <div className="button-container">
+                    <button className="a1" onClick={handleAddSubCourse}>
+                      Add Sub-Course
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          )}
+          </div>
+        </details>
 
-          <div className="user-details">
-            {selectedUser && (
-              <div className="user-details1">
-                <h2>User Details</h2>
-                <p>
-                  <strong>Email:</strong> {selectedUser.email}
-                </p>
-                <p>
-                  <strong>Name:</strong> {selectedUser.name}
-                </p>
-                <p>
-                  <strong>Department:</strong>{" "}
-                  {selectedUser.department || "Not assigned"}
-                </p>
-                <p>
-                  <strong>Role:</strong>{" "}
-                  {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
-                </p>
+        <details>
+          <summary>Manage Content</summary>
+          <div className="course-media-container">
+            <div className="course-selection-container">
+              <div className="course-selection">
+                <div className="course-dropdown">
+                  <h2>ٍSelect Main Course</h2>
 
-                <h3>Sub-course Access</h3>
-                <input
-                  type="text"
-                  placeholder="Search courses..."
-                  value={courseSearchQuery}
-                  onChange={(e) => setCourseSearchQuery(e.target.value)}
-                />
+                  <select
+                    value={selectedCourse}
+                    onChange={(e) => setSelectedCourse(e.target.value)}
+                    className="dropdown"
+                  >
+                    <option value="" disabled>
+                      Select a main course
+                    </option>
+                    {filteredCourses.map((course) => (
+                      <option key={course.id} value={course.id}>
+                        {course.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                {Object.entries(courses).map(([courseId, course]) => {
-                  // الحصول على بيانات صلاحيات المستخدم
-                  const userCourses =
-                    roles[selectedUser.email.replace(/\./g, ",")]?.courses;
-                  // إذا لم يمتلك المستخدم صلاحية الـ main course، لا نقوم بعرض هذا الكورس
-                  if (!userCourses || !userCourses[courseId]) {
-                    return null;
-                  }
-                  return (
-                    <div key={courseId}>
-                      <h4>{course.name}</h4>
-                      {course.subCourses && (
-                        <div className="subcourses-container">
-                          {Object.entries(course.subCourses).map(
-                            ([subCourseId, subCourse]) => (
-                              <div className="sup" key={subCourseId}>
-<input
-  type="datetime-local"
-  className="timer-input"
-  value={
-    expirationTimes[subCourseId]
-      ? toLocalDatetimeString(expirationTimes[subCourseId])
-      : ""
-  }
-  onChange={(e) => {
-    const newTime = e.target.value
-      ? new Date(e.target.value).getTime()
-      : null;
-    setExpirationTimes((prev) => ({
-      ...prev,
-      [subCourseId]: newTime,
-    }));
-  }}
-/>
-
-                                <input
-                                  type="checkbox"
-                                  checked={
-                                    !!userCourses[courseId][subCourseId]
-                                      ?.hasAccess
-                                  }
-                                  onChange={() =>
-                                    handleToggleAccess(
-                                      selectedUser.email,
-                                      courseId,
-                                      subCourseId,
-                                      expirationTimes[subCourseId]
-                                    )
-                                  }
-                                />
-                                <label>
-                                  {getSubCourseName(courseId, subCourseId)}
-                                </label>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                <div className="course-dropdown">
+                  <h2>Select Sub Course</h2>
+                  <select
+                    value={selectedSubCourse}
+                    onChange={(e) => setSelectedSubCourse(e.target.value)}
+                    className="dropdown"
+                    disabled={!selectedCourse}
+                  >
+                    <option value="" disabled>
+                      Select a sub-course
+                    </option>
+                    {subCourses.map((subCourse) => (
+                      <option key={subCourse.id} value={subCourse.id}>
+                        {subCourse.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-        {isPopupOpen && (
-          <div className="popup">
-            <button className="wa" onClick={() => setIsPopupOpen(false)}>
-              X
-            </button>
 
-            <h2>Create User</h2>
+              {selectedSubCourse && (
+                <div className="questions-list">
+                  <div className="gg1">
+                    <h2>Questions </h2>
+                    <button
+                      className="right"
+                      onClick={() => setShowPopup(true)}
+                    >
+                      Add New
+                    </button>
+                  </div>
 
-            <input
-              type="text"
-              placeholder="Email"
-              value={newUserEmail}
-              onChange={(e) => setNewUserEmail(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Name"
-              value={newUserName}
-              onChange={(e) => setNewUserName(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={newUserPassword}
-              onChange={(e) => setNewUserPassword(e.target.value)}
-            />
-            <select
-              value={newUserRole}
-              onChange={(e) => setNewUserRole(e.target.value)}
-            >
-              <option value="user">User</option>
-              {currentUserRole === "SuperAdmin" && (
-                <option value="admin">Admin</option>
+                  {questions.map((question) => (
+                    <div key={question.id} className="question-item">
+                      <div className="question-content">
+                        <h4>{question.text}</h4>
+
+                        {/* عرض الإجابات تحت السؤال */}
+                        <div className="answers-container">
+                          <div className="answer-list">
+                            {question.answers.map((answer) => (
+                              <div key={answer.id} className="answer-content">
+                                <p>{answer.text}</p>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="action-buttons">
+                            <button
+                              onClick={() => {
+                                setIsModalOpen(true);
+                                handleEditQuestion(question);
+                              }}
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              onClick={() => handleDeleteQuestion(question.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        {isModalOpen && (
+                          <div className="popup-overlay">
+                            <div className="popup-content">
+                              <button
+                                className="close-popup-btn"
+                                onClick={() => {
+                                  setIsModalOpen(false);
+                                  clearPopupFields(); // تنظيف الحقول عند الإغلاق
+                                }}
+                              >
+                                X
+                              </button>
+                              <h3>
+                                {isEditMode
+                                  ? "Edit Question"
+                                  : "Add New Question"}
+                              </h3>
+
+                              <input
+                                type="text"
+                                value={newQuestion}
+                                onChange={(e) => setNewQuestion(e.target.value)}
+                                placeholder="Enter question"
+                              />
+                              <h4>Answers:</h4>
+                              {answers.map((answer, index) => (
+                                <div key={index}>
+                                  <input
+                                    type="text"
+                                    value={answer.text}
+                                    onChange={(e) => {
+                                      const newAnswers = [...answers];
+                                      newAnswers[index].text = e.target.value;
+                                      setAnswers(newAnswers);
+                                    }}
+                                    placeholder="Enter answer"
+                                  />
+                                  <label className="align-left">
+                                    <input
+                                      type="checkbox"
+                                      checked={answer.correct}
+                                      onChange={() => {
+                                        const newAnswers = [...answers];
+                                        newAnswers[index].correct =
+                                          !newAnswers[index].correct;
+
+                                        if (
+                                          !newAnswers.some((ans) => ans.correct)
+                                        ) {
+                                          newAnswers[index].correct = true;
+                                        }
+
+                                        setAnswers(newAnswers);
+                                      }}
+                                    />
+                                    Correct Answer
+                                  </label>
+                                </div>
+                              ))}
+                              <button
+                                className="add-answer-btn"
+                                onClick={handleAddAnswer}
+                              >
+                                Add Answer
+                              </button>
+                              <button
+                                onClick={() => {
+                                  handleUpdateQuestion();
+                                  clearPopupFields(); // تنظيف الحقول بعد الحفظ
+                                }}
+                              >
+                                {isEditMode ? "Save Changes" : "Add Question"}
+                              </button>
+
+                              {error && (
+                                <p className="error-message">{error}</p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  <details>
+                    <summary>Upload Media for Selected Sub-course</summary>
+                    <input
+                      type="text"
+                      value={newImageUrl}
+                      onChange={(e) => setNewImageUrl(e.target.value)}
+                      placeholder="Add Image URL"
+                    />
+                    <input
+                      type="text"
+                      value={newVideoUrl}
+                      onChange={(e) => setNewVideoUrl(e.target.value)}
+                      placeholder="Add Video URL"
+                    />
+                    <div className="a1">
+                      <button className="a2" onClick={handleAddMedia}>
+                        Add Media
+                      </button>
+                    </div>
+                    <div className="media-display">
+                      {media.images &&
+                        media.images
+                          .sort((a, b) => a.id - b.id)
+                          .map((mediaItem) => (
+                            <div key={mediaItem.id} className="media-item1">
+                              <img
+                                src={mediaItem.url}
+                                alt={`Media ${mediaItem.id}`}
+                              />
+                              <div className="delete-button-container">
+                                <button
+                                  className="vim"
+                                  onClick={() =>
+                                    handleDeleteMedia("images", mediaItem.id)
+                                  }
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+
+                      {media.videos &&
+                        media.videos
+                          .sort((a, b) => a.id - b.id)
+                          .map((mediaItem) => (
+                            <div key={mediaItem.id} className="media-item1">
+                              <video src={mediaItem.url} controls />
+                              <div className="delete-button-container">
+                                <button
+                                  className="vim"
+                                  onClick={() =>
+                                    handleDeleteMedia("videos", mediaItem.id)
+                                  }
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                    </div>
+                  </details>
+                </div>
               )}
-            </select>
-            {currentUserRole === "SuperAdmin" ? (
-              <select
-                value={newUserDepartment}
-                onChange={(e) => setNewUserDepartment(e.target.value)}
-              >
-                <option value="">Select Department</option>
-                {departments.map((department) => (
-                  <option key={department.id} value={department.name}>
-                    {department.name}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <select
-                value={newUserDepartment}
-                onChange={(e) => setNewUserDepartment(e.target.value)}
-              >
-                <option value="">Select Department</option>
-                {departments.map((department) => (
-                  <option key={department.id} value={department.name}>
-                    {department.name}
-                  </option>
-                ))}
-              </select>
-            )}
-
-            <button className="addus" onClick={handleAddUser}>
-              Add
-            </button>
+            </div>
           </div>
-        )}{" "}
+        </details>
+
+        {showPopup && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <button
+                className="close-popup-btn"
+                onClick={() => setShowPopup(false)}
+              >
+                X
+              </button>
+              <h3>Add New Question</h3>
+              <h4 className="gg">Question:</h4>
+              <input
+                type="text"
+                value={newQuestion}
+                onChange={(e) => setNewQuestion(e.target.value)}
+                placeholder="Enter new question"
+              />
+              <div className="Add-answer">
+                <div className="gg">
+                  <h4>Answers: </h4>
+                </div>
+                <button className="right2" onClick={handleAddAnswer}>
+                  Add New
+                </button>
+              </div>
+              {answers.map((answer, index) => (
+                <div key={index}>
+                  <input
+                    type="text"
+                    value={answer.text}
+                    onChange={(e) => {
+                      const newAnswers = [...answers];
+                      newAnswers[index].text = e.target.value;
+                      setAnswers(newAnswers);
+                    }}
+                    placeholder="Enter answer"
+                  />
+                  <label className="align-left">
+                    <input
+                      type="checkbox"
+                      checked={answer.correct}
+                      onChange={() => {
+                        const newAnswers = [...answers];
+                        newAnswers[index].correct = !newAnswers[index].correct;
+                        setAnswers(newAnswers);
+                      }}
+                    />
+                    Correct Answer
+                  </label>
+                </div>
+              ))}
+              <button
+                className="save-question-btn"
+                onClick={handleAddNewQuestion}
+              >
+                Save
+              </button>
+
+              {error && <p className="error-message">{error}</p>}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export default AdminPage;
+export default CoursePage;
