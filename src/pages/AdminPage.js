@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { db } from "../firebase"; // استيراد قاعدة البيانات فقط
 import { ref as dbRef } from "firebase/database";
-import { get, ref, set, remove } from "firebase/database";
+import { get, ref, set, remove, getDatabase } from "firebase/database";
 import { update } from "firebase/database"; // إضافة update هنا
 
 import {
@@ -33,6 +33,10 @@ function AdminPage() {
   const [selectedSubCourses, setSelectedSubCourses] = useState([]);
   const [isSubCoursePopupOpen, setIsSubCoursePopupOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [employeeName, setEmployeeName] = useState("");
+  const [employeeEmail, setEmployeeEmail] = useState("");
+  const [sites, setSites] = useState([]);
+  const [employeeSite, setEmployeeSite] = useState("");
 
   const auth = getAuth();
   const navigate = useNavigate();
@@ -219,13 +223,15 @@ function AdminPage() {
         // Prepare dbReferences to save new user data
         const roledbRef = dbRef(db, `roles/${sanitizedEmail}`);
         const usersdbRef = dbRef(db, `users/${sanitizedEmail}`);
-        // إضافة المستخدم الجديد إلى قاعدة البيانات
+
+        // إضافة المستخدم الجديد إلى قاعدة البيانات مع الموقع
         await set(roledbRef, { role: newUserRole, courses: {} });
         await set(usersdbRef, {
           email: newUserEmail,
           name: newUserName,
           role: newUserRole,
           department: newUserDepartment,
+          site: employeeSite, // إضافة الموقع
         });
 
         // Re-sign in with admin account
@@ -237,6 +243,7 @@ function AdminPage() {
         setNewUserName("");
         setNewUserRole("user");
         setNewUserDepartment(""); // Reset new user department
+        setEmployeeSite(""); // Reset the site
 
         // Update data and close popup
         await fetchData();
@@ -246,6 +253,7 @@ function AdminPage() {
       }
     }
   };
+
   const handleBulkAssign = async () => {
     if (selectedUsers.length === 0 || selectedSubCourses.length === 0) {
       alert("يرجى تحديد المستخدمين والدورات الفرعية!");
@@ -344,8 +352,29 @@ function AdminPage() {
     const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
-  
-  
+  useEffect(() => {
+    const fetchSites = async () => {
+      try {
+        const db = getDatabase();
+        const sitesRef = ref(db, "sites");
+        const snapshot = await get(sitesRef);
+        if (snapshot.exists()) {
+          const sitesData = snapshot.val();
+          const sitesList = Object.entries(sitesData).map(([id, site]) => ({
+            id,
+            name: site.name,
+          }));
+          setSites(sitesList);
+        } else {
+          console.log("No data available");
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchSites();
+  }, []);
+
   return (
     <div className="admin-page-all">
       <header>
@@ -474,23 +503,25 @@ function AdminPage() {
                           <div key={subCourseId} className="subcourse-item">
                             {/* حقل تعديل التاريخ */}
                             <input
-  type="datetime-local"
-  className="timer-input"
-  value={
-    expirationTimes[subCourseId]
-      ? toLocalDatetimeString(expirationTimes[subCourseId])
-      : ""
-  }
-  onChange={(e) => {
-    const newTime = e.target.value
-      ? new Date(e.target.value).getTime()
-      : null;
-    setExpirationTimes((prev) => ({
-      ...prev,
-      [subCourseId]: newTime,
-    }));
-  }}
-/>
+                              type="datetime-local"
+                              className="timer-input"
+                              value={
+                                expirationTimes[subCourseId]
+                                  ? toLocalDatetimeString(
+                                      expirationTimes[subCourseId]
+                                    )
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                const newTime = e.target.value
+                                  ? new Date(e.target.value).getTime()
+                                  : null;
+                                setExpirationTimes((prev) => ({
+                                  ...prev,
+                                  [subCourseId]: newTime,
+                                }));
+                              }}
+                            />
 
                             {/* خانة اختيار الدورة الفرعية */}
                             <input
@@ -540,6 +571,10 @@ function AdminPage() {
                   {selectedUser.department || "Not assigned"}
                 </p>
                 <p>
+                  <strong>Site:</strong> {selectedUser.site || "Not assigned"}{" "}
+                  {/* عرض الموقع */}
+                </p>
+                <p>
                   <strong>Role:</strong>{" "}
                   {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
                 </p>
@@ -549,70 +584,80 @@ function AdminPage() {
                   type="text"
                   placeholder="Search courses..."
                   value={courseSearchQuery}
-                  onChange={(e) => setCourseSearchQuery(e.target.value)}
+                  onChange={(e) => setCourseSearchQuery(e.target.value)} // استخدام onChange
                 />
 
-                {Object.entries(courses).map(([courseId, course]) => {
-                  // الحصول على بيانات صلاحيات المستخدم
-                  const userCourses =
-                    roles[selectedUser.email.replace(/\./g, ",")]?.courses;
-                  // إذا لم يمتلك المستخدم صلاحية الـ main course، لا نقوم بعرض هذا الكورس
-                  if (!userCourses || !userCourses[courseId]) {
-                    return null;
-                  }
-                  return (
-                    <div key={courseId}>
-                      <h4>{course.name}</h4>
-                      {course.subCourses && (
-                        <div className="subcourses-container">
-                          {Object.entries(course.subCourses).map(
-                            ([subCourseId, subCourse]) => (
-                              <div className="sup" key={subCourseId}>
-<input
-  type="datetime-local"
-  className="timer-input"
-  value={
-    expirationTimes[subCourseId]
-      ? toLocalDatetimeString(expirationTimes[subCourseId])
-      : ""
-  }
-  onChange={(e) => {
-    const newTime = e.target.value
-      ? new Date(e.target.value).getTime()
-      : null;
-    setExpirationTimes((prev) => ({
-      ...prev,
-      [subCourseId]: newTime,
-    }));
-  }}
-/>
+                {Object.entries(courses)
+                  .filter(
+                    ([courseId, course]) =>
+                      course.name
+                        .toLowerCase()
+                        .includes(courseSearchQuery.toLowerCase()) // تصفية الدورات حسب اسم الكورس
+                  )
+                  .map(([courseId, course]) => {
+                    // الحصول على بيانات صلاحيات المستخدم
+                    const userCourses =
+                      roles[selectedUser.email.replace(/\./g, ",")]?.courses;
+                    // إذا لم يمتلك المستخدم صلاحية الـ main course، لا نقوم بعرض هذا الكورس
+                    if (!userCourses || !userCourses[courseId]) {
+                      return null;
+                    }
 
-                                <input
-                                  type="checkbox"
-                                  checked={
-                                    !!userCourses[courseId][subCourseId]
-                                      ?.hasAccess
-                                  }
-                                  onChange={() =>
-                                    handleToggleAccess(
-                                      selectedUser.email,
-                                      courseId,
-                                      subCourseId,
+                    return (
+                      <div key={courseId}>
+                        <h4>{course.name}</h4>
+                        {course.subCourses && (
+                          <div className="subcourses-container">
+                            {Object.entries(course.subCourses).map(
+                              ([subCourseId, subCourse]) => (
+                                <div className="sup" key={subCourseId}>
+                                  <input
+                                    type="datetime-local"
+                                    className="timer-input"
+                                    value={
                                       expirationTimes[subCourseId]
-                                    )
-                                  }
-                                />
-                                <label>
-                                  {getSubCourseName(courseId, subCourseId)}
-                                </label>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                                        ? toLocalDatetimeString(
+                                            expirationTimes[subCourseId]
+                                          )
+                                        : ""
+                                    }
+                                    onChange={(e) => {
+                                      const newTime = e.target.value
+                                        ? new Date(e.target.value).getTime()
+                                        : null;
+                                      setExpirationTimes((prev) => ({
+                                        ...prev,
+                                        [subCourseId]: newTime,
+                                      }));
+                                    }}
+                                  />
+
+                                  <input
+                                    type="checkbox"
+                                    checked={
+                                      !!userCourses[courseId][subCourseId]
+                                        ?.hasAccess
+                                    }
+                                    onChange={() =>
+                                      handleToggleAccess(
+                                        selectedUser.email,
+                                        courseId,
+                                        subCourseId,
+                                        expirationTimes[subCourseId]
+                                      )
+                                    }
+                                  />
+                                  <label>
+                                    {getSubCourseName(courseId, subCourseId)}
+                                  </label>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
               </div>
             )}
           </div>
@@ -643,6 +688,18 @@ function AdminPage() {
               value={newUserPassword}
               onChange={(e) => setNewUserPassword(e.target.value)}
             />
+            <select
+              value={employeeSite}
+              onChange={(e) => setEmployeeSite(e.target.value)}
+            >
+              <option value="">Select Site</option>
+              {sites.map((site) => (
+                <option key={site.id} value={site.id}>
+                  {site.name}
+                </option>
+              ))}
+            </select>
+
             <select
               value={newUserRole}
               onChange={(e) => setNewUserRole(e.target.value)}
