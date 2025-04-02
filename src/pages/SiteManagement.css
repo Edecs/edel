@@ -1,0 +1,100 @@
+/* ملف SiteManagement.css */
+
+/* تصميم الحاوية الرئيسية */
+.site {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+}
+
+/* تصميم حاوية إدارة المواقع */
+.site-management {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.site-management input {
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.site-management input:focus {
+  border-color: #094d50;
+  outline: none;
+}
+
+/* تصميم الزر لإضافة الموقع */
+.site-management button {
+  background-color: #094d50;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.site-management button:hover {
+  background-color: #094d50a8;
+  transform: scale(1.05);
+}
+
+.site-management button:active {
+  background-color: #055e3c;
+}
+
+/* تصميم قائمة المواقع */
+.site-management ul {
+  padding-left: 0;
+  list-style: none;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.site-management ul li {
+  background-color: #f1f1f1;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #094d50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.site-management ul li:hover {
+  background-color: #e0e0e0;
+}
+
+/* تغيير تنسيق الزر عند التمرير */
+.site-management ul li button {
+  background-color: #ce1100;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.site-management ul li button:hover {
+  background-color: #b01000;
+}
