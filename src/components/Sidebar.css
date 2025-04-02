@@ -32,9 +32,10 @@
 .sidebar::-webkit-scrollbar-thumb:hover {
   background-color: #b0b0b0; /* لون عند التمرير */
 }
-
 .sidebar.open {
-  transform: translateX(0); /* عند الفتح */
+  transform: translateX(0);
+  opacity: 1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar.closed {
@@ -163,4 +164,42 @@
 
 .sidebar.open + .main-content {
   margin-left: 80px; /* عند فتح الشريط الجانبي، اجعل الهامش 80px */
+}
+.sidebar.open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.sidebar.closed {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.sidebar ul li a .sidebar-icon:hover {
+  transform: scale(1.2); /* تكبير الأيقونة عند التمرير */
+}
+.sidebar ul li a:focus {
+  outline: none;
+  background-color: rgba(66, 68, 70, 0.534); /* تغيير اللون عند التركيز */
+}
+.sidebar ul {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap; /* السماح بتوزيع العناصر بشكل مرن */
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #094d50; /* نفس لون النص */
+}
+
+.sidebar::-webkit-scrollbar {
+  background-color: #f1f1f1; /* لون خلفية شريط التمرير */
+}
+.sidebar .logout-button:hover {
+  background-color: #e64a19;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1); /* إضافة تأثير لمعان عند التمرير */
+}
+@media (max-width: 480px) {
+  .sidebar ul li {
+    padding: 20px 0; /* زيادة الحشو بين الأزرار */
+  }
 }
