@@ -15,12 +15,14 @@ import AddTaskPage from "./pages/AddTaskPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ArchivedTasksPage from "./pages/ArchivedTasksPage";
 import DepartmentManagement from "./pages/DepartmentManagement";
+
+import SiteManagement from "./pages/SiteManagement";
+
 import LoadingScreen from "./components/LoadingScreen";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EmailForm from "./pages/EmailForm";
 import BulkUserUpload from "./pages/BulkUserUpload";
 import CertificatePage from "./pages/CertificatePage"; // استيراد الصفحة الجديدة
-
 
 import { useAuth } from "./context/AuthContext";
 import Modal from "react-modal";
@@ -152,11 +154,11 @@ const App = () => {
 
                   <Route path="/BulkUser-Upload" element={<BulkUserUpload />} />
 
-
                   <Route
                     path="/department-management"
                     element={<DepartmentManagement />}
                   />
+                  <Route path="/Site-Management" element={<SiteManagement />} />
                 </>
               )}
               <Route path="*" element={<NotFoundPage />} />
