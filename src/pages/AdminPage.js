@@ -694,7 +694,7 @@ function AdminPage() {
             >
               <option value="">Select Site</option>
               {sites.map((site) => (
-                <option key={site.id} value={site.id}>
+                <option key={site.name} value={site.name}>
                   {site.name}
                 </option>
               ))}
