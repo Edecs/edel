@@ -457,7 +457,9 @@ function AdminPage() {
                 return (
                   user.name?.toLowerCase().includes(lowerCaseQuery) ||
                   user.department?.toLowerCase().includes(lowerCaseQuery) ||
-                  user.email.toLowerCase().includes(lowerCaseQuery)
+                  user.email.toLowerCase().includes(lowerCaseQuery) ||
+                  (user.site &&
+                    user.site.toString().toLowerCase().includes(lowerCaseQuery))
                 );
               })
               .map((user) => (
