@@ -116,6 +116,15 @@ function Sidebar({ isOpen, onClose }) {
                 <DepartmentIcon className="sidebar-icon" />
               </Link>
             </li>
+            <li>
+              <Link
+                to="/Site-Management"
+                onClick={onClose}
+                title="SiteManagement"
+              >
+                <DepartmentIcon className="sidebar-icon" />
+              </Link>
+            </li>
           </>
         )}
       </ul>
