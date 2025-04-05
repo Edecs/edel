@@ -9,9 +9,11 @@
     "axios": "^0.27.2",
     "emailjs-com": "^3.2.0",
     "exceljs": "^4.4.0",
-    "firebase": "^9.23.0",
+    "firebase": "^9.22.0",
+    "html2canvas": "^1.4.1",
     "immer": "^9.0.21",
-        "papaparse": "^5.4.1",
+    "jspdf": "^2.5.1",
+    "papaparse": "^5.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-modal": "^3.16.1",
@@ -22,10 +24,7 @@
     "sass-loader": "^16.0.2",
     "typeface-roboto": "^0.0.75",
     "uuid": "^9.0.1",
-    "xlsx": "^0.18.5",
-    "html2canvas": "^1.4.1",
-"jspdf": "^2.5.1"
-
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,6 +51,7 @@
   },
   "devDependencies": {
     "eslint": "^8.57.0",
-    "eslint-config-react-app": "^7.0.1"
+    "eslint-config-react-app": "^7.0.1",
+    "source-map-loader": "^5.0.0"
   }
 }
