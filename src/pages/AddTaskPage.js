@@ -54,14 +54,7 @@ const AddTaskPage = () => {
           templateParams,
           "PXS_cTqdGTjx-W0yE"
         )
-        .then((response) => {
-          console.log(
-            "Email sent successfully to",
-            email,
-            response.status,
-            response.text
-          );
-        })
+
         .catch((error) => {
           console.error("Error sending email to", email, error);
         });
