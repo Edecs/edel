@@ -5,6 +5,7 @@ import { ReactComponent as HomeIcon } from "../photos/icons8-home.svg";
 import { ReactComponent as CoursesIcon } from "../photos/add.svg";
 import { ReactComponent as ProgressIcon } from "../photos/address-book.svg";
 import { ReactComponent as SubmissionsIcon } from "../photos/Submissions.svg";
+import { ReactComponent as SiteIcon } from "../photos/construction.svg";
 
 import { ReactComponent as AdminIcon } from "../photos/user-add-outlined.svg";
 import { ReactComponent as AddTaskIcon } from "../photos/add task.svg";
@@ -133,7 +134,7 @@ function Sidebar({ isOpen, onClose }) {
                 onClick={onClose}
                 title="SiteManagement"
               >
-                <DepartmentIcon className="sidebar-icon" />
+                <SiteIcon className="sidebar-icon" />
               </Link>
             </li>
           </>
