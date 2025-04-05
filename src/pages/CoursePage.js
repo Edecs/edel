@@ -29,10 +29,11 @@ function CoursePage() {
   const [newCourseName, setNewCourseName] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
-  const [currentUserRole, setCurrentUserRole] = useState("");
   const [currentUserDepartment, setCurrentUserDepartment] = useState("");
   const [media, setMedia] = useState({ images: [], videos: [] });
   const [newImageUrl, setNewImageUrl] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState("");
+
   const filteredCourses = mainCourses.filter(
     (course) => course.department === currentUserDepartment
   );
@@ -51,24 +52,16 @@ function CoursePage() {
     if (user) {
       const userEmail = user.email;
       const usersRef = ref(db, "users");
-      onValue(
-        usersRef,
-        (snapshot) => {
-          const usersData = snapshot.val();
-          const userData = Object.values(usersData).find(
-            (u) => u.email === userEmail
-          );
-          if (userData) {
-            setCurrentUserRole(userData.role);
-            setCurrentUserDepartment(userData.department || "");
-          } else {
-            console.error("User data not found for email:", userEmail);
-          }
-        },
-        (error) => {
-          console.error("Error fetching user data:", error);
+      onValue(usersRef, (snapshot) => {
+        const usersData = snapshot.val();
+        const userData = Object.values(usersData).find(
+          (u) => u.email === userEmail
+        );
+        if (userData) {
+          setCurrentUserRole(userData.role);
+          setCurrentUserDepartment(userData.department || "");
         }
-      );
+      });
     }
   }, [db]);
 
@@ -403,6 +396,12 @@ function CoursePage() {
     setAnswers([]); // مسح قائمة الإجابات
     setIsEditMode(false); // تصفير وضع التحرير
   };
+  {
+    currentUserRole === "admin" && (
+      <button onClick={handleAddCourse}>إضافة دورة</button>
+    );
+  }
+
   return (
     <div className="course">
       <header>
@@ -555,8 +554,16 @@ function CoursePage() {
                         {/* عرض الإجابات تحت السؤال */}
                         <div className="answers-container">
                           <div className="answer-list">
-                            {question.answers.map((answer) => (
+                            {question.answers.map((answer, idx) => (
                               <div key={answer.id} className="answer-content">
+                                <div key={idx}>
+                                  <span>{answer.text}</span>
+                                  <button
+                                    onClick={() => handleEditAnswer(answer)}
+                                  >
+                                    ✏️
+                                  </button>
+                                </div>
                                 <p>{answer.text}</p>
                               </div>
                             ))}
