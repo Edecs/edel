@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { ReactComponent as HomeIcon } from "../photos/icons8-home.svg";
 import { ReactComponent as CoursesIcon } from "../photos/add.svg";
 import { ReactComponent as ProgressIcon } from "../photos/address-book.svg";
+import { ReactComponent as SubmissionsIcon } from "../photos/Submissions.svg";
+
 import { ReactComponent as AdminIcon } from "../photos/user-add-outlined.svg";
 import { ReactComponent as AddTaskIcon } from "../photos/add task.svg";
 import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-com.svg";
@@ -67,9 +69,14 @@ function Sidebar({ isOpen, onClose }) {
                 <AdminIcon className="sidebar-icon" />
               </Link>
             </li>
+
             <li>
-              <Link to="/user-progress" onClick={onClose} title="User Progress">
-                <ProgressIcon className="sidebar-icon" />
+              <Link
+                to="/Submissions-Page"
+                onClick={onClose}
+                title="Submissions Page"
+              >
+                <SubmissionsIcon className="sidebar-icon" />
               </Link>
             </li>
             <li>
@@ -106,7 +113,11 @@ function Sidebar({ isOpen, onClose }) {
                 <BulkUserUpload className="sidebar-icon" />
               </Link>
             </li>
-
+            <li>
+              <Link to="/user-progress" onClick={onClose} title="User Progress">
+                <ProgressIcon className="sidebar-icon" />
+              </Link>
+            </li>
             <li>
               <Link
                 to="/department-management"
