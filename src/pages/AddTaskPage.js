@@ -47,17 +47,12 @@ const AddTaskPage = () => {
         subject: "You have a new task from E-learning EDECS",
       };
 
-      emailjs
-        .send(
-          "service_33nrb0q",
-          "template_zz1ruij",
-          templateParams,
-          "PXS_cTqdGTjx-W0yE"
-        )
-
-        .catch((error) => {
-          console.error("Error sending email to", email, error);
-        });
+      emailjs.send(
+        "service_33nrb0q",
+        "template_zz1ruij",
+        templateParams,
+        "PXS_cTqdGTjx-W0yE"
+      );
     });
   };
 
