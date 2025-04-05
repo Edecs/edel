@@ -43,16 +43,12 @@ const CourseDetailPage = () => {
         const accessData = userAccessSnapshot.val();
         setUserAccess(accessData);
 
-        console.log("📌 Fetched User Access Data:", accessData); // ✅ تحقق من البيانات المسترجعة
-
         // إعداد توقيتات كل SubCourse
         const expirations = {};
         Object.entries(accessData).forEach(([key, value]) => {
           if (value.expirationTime) {
             const remainingTime = value.expirationTime - Date.now();
-            console.log(
-              `🔍 SubCourse: ${key}, Expiration Time: ${value.expirationTime}, Remaining: ${remainingTime}`
-            );
+
             expirations[key] = remainingTime > 0 ? remainingTime : 0;
           }
         });
