@@ -205,14 +205,15 @@ function CourseManagementPage() {
         (user.email &&
           user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (user.department &&
-          user.department.toLowerCase().includes(searchTerm.toLowerCase()))
+          user.department.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.site &&
+          user.site.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     .filter((user) => {
       return !enrolledUsers.some(
         (enrolledUser) => enrolledUser.email === user.email
       );
     });
-
   const filteredEnrolledUsers = enrolledUsers.filter(
     (user) =>
       (user.name &&
@@ -220,7 +221,8 @@ function CourseManagementPage() {
       (user.email &&
         user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (user.department &&
-        user.department.toLowerCase().includes(searchTerm.toLowerCase()))
+        user.department.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.site && user.site.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const usersToDisplay = selectedCourse ? filteredUsers : [];
