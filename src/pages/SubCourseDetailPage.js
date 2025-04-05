@@ -66,7 +66,6 @@ const SubCourseDetailPage = () => {
         if (userSnapshot.exists()) {
           const userData = userSnapshot.val();
           setUserName(userData.name || "User");
-          console.log("User Name Fetched:", userData.name);
         } else {
           setUserName("User");
         }
@@ -122,13 +121,12 @@ const SubCourseDetailPage = () => {
       setCurrentMediaIndex((prevIndex) => prevIndex + 1);
     }
   };
-  
+
   const handlePrevMedia = () => {
     if (currentMediaIndex > 0) {
       setCurrentMediaIndex((prevIndex) => prevIndex - 1);
     }
   };
-  
 
   const handleAnswerChange = (questionIndex, answer) => {
     setUserAnswers((prevAnswers) => {
@@ -155,12 +153,12 @@ const SubCourseDetailPage = () => {
       alert("User name not loaded. Please try again.");
       return;
     }
-  
+
     let endTime = new Date();
     const totalTime = (endTime - startTime) / 1000;
-  
+
     let correctCount = 0;
-  
+
     if (subCourse?.questions) {
       Object.values(subCourse.questions).forEach((question, index) => {
         const userAnswer = userAnswers[index];
@@ -172,12 +170,12 @@ const SubCourseDetailPage = () => {
         }
       });
     }
-  
+
     let percentageSuccess =
       totalQuestions > 0
         ? ((correctCount / totalQuestions) * 100).toFixed(2)
         : "0.00";
-  
+
     const submissionData = {
       email: user.email,
       userId: user ? user.uid : "Anonymous",
@@ -189,31 +187,35 @@ const SubCourseDetailPage = () => {
       percentageSuccess,
       userAnswers,
     };
-  
+
     try {
-      await set(ref(db, `submissions/${user.uid}/${subCourseId}`), submissionData);
+      await set(
+        ref(db, `submissions/${user.uid}/${subCourseId}`),
+        submissionData
+      );
       setSubmissionResult(submissionData);
-  
+
       if (percentageSuccess >= 80) {
-        navigate("/certificates", { state: { userName, courseId: subCourseId, percentageSuccess } });
+        navigate("/certificates", {
+          state: { userName, courseId: subCourseId, percentageSuccess },
+        });
       } else {
         navigate("/welcome", { replace: true }); // استخدم replace لتجنب الرجوع للخلف بالمتصفح
       }
-      
     } catch (error) {
       console.error("Error submitting data:", error);
       alert("Failed to submit data.");
     }
   };
-  
 
   const convertDropboxLink = (link) => {
     if (link.includes("dropbox.com")) {
-      return link.replace("www.dropbox.com", "dl.dropboxusercontent.com").replace("?dl=1", "");
+      return link
+        .replace("www.dropbox.com", "dl.dropboxusercontent.com")
+        .replace("?dl=1", "");
     }
     return link;
   };
-  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -232,7 +234,7 @@ const SubCourseDetailPage = () => {
         type: "image",
       });
     });
-  
+
     const videoKeys = Object.keys(subCourse.media.videos || {});
     videoKeys.forEach((key) => {
       mediaItems.push({
@@ -242,7 +244,6 @@ const SubCourseDetailPage = () => {
       });
     });
   }
-  
 
   const currentMedia = mediaItems[currentMediaIndex];
 
@@ -274,21 +275,21 @@ const SubCourseDetailPage = () => {
                   />
                 </div>
               )}
-       {currentMedia.type === "video" && (
-  <div className="media-item">
-    <video 
-      key={currentMedia.id} // أضف المفتاح هنا لإجبار إعادة التحميل
-      controls 
-      style={{ width: "100%", height: "auto" }}
-    >
-      <source
-        src={convertDropboxLink(currentMedia.url)}
-        type="video/mp4"
-      />
-      Your browser does not support the video tag.
-    </video>
-  </div>
-)}
+              {currentMedia.type === "video" && (
+                <div className="media-item">
+                  <video
+                    key={currentMedia.id} // أضف المفتاح هنا لإجبار إعادة التحميل
+                    controls
+                    style={{ width: "100%", height: "auto" }}
+                  >
+                    <source
+                      src={convertDropboxLink(currentMedia.url)}
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
 
               <div className="media-navigation">
                 <NavigationButton
