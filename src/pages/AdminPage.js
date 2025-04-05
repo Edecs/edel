@@ -365,8 +365,6 @@ function AdminPage() {
             name: site.name,
           }));
           setSites(sitesList);
-        } else {
-          console.log("No data available");
         }
       } catch (error) {
         console.error("Error fetching data: ", error);
