@@ -27,8 +27,6 @@ const DepartmentManagement = () => {
               (key) => data[key].name
             );
             setDepartments(departmentList);
-          } else {
-            console.log("No departments found");
           }
         } catch (error) {
           console.error("Error fetching departments: ", error);
