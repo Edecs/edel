@@ -6,7 +6,6 @@ import { ReactComponent as CoursesIcon } from "../photos/add.svg";
 import { ReactComponent as ProgressIcon } from "../photos/address-book.svg";
 import { ReactComponent as SubmissionsIcon } from "../photos/Submissions.svg";
 import { ReactComponent as SiteIcon } from "../photos/construction.svg";
-
 import { ReactComponent as AdminIcon } from "../photos/user-add-outlined.svg";
 import { ReactComponent as AddTaskIcon } from "../photos/add task.svg";
 import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-com.svg";
