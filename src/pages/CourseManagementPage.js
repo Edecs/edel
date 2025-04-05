@@ -66,8 +66,6 @@ function CourseManagementPage() {
       const userData = userSnapshot.val();
       setUserDepartment(userData.department);
       setCurrentUserRole(userData.role); // حفظ الدور
-      console.log("User Department:", userData.department);
-      console.log("User Role:", userData.role);
     }
   }, [currentUser]);
 
