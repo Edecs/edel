@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { get, ref } from 'firebase/database';
-import { db } from '../firebase';
+import React, { createContext, useState, useEffect } from "react";
+import { get, ref } from "firebase/database";
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth"; // استيراد Firebase Auth
 
 export const UserContext = createContext();
 
@@ -8,6 +9,7 @@ export const UserProvider = ({ children }) => {
   const [courses, setCourses] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true); // حالة التحميل
+  const [user, setUser] = useState(null); // لحالة المستخدم
 
   const fetchCourses = async () => {
     const coursesRef = ref(db, "courses/mainCourses");
@@ -31,13 +33,23 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchCourses();
-    fetchUsers();
-    setLoading(false); // الانتهاء من تحميل البيانات
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user); // تعيين حالة المستخدم عند تغيير حالة التوثيق
+      if (user) {
+        fetchCourses(); // جلب الدورات لما المستخدم يكون متوثق
+        fetchUsers(); // جلب المستخدمين لما المستخدم يكون متوثق
+      }
+      setLoading(false); // إنهاء التحميل بعد جلب البيانات
+    });
+
+    return () => unsubscribe(); // تنظيف المستمع عند تفكيك المكون
   }, []);
 
   return (
-    <UserContext.Provider value={{ courses, users, fetchCourses, fetchUsers, loading }}>
+    <UserContext.Provider
+      value={{ courses, users, fetchCourses, fetchUsers, loading, user }}
+    >
       {children}
     </UserContext.Provider>
   );
