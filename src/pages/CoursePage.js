@@ -288,12 +288,7 @@ function CoursePage() {
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}/answers/${answerId}`
     );
-
-    try {
-      await remove(questionRef);
-    } catch (error) {
-      setError("Failed to delete answer: " + error.message);
-    }
+    await remove(questionRef);
   };
 
   const handleAddMedia = async () => {
