@@ -12,7 +12,6 @@ import { ReactComponent as ArchiveIcon } from "../photos/archive-down-svgrepo-co
 import { ReactComponent as DepartmentIcon } from "../photos/open-data-square.svg"; // تأكد من وجود أيقونة للقسم
 import { ReactComponent as EmailFormIcon } from "../photos/email-essential-letter-svgrepo-com.svg"; // تأكد من وجود أيقونة للقسم
 import { ReactComponent as BulkUserUpload } from "../photos/upload-svgrepo-com.svg"; // تأكد من وجود أيقونة للقسم
-
 import "./Sidebar.css";
 
 function Sidebar({ isOpen, onClose }) {
