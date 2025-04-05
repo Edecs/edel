@@ -25,8 +25,6 @@ const SiteManagement = () => {
             const data = snapshot.val();
             const siteList = Object.keys(data).map((key) => data[key].name);
             setSites(siteList);
-          } else {
-            console.log("No sites found");
           }
         } catch (error) {
           console.error("Error fetching sites: ", error);
