@@ -356,5 +356,5 @@ function CourseManagementPage() {
     </div>
   );
 }
-
+ 
 export default CourseManagementPage;
