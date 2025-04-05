@@ -551,14 +551,7 @@ function CoursePage() {
                           <div className="answer-list">
                             {question.answers.map((answer, idx) => (
                               <div key={answer.id} className="answer-content">
-                                <div key={idx}>
-                                  <span>{answer.text}</span>
-                                  <button
-                                    onClick={() => handleEditAnswer(answer)}
-                                  >
-                                    ✏️
-                                  </button>
-                                </div>
+                                <div key={idx}></div>
                                 <p>{answer.text}</p>
                               </div>
                             ))}
