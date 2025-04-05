@@ -1,0 +1,126 @@
+.submissions-page {
+  display: flex;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.left-panel {
+  width: 25%;
+  padding: 20px;
+  background-color: #f4f4f4;
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.right-panel {
+  flex: 1;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+input[type="text"] {
+  padding: 8px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+select {
+  padding: 8px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #094d50;
+  color: white;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+.export-btn {
+  background-color: #094d50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.export-btn:hover {
+  background-color: #0f696e;
+}
+
+.progress {
+  margin-bottom: 20px;
+}
+
+progress {
+  width: 100%;
+  height: 20px;
+}
+
+.user-details {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.user-details p {
+  margin: 5px 0;
+}
+
+.course-submissions {
+  background: #f9f9f9;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.course-submissions h3 {
+  margin-bottom: 10px;
+}
+.dashboard {
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.dashboard h2 {
+  text-align: center;
+}
+
+.dashboard-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-stats p {
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+.charts {
+  margin-top: 20px;
+  /* Add chart styles here */
+}
