@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import emailjs from 'emailjs-com';
-import './EmailForm.css';
-import { db, ref, push, set, get } from '../firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import React, { useState, useEffect } from "react";
+import emailjs from "emailjs-com";
+import "./EmailForm.css";
+import { db, ref, push, set, get } from "../firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EmailForm() {
-  const [senderName, setSenderName] = useState('');
-  const [senderEmail, setSenderEmail] = useState('');
-  const [messageContent, setMessageContent] = useState('');
-  const [subject, setSubject] = useState('');
-  const [ccEmail, setCcEmail] = useState('');
-  const [bccEmail, setBccEmail] = useState('');
-  const [statusMessage, setStatusMessage] = useState('');
+  const [senderName, setSenderName] = useState("");
+  const [senderEmail, setSenderEmail] = useState("");
+  const [messageContent, setMessageContent] = useState("");
+  const [subject, setSubject] = useState("");
+  const [ccEmail, setCcEmail] = useState("");
+  const [bccEmail, setBccEmail] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
   const [usersList, setUsersList] = useState([]);
   const [selectedEmails, setSelectedEmails] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const usersRef = ref(db, 'users');
+      const usersRef = ref(db, "users");
       const snapshot = await get(usersRef);
       if (snapshot.exists()) {
         const usersData = snapshot.val();
@@ -29,7 +29,7 @@ function EmailForm() {
     const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userEmail = user.email.replace(/\./g, ',');
+        const userEmail = user.email.replace(/\./g, ",");
         const userRef = ref(db, `users/${userEmail}`);
         const userSnapshot = await get(userRef);
 
@@ -39,8 +39,6 @@ function EmailForm() {
         }
 
         setSenderEmail(user.email);
-      } else {
-        console.log("No user is signed in");
       }
     });
 
@@ -68,14 +66,16 @@ function EmailForm() {
     event.preventDefault();
 
     if (selectedEmails.length === 0 || !senderEmail) {
-      setStatusMessage('Please provide the sender email and select at least one recipient.');
+      setStatusMessage(
+        "Please provide the sender email and select at least one recipient."
+      );
       return;
     }
 
     const templateParams = {
       from_name: senderName,
       from_email: senderEmail,
-      to_email: selectedEmails.join(', '),
+      to_email: selectedEmails.join(", "),
       cc_email: ccEmail,
       bcc_email: bccEmail,
       subject: subject,
@@ -83,10 +83,15 @@ function EmailForm() {
       reply_to: senderEmail,
     };
 
-    emailjs.send('service_33nrb0q', 'template_zz1ruij', templateParams, 'PXS_cTqdGTjx-W0yE')
+    emailjs
+      .send(
+        "service_33nrb0q",
+        "template_zz1ruij",
+        templateParams,
+        "PXS_cTqdGTjx-W0yE"
+      )
       .then((response) => {
-        setStatusMessage('Emails sent successfully!');
-        console.log('SUCCESS!', response.status, response.text);
+        setStatusMessage("Emails sent successfully!");
 
         const emailData = {
           senderName,
@@ -99,27 +104,24 @@ function EmailForm() {
           timestamp: new Date().toISOString(),
         };
 
-        const emailsRef = ref(db, 'emails');
+        const emailsRef = ref(db, "emails");
         const newEmailRef = push(emailsRef);
         set(newEmailRef, emailData)
-          .then(() => {
-            console.log('Email saved to Firebase');
-          })
+          .then(() => {})
           .catch((error) => {
-            console.error('Error saving email to Firebase:', error);
+            console.error("Error saving email to Firebase:", error);
           });
       })
       .catch((error) => {
-        setStatusMessage('Failed to send email.');
-        console.log('FAILED...', error);
+        setStatusMessage("Failed to send email.");
       });
 
-    setSenderName('');
-    setSenderEmail('');
-    setCcEmail('');
-    setBccEmail('');
-    setSubject('');
-    setMessageContent('');
+    setSenderName("");
+    setSenderEmail("");
+    setCcEmail("");
+    setBccEmail("");
+    setSubject("");
+    setMessageContent("");
     setSelectedEmails([]);
   };
 
@@ -191,7 +193,7 @@ function EmailForm() {
             required
           />
         </div>
-        
+
         {/* شريط المستلمين المحددين */}
         <div className="selected-emails-bar">
           {selectedEmails.map((email) => (
@@ -213,17 +215,20 @@ function EmailForm() {
             className="search-bar"
           />
           <ul className="recipient-list">
-            {searchQuery && filteredUsers.map((user) => (
-              <li key={user.email}>
-                <input
-                  type="checkbox"
-                  id={user.email}
-                  checked={selectedEmails.includes(user.email)}
-                  onChange={() => handleUserSelection(user.email)}
-                />
-                <label htmlFor={user.email}>{user.name} ({user.email})</label>
-              </li>
-            ))}
+            {searchQuery &&
+              filteredUsers.map((user) => (
+                <li key={user.email}>
+                  <input
+                    type="checkbox"
+                    id={user.email}
+                    checked={selectedEmails.includes(user.email)}
+                    onChange={() => handleUserSelection(user.email)}
+                  />
+                  <label htmlFor={user.email}>
+                    {user.name} ({user.email})
+                  </label>
+                </li>
+              ))}
           </ul>
         </div>
 
