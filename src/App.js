@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import LoginPage from "./pages/LoginPage";
 import WelcomePage from "./pages/WelcomePage";
 import AdminPage from "./pages/AdminPage";
+import SubmissionsPage from "./pages/SubmissionsPage";
 
 import CoursePage from "./pages/CoursePage";
 import CourseDetailPage from "./pages/CourseDetailPage";
@@ -151,7 +152,10 @@ const App = () => {
                     path="/course-management"
                     element={<CourseManagementPage />}
                   />
-
+                  <Route
+                    path="/Submissions-Page"
+                    element={<SubmissionsPage />}
+                  />
                   <Route path="/BulkUser-Upload" element={<BulkUserUpload />} />
 
                   <Route
