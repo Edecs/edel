@@ -29,6 +29,7 @@ function SubmissionsPage() {
   const [departmentsList, setDepartmentsList] = useState([]);
   const [coursesList, setCoursesList] = useState([]);
   const database = getDatabase();
+  const [expandedUser, setExpandedUser] = useState(null);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -391,84 +392,96 @@ function SubmissionsPage() {
             Export to Excel
           </button>
 
-          {loading ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : filteredSubmissions.length === 0 ? (
-            <p>No submissions found matching the filters.</p>
-          ) : (
-            Object.keys(groupedByMember).map((email) => {
-              const userSubmissions = groupedByMember[email];
-              const submissionFallback = userSubmissions[0];
+          {Object.keys(groupedByMember).map((email) => {
+            const userSubmissions = groupedByMember[email];
+            const submissionFallback = userSubmissions[0];
 
-              const matchedUser = Object.values(usersData).find(
-                (user) =>
-                  user.email?.toLowerCase() ===
-                  submissionFallback.email?.toLowerCase()
-              );
+            const matchedUser = Object.values(usersData).find(
+              (user) =>
+                user.email?.toLowerCase() ===
+                submissionFallback.email?.toLowerCase()
+            );
 
-              const userInfo = {
-                userName:
-                  matchedUser?.userName ||
-                  submissionFallback.userName ||
-                  "Unknown",
-                email:
-                  matchedUser?.email || submissionFallback.email || "Unknown",
-                site: matchedUser?.site || "Not Defined",
-                department: matchedUser?.department || "Not Defined",
-              };
+            const userInfo = {
+              userName:
+                matchedUser?.userName ||
+                submissionFallback.userName ||
+                "Unknown",
+              email:
+                matchedUser?.email || submissionFallback.email || "Unknown",
+              site: matchedUser?.site || "Not Defined",
+              department: matchedUser?.department || "Not Defined",
+            };
 
-              const groupedByCourse = userSubmissions.reduce((acc, sub) => {
-                if (!acc[sub.courseId]) {
-                  acc[sub.courseId] = [];
-                }
-                acc[sub.courseId].push(sub);
-                return acc;
-              }, {});
+            const groupedByCourse = userSubmissions.reduce((acc, sub) => {
+              if (!acc[sub.courseId]) {
+                acc[sub.courseId] = [];
+              }
+              acc[sub.courseId].push(sub);
+              return acc;
+            }, {});
 
-              return (
-                <div key={email} className="user-submissions">
-                  <h2>{userInfo.userName}'s Submissions</h2>
-                  <div className="user-details">
-                    <p>Email: {userInfo.email}</p>
-                    <p>Site: {userInfo.site}</p>
-                    <p>Department: {userInfo.department}</p>
-                  </div>
-                  {Object.keys(groupedByCourse).map((courseId) => {
-                    const courseSubmissions = groupedByCourse[courseId];
-                    return (
-                      <div key={courseId} className="course-submissions">
-                        <h3>{courseId}</h3>
-                        <table className="custom-table">
-                          <thead>
-                            <tr>
-                              <th>Start Time</th>
-                              <th>End Time</th>
-                              <th>Total Time</th>
-                              <th>Success Rate</th>
-                              <th>User Answers</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {courseSubmissions.map((submission, index) => (
-                              <tr key={index}>
-                                <td>{submission.startTime}</td>
-                                <td>{submission.endTime}</td>
-                                <td>{submission.totalTime}</td>
-                                <td>{submission.successRate}%</td>
-                                <td>{submission.userAnswers}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    );
-                  })}
+            const isExpanded = expandedUser === email;
+
+            return (
+              <div key={email} className="user-submissions">
+                <div
+                  className="user-header"
+                  onClick={() => setExpandedUser(isExpanded ? null : email)}
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "#094d50",
+                    color: "white",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <h3>{userInfo.userName}</h3>
                 </div>
-              );
-            })
-          )}
+
+                {isExpanded && (
+                  <div className="user-content">
+                    <div className="user-details">
+                      <p>Email: {userInfo.email}</p>
+                      <p>Site: {userInfo.site}</p>
+                      <p>Department: {userInfo.department}</p>
+                    </div>
+                    {Object.keys(groupedByCourse).map((courseId) => {
+                      const courseSubmissions = groupedByCourse[courseId];
+                      return (
+                        <div key={courseId} className="course-submissions">
+                          <h3>{courseId}</h3>
+                          <table className="custom-table">
+                            <thead>
+                              <tr>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Total Time</th>
+                                <th>Success Rate</th>
+                                <th>User Answers</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {courseSubmissions.map((submission, index) => (
+                                <tr key={index}>
+                                  <td>{submission.startTime}</td>
+                                  <td>{submission.endTime}</td>
+                                  <td>{submission.totalTime}</td>
+                                  <td>{submission.successRate}%</td>
+                                  <td>{submission.userAnswers}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
