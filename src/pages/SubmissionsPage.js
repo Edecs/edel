@@ -293,29 +293,53 @@ function SubmissionsPage() {
     return (successfulCourses / totalCourses) * 100;
   };
   const getDashboardChartData = () => {
-    const totalUsers = filteredSubmissions.length;
-    const totalSuccessRate = filteredSubmissions.reduce((acc, submission) => {
-      return acc + calculateSuccessRate([submission]);
-    }, 0);
-
-    const wrongAnswers = filteredSubmissions.reduce((acc, submission) => {
-      return acc + calculateWrongAnswers(submission.userAnswers || []); // التأكد من أن userAnswers مصفوفة
-    }, 0);
-
-    const averageSuccessRate = totalSuccessRate / totalUsers;
+    const totalSubmissions = filteredSubmissions.length;
+    const successful = filteredSubmissions.filter(
+      (submission) => submission.successRate >= 50
+    ).length;
+    const failed = totalSubmissions - successful;
 
     return [
       {
-        name: "Success Rate",
-        value: averageSuccessRate,
-        color: "#4CAF50", // اللون الأخضر
+        name: "Success",
+        value: successful,
+        color: "#4CAF50",
       },
       {
-        name: "Wrong Answers",
-        value: wrongAnswers,
-        color: "#FF5733", // اللون الأحمر
+        name: "Failure",
+        value: failed,
+        color: "#FF5733",
       },
     ];
+  };
+
+  const DashboardPieChart = () => {
+    const data = getDashboardChartData();
+    const total = data.reduce((acc, item) => acc + item.value, 0);
+
+    return (
+      <PieChart width={400} height={300}>
+        <Pie
+          data={data}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          label={({ name, value }) => {
+            const percentage = ((value / total) * 100).toFixed(0);
+            return `${name}: ${percentage}%`;
+          }}
+          outerRadius={100}
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.color} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    );
   };
 
   const renderDashboardChart = () => {
@@ -330,7 +354,14 @@ function SubmissionsPage() {
             nameKey="name"
             outerRadius={100}
             fill="#8884d8"
-            label
+            label={({ name, value }) => {
+              const total = chartData.reduce(
+                (acc, item) => acc + item.value,
+                0
+              );
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${name}: ${value} (${percentage}%)`;
+            }}
           >
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
