@@ -32,15 +32,33 @@ function SubmissionsPage() {
   const [expandedUser, setExpandedUser] = useState(null);
 
   const formatDate = (dateString) => {
+    if (!dateString) return "Not available";
     const date = new Date(dateString);
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
     const formattedDate = date.toLocaleDateString(undefined, options);
-    const formattedHours = date.toLocaleTimeString([], {
+    const formattedTime = date.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
+      second: "2-digit", // ✅ إضافة الثواني هنا
     });
-    return `${formattedDate} - ${formattedHours}`;
+    return `${formattedDate} - ${formattedTime}`;
   };
+  // دالة لتحويل الوقت من ثواني إلى "ساعة:دقيقة:ثانية" مع تجاهل الكسور الزائدة
+  const formatTotalTime = (seconds) => {
+    if (!seconds) return "00:00:00"; // في حالة عدم وجود وقت، نعرض 00:00:00
+    const roundedSeconds = Math.round(seconds); // تقريب القيمة إلى أقرب ثانية
+    const hours = Math.floor(roundedSeconds / 3600); // حساب الساعات
+    const minutes = Math.floor((roundedSeconds % 3600) / 60); // حساب الدقائق
+    const remainingSeconds = roundedSeconds % 60; // حساب الثواني
+
+    // تنسيق الوقت بحيث تكون جميع الأرقام مكونة من رقمين
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}:${String(remainingSeconds).padStart(2, "0")}`;
+  };
+
+  // عرض **Total Time** باستخدام الدالة formatTotalTime
 
   const fetchSubmissions = useCallback(async () => {
     try {
@@ -467,7 +485,9 @@ function SubmissionsPage() {
                                 <tr key={index}>
                                   <td>{submission.startTime}</td>
                                   <td>{submission.endTime}</td>
-                                  <td>{submission.totalTime}</td>
+                                  <td>
+                                    {formatTotalTime(submission.totalTime)}
+                                  </td>
                                   <td>{submission.successRate}%</td>
                                   <td>{submission.userAnswers}</td>
                                 </tr>
