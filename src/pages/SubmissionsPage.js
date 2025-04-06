@@ -181,7 +181,7 @@ function SubmissionsPage() {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Submissions");
 
-    // إضافة بيانات Dashboard
+    // Dashboard Data
     const dashboardData = getDashboardData();
     worksheet.addRow([
       "Dashboard Data",
@@ -190,11 +190,15 @@ function SubmissionsPage() {
       `Total Wrong Answers: ${dashboardData.wrongAnswers}`,
     ]);
 
-    // إضافة الأعمدة
+    worksheet.addRow([]); // صف فاصل
+
+    // Columns
     worksheet.columns = [
-      { header: "Email", key: "email", width: 20 },
+      { header: "Email", key: "email", width: 25 },
       { header: "User Name", key: "userName", width: 20 },
-      { header: "Course ID", key: "courseId", width: 15 },
+      { header: "Site", key: "site", width: 20 }, // ✅ جديد
+      { header: "Department", key: "department", width: 20 }, // ✅ جديد
+      { header: "Course ID", key: "courseId", width: 20 },
       { header: "Start Time", key: "startTime", width: 25 },
       { header: "End Time", key: "endTime", width: 25 },
       { header: "Total Time", key: "totalTime", width: 15 },
@@ -202,26 +206,31 @@ function SubmissionsPage() {
       { header: "User Answers", key: "userAnswers", width: 30 },
     ];
 
-    // إضافة البيانات من الـ Submissions
+    // Rows
     filteredSubmissions.forEach((submission) => {
+      const user = Object.values(usersData).find(
+        (u) => u.email?.toLowerCase() === submission.email?.toLowerCase()
+      );
+
       worksheet.addRow({
         email: submission.email,
         userName: submission.userName,
+        site: user?.site || "Not Defined", // ✅ جديد
+        department: user?.department || "Not Defined", // ✅ جديد
         courseId: submission.courseId,
         startTime: submission.startTime,
         endTime: submission.endTime,
-        totalTime: submission.totalTime,
+        totalTime: formatTotalTime(submission.totalTime),
         successRate: submission.successRate,
         userAnswers: submission.userAnswers,
       });
     });
 
-    // التقاط الرسم البياني كصورة باستخدام html2canvas
-    const chartElement = document.querySelector(".charts"); // تأكد من تحديد العنصر الذي يحتوي على الرسم البياني
+    // Export file
+    const chartElement = document.querySelector(".charts");
     if (chartElement) {
       html2canvas(chartElement).then((canvas) => {
         canvas.toBlob((blob) => {
-          // إضافة الصورة إلى Excel بعد تحويلها
           workbook.xlsx.writeBuffer().then((buffer) => {
             const newWorkbook = new Blob([buffer], {
               type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -236,6 +245,7 @@ function SubmissionsPage() {
       });
     }
   };
+
   // دالة لحساب نسبة النجاح للمستخدمين
   const calculateSuccessRate = (submissions) => {
     const totalSubmissions = submissions.length;
