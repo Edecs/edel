@@ -594,3 +594,65 @@ input[type="checkbox"] {
 .modal-cancel-btn1:hover {
   background-color: #c82333;
 }
+/* تحسين تنسيق الصفحة عند تصغير الشاشة */
+@media (max-width: 768px) {
+  .admin-page .main-content {
+    display: block; /* جعل المحتوى يعرض بشكل عمودي في الشاشات الصغيرة */
+    gap: 0; /* إزالة الفجوة بين العناصر */
+  }
+
+  .admin-page .user-list4,
+  .admin-page .user-details {
+    width: 100%; /* عرض المحتويات بنسبة 100% */
+    max-height: none; /* إزالة الحد الأقصى للطول */
+  }
+
+  /* تحسين الأزرار في الشاشات الصغيرة */
+  .admin-page .user-actions button {
+    width: 100%; /* جعل الأزرار تأخذ العرض الكامل في الشاشات الصغيرة */
+    margin: 5px 0; /* إضافة هامش بين الأزرار */
+  }
+
+  /* تعديل حواف الحقول */
+  .admin-page input[type="text"],
+  .admin-page input[type="password"],
+  .admin-page select {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+  }
+
+  .admin-page .popup,
+  .subcourse-modal {
+    width: 90%;
+    max-width: 100%; /* عرض النافذة بالكامل */
+    padding: 15px;
+  }
+
+  /* تحسين قائمة الدورات */
+  .course-list,
+  .courses-container {
+    width: 100%;
+    padding: 15px;
+  }
+
+  /* تنسيق خاص للأزرار في الشاشات الصغيرة */
+  .open-popup-btn,
+  .addus,
+  .assign-subcourses-btn,
+  .select-all-btn {
+    width: 100%; /* جعل الأزرار عرضها 100% في الشاشات الصغيرة */
+    padding: 15px;
+  }
+
+  /* تحسين عرض الحقول والحقول الزمنية */
+  input[type="datetime-local"] {
+    width: 100%;
+  }
+
+  /* تخصيص التنسيق الخاص بالحاويات الصغيرة */
+  .subcourses-container {
+    max-height: 200px; /* الحفاظ على الارتفاع المحدد */
+    padding: 10px;
+  }
+}
