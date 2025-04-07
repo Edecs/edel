@@ -4,6 +4,8 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import LoginPage from "./pages/LoginPage";
 import WelcomePage from "./pages/WelcomePage";
+import UserSubmissionsPage from "./pages/UserSubmissionsPage";
+
 import AdminPage from "./pages/AdminPage";
 import SubmissionsPage from "./pages/SubmissionsPage";
 
@@ -132,6 +134,11 @@ const App = () => {
           ) : (
             <>
               <Route path="/welcome" element={<WelcomePage />} />
+              <Route
+                path="/UserSubmissionsPage"
+                element={<UserSubmissionsPage />}
+              />
+
               <Route path="/courses" element={<CoursePage />} />
               <Route path="/certificates" element={<CertificatePage />} />
 
