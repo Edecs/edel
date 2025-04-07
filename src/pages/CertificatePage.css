@@ -1,44 +1,253 @@
-.certificate-container {
-margin-top:60px;
-    
+.certificate-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.certificate-box {
+  width: 1123px; /* A4 landscape */
+  height: 794px;
+  border: 10px solid #b38126;
+  padding: 40px 30px;
+  position: relative;
+  background: linear-gradient(
+      to top left,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.8) 100%
+    ),
+    url("../photos/Picture1.png") no-repeat bottom right; /* صورة الخلفية */
+  background-size: 50%;
+  margin: 3px 3px 3px 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* توسيط النص داخل الفقرات */
+}
+.congrats-text {
+  font-family: "Great Vibes", cursive !important;
+  font-size: 48px !important;
+  font-weight: bold !important;
+  color: #b38126 !important;
+  margin-top: 20px !important;
+  letter-spacing: 2px !important;
+  text-align: center !important;
+  width: 100%; /* زيادة العرض */
+  margin: 0 auto; /* توسيط النص */
+}
+
+.subtitle {
+  font-family: "Cairo", sans-serif !important; /* تغيير الخط إلى Cairo */
+  font-size: 20px !important; /* تعيين الحجم إلى 12px */
+  font-weight: 500;
+  margin-top: 20px;
+  text-align: center !important;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.user-name {
+  font-family: "Cairo", sans-serif !important; /* تغيير الخط إلى Cairo */
+
+  font-size: 32px !important;
+  margin: 30px 0;
+  font-weight: bold !important;
+  color: #084f53 !important;
+  text-align: center;
+  letter-spacing: 1px;
+  width: 80%; /* زيادة العرض */
+  margin: 30px auto;
+}
+
+.description {
+  font-family: "Cairo", sans-serif !important; /* تغيير الخط إلى Cairo */
+
+  font-size: 20px;
+  margin: 20px auto;
+  max-width: 900px; /* زيادة العرض */
+  text-align: center; /* توسيط النص */
+}
+
+.footer-text {
+  font-size: 16px;
+  margin: 30px auto;
+  max-width: 800px;
+}
+
+.certificate-signatures-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 200px;
+  gap: 40px;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+}
+
+.certificate-signature-block {
+  width: 45%;
+  text-align: center;
+}
+
+.certificate-signature-name {
+  font-family: "Great Vibes", cursive !important;
+  font-size: 24px !important;
+  color: #b38126 !important;
+  font-weight: bold !important;
+  margin-bottom: 10px !important;
+  margin-top: 30px;
+}
+
+.issued-on {
+  position: absolute;
+  bottom: 100px; /* تغيير من 140px إلى 100px */
+  left: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+}
+.department-signature {
+  position: absolute;
+  bottom: 70px; /* تغيير من 110px إلى 70px */
+  left: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  font-style: italic;
+}
+
+.authorized-signatory .underline {
+  display: block;
+  width: 150px;
+  border-bottom: 2px solid #000000;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.authorized-signatory {
+  position: absolute;
+  bottom: 40px; /* تغيير من 80px إلى 40px */
+  right: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 20px;
+}
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.submit-button {
+  background-color: #b38126;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin: 0 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.submit-button:hover {
+  background-color: #9a6b1e;
+}
+
+@media print {
+  .user-name {
+    font-size: 32px;
+    margin: 30px 0;
+    font-weight: bold;
+    color: #094d50;
     text-align: center;
-    padding: 20px;
-    border: 2px solid #000;
-    max-width: 600px;
-    margin: 50px auto;
-    background: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    color: #2c3e50;
-  }
-  .certificate-logo {
-    width: 150px; /* عرض الصورة */
-    height: auto; /* الحفاظ على نسبة الأبعاد */
-    margin-bottom: 20px; /* إضافة مسافة بين الشعار والنص */
-  }
-  .certificate-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* توسيط عمودي */
-    align-items: center; /* توسيط أفقي */
-    height: 100%; /* اجعل الحاوية تأخذ كامل الارتفاع */
-    text-align: center; /* توسيط النص */
-  }
-  
-  .certificate-content h2 {
-    font-size: 24px; /* تكبير حجم الخط */
-    font-weight: bold; /* جعله عريضًا */
-    margin-top: 20px; /* هامش علوي بسيط */
-  }
-  .certificate-content p:last-of-type {
-    margin-top: 40px; /* أضف مسافة 40px فوق الفقرة الأخيرة */
   }
 
-  
-  button:hover {
-    background: #0056b3;
+  .certificate-signatures-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+    gap: 40px;
   }
-  
+
+  .certificate-signature-block {
+    width: 45%;
+    text-align: center;
+  }
+
+  .certificate-signature-box {
+    border: 1px dashed #333;
+    height: 50px;
+    width: 100%;
+    display: block;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+}
+
+.certificate-box::after {
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 50%; /* تحديد عرض الصورة */
+  height: 50%; /* تحديد ارتفاع الصورة */
+}
+
+.logo {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 200px;
+  height: auto;
+}
+
+.certificate-signature-block {
+  width: 45% !important;
+  text-align: center !important;
+}
+
+.certificate-signature-block.right1 {
+  text-align: right !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: absolute;
+  right: 60px; /* 👈 بدل 0 عشان تيجي شمال شوية */
+}
+
+.certificate-signature-block.left {
+  text-align: left !important;
+  position: absolute;
+  left: 10px; /* المسافة من الحافة اليسرى */
+  bottom: 0px; /* تأكيد المسافة الرأسية لتكون ثابتة */
+}
+
+/* إضافة التنسيقات الخاصة بالطباعة */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    background: none;
+  }
+}
+@media print {
+  .issued-on {
+    bottom: 140px; /* زيادة المسافة في وضع الطباعة */
+  }
+
+  .department-signature {
+    bottom: 110px;
+  }
+
+  .authorized-signatory {
+    bottom: 80px;
+  }
+}
