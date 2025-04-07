@@ -6,7 +6,7 @@ import logo from "../photos/Picture3.png";
 import { db, ref, get } from "../firebase";
 import "./CertificatePage.css";
 import backgroundImage from "../photos/Picture1.png"; // استيراد الصورة
-
+ 
 const CertificatePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
