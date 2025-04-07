@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ReactComponent as HomeIcon } from "../photos/icons8-home.svg";
+import { ReactComponent as UserSubmissionsPageIcon } from "../photos/test-svgrepo-com.svg";
+
 import { ReactComponent as CoursesIcon } from "../photos/add.svg";
 import { ReactComponent as ProgressIcon } from "../photos/address-book.svg";
 import { ReactComponent as SubmissionsIcon } from "../photos/Submissions.svg";
@@ -54,6 +56,15 @@ function Sidebar({ isOpen, onClose }) {
         <li>
           <Link to="/welcome" onClick={onClose} title="Home">
             <HomeIcon className="sidebar-icon" />
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="UserSubmissionsPage"
+            onClick={onClose}
+            title="UserSubmissionsPage"
+          >
+            <UserSubmissionsPageIcon className="sidebar-icon" />
           </Link>
         </li>
         {(isAdmin || isSuperAdmin) && (
