@@ -20,22 +20,23 @@ const NotificationPopup = ({ onClose }) => {
 
         const email = user.email;
         const notificationsRef = ref(db, `notifications`);
+
         const notificationsSnapshot = await get(notificationsRef);
         if (notificationsSnapshot.exists()) {
           const notificationsData = notificationsSnapshot.val();
           const filteredNotifications = Object.keys(notificationsData)
             .map((key) => ({ id: key, ...notificationsData[key] }))
             .filter((notification) => {
+              // فحص الـ assignedEmail أو createdBy مع البريد الإلكتروني الحالي
               return (
-                (notification.assignedEmail === email &&
-                  notification.message.includes("assigned")) ||
-                (notification.createdBy === email &&
-                  notification.message.includes("created"))
+                notification.assignedEmail === email ||
+                notification.createdBy === email
               );
             });
+
           setNotifications(filteredNotifications);
         } else {
-          setNotifications([]);
+          setNotifications([]); // إذا لم توجد إشعارات
         }
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -54,10 +55,11 @@ const NotificationPopup = ({ onClose }) => {
       if (!user) throw new Error("User is not authenticated.");
       const notificationRef = ref(db, `notifications/${id}`);
       await update(notificationRef, { isRead: true });
+      // تحديث الإشعارات في الواجهة دون التسبب في اختفاء الإشعارات
       setNotifications((prevNotifications) =>
         prevNotifications.map((notification) =>
           notification.id === id
-            ? { ...notification, isRead: true }
+            ? { ...notification, isRead: true } // فقط تغيير حالة "isRead"
             : notification
         )
       );
