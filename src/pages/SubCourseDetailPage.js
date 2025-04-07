@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ref, get, set } from "firebase/database";
+import { ref, get, set, push } from "firebase/database"; // تأكد من استيراد get أيضًا
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./SubCourseDetailPage.css";
@@ -149,6 +149,7 @@ const SubCourseDetailPage = () => {
   };
 
   const handleSubmit = async () => {
+    // التأكد من أنه تم تحميل اسم المستخدم قبل المتابعة
     if (!userName) {
       alert("User name not loaded. Please try again.");
       return;
@@ -195,12 +196,54 @@ const SubCourseDetailPage = () => {
       );
       setSubmissionResult(submissionData);
 
+      // إرسال إشعار للمسؤولين في حالة الرسوب
+      if (parseFloat(percentageSuccess) < 80) {
+        const mainCourseId = new URLSearchParams(window.location.search).get(
+          "mainCourseId"
+        );
+        const departmentRef = ref(db, `courses/mainCourses/${mainCourseId}`);
+        const departmentSnapshot = await get(departmentRef);
+        if (departmentSnapshot.exists()) {
+          const departmentData = departmentSnapshot.val();
+          const department = departmentData.department.trim().toLowerCase();
+
+          const usersRef = ref(db, "users");
+          const usersSnapshot = await get(usersRef);
+          if (usersSnapshot.exists()) {
+            const usersData = usersSnapshot.val();
+            const admins = Object.values(usersData).filter((user) => {
+              const userDepartment = user.department?.trim().toLowerCase();
+              const courseDepartment = department?.trim().toLowerCase();
+
+              return (
+                userDepartment === courseDepartment &&
+                (user.role.toLowerCase() === "admin" ||
+                  user.role.toLowerCase() === "superadmin")
+              );
+            });
+
+            // إرسال إشعار للمسؤولين
+            admins.forEach(async (admin) => {
+              const notificationRef = ref(db, "notifications");
+              const newNotification = {
+                assignedEmail: admin.email,
+                createdAt: new Date().toISOString(),
+                createdBy: user.email,
+                isRead: false,
+                message: `User ${userName} has failed the exam in the sub-course ${subCourse.name}.`,
+              };
+              await push(notificationRef, newNotification);
+            });
+          }
+        }
+      }
+
       if (percentageSuccess >= 80) {
         navigate("/certificates", {
           state: { userName, courseId: subCourseId, percentageSuccess },
         });
       } else {
-        navigate("/welcome", { replace: true }); // استخدم replace لتجنب الرجوع للخلف بالمتصفح
+        navigate("/welcome", { replace: true });
       }
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -225,7 +268,6 @@ const SubCourseDetailPage = () => {
   const mediaItems = [];
 
   if (subCourse?.media) {
-    // استخدم Object.keys بدلاً من Object.entries للحفاظ على ترتيب Firebase
     const imageKeys = Object.keys(subCourse.media.images || {});
     imageKeys.forEach((key) => {
       mediaItems.push({
@@ -246,12 +288,10 @@ const SubCourseDetailPage = () => {
   }
 
   const currentMedia = mediaItems[currentMediaIndex];
-
   const currentQuestion = subCourse?.questions
     ? Object.values(subCourse.questions)[currentQuestionIndex]
     : null;
 
-  // Number of questions answered
   const answeredQuestionsCount = userAnswers.filter(
     (answer) => answer !== undefined
   ).length;
@@ -278,7 +318,7 @@ const SubCourseDetailPage = () => {
               {currentMedia.type === "video" && (
                 <div className="media-item">
                   <video
-                    key={currentMedia.id} // أضف المفتاح هنا لإجبار إعادة التحميل
+                    key={currentMedia.id}
                     controls
                     style={{ width: "100%", height: "auto" }}
                   >
