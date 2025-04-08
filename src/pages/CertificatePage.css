@@ -6,7 +6,7 @@
   padding: 40px 20px;
   box-sizing: border-box;
   overflow-x: auto;
-} 
+}
 
 .certificate-box {
   width: 1123px; /* A4 landscape */
@@ -52,7 +52,7 @@
 
 .user-name {
   font-family: "Cairo", sans-serif !important; /* تغيير الخط إلى Cairo */
-
+  border-bottom: none !important;
   font-size: 32px !important;
   margin: 30px 0;
   font-weight: bold !important;
@@ -143,7 +143,7 @@
   margin-top: 20px;
 }
 
-.submit-button {
+.submit-button00 {
   background-color: #b38126;
   color: white;
   border: none;
@@ -154,7 +154,7 @@
   font-weight: bold;
 }
 
-.submit-button:hover {
+.submit-button00:hover {
   background-color: #9a6b1e;
 }
 
@@ -249,5 +249,32 @@
 
   .authorized-signatory {
     bottom: 80px;
+  }
+}
+@media (max-width: 768px) {
+  .certificate-box {
+    width: 100%; /* استجابة العرض لأجهزة الجوال */
+    padding: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .congrats-text {
+    font-size: 36px;
+  }
+  .user-name {
+    font-size: 24px;
+  }
+}
+.logo {
+  width: 150px;
+}
+@media (max-width: 768px) {
+  .logo {
+    width: 100px;
+  }
+}
+@media print {
+  .certificate-box {
+    width: 100%; /* اجعل العرض 100% للصفحة عند الطباعة */
   }
 }
