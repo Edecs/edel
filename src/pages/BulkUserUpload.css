@@ -1,24 +1,48 @@
 .bulk-upload-page {
   margin: 20px auto;
-  max-width: 600px;
+  max-width: 100%;
+  width: 100%;
   text-align: center;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
 }
 
-.bulk-upload-page input {
-  margin: 10px 0;
-  padding: 8px;
-  width: 100%;
+.bulk-upload-page input[type="file"] {
+  display: block;
+  margin: 10px auto;
+  padding: 6px;
+  width: 90%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   box-sizing: border-box;
 }
 
+.bulk-upload-page .dropzone {
+  display: block;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #f1f1f1;
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #888;
+  width: 90%;
+}
+
+.bulk-upload-page .dropzone.hidden {
+  display: none;
+}
+
 .bulk-upload-page button {
-  padding: 10px 20px;
+  padding: 8px 15px;
   background-color: #4caf50;
   color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
   margin: 10px;
   transition: background-color 0.3s ease;
+  font-size: 14px;
 }
 
 .bulk-upload-page button:hover {
@@ -26,50 +50,112 @@
 }
 
 .bulk-upload-page p {
-  margin-top: 20px;
+  margin-top: 15px;
   font-weight: bold;
+  color: #333;
+}
+
+.csv-preview {
+  margin-top: 20px;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fafafa;
+  width: 100%;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.csv-preview table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.csv-preview table th,
+.csv-preview table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.csv-preview table th {
+  background-color: #4caf50;
+  color: white;
+}
+
+.csv-preview table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.csv-preview table tr:hover {
+  background-color: #f1f1f1;
 }
 
 .uploaded-users {
   margin-top: 20px;
   text-align: left;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fafafa;
+  width: 100%;
+  overflow-x: auto;
+  max-width: 100%;
+  resize: both;
+  min-width: 400px;
 }
 
 .uploaded-users ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .uploaded-users li {
-  margin: 10px 0;
+  margin: 8px 0;
   border-bottom: 1px solid #ddd;
   padding-bottom: 5px;
+  color: #333;
+  font-size: 14px;
+}
+
+.uploaded-users li:last-child {
+  border-bottom: none;
+}
+
+.uploaded-users .progress-bar {
+  display: inline-block;
+  width: 100%;
+  height: 6px;
+  background-color: #ddd;
+  margin-left: 10px;
+  border-radius: 4px;
+}
+
+.uploaded-users .progress-bar span {
+  display: block;
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 4px;
+}
+
+.uploaded-users li strong {
+  color: #4caf50;
 }
 
 .delete-all-btn {
   background-color: #f44336;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 15px;
   border: none;
   cursor: pointer;
   margin: 10px;
+  border-radius: 4px;
   transition: background-color 0.3s ease;
+  font-size: 14px;
 }
 
 .delete-all-btn:hover {
   background-color: #d32f2f;
-}
-
-.progress-bar {
-  display: inline-block;
-  width: 100%;
-  height: 5px;
-  background-color: #ddd;
-  margin-left: 10px;
-}
-
-.progress-bar span {
-  display: block;
-  height: 100%;
-  background-color: #4caf50;
 }
