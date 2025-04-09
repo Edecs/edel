@@ -372,6 +372,30 @@ function AdminPage() {
     };
     fetchSites();
   }, []);
+  const handleMakeModerator = async (email) => {
+    try {
+      const sanitized = email.replace(/\./g, ",");
+      const roleRef = dbRef(db, `roles/${sanitized}`);
+      // نقرأ البيانات الحالية
+      const snap = await get(roleRef);
+      const data = snap.exists() ? snap.val() : {};
+      const isMod = data.moderator === true;
+
+      // نحدّث الحقل moderator
+      await update(roleRef, { moderator: !isMod });
+
+      // نحدّث الستيت محليًا
+      setRoles((prev) => ({
+        ...prev,
+        [sanitized]: {
+          ...prev[sanitized],
+          moderator: !isMod,
+        },
+      }));
+    } catch (err) {
+      console.error("Error toggling moderator:", err);
+    }
+  };
 
   return (
     <div className="admin-page-all">
@@ -451,15 +475,19 @@ function AdminPage() {
 
             {users
               .filter((user) => {
-                const lowerCaseQuery = searchQuery.toLowerCase();
+                const q = searchQuery.toLowerCase();
+                const name = user.name?.toLowerCase() || "";
+                const dept = user.department?.toLowerCase() || "";
+                const email = user.email?.toLowerCase() || "";
+                const site = user.site?.toString().toLowerCase() || "";
                 return (
-                  user.name?.toLowerCase().includes(lowerCaseQuery) ||
-                  user.department?.toLowerCase().includes(lowerCaseQuery) ||
-                  user.email.toLowerCase().includes(lowerCaseQuery) ||
-                  (user.site &&
-                    user.site.toString().toLowerCase().includes(lowerCaseQuery))
+                  name.includes(q) ||
+                  dept.includes(q) ||
+                  email.includes(q) ||
+                  site.includes(q)
                 );
               })
+
               .map((user) => (
                 <div
                   key={user.email}
@@ -578,6 +606,16 @@ function AdminPage() {
                   <strong>Role:</strong>{" "}
                   {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
                 </p>
+                {currentUserRole === "SuperAdmin" && selectedUser && (
+                  <button
+                    className="make-moderator-btn"
+                    onClick={() => handleMakeModerator(selectedUser.email)}
+                  >
+                    {roles[selectedUser.email.replace(/\./g, ",")]?.moderator
+                      ? "Remove Moderator"
+                      : "Make Moderator"}
+                  </button>
+                )}
 
                 <h3>Sub-course Access</h3>
                 <input
@@ -588,12 +626,12 @@ function AdminPage() {
                 />
 
                 {Object.entries(courses)
-                  .filter(
-                    ([courseId, course]) =>
-                      course.name
-                        .toLowerCase()
-                        .includes(courseSearchQuery.toLowerCase()) // تصفية الدورات حسب اسم الكورس
-                  )
+                  .filter(([courseId, course]) => {
+                    const q = courseSearchQuery.toLowerCase();
+                    const name = course.name?.toLowerCase() || "";
+                    return name.includes(q);
+                  })
+
                   .map(([courseId, course]) => {
                     // الحصول على بيانات صلاحيات المستخدم
                     const userCourses =
