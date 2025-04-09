@@ -278,3 +278,25 @@
     width: 100%; /* اجعل العرض 100% للصفحة عند الطباعة */
   }
 }
+.authorized-signatory {
+  position: absolute;
+  bottom: 40px;
+  right: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 20px;
+  text-align: center; /* تأكد من أن العناصر ستكون في المنتصف */
+}
+
+.authorized {
+  font-family: "Cairo", sans-serif;
+  font-size: 16px;
+  text-decoration: underline; /* إضافة الخط تحت كلمة Authorized Signatory */
+}
+
+.signatory {
+  font-family: "Great Vibes", cursive !important;
+  font-size: 30px;
+  letter-spacing: 2px;
+}
