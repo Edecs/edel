@@ -115,16 +115,17 @@ const CertificatePage = () => {
       <div className="certificate-box" ref={certificateRef}>
         <img src={logo} alt="Company Logo" className="logo" />
         <h1 className="congrats-text">Congratulations</h1>
+        <br />
+
         <p className="subtitle">Certificate of Achievement</p>
+        <br />
         <p className="subtitle">
-          the <strong>{department}</strong> of EDECS is proud to confer this
-          honor upon:
+          The {department} of EDECS is proud to confer this honor upon:
         </p>
         <h2 className="user-name">{userName.toUpperCase()}</h2>
         <p className="description">
-          For successfully passing the Post-Assessment Test in{" "}
-          <strong>[{courseId}]</strong> with exemplary dedication and
-          competence.
+          For successfully passing the Post-Assessment Test in [{courseId}] with
+          exemplary dedication and competence.
         </p>
         <p className="subtitle">
           Your commitment to excellence aligns with our highest standards of
