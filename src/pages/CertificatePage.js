@@ -5,61 +5,102 @@ import { jsPDF } from "jspdf";
 import logo from "../photos/Picture3.png";
 import { db, ref, get } from "../firebase";
 import "./CertificatePage.css";
-import backgroundImage from "../photos/Picture1.png"; // استيراد الصورة
- 
+
 const CertificatePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { userName, courseId, percentageSuccess } = location.state || {};
 
   const [department, setDepartment] = useState("");
+  const [moderatorName, setModeratorName] = useState("");
   const certificateRef = useRef(null);
 
+  // جلب اسم القسم بناءً على courseId
   useEffect(() => {
-    if (courseId) {
-      fetchDepartment(courseId);
-    }
+    if (courseId) fetchDepartment(courseId);
   }, [courseId]);
 
   const fetchDepartment = async (subCourseId) => {
     try {
-      const mainCoursesSnap = await get(ref(db, "courses/mainCourses"));
-      if (mainCoursesSnap.exists()) {
-        const mainCourses = mainCoursesSnap.val();
-        for (const courseKey in mainCourses) {
-          const course = mainCourses[courseKey];
-          if (
-            course.subCourses &&
-            Object.keys(course.subCourses).includes(subCourseId)
-          ) {
-            setDepartment(course.department || "Our Department");
-            return;
-          }
-        }
+      const mainSnap = await get(ref(db, "courses/mainCourses"));
+      if (!mainSnap.exists()) {
         setDepartment("Our Department");
+        return;
       }
-    } catch (error) {
-      console.error("Error fetching department:", error);
+      const main = mainSnap.val();
+      for (const key in main) {
+        if (main[key].subCourses?.[subCourseId]) {
+          const dep = main[key].department || "Our Department";
+          console.log("Department found:", dep);
+          setDepartment(dep);
+          return;
+        }
+      }
+      console.log("No matching department found.");
+      setDepartment("Our Department");
+    } catch (e) {
+      console.error("Error fetching department:", e);
       setDepartment("Our Department");
     }
   };
 
+  useEffect(() => {
+    if (!department) return;
+    const fetchModerator = async () => {
+      try {
+        const rolesSnap = await get(ref(db, "roles"));
+        if (!rolesSnap.exists()) {
+          setModeratorName("");
+          return;
+        }
+        const rolesData = rolesSnap.val();
+        console.log("Looking for moderator for department:", department);
+
+        for (const emailKey in rolesData) {
+          const r = rolesData[emailKey];
+          const isModerator = r.moderator === true || r.moderator === "true";
+
+          if (!isModerator) continue;
+
+          const fixedEmail = emailKey.replace(/\./g, "-");
+          console.log(`Fixed email for Firebase: ${fixedEmail}`); // إضافة سجل للبريد الإلكتروني المعدل
+          const userSnap = await get(ref(db, `users/${fixedEmail}`));
+          if (userSnap.exists()) {
+            const userData = userSnap.val();
+            const userDep = userData.department?.toLowerCase() || "";
+
+            console.log(`User ${fixedEmail} department:`, userDep);
+
+            if (userDep === department.toLowerCase()) {
+              setModeratorName(userData.name || fixedEmail);
+              return;
+            }
+          }
+        }
+
+        console.log("No moderator found matching the department.");
+        setModeratorName("");
+      } catch (e) {
+        console.error("Error fetching moderator:", e);
+        setModeratorName("");
+      }
+    };
+
+    fetchModerator();
+  }, [department]);
+
+  // توليد PDF
   const handleDownloadPDF = () => {
-    const input = certificateRef.current;
-    html2canvas(input, { scale: 2 }).then((canvas) => {
+    html2canvas(certificateRef.current, { scale: 2 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "landscape",
         unit: "mm",
         format: "a4",
       });
-
-      // إضافة هوامش (margin) إلى الـ PDF
-      const margin = 3; // الهوامش المطلوبة
-      const pageWidth = pdf.internal.pageSize.getWidth() - 2 * margin; // حساب عرض الصفحة مع الهوامش
-      const pageHeight = pdf.internal.pageSize.getHeight() - 2 * margin; // حساب ارتفاع الصفحة مع الهوامش
-
-      // إضافة الصورة إلى الـ PDF مع الهوامش
+      const margin = 3;
+      const pageWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
+      const pageHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
       pdf.addImage(imgData, "PNG", margin, margin, pageWidth, pageHeight);
       pdf.save("certificate.pdf");
     });
@@ -82,7 +123,8 @@ const CertificatePage = () => {
         <h2 className="user-name">{userName.toUpperCase()}</h2>
         <p className="description">
           For successfully passing the Post-Assessment Test in{" "}
-          <strong>[{courseId}]</strong>with exemplary dedication and competence.
+          <strong>[{courseId}]</strong> with exemplary dedication and
+          competence.
         </p>
         <p className="subtitle">
           Your commitment to excellence aligns with our highest standards of
@@ -95,34 +137,31 @@ const CertificatePage = () => {
         </p>
         <div className="certificate-signatures-row">
           <div className="certificate-signature-block left">
-            <p className="certificate-signature-name">{department}</p>{" "}
-            {/* قسم تحت اليسار */}
+            <p className="certificate-signature-name">{department}</p>
           </div>
           <div className="certificate-signature-block right1">
-            <div className="certificate-signature-box"></div>{" "}
-            {/* الصندوق تحت اليمين */}
+            <div className="certificate-signature-box"></div>
           </div>
         </div>
-
-        {/* نص "Issued on" */}
         <div className="issued-on">
           Issued on: {new Date().toLocaleDateString()}
         </div>
-
-        {/* نص "Department Signature" بالإنجليزي تحت "Issued on" */}
         <div className="department-signature">Department Signature</div>
-
-        {/* نص "Authorized Signatory" مع خط تحت */}
         <div className="authorized-signatory">
-          Authorized Signatory <span className="underline"></span>
+          <span className="authorized">Authorized Signatory</span>
+          <br />
+          <span className="signatory">{moderatorName}</span>
         </div>
       </div>
 
       <div className="actions">
-        <button className="submit-button" onClick={handleDownloadPDF}>
+        <button className="submit-button00" onClick={handleDownloadPDF}>
           Download as PDF
         </button>
-        <button className="submit-button" onClick={() => navigate("/welcome")}>
+        <button
+          className="submit-button00"
+          onClick={() => navigate("/welcome")}
+        >
           Go to Home
         </button>
       </div>
