@@ -117,7 +117,7 @@ const CertificatePage = () => {
         <h1 className="congrats-text">Congratulations</h1>
         <p className="subtitle">Certificate of Achievement</p>
         <p className="subtitle">
-          the <strong>{department}</strong> of EDCCS is proud to confer this
+          the <strong>{department}</strong> of EDECS is proud to confer this
           honor upon:
         </p>
         <h2 className="user-name">{userName.toUpperCase()}</h2>
