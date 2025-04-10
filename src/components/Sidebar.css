@@ -4,7 +4,7 @@
   top: 64px; /* الشريط الجانبي يبدأ أسفل شريط التنقل */
   left: 0;
   width: 68px; /* عرض الشريط الجانبي ثابت */
-  height: calc(100% - 30px); /* يملأ الارتفاع المتبقي */
+  height: calc(100% - 64px); /* يملأ الارتفاع المتبقي */
   background-color: #ffffff; /* لون الخلفية */
   color: #094d50; /* لون النص */
   transition: transform 0.3s ease-in-out;
@@ -73,7 +73,7 @@
 
 .sidebar ul li:hover {
   background-color: rgba(66, 68, 70, 0.534); /* لون خلفية عند التمرير */
-  transform: scale(1.05); /* تأثير تكبير طفيف عند التمرير */
+  transform: scale(1); /* تأثير تكبير طفيف عند التمرير */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* زيادة الظل عند التمرير */
 }
 
@@ -141,22 +141,6 @@
   }
 }
 
-@media (max-width: 480px) {
-  .sidebar {
-    width: 120px; /* عرض أكبر للأجهزة المحمولة */
-  }
-
-  .sidebar .logout-button {
-    font-size: 12px; /* تقليل حجم الخط */
-    padding: 5px; /* تقليل الحشو */
-  }
-
-  .sidebar ul li a .sidebar-icon {
-    width: 40px; /* زيادة حجم الأيقونات قليلاً */
-    height: 40px; /* زيادة ارتفاع الأيقونات قليلاً */
-  }
-}
-
 /* إضافة القاعدة التالية إلى ملف CSS الخاص بالشاشة الرئيسية */
 .main-content {
   transition: margin-left 0.3s ease; /* إضافة انتقال سلس عند تغيير الهامش */
@@ -199,8 +183,25 @@
   filter: brightness(1.1); /* إضافة تأثير لمعان عند التمرير */
 }
 @media (max-width: 480px) {
+  .sidebar {
+    width: 120px;
+  }
+
+  .sidebar .logout-button {
+    font-size: 12px;
+    padding: 5px;
+  }
+
   .sidebar ul li {
-    padding: 20px 0; /* زيادة الحشو بين الأزرار */
+    padding: 20px 0;
+  }
+
+  .sidebar ul li a .sidebar-icon {
+    width: 40px;
+    height: 40px;
   }
 }
- 
+.sidebar.open {
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+}
