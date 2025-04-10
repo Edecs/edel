@@ -31,10 +31,12 @@ const CertificatePage = () => {
       for (const key in main) {
         if (main[key].subCourses?.[subCourseId]) {
           const dep = main[key].department || "Our Department";
+          console.log("Department found:", dep);
           setDepartment(dep);
           return;
         }
       }
+      console.log("No matching department found.");
       setDepartment("Our Department");
     } catch (e) {
       console.error("Error fetching department:", e);
@@ -52,6 +54,7 @@ const CertificatePage = () => {
           return;
         }
         const rolesData = rolesSnap.val();
+        console.log("Looking for moderator for department:", department);
 
         for (const emailKey in rolesData) {
           const r = rolesData[emailKey];
@@ -60,10 +63,13 @@ const CertificatePage = () => {
           if (!isModerator) continue;
 
           const fixedEmail = emailKey.replace(/\./g, "-");
+          console.log(`Fixed email for Firebase: ${fixedEmail}`); // إضافة سجل للبريد الإلكتروني المعدل
           const userSnap = await get(ref(db, `users/${fixedEmail}`));
           if (userSnap.exists()) {
             const userData = userSnap.val();
             const userDep = userData.department?.toLowerCase() || "";
+
+            console.log(`User ${fixedEmail} department:`, userDep);
 
             if (userDep === department.toLowerCase()) {
               setModeratorName(userData.name || fixedEmail);
@@ -72,6 +78,7 @@ const CertificatePage = () => {
           }
         }
 
+        console.log("No moderator found matching the department.");
         setModeratorName("");
       } catch (e) {
         console.error("Error fetching moderator:", e);
@@ -104,60 +111,65 @@ const CertificatePage = () => {
   }
 
   return (
-    <div className="certificate-wrapper">
-      <div className="certificate-box" ref={certificateRef}>
-        <img src={logo} alt="Company Logo" className="logo" />
-        <h1 className="congrats-text">Congratulations</h1>
-        <br />
-
-        <p className="subtitle">Certificate of Achievement</p>
-        <br />
-        <p className="subtitle">
-          The {department} of EDECS is proud to confer this honor upon:
-        </p>
-        <h2 className="user-name">{userName.toUpperCase()}</h2>
-        <p className="description">
-          For successfully passing the Post-Assessment Test in [{courseId}] with
-          exemplary dedication and competence.
-        </p>
-        <p className="subtitle">
-          Your commitment to excellence aligns with our highest standards of
-          professionalism. This accomplishment stands as a testament to your
-          hard work and intellectual rigor.
-        </p>
-        <p className="subtitle">
-          May it inspire you to reach even greater heights in your career and
-          personal growth.
-        </p>
-        <div className="certificate-signatures-row">
-          <div className="certificate-signature-block left">
-            <p className="certificate-signature-name">{department}</p>
-          </div>
-          <div className="certificate-signature-block right1">
-            <div className="certificate-signature-box"></div>
-          </div>
-        </div>
-        <div className="issued-on">
-          Issued on: {new Date().toLocaleDateString()}
-        </div>
-        <div className="department-signature">Department Signature</div>
-        <div className="authorized-signatory">
-          <span className="authorized">Authorized Signatory</span>
+    <div className="page-e">
+      <header>
+        <h1 className="header-h1">certificate</h1>
+      </header>
+      <div className="certificate-wrapper">
+        <div className="certificate-box" ref={certificateRef}>
+          <img src={logo} alt="Company Logo" className="logo" />
+          <h1 className="congrats-text">Congratulations</h1>
           <br />
-          <span className="signatory">{moderatorName}</span>
-        </div>
-      </div>
 
-      <div className="actions">
-        <button className="submit-button00" onClick={handleDownloadPDF}>
-          Download as PDF
-        </button>
-        <button
-          className="submit-button00"
-          onClick={() => navigate("/welcome")}
-        >
-          Go to Home
-        </button>
+          <p className="subtitle">Certificate of Achievement</p>
+          <br />
+          <p className="subtitle">
+            The {department} of EDECS is proud to confer this honor upon:
+          </p>
+          <h2 className="user-name">{userName.toUpperCase()}</h2>
+          <p className="description">
+            For successfully passing the Post-Assessment Test in [{courseId}]
+            with exemplary dedication and competence.
+          </p>
+          <p className="subtitle">
+            Your commitment to excellence aligns with our highest standards of
+            professionalism. This accomplishment stands as a testament to your
+            hard work and intellectual rigor.
+          </p>
+          <p className="subtitle">
+            May it inspire you to reach even greater heights in your career and
+            personal growth.
+          </p>
+          <div className="certificate-signatures-row">
+            <div className="certificate-signature-block left">
+              <p className="certificate-signature-name">{department}</p>
+            </div>
+            <div className="certificate-signature-block right1">
+              <div className="certificate-signature-box"></div>
+            </div>
+          </div>
+          <div className="issued-on">
+            Issued on: {new Date().toLocaleDateString()}
+          </div>
+          <div className="department-signature">Department Signature</div>
+          <div className="authorized-signatory">
+            <span className="authorized">Authorized Signatory</span>
+            <br />
+            <span className="signatory">{moderatorName}</span>
+          </div>
+        </div>
+
+        <div className="actions">
+          <button className="submit-button00" onClick={handleDownloadPDF}>
+            Download as PDF
+          </button>
+          <button
+            className="submit-button00"
+            onClick={() => navigate("/welcome")}
+          >
+            Go to Home
+          </button>
+        </div>
       </div>
     </div>
   );
