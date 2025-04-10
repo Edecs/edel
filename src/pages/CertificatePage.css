@@ -1,6 +1,4 @@
 .certificate-wrapper {
-  background-color: aliceblue;
-  display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -10,6 +8,7 @@
 }
 
 .certificate-box {
+  background-color: aliceblue;
   width: 1123px; /* A4 landscape */
   height: 794px;
   border: 10px solid #b38126;
@@ -206,7 +205,7 @@
   position: absolute;
   top: 30px;
   left: 30px;
-  width: 200px;
+  width: 150px;
   height: auto;
 }
 
