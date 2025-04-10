@@ -31,12 +31,10 @@ const CertificatePage = () => {
       for (const key in main) {
         if (main[key].subCourses?.[subCourseId]) {
           const dep = main[key].department || "Our Department";
-          console.log("Department found:", dep);
           setDepartment(dep);
           return;
         }
       }
-      console.log("No matching department found.");
       setDepartment("Our Department");
     } catch (e) {
       console.error("Error fetching department:", e);
@@ -54,7 +52,6 @@ const CertificatePage = () => {
           return;
         }
         const rolesData = rolesSnap.val();
-        console.log("Looking for moderator for department:", department);
 
         for (const emailKey in rolesData) {
           const r = rolesData[emailKey];
@@ -63,13 +60,10 @@ const CertificatePage = () => {
           if (!isModerator) continue;
 
           const fixedEmail = emailKey.replace(/\./g, "-");
-          console.log(`Fixed email for Firebase: ${fixedEmail}`); // إضافة سجل للبريد الإلكتروني المعدل
           const userSnap = await get(ref(db, `users/${fixedEmail}`));
           if (userSnap.exists()) {
             const userData = userSnap.val();
             const userDep = userData.department?.toLowerCase() || "";
-
-            console.log(`User ${fixedEmail} department:`, userDep);
 
             if (userDep === department.toLowerCase()) {
               setModeratorName(userData.name || fixedEmail);
@@ -78,7 +72,6 @@ const CertificatePage = () => {
           }
         }
 
-        console.log("No moderator found matching the department.");
         setModeratorName("");
       } catch (e) {
         console.error("Error fetching moderator:", e);
