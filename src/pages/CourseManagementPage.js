@@ -214,6 +214,7 @@ function CourseManagementPage() {
         (enrolledUser) => enrolledUser.email === user.email
       );
     });
+
   const filteredEnrolledUsers = enrolledUsers.filter(
     (user) =>
       (user.name &&
@@ -227,8 +228,8 @@ function CourseManagementPage() {
 
   const usersToDisplay = selectedCourse ? filteredUsers : [];
   const enrolledUsersToDisplay = selectedCourse ? filteredEnrolledUsers : [];
-  const handleSelectAll = () => {
-    // إذا كان جميع المستخدمين المعروضين موجودين في selectedUsers، قم بإلغاء تحديدهم
+
+  const handleSelectAllUsers = () => {
     if (
       filteredUsers.every((user) =>
         selectedUsers.some((u) => u.email === user.email)
@@ -236,10 +237,10 @@ function CourseManagementPage() {
     ) {
       setSelectedUsers([]);
     } else {
-      // وإلا، قم بتحديد جميع المستخدمين المعروضين
       setSelectedUsers(filteredUsers);
     }
   };
+
   const handleSelectAllEnrolled = () => {
     if (
       filteredEnrolledUsers.every((user) =>
@@ -284,20 +285,25 @@ function CourseManagementPage() {
                 </li>
               ))}
             </ul>
-          </div>
+            </div>
 
           <div className="column enrolled-users-column">
             <h2>Enrolled Users</h2>
-            {selectedCourse && (
-              <button className="select-all-btn" onClick={handleSelectAll}>
-                {filteredUsers.every((user) =>
-                  selectedUsers.some((u) => u.email === user.email)
+<div>
+{selectedCourse && (
+              <button
+                className="select-all-btn"
+                onClick={handleSelectAllEnrolled}
+              >
+                {filteredEnrolledUsers.every((user) =>
+                  selectedEnrolledUsers.includes(user.email)
                 )
                   ? "Deselect All"
                   : "Select All"}
               </button>
             )}
             <ul className="user-list">
+
               {enrolledUsersToDisplay.map((user) => (
                 <li key={user.email}>
                   <label>
@@ -312,7 +318,7 @@ function CourseManagementPage() {
               ))}
             </ul>
           </div>
-
+          </div>
           <div className="column buttons-column">
             <button className="butt1" onClick={handleRemoveUsersFromCourse}>
               <img src={rightArrowIcon} alt="Remove Users from Course" />
@@ -325,7 +331,7 @@ function CourseManagementPage() {
           <div className="column users-column">
             <h2>Users</h2>
             {selectedCourse && (
-              <button className="select-all-btn" onClick={handleSelectAll}>
+              <button className="select-all-btn" onClick={handleSelectAllUsers}>
                 {filteredUsers.every((user) =>
                   selectedUsers.some((u) => u.email === user.email)
                 )
@@ -356,5 +362,5 @@ function CourseManagementPage() {
     </div>
   );
 }
- 
+
 export default CourseManagementPage;
