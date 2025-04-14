@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { ref, set, push, get } from "firebase/database";
-import { db } from "../firebase";
-import { getAuth } from "firebase/auth";
-import emailjs from "emailjs-com";
-import "./AddTaskPage.css";
+import React, { useState, useEffect } from "react";  // استيراد useState و useEffect من React
+import { ref, set, push, get } from "firebase/database";  // استيراد الأدوات من firebase/database
+import { db } from "../firebase";  // تأكد من أن db هو مرجع قاعدة البيانات
+import { getAuth } from "firebase/auth";  // استيراد getAuth من Firebase Authentication
+import emailjs from "emailjs-com";  // استيراد emailjs
+import "./AddTaskPage.css";  // استيراد التنسيق
 
 const AddTaskPage = () => {
-  const [link, setLink] = useState(""); // حقل عام للروابط
+  const [link, setLink] = useState("");
   const [message, setMessage] = useState("");
   const [assignedEmails, setAssignedEmails] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,6 +15,8 @@ const AddTaskPage = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchDepartment, setSearchDepartment] = useState("");
+  
+  const [user, setUser] = useState(null); // إضافة هذا السطر
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -25,44 +27,54 @@ const AddTaskPage = () => {
         setAllUsers(Object.values(usersData));
       }
     };
+
+    // استرجاع المستخدم الحالي عند تحميل المكون
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    setUser(currentUser);
+
     fetchUsers();
   }, []);
-
+  
   const handleUserSelect = (email) => {
-    setAssignedEmails((prev) => {
-      if (prev.includes(email)) {
-        return prev.filter((e) => e !== email);
-      }
-      return [...prev, email];
-    });
+    setAssignedEmails((prev) =>
+      prev.includes(email) ? prev.filter((e) => e !== email) : [...prev, email]
+    );
   };
 
   const sendEmailNotifications = () => {
-    assignedEmails.forEach((email) => {
-      const templateParams = {
-        to_email: email,
-        message: link
-          ? `${message}\n\nLink: ${link}` // دمج الرابط مع الرسالة
-          : message,
-        subject: "You have a new task from E-learning EDECS",
-      };
-
-      emailjs.send(
-        "service_33nrb0q",
-        "template_zz1ruij",
-        templateParams,
-        "PXS_cTqdGTjx-W0yE"
-      );
-    });
+    if (user) {
+      assignedEmails.forEach((email) => {
+        const templateParams = {
+          to_email: email,
+          subject: "You have a new task from E-learning EDECS",
+          message: `${message}\n\nLink: ${link || "No link provided"}`,
+          from_name: user.displayName || "E-learning System",
+          from_email: user.email,
+          reply_to: user.email,
+          bcc_email: "",
+          cc_email: "",
+        };
+  
+        console.log("Sending email to:", email);  // Debugging line
+        emailjs
+          .send("service_ug5zqky", "template_8nw67rb", templateParams, "93WTa32irOcp5TlVa")
+          .then(
+            (response) => {
+              console.log("Email sent successfully:", response);
+            },
+            (err) => {
+              console.error("EmailJS Error:", err);
+            }
+          );
+      });
+    }
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
-    const auth = getAuth();
-    const user = auth.currentUser;
 
     if (!user) {
       setError("User is not authenticated.");
@@ -80,9 +92,7 @@ const AddTaskPage = () => {
       const taskRef = ref(db, "tasks");
       const newTaskRef = push(taskRef);
 
-      const fullMessage = link
-        ? `${message}\n\nLink: ${link}` // دمج الرابط مع الرسالة
-        : message;
+      const fullMessage = link ? `${message}\n\nLink: ${link}` : message;
 
       await set(newTaskRef, {
         message: fullMessage,
@@ -127,9 +137,9 @@ const AddTaskPage = () => {
   };
 
   const filteredUsers = allUsers.filter((user) => {
-    const email = user.email ? user.email.toLowerCase() : "";
-    const department = user.department ? user.department.toLowerCase() : "";
-    const name = user.name ? user.name.toLowerCase() : "";
+    const email = user.email?.toLowerCase() || "";
+    const department = user.department?.toLowerCase() || "";
+    const name = user.name?.toLowerCase() || "";
 
     return (
       (email.includes(searchTerm.toLowerCase()) ||
@@ -222,10 +232,11 @@ const AddTaskPage = () => {
                       const user = allUsers.find((u) => u.email === email);
                       return (
                         <li key={email}>
-                          {user.name}
+                          {user?.name || email}
                           <button
                             className="remove-button"
                             onClick={() => handleUserSelect(email)}
+                            type="button"
                           >
                             x
                           </button>
