@@ -89,7 +89,19 @@ function Sidebar({ isOpen, onClose }) {
                 <SubmissionsIcon className="sidebar-icon" />
               </Link>
             </li>
+
+
+          </>
+        )}
+        {/* يظهر رابط قسم إدارة الأقسام فقط إذا كان المستخدم سوبر أدمن */}
+        {isSuperAdmin && (
+          <>
             <li>
+              <Link to="/Email-Form" onClick={onClose} title="Email Form">
+                <EmailFormIcon className="sidebar-icon" />
+              </Link>
+            </li>
+                      <li>
               <Link to="/add-task" onClick={onClose} title="Add Task">
                 <AddTaskIcon className="sidebar-icon" />
               </Link>
@@ -103,17 +115,6 @@ function Sidebar({ isOpen, onClose }) {
                 <ArchiveIcon className="sidebar-icon" />
               </Link>
             </li>
-          </>
-        )}
-        {/* يظهر رابط قسم إدارة الأقسام فقط إذا كان المستخدم سوبر أدمن */}
-        {isSuperAdmin && (
-          <>
-            <li>
-              <Link to="/Email-Form" onClick={onClose} title="Email Form">
-                <EmailFormIcon className="sidebar-icon" />
-              </Link>
-            </li>
-
             <li>
               <Link
                 to="/BulkUser-Upload"
