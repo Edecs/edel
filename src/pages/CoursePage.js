@@ -751,19 +751,18 @@ function CoursePage() {
                                     src={googleViewerUrl}
                                     width="100%"
                                     height="600px"
-                                    title={`PDF ${mediaItem.id}`}
-                                    frameBorder="0"
+                                    title="PDF Viewer"
                                   />
-                                </div>
-                                <div className="delete-button-container">
-                                  <button
-                                    className="vim"
-                                    onClick={() =>
-                                      handleDeleteMedia("pdfs", mediaItem.id)
-                                    }
-                                  >
-                                    Delete
-                                  </button>
+                                  <div className="delete-button-container">
+                                    <button
+                                      className="vim"
+                                      onClick={() =>
+                                        handleDeleteMedia("pdfs", mediaItem.id)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             );
