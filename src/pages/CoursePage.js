@@ -9,7 +9,6 @@ import {
   push,
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
-
 import "./CoursePage.css";
 
 function CoursePage() {
@@ -30,7 +29,7 @@ function CoursePage() {
   const [thumbnail, setThumbnail] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
   const [currentUserDepartment, setCurrentUserDepartment] = useState("");
-  const [media, setMedia] = useState({ images: [], videos: [] });
+  const [media, setMedia] = useState({ images: [], videos: [], pdfs: [] });
   const [newImageUrl, setNewImageUrl] = useState("");
   const [currentUserRole, setCurrentUserRole] = useState("");
 
@@ -39,6 +38,10 @@ function CoursePage() {
   );
 
   const [newVideoUrl, setNewVideoUrl] = useState("");
+  const [newPdfUrl, setNewPdfUrl] = useState("");
+
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
 
   const db = getDatabase();
 
@@ -299,37 +302,35 @@ function CoursePage() {
 
     const newMedia = {
       images: newImageUrl ? [{ url: newImageUrl, id: Date.now() }] : [],
-      videos: newVideoUrl
-        ? [{ url: newVideoUrl, id: Date.now() + 100000 }]
-        : [], // زيادة ID الفيديوهات
+      videos: newVideoUrl ? [{ url: newVideoUrl, id: Date.now() + 100000 }] : [],
+      pdfs: newPdfUrl ? [{ url: newPdfUrl, id: Date.now() + 200000 }] : [], // Add PDFs with higher ID offset
     };
 
-    if (newMedia.images.length > 0 || newMedia.videos.length > 0) {
+    if (newMedia.images.length > 0 || newMedia.videos.length > 0 || newMedia.pdfs.length > 0) {
       try {
         const snapshot = await get(mediaRef);
-        const existingMedia = snapshot.val() || { images: [], videos: [] };
+        const existingMedia = snapshot.val() || { images: [], videos: [], pdfs: [] };
 
         const currentMedia = {
-          images: Array.isArray(existingMedia.images)
-            ? existingMedia.images
-            : [],
-          videos: Array.isArray(existingMedia.videos)
-            ? existingMedia.videos
-            : [],
+          images: Array.isArray(existingMedia.images) ? existingMedia.images : [],
+          videos: Array.isArray(existingMedia.videos) ? existingMedia.videos : [],
+          pdfs: Array.isArray(existingMedia.pdfs) ? existingMedia.pdfs : [],
         };
 
         currentMedia.images.push(...newMedia.images);
         currentMedia.videos.push(...newMedia.videos);
+        currentMedia.pdfs.push(...newMedia.pdfs);
 
         await set(mediaRef, currentMedia);
         setNewImageUrl("");
         setNewVideoUrl("");
+        setNewPdfUrl("");
         setMedia(currentMedia);
       } catch (error) {
         setError("Failed to add media: " + error.message);
       }
     } else {
-      setError("Please provide at least one image or video URL.");
+      setError("Please provide at least one image, video, or PDF URL.");
     }
   };
 
@@ -356,6 +357,10 @@ function CoursePage() {
         existingMedia.videos = existingMedia.videos.filter(
           (item) => item.id !== mediaId
         );
+      } else if (mediaType === "pdfs" && existingMedia.pdfs) {
+        existingMedia.pdfs = existingMedia.pdfs.filter(
+          (item) => item.id !== mediaId
+        );
       } else {
         return;
       }
@@ -367,6 +372,10 @@ function CoursePage() {
     }
   };
 
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
+
   // Rest of your code...
 
   useEffect(() => {
@@ -376,7 +385,7 @@ function CoursePage() {
         `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
       );
       const unsubscribe = onValue(mediaRef, (snapshot) => {
-        const mediaData = snapshot.val() || { images: [], videos: [] };
+        const mediaData = snapshot.val() || { images: [], videos: [], pdfs: [] };
         setMedia(mediaData);
       });
 
@@ -551,7 +560,6 @@ function CoursePage() {
                           <div className="answer-list">
                             {question.answers.map((answer, idx) => (
                               <div key={answer.id} className="answer-content">
-                                <div key={idx}></div>
                                 <p>{answer.text}</p>
                               </div>
                             ))}
@@ -675,6 +683,12 @@ function CoursePage() {
                       onChange={(e) => setNewVideoUrl(e.target.value)}
                       placeholder="Add Video URL"
                     />
+                    <input
+                      type="text"
+                      value={newPdfUrl}
+                      onChange={(e) => setNewPdfUrl(e.target.value)}
+                      placeholder="Add PDF URL (Dropbox link)"
+                    />
                     <div className="a1">
                       <button className="a2" onClick={handleAddMedia}>
                         Add Media
@@ -721,6 +735,39 @@ function CoursePage() {
                               </div>
                             </div>
                           ))}
+
+                      {media.pdfs &&
+                        media.pdfs
+                          .sort((a, b) => a.id - b.id)
+                          .map((mediaItem) => {
+                            // تحويل رابط Dropbox إلى رابط Google Docs Viewer
+                            const dropboxUrl = mediaItem.url;
+                            const googleViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(dropboxUrl)}&embedded=true`;
+                            
+                            return (
+                              <div key={mediaItem.id} className="media-item1">
+                                <div className="pdf-container">
+                                  <iframe
+                                    src={googleViewerUrl}
+                                    width="100%"
+                                    height="600px"
+                                    title={`PDF ${mediaItem.id}`}
+                                    frameBorder="0"
+                                  />
+                                </div>
+                                <div className="delete-button-container">
+                                  <button
+                                    className="vim"
+                                    onClick={() =>
+                                      handleDeleteMedia("pdfs", mediaItem.id)
+                                    }
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })}
                     </div>
                   </details>
                 </div>
