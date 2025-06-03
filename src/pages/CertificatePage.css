@@ -1,5 +1,6 @@
 .certificate-wrapper {
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   min-height: 100vh;
   padding: 40px 20px;
@@ -21,10 +22,9 @@
     ),
     url("../photos/Picture1.png") no-repeat bottom right; /* صورة الخلفية */
   background-size: 50%;
-  margin: 3px 3px 3px 3px;
+  margin: 20px auto; /* Center the certificate box and add some vertical margin */
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center; /* توسيط النص داخل الفقرات */
 }
@@ -139,7 +139,7 @@
 }
 .actions {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Center the buttons horizontally */
   margin-top: 20px;
 }
 
