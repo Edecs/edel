@@ -285,6 +285,15 @@ const SubCourseDetailPage = () => {
         type: "video",
       });
     });
+
+    const pdfKeys = Object.keys(subCourse.media.pdfs || {});
+    pdfKeys.forEach((key) => {
+      mediaItems.push({
+        id: key,
+        url: subCourse.media.pdfs[key].url,
+        type: "pdf",
+      });
+    });
   }
 
   const currentMedia = mediaItems[currentMediaIndex];
@@ -328,6 +337,18 @@ const SubCourseDetailPage = () => {
                     />
                     Your browser does not support the video tag.
                   </video>
+                </div>
+              )}
+              {currentMedia.type === "pdf" && (
+                <div className="media-item">
+                  <div className="pdf-container">
+                    <iframe
+                      src={`https://docs.google.com/viewer?url=${encodeURIComponent(currentMedia.url)}&embedded=true`}
+                      width="100%"
+                      height="600px"
+                      title="PDF Viewer"
+                    />
+                  </div>
                 </div>
               )}
 
