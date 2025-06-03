@@ -142,7 +142,7 @@ const CertificatePage = () => {
           </p>
           <div className="certificate-signatures-row">
             <div className="certificate-signature-block left">
-              <p className="certificate-signature-name">{department}</p>
+              <p className="certificate-signature-name">{department} & HR Department</p>
             </div>
             <div className="certificate-signature-block right1">
               <div className="certificate-signature-box"></div>
