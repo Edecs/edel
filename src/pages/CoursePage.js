@@ -203,10 +203,19 @@ function CoursePage() {
   };
 
   const handleAddCourse = () => {
+    // Function to convert last number from 0 to 1 in URLs
+    const convertLastNumber = (url) => {
+      if (!url) return url;
+      // تحويل آخر رقم من 0 إلى 1 في أي رابط
+      return url.replace(/(\d+)(?=\D*$)/, (match) => {
+        return match.replace(/0$/, '1');
+      });
+    };
+
     const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
     set(courseRef, {
       name: newCourseName,
-      thumbnail: thumbnail,
+      thumbnail: convertLastNumber(thumbnail),
       department: currentUserDepartment,
     });
 
@@ -300,10 +309,19 @@ function CoursePage() {
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
     );
 
+    // Function to convert last number from 0 to 1 in URLs
+    const convertLastNumber = (url) => {
+      if (!url) return url;
+      // تحويل آخر رقم من 0 إلى 1 في أي رابط
+      return url.replace(/(\d+)(?=\D*$)/, (match) => {
+        return match.replace(/0$/, '1');
+      });
+    };
+
     const newMedia = {
-      images: newImageUrl ? [{ url: newImageUrl, id: Date.now() }] : [],
-      videos: newVideoUrl ? [{ url: newVideoUrl, id: Date.now() + 100000 }] : [],
-      pdfs: newPdfUrl ? [{ url: newPdfUrl, id: Date.now() + 200000 }] : [], // Add PDFs with higher ID offset
+      images: newImageUrl ? [{ url: convertLastNumber(newImageUrl), id: Date.now() }] : [],
+      videos: newVideoUrl ? [{ url: convertLastNumber(newVideoUrl), id: Date.now() + 100000 }] : [],
+      pdfs: newPdfUrl ? [{ url: convertLastNumber(newPdfUrl), id: Date.now() + 200000 }] : [],
     };
 
     if (newMedia.images.length > 0 || newMedia.videos.length > 0 || newMedia.pdfs.length > 0) {
