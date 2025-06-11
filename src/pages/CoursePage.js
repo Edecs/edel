@@ -10,7 +10,6 @@ import {
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import "./CoursePage.css";
-import { logUserAction } from '../utils/logging'; // Import the utility function
 
 function CoursePage() {
   const [mainCourses, setMainCourses] = useState([]);
@@ -51,9 +50,6 @@ function CoursePage() {
   }, [selectedSubCourse]);
 
   useEffect(() => {
-    // Log page view
-    logUserAction("VIEW_PAGE", { page: "CoursePage" });
-
     const auth = getAuth();
     const user = auth.currentUser;
     if (user) {
@@ -207,24 +203,15 @@ function CoursePage() {
   };
 
   const handleAddCourse = () => {
-    // Function to convert last number from 0 to 1 in URLs
-    const convertLastNumber = (url) => {
-      if (!url) return url;
-      return url.replace(/(\d+)(?=\D*$)/, (match) => {
-        return match.replace(/0$/, '1');
-      });
-    };
-
     const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
     set(courseRef, {
       name: newCourseName,
-      thumbnail: convertLastNumber(thumbnail),
+      thumbnail: thumbnail,
       department: currentUserDepartment,
     });
 
     setNewCourseName("");
     setThumbnail("");
-    logUserAction("ADD_COURSE", { courseName: newCourseName });
   };
 
   const handleAddSubCourse = () => {
@@ -235,7 +222,6 @@ function CoursePage() {
     set(subCourseRef, { name: newSubCourseName });
 
     setNewSubCourseName("");
-    logUserAction("ADD_SUB_COURSE", { subCourseName: newSubCourseName, mainCourseId: selectedCourse });
   };
 
   const handleAddNewQuestion = async () => {
@@ -314,18 +300,10 @@ function CoursePage() {
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
     );
 
-    // Function to convert last number from 0 to 1 in URLs
-    const convertLastNumber = (url) => {
-      if (!url) return url;
-      return url.replace(/(\d+)(?=\D*$)/, (match) => {
-        return match.replace(/0$/, '1');
-      });
-    };
-
     const newMedia = {
-      images: newImageUrl ? [{ url: convertLastNumber(newImageUrl), id: Date.now() }] : [],
-      videos: newVideoUrl ? [{ url: convertLastNumber(newVideoUrl), id: Date.now() + 100000 }] : [],
-      pdfs: newPdfUrl ? [{ url: convertLastNumber(newPdfUrl), id: Date.now() + 200000 }] : [], // Add PDFs with higher ID offset
+      images: newImageUrl ? [{ url: newImageUrl, id: Date.now() }] : [],
+      videos: newVideoUrl ? [{ url: newVideoUrl, id: Date.now() + 100000 }] : [],
+      pdfs: newPdfUrl ? [{ url: newPdfUrl, id: Date.now() + 200000 }] : [], // Add PDFs with higher ID offset
     };
 
     if (newMedia.images.length > 0 || newMedia.videos.length > 0 || newMedia.pdfs.length > 0) {
@@ -348,7 +326,6 @@ function CoursePage() {
         setNewVideoUrl("");
         setNewPdfUrl("");
         setMedia(currentMedia);
-        logUserAction("ADD_MEDIA", { images: newMedia.images.length, videos: newMedia.videos.length, pdfs: newMedia.pdfs.length, subCourseId: selectedSubCourse });
       } catch (error) {
         setError("Failed to add media: " + error.message);
       }
@@ -390,7 +367,6 @@ function CoursePage() {
 
       await set(mediaRef, existingMedia);
       setMedia(existingMedia);
-      logUserAction("DELETE_MEDIA", { mediaType: mediaType, mediaId: mediaId, subCourseId: selectedSubCourse });
     } catch (error) {
       setError("Failed to delete media: " + error.message);
     }
@@ -583,7 +559,7 @@ function CoursePage() {
                         <div className="answers-container">
                           <div className="answer-list">
                             {question.answers.map((answer, idx) => (
-                              <div key={answer.id || idx} className="answer-content">
+                              <div key={answer.id} className="answer-content">
                                 <p>{answer.text}</p>
                               </div>
                             ))}
@@ -635,7 +611,7 @@ function CoursePage() {
                               />
                               <h4>Answers:</h4>
                               {answers.map((answer, index) => (
-                                <div key={answer.id || index}>
+                                <div key={index}>
                                   <input
                                     type="text"
                                     value={answer.text}
@@ -825,7 +801,7 @@ function CoursePage() {
                 </button>
               </div>
               {answers.map((answer, index) => (
-                <div key={answer.id || index}>
+                <div key={index}>
                   <input
                     type="text"
                     value={answer.text}
