@@ -694,18 +694,33 @@ function CoursePage() {
                       value={newImageUrl}
                       onChange={(e) => setNewImageUrl(e.target.value)}
                       placeholder="Add Image URL"
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleAddMedia();
+                        }
+                      }}
                     />
                     <input
                       type="text"
                       value={newVideoUrl}
                       onChange={(e) => setNewVideoUrl(e.target.value)}
                       placeholder="Add Video URL"
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleAddMedia();
+                        }
+                      }}
                     />
                     <input
                       type="text"
                       value={newPdfUrl}
                       onChange={(e) => setNewPdfUrl(e.target.value)}
                       placeholder="Add PDF URL (Dropbox link)"
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleAddMedia();
+                        }
+                      }}
                     />
                     <div className="a1">
                       <button className="a2" onClick={handleAddMedia}>
