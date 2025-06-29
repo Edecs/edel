@@ -56,13 +56,12 @@ const SiteManagement = () => {
           }
         }
 
-        // إضافة سجل في اللوج على Realtime Database
+        // إضافة سجل في اللوج على Realtime Database (فقط userName وdetailMessage وtimestamp)
         const logsRef = ref(db, "logs");
         const logEntry = {
-          eventType: "ADD_SITE",
           userName: userName,
-          userEmail: userEmail,
           timestamp: new Date().toISOString(),
+          detailMessage: `تم إضافة موقع جديد باسم ${newSite}`,
         };
         await push(logsRef, logEntry);
 
@@ -99,13 +98,12 @@ const SiteManagement = () => {
             }
           }
 
-          // إضافة سجل في اللوج على Realtime Database
+          // إضافة سجل في اللوج على Realtime Database (فقط userName وdetailMessage وtimestamp)
           const logsRef = ref(db, "logs");
           const logEntry = {
-            eventType: "DELETE_SITE",
             userName: userName,
-            userEmail: userEmail,
             timestamp: new Date().toISOString(),
+            detailMessage: `تم حذف الموقع ${siteName}`,
           };
           await push(logsRef, logEntry);
         }
