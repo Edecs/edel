@@ -26,6 +26,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import EmailForm from "./pages/EmailForm";
 import BulkUserUpload from "./pages/BulkUserUpload";
 import CertificatePage from "./pages/CertificatePage"; // استيراد الصفحة الجديدة
+import LogsPage from "./pages/LogsPage";
 
 import { useAuth } from "./context/AuthContext";
 import Modal from "react-modal";
@@ -171,6 +172,9 @@ const App = () => {
                   />
                   <Route path="/Site-Management" element={<SiteManagement />} />
                 </>
+              )}
+              {isSuperAdmin && (
+                <Route path="/logs" element={<LogsPage />} />
               )}
               <Route path="*" element={<NotFoundPage />} />
             </>
