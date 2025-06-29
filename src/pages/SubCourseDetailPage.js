@@ -266,33 +266,46 @@ const SubCourseDetailPage = () => {
 
   // Prepare media items
   const mediaItems = [];
+  const today = new Date();
 
   if (subCourse?.media) {
     const imageKeys = Object.keys(subCourse.media.images || {});
     imageKeys.forEach((key) => {
-      mediaItems.push({
-        id: key,
-        url: subCourse.media.images[key].url,
-        type: "image",
-      });
+      const item = subCourse.media.images[key];
+      if (!item.expDate || new Date(item.expDate) > today) {
+        mediaItems.push({
+          id: key,
+          url: item.url,
+          type: "image",
+          expDate: item.expDate || null,
+        });
+      }
     });
 
     const videoKeys = Object.keys(subCourse.media.videos || {});
     videoKeys.forEach((key) => {
-      mediaItems.push({
-        id: key,
-        url: subCourse.media.videos[key].url,
-        type: "video",
-      });
+      const item = subCourse.media.videos[key];
+      if (!item.expDate || new Date(item.expDate) > today) {
+        mediaItems.push({
+          id: key,
+          url: item.url,
+          type: "video",
+          expDate: item.expDate || null,
+        });
+      }
     });
 
     const pdfKeys = Object.keys(subCourse.media.pdfs || {});
     pdfKeys.forEach((key) => {
-      mediaItems.push({
-        id: key,
-        url: subCourse.media.pdfs[key].url,
-        type: "pdf",
-      });
+      const item = subCourse.media.pdfs[key];
+      if (!item.expDate || new Date(item.expDate) > today) {
+        mediaItems.push({
+          id: key,
+          url: item.url,
+          type: "pdf",
+          expDate: item.expDate || null,
+        });
+      }
     });
   }
 
