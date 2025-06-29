@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getFirestore, collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db, ref, get } from "../firebase";
 import "./LogsPage.css";
 
 const LogsPage = () => {
@@ -10,12 +10,17 @@ const LogsPage = () => {
     const fetchLogs = async () => {
       setLoading(true);
       try {
-        const firestore = getFirestore();
-        const logsRef = collection(firestore, "logs");
-        const q = query(logsRef, orderBy("timestamp", "desc"));
-        const snapshot = await getDocs(q);
-        const logsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setLogs(logsData);
+        const logsRef = ref(db, "logs");
+        const snapshot = await get(logsRef);
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const logsArray = Object.values(data).sort(
+            (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+          );
+          setLogs(logsArray);
+        } else {
+          setLogs([]);
+        }
       } catch (error) {
         console.error("Error fetching logs:", error);
       } finally {
@@ -35,20 +40,22 @@ const LogsPage = () => {
           <thead>
             <tr>
               <th>Event Type</th>
-              <th>Site Name</th>
               <th>User Name</th>
               <th>User Email</th>
               <th>Timestamp</th>
             </tr>
           </thead>
           <tbody>
-            {logs.map((log) => (
-              <tr key={log.id}>
+            {logs.map((log, idx) => (
+              <tr key={idx}>
                 <td>{log.eventType}</td>
-                <td>{log.siteName || "-"}</td>
                 <td>{log.userName}</td>
                 <td>{log.userEmail}</td>
-                <td>{new Date(log.timestamp).toLocaleString()}</td>
+                <td>
+                  {log.timestamp
+                    ? new Date(log.timestamp).toLocaleString()
+                    : "-"}
+                </td>
               </tr>
             ))}
           </tbody>
