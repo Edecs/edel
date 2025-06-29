@@ -217,19 +217,32 @@ function AdminPage() {
         userName = userData.name || userEmail;
       }
     }
-    return { userName, userEmail };
+    return { userName };
   };
 
   // Log helper
   const addLog = async (eventType, extra = {}) => {
-    const { userName, userEmail } = await getAdminLogInfo();
+    const { userName } = await getAdminLogInfo();
     const logsRef = dbRef(db, "logs");
+    let detailMessage = "";
+    // تخصيص نص اللوج حسب نوع العملية
+    if (eventType === "ADD_USER" && extra.targetEmail) {
+      detailMessage = `تم إضافة مستخدم جديد (${extra.targetEmail})`;
+    } else if (eventType === "REMOVE_COURSE_ACCESS" && extra.targetEmail && extra.courseId && extra.subCourseName) {
+      detailMessage = `تم إزالة صلاحية الكورس (${extra.courseId} - ${extra.subCourseName}) عن المستخدم (${extra.targetEmail})`;
+    } else if (eventType === "GRANT_COURSE_ACCESS" && extra.targetEmail && extra.courseId && extra.subCourseName) {
+      detailMessage = `تم منح صلاحية الكورس (${extra.courseId} - ${extra.subCourseName}) للمستخدم (${extra.targetEmail})`;
+    } else if (eventType === "BULK_ASSIGN" && extra.users && extra.subCourses) {
+      const usersStr = extra.users.join("، ");
+      const subCoursesStr = extra.subCourses.join("، ");
+      detailMessage = `تم تعيين الصلاحيات للمستخدمين (${usersStr}) على الدورات الفرعية (${subCoursesStr})`;
+    } else if (eventType === "TOGGLE_MODERATOR" && extra.targetEmail) {
+      detailMessage = `تم تغيير حالة المشرف للمستخدم (${extra.targetEmail}) إلى ${extra.newValue ? "مشرف" : "ليس مشرف"}`;
+    }
     const logEntry = {
-      eventType,
       userName,
-      userEmail,
       timestamp: new Date().toISOString(),
-      ...extra,
+      detailMessage,
     };
     await push(logsRef, logEntry);
   };
