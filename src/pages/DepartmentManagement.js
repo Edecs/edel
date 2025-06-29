@@ -58,14 +58,12 @@ const DepartmentManagement = () => {
           }
         }
 
-        // إضافة سجل في اللوج على Realtime Database
+        // إضافة سجل في اللوج على Realtime Database (فقط userName وdetailMessage وtimestamp)
         const logsRef = ref(db, "logs");
         const logEntry = {
-          eventType: "ADD_DEPARTMENT",
-          departmentName: newDepartment,
           userName: userName,
-          userEmail: userEmail,
           timestamp: new Date().toISOString(),
+          detailMessage: `تم إضافة قسم جديد باسم ${newDepartment}`,
         };
         await push(logsRef, logEntry);
 
@@ -102,14 +100,12 @@ const DepartmentManagement = () => {
             }
           }
 
-          // إضافة سجل في اللوج على Realtime Database
+          // إضافة سجل في اللوج على Realtime Database (فقط userName وdetailMessage وtimestamp)
           const logsRef = ref(db, "logs");
           const logEntry = {
-            eventType: "DELETE_DEPARTMENT",
-            departmentName: departmentName,
             userName: userName,
-            userEmail: userEmail,
             timestamp: new Date().toISOString(),
+            detailMessage: `تم حذف القسم ${departmentName}`,
           };
           await push(logsRef, logEntry);
         }
