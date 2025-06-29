@@ -39,22 +39,22 @@ const LogsPage = () => {
         <table className="logs-table">
           <thead>
             <tr>
-              <th>Event Type</th>
-              <th>User Name</th>
-              <th>User Email</th>
-              <th>Timestamp</th>
+              <th>اسم المنفذ</th>
+              <th>التاريخ والوقت</th>
+              <th>التفاصيل</th>
             </tr>
           </thead>
           <tbody>
             {logs.map((log, idx) => (
               <tr key={idx}>
-                <td>{log.eventType}</td>
                 <td>{log.userName}</td>
-                <td>{log.userEmail}</td>
                 <td>
                   {log.timestamp
                     ? new Date(log.timestamp).toLocaleString()
                     : "-"}
+                </td>
+                <td style={{direction: 'rtl', fontWeight: 'bold', color: '#1a237e'}}>
+                  {log.detailMessage ? log.detailMessage : "-"}
                 </td>
               </tr>
             ))}
