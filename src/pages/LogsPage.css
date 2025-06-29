@@ -1,0 +1,28 @@
+.logs-page {
+  padding: 2rem;
+}
+
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.logs-table th,
+.logs-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.logs-table th {
+  background-color: #f2f2f2;
+}
+
+.logs-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.logs-table tr:hover {
+  background-color: #e6f7ff;
+}
