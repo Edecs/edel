@@ -65,14 +65,13 @@ function CoursePage() {
   };
 
   // Log helper
-  const addLog = async (eventType) => {
-    const { userName, userEmail } = await getUserLogInfo();
+  const addLog = async (detailMessage) => {
+    const { userName } = await getUserLogInfo();
     const logsRef = ref(db, "logs");
     const logEntry = {
-      eventType,
       userName,
-      userEmail,
       timestamp: new Date().toISOString(),
+      detailMessage,
     };
     await push(logsRef, logEntry);
   };
@@ -177,7 +176,6 @@ function CoursePage() {
       setError("⚠️ لا يمكن أن يكون نص السؤال فارغًا.");
       return;
     }
-
     if (
       answers.length === 0 ||
       answers.every((answer) => !answer.text.trim())
@@ -185,12 +183,10 @@ function CoursePage() {
       setError("⚠️ يجب إدخال إجابة واحدة على الأقل.");
       return;
     }
-
     const questionData = {
       text: newQuestion,
       answers: answers,
     };
-
     try {
       if (isEditMode) {
         // تحديث السؤال
@@ -199,7 +195,7 @@ function CoursePage() {
           `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}`
         );
         await set(questionRef, questionData);
-        await addLog("EDIT_QUESTION");
+        await addLog(`تم تعديل سؤال في الكورس ${selectedCourse} - الدورة الفرعية ${selectedSubCourse}`);
       } else {
         // إضافة سؤال جديد
         const newQuestionRef = push(
@@ -209,10 +205,8 @@ function CoursePage() {
           )
         );
         await set(newQuestionRef, questionData);
-        await addLog("ADD_QUESTION");
+        await addLog(`تم إضافة سؤال إلى الكورس ${selectedCourse} - الدورة الفرعية ${selectedSubCourse}`);
       }
-
-      // إعادة تعيين القيم بعد الحفظ
       setNewQuestion("");
       setAnswers([{ text: "", correct: false }]);
       setEditQuestionIndex(null);
@@ -228,10 +222,9 @@ function CoursePage() {
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${questionId}`
     );
-
     try {
       await remove(questionRef);
-      await addLog("DELETE_QUESTION");
+      await addLog(`تم حذف سؤال من الكورس ${selectedCourse} - الدورة الفرعية ${selectedSubCourse}`);
     } catch (error) {
       setError("Failed to delete question: " + error.message);
     }
@@ -246,14 +239,13 @@ function CoursePage() {
         return match.replace(/0$/, '1');
       });
     };
-
     const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
     set(courseRef, {
       name: newCourseName,
       thumbnail: convertLastNumber(thumbnail),
       department: currentUserDepartment,
     });
-    addLog("ADD_MAIN_COURSE");
+    addLog(`تم إضافة كورس جديد باسم ${newCourseName}`);
     setNewCourseName("");
     setThumbnail("");
   };
@@ -264,18 +256,15 @@ function CoursePage() {
       `courses/mainCourses/${selectedCourse}/subCourses/${newSubCourseName}`
     );
     set(subCourseRef, { name: newSubCourseName });
-    addLog("ADD_SUB_COURSE");
+    addLog(`تم إضافة دورة فرعية باسم ${newSubCourseName} إلى الكورس ${selectedCourse}`);
     setNewSubCourseName("");
   };
 
   const handleAddNewQuestion = async () => {
-    // تحقق من أن السؤال غير فارغ
     if (!newQuestion.trim()) {
       setError("⚠️ لا يمكن إضافة سؤال فارغ.");
       return;
     }
-
-    // تحقق من أن هناك إجابة واحدة على الأقل
     if (
       answers.length === 0 ||
       answers.every((answer) => !answer.text.trim())
@@ -283,12 +272,10 @@ function CoursePage() {
       setError("⚠️ يجب إدخال إجابة واحدة على الأقل.");
       return;
     }
-
     const questionData = {
       text: newQuestion,
       answers: answers,
     };
-
     try {
       const newQuestionRef = push(
         ref(
@@ -297,13 +284,11 @@ function CoursePage() {
         )
       );
       await set(newQuestionRef, questionData);
-      await addLog("ADD_QUESTION");
-
-      // مسح الحقول بعد الحفظ
+      await addLog(`تم إضافة سؤال إلى الكورس ${selectedCourse} - الدورة الفرعية ${selectedSubCourse}`);
       setNewQuestion("");
       setAnswers([{ text: "", correct: false }]);
       setIsModalOpen(false);
-      setError(""); // مسح أي خطأ موجود
+      setError("");
     } catch (error) {
       setError("❌ حدث خطأ أثناء إضافة السؤال: " + error.message);
     }
@@ -368,19 +353,16 @@ function CoursePage() {
       try {
         const snapshot = await get(mediaRef);
         const existingMedia = snapshot.val() || { images: [], videos: [], pdfs: [] };
-
         const currentMedia = {
           images: Array.isArray(existingMedia.images) ? existingMedia.images : [],
           videos: Array.isArray(existingMedia.videos) ? existingMedia.videos : [],
           pdfs: Array.isArray(existingMedia.pdfs) ? existingMedia.pdfs : [],
         };
-
         currentMedia.images.push(...newMedia.images);
         currentMedia.videos.push(...newMedia.videos);
         currentMedia.pdfs.push(...newMedia.pdfs);
-
         await set(mediaRef, currentMedia);
-        await addLog("ADD_MEDIA");
+        await addLog(`تم إضافة ميديا إلى الكورس ${selectedCourse} - الدورة الفرعية ${selectedSubCourse}`);
         setNewImageUrl("");
         setNewVideoUrl("");
         setNewPdfUrl("");
@@ -401,16 +383,13 @@ function CoursePage() {
       db,
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
     );
-
     try {
       const snapshot = await get(mediaRef);
       const existingMedia = snapshot.val();
-
       if (!existingMedia) {
         setError("No media found");
         return;
       }
-
       if (mediaType === "images" && existingMedia.images) {
         existingMedia.images = existingMedia.images.filter(
           (item) => item.id !== mediaId
@@ -426,10 +405,9 @@ function CoursePage() {
       } else {
         return;
       }
-
       await set(mediaRef, existingMedia);
       setMedia(existingMedia);
-      await addLog("DELETE_MEDIA");
+      await addLog(`تم حذف ميديا من الكورس ${selectedCourse} - الدورة الفرعية ${selectedSubCourse}`);
     } catch (error) {
       setError("Failed to delete media: " + error.message);
     }
