@@ -3,7 +3,6 @@ import { db, ref, set, get, push } from "../firebase"; // تأكد من استي
 import { auth } from "../firebase"; // إضافة هذا السطر إذا لم يكن موجودًا
 import { useAuth } from "../context/AuthContext"; // استيراد AuthContext
 import { useNavigate } from "react-router-dom"; // استيراد useNavigate للتوجيه
-import { getFirestore, collection, addDoc } from "firebase/firestore"; // استيراد Firestore
 import "./SiteManagement.css"; // ستحتاج إلى إضافة CSS
 
 const SiteManagement = () => {
@@ -57,16 +56,15 @@ const SiteManagement = () => {
           }
         }
 
-        // إضافة سجل في اللوج على Firestore
-        const firestore = getFirestore();
+        // إضافة سجل في اللوج على Realtime Database
+        const logsRef = ref(db, "logs");
         const logEntry = {
           eventType: "ADD_SITE",
-          siteName: newSite,
           userName: userName,
           userEmail: userEmail,
           timestamp: new Date().toISOString(),
         };
-        await addDoc(collection(firestore, "logs"), logEntry);
+        await push(logsRef, logEntry);
 
         setSites([...sites, newSite]);
         setNewSite("");
@@ -101,16 +99,15 @@ const SiteManagement = () => {
             }
           }
 
-          // إضافة سجل في اللوج على Firestore
-          const firestore = getFirestore();
+          // إضافة سجل في اللوج على Realtime Database
+          const logsRef = ref(db, "logs");
           const logEntry = {
             eventType: "DELETE_SITE",
-            siteName: siteName,
             userName: userName,
             userEmail: userEmail,
             timestamp: new Date().toISOString(),
           };
-          await addDoc(collection(firestore, "logs"), logEntry);
+          await push(logsRef, logEntry);
         }
       }
     } catch (error) {
