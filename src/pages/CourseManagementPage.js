@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { db, ref, set, get, remove } from "../firebase";
+import { db, ref, set, get, remove, push } from "../firebase";
 import { auth } from "../firebase";
 import "./CourseManagementPage.css";
 import rightArrowIcon from "../photos/right-arrow-svgrepo-com.svg";
@@ -141,6 +141,51 @@ function CourseManagementPage() {
     }
   }, [selectedCourse, fetchEnrolledUsers, fetchUsers]);
 
+  // Helper to get admin info for logs
+  const getAdminLogInfo = async () => {
+    let userName = "Unknown";
+    let userEmail = currentUser?.email || "Unknown";
+    if (userEmail !== "Unknown") {
+      const safeEmailPath = userEmail.replace(/\./g, ",");
+      const userRef = ref(db, `users/${safeEmailPath}`);
+      const userSnapshot = await get(userRef);
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.val();
+        userName = userData.name || userEmail;
+      }
+    }
+    return { userName, userEmail };
+  };
+
+  // Log helper
+  const addLog = async (eventType, extra = {}) => {
+    const { userName } = await getAdminLogInfo();
+    const logsRef = ref(db, "logs");
+    let detailMessage = "";
+    if (eventType === "ADD_USERS_TO_COURSE" && extra.users && extra.course) {
+      if (extra.users.length === 1) {
+        detailMessage = `تم إضافة المستخدم ${extra.users[0].name} (${extra.users[0].email}) إلى الكورس ${extra.course}`;
+      } else {
+        const names = extra.users.map((u) => `${u.name} (${u.email})`).join("، ");
+        detailMessage = `تم إضافة المستخدمين ${names} إلى الكورس ${extra.course}`;
+      }
+    } else if (eventType === "REMOVE_USERS_FROM_COURSE" && extra.users && extra.course) {
+      if (extra.users.length === 1) {
+        detailMessage = `تم إزالة المستخدم ${extra.users[0].name} (${extra.users[0].email}) من الكورس ${extra.course}`;
+      } else {
+        const names = extra.users.map((u) => `${u.name} (${u.email})`).join("، ");
+        detailMessage = `تم إزالة المستخدمين ${names} من الكورس ${extra.course}`;
+      }
+    }
+    const logEntry = {
+      userName,
+      timestamp: new Date().toISOString(),
+      ...extra,
+      detailMessage,
+    };
+    await push(logsRef, logEntry);
+  };
+
   const handleAddUsersToCourse = async () => {
     if (selectedCourse && selectedUsers.length > 0) {
       try {
@@ -151,6 +196,14 @@ function CourseManagementPage() {
             `roles/${sanitizedEmail}/courses/${selectedCourse}`
           );
           await set(userCoursesRef, { hasAccess: true });
+        }
+        // إضافة detailMessage مخصص لكل مستخدم
+        for (const user of selectedUsers) {
+          await addLog("ADD_USERS_TO_COURSE", {
+            course: selectedCourse,
+            users: [{ email: user.email, name: user.name || "No name" }],
+            detailMessage: `تم إضافة المستخدم ${user.name || user.email} إلى الكورس ${selectedCourse}`,
+          });
         }
         await fetchEnrolledUsers(selectedCourse);
         await fetchUsers();
@@ -164,6 +217,10 @@ function CourseManagementPage() {
   const handleRemoveUsersFromCourse = async () => {
     if (selectedCourse && selectedEnrolledUsers.length > 0) {
       try {
+        // جلب بيانات الأسماء للمستخدمين الذين سيتم حذفهم
+        const removedUsers = enrolledUsers.filter((u) =>
+          selectedEnrolledUsers.includes(u.email)
+        );
         for (const userEmail of selectedEnrolledUsers) {
           const sanitizedEmail = sanitizeEmail(userEmail);
           const userCoursesRef = ref(
@@ -171,6 +228,14 @@ function CourseManagementPage() {
             `roles/${sanitizedEmail}/courses/${selectedCourse}`
           );
           await remove(userCoursesRef);
+        }
+        // إضافة detailMessage مخصص لكل مستخدم
+        for (const user of removedUsers) {
+          await addLog("REMOVE_USERS_FROM_COURSE", {
+            course: selectedCourse,
+            users: [{ email: user.email, name: user.name || "No name" }],
+            detailMessage: `تم إزالة المستخدم ${user.name || user.email} من الكورس ${selectedCourse}`,
+          });
         }
         await fetchEnrolledUsers(selectedCourse);
         await fetchUsers();
