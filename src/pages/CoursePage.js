@@ -10,6 +10,8 @@ import {
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import "./CoursePage.css";
+import { db, ref as dbRef, set as dbSet, get as dbGet, remove as dbRemove, push as dbPush } from "../firebase";
+import { useAuth } from "../context/AuthContext";
 
 function CoursePage() {
   const [mainCourses, setMainCourses] = useState([]);
@@ -44,6 +46,36 @@ function CoursePage() {
   const [pageNumber, setPageNumber] = useState(1);
 
   const db = getDatabase();
+  const { user } = useAuth();
+
+  // Helper to get user info for logs
+  const getUserLogInfo = async () => {
+    let userName = "Unknown";
+    let userEmail = user?.email || "Unknown";
+    if (userEmail !== "Unknown") {
+      const safeEmailPath = userEmail.replace(/\./g, ",");
+      const userRef = ref(db, `users/${safeEmailPath}`);
+      const userSnapshot = await get(userRef);
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.val();
+        userName = userData.name || userEmail;
+      }
+    }
+    return { userName, userEmail };
+  };
+
+  // Log helper
+  const addLog = async (eventType) => {
+    const { userName, userEmail } = await getUserLogInfo();
+    const logsRef = ref(db, "logs");
+    const logEntry = {
+      eventType,
+      userName,
+      userEmail,
+      timestamp: new Date().toISOString(),
+    };
+    await push(logsRef, logEntry);
+  };
 
   useEffect(() => {
     selectedSubCourseRef.current = selectedSubCourse;
@@ -167,6 +199,7 @@ function CoursePage() {
           `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}`
         );
         await set(questionRef, questionData);
+        await addLog("EDIT_QUESTION");
       } else {
         // إضافة سؤال جديد
         const newQuestionRef = push(
@@ -176,6 +209,7 @@ function CoursePage() {
           )
         );
         await set(newQuestionRef, questionData);
+        await addLog("ADD_QUESTION");
       }
 
       // إعادة تعيين القيم بعد الحفظ
@@ -197,6 +231,7 @@ function CoursePage() {
 
     try {
       await remove(questionRef);
+      await addLog("DELETE_QUESTION");
     } catch (error) {
       setError("Failed to delete question: " + error.message);
     }
@@ -218,7 +253,7 @@ function CoursePage() {
       thumbnail: convertLastNumber(thumbnail),
       department: currentUserDepartment,
     });
-
+    addLog("ADD_MAIN_COURSE");
     setNewCourseName("");
     setThumbnail("");
   };
@@ -229,7 +264,7 @@ function CoursePage() {
       `courses/mainCourses/${selectedCourse}/subCourses/${newSubCourseName}`
     );
     set(subCourseRef, { name: newSubCourseName });
-
+    addLog("ADD_SUB_COURSE");
     setNewSubCourseName("");
   };
 
@@ -262,6 +297,7 @@ function CoursePage() {
         )
       );
       await set(newQuestionRef, questionData);
+      await addLog("ADD_QUESTION");
 
       // مسح الحقول بعد الحفظ
       setNewQuestion("");
@@ -344,6 +380,7 @@ function CoursePage() {
         currentMedia.pdfs.push(...newMedia.pdfs);
 
         await set(mediaRef, currentMedia);
+        await addLog("ADD_MEDIA");
         setNewImageUrl("");
         setNewVideoUrl("");
         setNewPdfUrl("");
@@ -392,6 +429,7 @@ function CoursePage() {
 
       await set(mediaRef, existingMedia);
       setMedia(existingMedia);
+      await addLog("DELETE_MEDIA");
     } catch (error) {
       setError("Failed to delete media: " + error.message);
     }
