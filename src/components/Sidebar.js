@@ -147,6 +147,11 @@ function Sidebar({ isOpen, onClose }) {
                 <SiteIcon className="sidebar-icon" />
               </Link>
             </li>
+            <li>
+              <Link to="/logs" onClick={onClose} title="Logs">
+                <span role="img" aria-label="Logs" className="sidebar-icon">📝</span>
+              </Link>
+            </li>
           </>
         )}
       </ul>
