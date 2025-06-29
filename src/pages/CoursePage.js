@@ -303,6 +303,10 @@ function CoursePage() {
     await remove(questionRef);
   };
 
+  const [newImageExpDate, setNewImageExpDate] = useState("");
+  const [newVideoExpDate, setNewVideoExpDate] = useState("");
+  const [newPdfExpDate, setNewPdfExpDate] = useState("");
+
   const handleAddMedia = async () => {
     const mediaRef = ref(
       db,
@@ -319,9 +323,9 @@ function CoursePage() {
     };
 
     const newMedia = {
-      images: newImageUrl ? [{ url: convertLastNumber(newImageUrl), id: Date.now() }] : [],
-      videos: newVideoUrl ? [{ url: convertLastNumber(newVideoUrl), id: Date.now() + 100000 }] : [],
-      pdfs: newPdfUrl ? [{ url: convertLastNumber(newPdfUrl), id: Date.now() + 200000 }] : [],
+      images: newImageUrl ? [{ url: convertLastNumber(newImageUrl), id: Date.now(), expDate: newImageExpDate }] : [],
+      videos: newVideoUrl ? [{ url: convertLastNumber(newVideoUrl), id: Date.now() + 100000, expDate: newVideoExpDate }] : [],
+      pdfs: newPdfUrl ? [{ url: convertLastNumber(newPdfUrl), id: Date.now() + 200000, expDate: newPdfExpDate }] : [],
     };
 
     if (newMedia.images.length > 0 || newMedia.videos.length > 0 || newMedia.pdfs.length > 0) {
@@ -343,6 +347,9 @@ function CoursePage() {
         setNewImageUrl("");
         setNewVideoUrl("");
         setNewPdfUrl("");
+        setNewImageExpDate("");
+        setNewVideoExpDate("");
+        setNewPdfExpDate("");
         setMedia(currentMedia);
       } catch (error) {
         setError("Failed to add media: " + error.message);
@@ -394,7 +401,32 @@ function CoursePage() {
     setNumPages(numPages);
   }
 
-  // Rest of your code...
+  // دوال تعديل exp date للميديا
+  const handleEditExpDate = (mediaType, mediaId, currentExpDate) => {
+    setEditingMedia({ id: mediaId, type: mediaType, expDate: currentExpDate || "" });
+  };
+
+  const handleSaveExpDate = async () => {
+    if (!editingMedia.id || !editingMedia.type) return;
+    const mediaRef = ref(
+      db,
+      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
+    );
+    try {
+      const snapshot = await get(mediaRef);
+      const existingMedia = snapshot.val() || { images: [], videos: [], pdfs: [] };
+      const mediaList = existingMedia[editingMedia.type] || [];
+      const updatedList = mediaList.map((item) =>
+        item.id === editingMedia.id ? { ...item, expDate: editingMedia.expDate } : item
+      );
+      existingMedia[editingMedia.type] = updatedList;
+      await set(mediaRef, existingMedia);
+      setMedia(existingMedia);
+      setEditingMedia({ id: null, type: null, expDate: "" });
+    } catch (error) {
+      setError("Failed to update exp date: " + error.message);
+    }
+  };
 
   useEffect(() => {
     if (selectedCourse && selectedSubCourse) {
@@ -411,6 +443,23 @@ function CoursePage() {
     }
   }, [db, selectedCourse, selectedSubCourse]);
 
+  // دالة لتنسيق التاريخ والوقت
+  const formatExpDate = (expDate) => {
+    if (!expDate) return "بدون تاريخ انتهاء";
+    try {
+      const d = new Date(expDate);
+      if (isNaN(d.getTime())) return expDate;
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    } catch {
+      return expDate;
+    }
+  };
+
   // Rest of your JSX...
   // تأكد من أن دالة clearPopupFields مكتوبة بشكل صحيح
   const clearPopupFields = () => {
@@ -423,6 +472,8 @@ function CoursePage() {
       <button onClick={handleAddCourse}>إضافة دورة</button>
     );
   }
+
+  const [editingMedia, setEditingMedia] = useState({ id: null, type: null, expDate: "" });
 
   return (
     <div className="course">
@@ -701,6 +752,12 @@ function CoursePage() {
                       }}
                     />
                     <input
+                      type="datetime-local"
+                      value={newImageExpDate}
+                      onChange={(e) => setNewImageExpDate(e.target.value)}
+                      placeholder="Image Expiry Date"
+                    />
+                    <input
                       type="text"
                       value={newVideoUrl}
                       onChange={(e) => setNewVideoUrl(e.target.value)}
@@ -712,6 +769,12 @@ function CoursePage() {
                       }}
                     />
                     <input
+                      type="datetime-local"
+                      value={newVideoExpDate}
+                      onChange={(e) => setNewVideoExpDate(e.target.value)}
+                      placeholder="Video Expiry Date"
+                    />
+                    <input
                       type="text"
                       value={newPdfUrl}
                       onChange={(e) => setNewPdfUrl(e.target.value)}
@@ -721,6 +784,12 @@ function CoursePage() {
                           handleAddMedia();
                         }
                       }}
+                    />
+                    <input
+                      type="datetime-local"
+                      value={newPdfExpDate}
+                      onChange={(e) => setNewPdfExpDate(e.target.value)}
+                      placeholder="PDF Expiry Date"
                     />
                     <div className="a1">
                       <button className="a2" onClick={handleAddMedia}>
@@ -737,6 +806,24 @@ function CoursePage() {
                                 src={mediaItem.url}
                                 alt={`Media ${mediaItem.id}`}
                               />
+                              <div style={{ fontSize: '0.95em', color: '#555', margin: '6px 0' }}>
+                                <span>تاريخ الانتهاء: {formatExpDate(mediaItem.expDate)}</span>
+                              </div>
+                              <div>
+                                {editingMedia.id === mediaItem.id && editingMedia.type === "images" ? (
+                                  <>
+                                    <input
+                                      type="datetime-local"
+                                      value={editingMedia.expDate}
+                                      onChange={e => setEditingMedia({ ...editingMedia, expDate: e.target.value })}
+                                    />
+                                    <button onClick={handleSaveExpDate}>حفظ</button>
+                                    <button onClick={() => setEditingMedia({ id: null, type: null, expDate: "" })}>إلغاء</button>
+                                  </>
+                                ) : (
+                                  <button onClick={() => handleEditExpDate("images", mediaItem.id, mediaItem.expDate)}>تعديل التاريخ</button>
+                                )}
+                              </div>
                               <div className="delete-button-container">
                                 <button
                                   className="vim"
@@ -756,6 +843,24 @@ function CoursePage() {
                           .map((mediaItem) => (
                             <div key={mediaItem.id} className="media-item1">
                               <video src={mediaItem.url} controls />
+                              <div style={{ fontSize: '0.95em', color: '#555', margin: '6px 0' }}>
+                                <span>تاريخ الانتهاء: {formatExpDate(mediaItem.expDate)}</span>
+                              </div>
+                              <div>
+                                {editingMedia.id === mediaItem.id && editingMedia.type === "videos" ? (
+                                  <>
+                                    <input
+                                      type="datetime-local"
+                                      value={editingMedia.expDate}
+                                      onChange={e => setEditingMedia({ ...editingMedia, expDate: e.target.value })}
+                                    />
+                                    <button onClick={handleSaveExpDate}>حفظ</button>
+                                    <button onClick={() => setEditingMedia({ id: null, type: null, expDate: "" })}>إلغاء</button>
+                                  </>
+                                ) : (
+                                  <button onClick={() => handleEditExpDate("videos", mediaItem.id, mediaItem.expDate)}>تعديل التاريخ</button>
+                                )}
+                              </div>
                               <div className="delete-button-container">
                                 <button
                                   className="vim"
@@ -776,16 +881,34 @@ function CoursePage() {
                             // تحويل رابط Dropbox إلى رابط Google Docs Viewer
                             const dropboxUrl = mediaItem.url;
                             const googleViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(dropboxUrl)}&embedded=true`;
-                            
                             return (
                               <div key={mediaItem.id} className="media-item1">
                                 <div className="pdf-container">
                                   <iframe
                                     src={googleViewerUrl}
                                     width="100%"
-                                    height="600px"
+                                    height="400px"
+                                    style={{ minHeight: "400px", maxHeight: "400px" }}
                                     title="PDF Viewer"
                                   />
+                                  <div style={{ fontSize: '0.95em', color: '#555', margin: '6px 0' }}>
+                                    <span>تاريخ الانتهاء: {formatExpDate(mediaItem.expDate)}</span>
+                                  </div>
+                                  <div>
+                                    {editingMedia.id === mediaItem.id && editingMedia.type === "pdfs" ? (
+                                      <>
+                                        <input
+                                          type="datetime-local"
+                                          value={editingMedia.expDate}
+                                          onChange={e => setEditingMedia({ ...editingMedia, expDate: e.target.value })}
+                                        />
+                                        <button onClick={handleSaveExpDate}>حفظ</button>
+                                        <button onClick={() => setEditingMedia({ id: null, type: null, expDate: "" })}>إلغاء</button>
+                                      </>
+                                    ) : (
+                                      <button onClick={() => handleEditExpDate("pdfs", mediaItem.id, mediaItem.expDate)}>تعديل التاريخ</button>
+                                    )}
+                                  </div>
                                   <div className="delete-button-container">
                                     <button
                                       className="vim"
