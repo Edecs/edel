@@ -32,8 +32,9 @@ const LogsPage = () => {
 
   return (
     <div className="logs-page">
-      <h1>Logs</h1>
-      {loading ? (
+<header>
+        <h1 className="header-h1">Logs Page</h1>
+      </header>      {loading ? (
         <p>Loading...</p>
       ) : (
         <table className="logs-table">
