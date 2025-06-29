@@ -3,6 +3,7 @@ import { db } from "../firebase"; // استيراد قاعدة البيانات 
 import { ref as dbRef } from "firebase/database";
 import { get, ref, set, remove, getDatabase } from "firebase/database";
 import { update } from "firebase/database"; // إضافة update هنا
+import { push } from "../firebase";
 
 import {
   getAuth,
@@ -116,6 +117,7 @@ function AdminPage() {
       if (currentAccess) {
         // 🔴 إزالة الصلاحية عند إيقافها
         await remove(userRoledbRef);
+        await addLog("REMOVE_COURSE_ACCESS", { targetEmail: email, courseId, subCourseName });
       } else {
         const accessData = { hasAccess: true };
         if (expirationTime) {
@@ -123,6 +125,7 @@ function AdminPage() {
         }
 
         await set(userRoledbRef, accessData);
+        await addLog("GRANT_COURSE_ACCESS", { targetEmail: email, courseId, subCourseName });
       }
 
       await fetchData(); // تحديث البيانات بعد التغيير
@@ -201,6 +204,36 @@ function AdminPage() {
     fetchData();
   }, [fetchCurrentUserRole, fetchData]);
 
+  // Helper to get admin info for logs
+  const getAdminLogInfo = async () => {
+    let userName = "Unknown";
+    let userEmail = auth.currentUser?.email || "Unknown";
+    if (userEmail !== "Unknown") {
+      const safeEmailPath = userEmail.replace(/\./g, ",");
+      const userRef = dbRef(db, `users/${safeEmailPath}`);
+      const userSnapshot = await get(userRef);
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.val();
+        userName = userData.name || userEmail;
+      }
+    }
+    return { userName, userEmail };
+  };
+
+  // Log helper
+  const addLog = async (eventType, extra = {}) => {
+    const { userName, userEmail } = await getAdminLogInfo();
+    const logsRef = dbRef(db, "logs");
+    const logEntry = {
+      eventType,
+      userName,
+      userEmail,
+      timestamp: new Date().toISOString(),
+      ...extra,
+    };
+    await push(logsRef, logEntry);
+  };
+
   const handleAddUser = async () => {
     if (newUserEmail && newUserPassword && newUserName) {
       const currentAdminUser = auth.currentUser; // Keep current user
@@ -233,6 +266,7 @@ function AdminPage() {
           department: newUserDepartment,
           site: employeeSite, // إضافة الموقع
         });
+        await addLog("ADD_USER", { targetEmail: newUserEmail });
 
         // Re-sign in with admin account
         await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
@@ -292,12 +326,12 @@ function AdminPage() {
 
     try {
       await update(dbRef(db), updates);
+      await addLog("BULK_ASSIGN", { users: selectedUsers, subCourses: selectedSubCourses });
       alert("✅ تم تحديث الصلاحيات بنجاح!");
     } catch (error) {
       console.error("❌ خطأ في حفظ الصلاحيات:", error);
       alert("❌ حدث خطأ أثناء تحديث الصلاحيات.");
     }
-
     setIsSubCoursePopupOpen(false);
   };
 
@@ -383,6 +417,7 @@ function AdminPage() {
 
       // نحدّث الحقل moderator
       await update(roleRef, { moderator: !isMod });
+      await addLog("TOGGLE_MODERATOR", { targetEmail: email, newValue: !isMod });
 
       // نحدّث الستيت محليًا
       setRoles((prev) => ({
