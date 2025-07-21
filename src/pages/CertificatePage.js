@@ -13,12 +13,37 @@ const CertificatePage = () => {
 
   const [department, setDepartment] = useState("");
   const [moderatorName, setModeratorName] = useState("");
+  const [issuedDate, setIssuedDate] = useState("");
   const certificateRef = useRef(null);
 
   // جلب اسم القسم بناءً على courseId
   useEffect(() => {
     if (courseId) fetchDepartment(courseId);
   }, [courseId]);
+
+  // جلب تاريخ إصدار الشهادة من submissions
+  useEffect(() => {
+    const fetchIssuedDate = async () => {
+      if (!courseId || !location.state?.userId) return;
+      try {
+        const submissionsSnap = await get(ref(db, `submissions/${courseId}/${location.state.userId}`));
+        if (submissionsSnap.exists()) {
+          const submission = submissionsSnap.val();
+          if (submission.endTime) {
+            // Format date as local string
+            const date = new Date(submission.endTime);
+            setIssuedDate(date.toLocaleDateString());
+            return;
+          }
+        }
+        setIssuedDate("");
+      } catch (e) {
+        console.error("Error fetching issued date:", e);
+        setIssuedDate("");
+      }
+    };
+    fetchIssuedDate();
+  }, [courseId, location.state?.userId]);
 
   const fetchDepartment = async (subCourseId) => {
     try {
@@ -149,7 +174,7 @@ const CertificatePage = () => {
             </div>
           </div>
           <div className="issued-on">
-            Issued on: {new Date().toLocaleDateString()}
+            Issued on: {issuedDate || new Date().toLocaleDateString()}
           </div>
           <div className="department-signature">Department Signature</div>
           <div className="authorized-signatory">
