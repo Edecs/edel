@@ -31,7 +31,7 @@ function CoursePage() {
   const [thumbnail, setThumbnail] = useState("");
   const [newSubCourseName, setNewSubCourseName] = useState("");
   const [currentUserDepartment, setCurrentUserDepartment] = useState("");
-  const [media, setMedia] = useState({ images: [], videos: [], pdfs: [] });
+  const [media, setMedia] = useState({ images: [], videos: [], pdfs: [], office: [] });
   const [newImageUrl, setNewImageUrl] = useState("");
   const [currentUserRole, setCurrentUserRole] = useState("");
 
@@ -41,6 +41,8 @@ function CoursePage() {
 
   const [newVideoUrl, setNewVideoUrl] = useState("");
   const [newPdfUrl, setNewPdfUrl] = useState("");
+  const [newOfficeUrl, setNewOfficeUrl] = useState("");
+  const [newOfficeType, setNewOfficeType] = useState("word"); // word, ppt
 
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -327,6 +329,7 @@ function CoursePage() {
   const [newImageExpDate, setNewImageExpDate] = useState("");
   const [newVideoExpDate, setNewVideoExpDate] = useState("");
   const [newPdfExpDate, setNewPdfExpDate] = useState("");
+  const [newOfficeExpDate, setNewOfficeExpDate] = useState("");
 
   const handleAddMedia = async () => {
     const mediaRef = ref(
@@ -334,41 +337,56 @@ function CoursePage() {
       `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
     );
 
-    // Function to convert last number from 0 to 1 in URLs
+    // Function to convert Dropbox dl=0 to dl=1 and last number from 0 to 1
     const convertLastNumber = (url) => {
       if (!url) return url;
-      // تحويل آخر رقم من 0 إلى 1 في أي رابط
-      return url.replace(/(\d+)(?=\D*$)/, (match) => {
+      let newUrl = url;
+      // تحويل dl=0 إلى dl=1 في روابط Dropbox
+      newUrl = newUrl.replace('dl=0', 'dl=1');
+      // تحويل آخر رقم من 0 إلى 1 في أي رابط (لو موجود)
+      newUrl = newUrl.replace(/(\d+)(?=\D*$)/, (match) => {
         return match.replace(/0$/, '1');
       });
+      return newUrl;
     };
 
     const newMedia = {
       images: newImageUrl ? [{ url: convertLastNumber(newImageUrl), id: Date.now(), expDate: newImageExpDate }] : [],
       videos: newVideoUrl ? [{ url: convertLastNumber(newVideoUrl), id: Date.now() + 100000, expDate: newVideoExpDate }] : [],
       pdfs: newPdfUrl ? [{ url: convertLastNumber(newPdfUrl), id: Date.now() + 200000, expDate: newPdfExpDate }] : [],
+      office: newOfficeUrl ? [{ url: convertLastNumber(newOfficeUrl), id: Date.now() + 300000, expDate: newOfficeExpDate, type: newOfficeType }] : [],
     };
 
-    if (newMedia.images.length > 0 || newMedia.videos.length > 0 || newMedia.pdfs.length > 0) {
+    if (
+      newMedia.images.length > 0 ||
+      newMedia.videos.length > 0 ||
+      newMedia.pdfs.length > 0 ||
+      newMedia.office.length > 0
+    ) {
       try {
         const snapshot = await get(mediaRef);
-        const existingMedia = snapshot.val() || { images: [], videos: [], pdfs: [] };
+        const existingMedia = snapshot.val() || { images: [], videos: [], pdfs: [], office: [] };
         const currentMedia = {
           images: Array.isArray(existingMedia.images) ? existingMedia.images : [],
           videos: Array.isArray(existingMedia.videos) ? existingMedia.videos : [],
           pdfs: Array.isArray(existingMedia.pdfs) ? existingMedia.pdfs : [],
+          office: Array.isArray(existingMedia.office) ? existingMedia.office : [],
         };
         currentMedia.images.push(...newMedia.images);
         currentMedia.videos.push(...newMedia.videos);
         currentMedia.pdfs.push(...newMedia.pdfs);
+        currentMedia.office.push(...newMedia.office);
         await set(mediaRef, currentMedia);
         await addLog(`تم إضافة ميديا إلى الكورس ${selectedCourse} - الدورة الفرعية ${selectedSubCourse}`);
         setNewImageUrl("");
         setNewVideoUrl("");
         setNewPdfUrl("");
+        setNewOfficeUrl("");
         setNewImageExpDate("");
         setNewVideoExpDate("");
         setNewPdfExpDate("");
+        setNewOfficeExpDate("");
+        setNewOfficeType("word");
         setMedia(currentMedia);
       } catch (error) {
         setError("Failed to add media: " + error.message);
@@ -400,6 +418,10 @@ function CoursePage() {
         );
       } else if (mediaType === "pdfs" && existingMedia.pdfs) {
         existingMedia.pdfs = existingMedia.pdfs.filter(
+          (item) => item.id !== mediaId
+        );
+      } else if (mediaType === "office" && existingMedia.office) {
+        existingMedia.office = existingMedia.office.filter(
           (item) => item.id !== mediaId
         );
       } else {
@@ -807,12 +829,85 @@ function CoursePage() {
                       onChange={(e) => setNewPdfExpDate(e.target.value)}
                       placeholder="PDF Expiry Date"
                     />
+                    <div>
+                      <select value={newOfficeType} onChange={e => setNewOfficeType(e.target.value)}>
+                        <option value="word">Word</option>
+                        <option value="ppt">PowerPoint</option>
+                      </select>
+                      <input
+                        type="text"
+                        value={newOfficeUrl}
+                        onChange={e => setNewOfficeUrl(e.target.value)}
+                        placeholder="Add Microsoft File URL (Word, PowerPoint)"
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            handleAddMedia();
+                          }
+                        }}
+                      />
+                      <input
+                        type="datetime-local"
+                        value={newOfficeExpDate}
+                        onChange={e => setNewOfficeExpDate(e.target.value)}
+                        placeholder="Office File Expiry Date"
+                      />
+                    </div>
                     <div className="a1">
                       <button className="a2" onClick={handleAddMedia}>
                         Add Media
                       </button>
                     </div>
                     <div className="media-display">
+                      {media.office &&
+                        media.office
+                          .sort((a, b) => a.id - b.id)
+                          .map((mediaItem) => {
+                            // استخدم Google Docs Viewer إذا كان الرابط http/https
+                            let canEmbed = mediaItem.url.startsWith('http://') || mediaItem.url.startsWith('https://');
+                            let googleViewerUrl = canEmbed
+                              ? `https://docs.google.com/gview?url=${encodeURIComponent(mediaItem.url)}&embedded=true`
+                              : null;
+                            const isExcel = false;
+                            return (
+                              <div key={mediaItem.id} className="media-item1">
+                                <div className="office-link-container">
+                                  {canEmbed ? (
+                                    <>
+                                      <iframe
+                                        src={googleViewerUrl}
+                                        width="100%"
+                                        height="400px"
+                                        style={{ minHeight: "400px", maxHeight: "400px", border: 0 }}
+                                        title="Office Viewer"
+                                        onError={(e) => {
+                                          e.target.style.display = 'none';
+                                          const msg = document.getElementById(`excel-fallback-${mediaItem.id}`);
+                                          if (msg) msg.style.display = 'block';
+                                        }}
+                                      />
+
+                                    </>
+                                  ) : (
+                                    <a href={mediaItem.url} target="_blank" rel="noopener noreferrer">
+                                      {mediaItem.type === "word" && "📄 Word File"}
+                                      {mediaItem.type === "ppt" && "📊 PowerPoint File"}
+                                    </a>
+                                  )}
+                                  <div style={{ fontSize: '0.95em', color: '#555', margin: '6px 0' }}>
+                                    <span>تاريخ الانتهاء: {formatExpDate(mediaItem.expDate)}</span>
+                                  </div>
+                                  <div className="delete-button-container">
+                                    <button
+                                      className="vim"
+                                      onClick={() => handleDeleteMedia("office", mediaItem.id)}
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
                       {media.images &&
                         media.images
                           .sort((a, b) => a.id - b.id)
@@ -1015,3 +1110,4 @@ function CoursePage() {
 }
 
 export default CoursePage;
+
