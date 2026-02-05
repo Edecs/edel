@@ -133,23 +133,21 @@ const CourseDetailPage = () => {
                       userAccess[subCourse.name]?.hasAccess
                   )
                   .map(([subCourseId, subCourse]) => {
-                    const expirationTime =
-                      userAccess[subCourse.name]?.expirationTime;
-                    const timeLeft = expirationTime
-                      ? Math.max(expirationTime - Date.now(), 0)
-                      : Infinity; // 🔹 إذا لم يكن هناك وقت انتهاء، اعتبره غير محدود
-
+                    const expirationTime = userAccess[subCourse.name]?.expirationTime;
+                    // استخدم subCourseExpirations في عرض الوقت المتبقي إذا كان موجودًا
+                    const timeLeft =
+                      subCourseExpirations[subCourse.name] !== undefined
+                        ? subCourseExpirations[subCourse.name]
+                        : (expirationTime ? Math.max(expirationTime - Date.now(), 0) : Infinity);
                     const isExpired = timeLeft === 0;
 
                     return (
                       <li key={subCourseId} className="sub-course-item">
                         {isExpired ? (
-                          <span
-                            style={{ color: "gray", cursor: "not-allowed" }}
-                          >
+                          <span style={{ color: "gray", cursor: "not-allowed" }}>
                             {subCourse.name}{" "}
                             <span className="sub-course-timer">
-                              {formatTimeLeft(timeLeft)}
+                              {typeof formatTimeLeft === 'function' ? formatTimeLeft(timeLeft) : timeLeft}
                             </span>
                           </span>
                         ) : (
@@ -160,7 +158,7 @@ const CourseDetailPage = () => {
                             <span>{subCourse.name}</span>
                             {expirationTime && (
                               <span className="sub-course-timer">
-                                {formatTimeLeft(timeLeft)}
+                                {typeof formatTimeLeft === 'function' ? formatTimeLeft(timeLeft) : timeLeft}
                               </span>
                             )}
                           </Link>
