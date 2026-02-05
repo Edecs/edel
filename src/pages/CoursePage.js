@@ -318,13 +318,7 @@ function CoursePage() {
   const handleAddAnswer = () => {
     setAnswers([...answers, { text: "", correct: false }]);
   };
-  const handleDeleteAnswer = async (answerId) => {
-    const questionRef = ref(
-      db,
-      `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/questions/${editQuestionIndex}/answers/${answerId}`
-    );
-    await remove(questionRef);
-  };
+  // handleDeleteAnswer removed (unused)
 
   const [newImageExpDate, setNewImageExpDate] = useState("");
   const [newVideoExpDate, setNewVideoExpDate] = useState("");
@@ -435,9 +429,7 @@ function CoursePage() {
     }
   };
 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
+  // onDocumentLoadSuccess removed (unused)
 
   // دوال تعديل exp date للميديا
   const handleEditExpDate = (mediaType, mediaId, currentExpDate) => {
@@ -473,7 +465,7 @@ function CoursePage() {
         `courses/mainCourses/${selectedCourse}/subCourses/${selectedSubCourse}/media`
       );
       const unsubscribe = onValue(mediaRef, (snapshot) => {
-        const mediaData = snapshot.val() || { images: [], videos: [], pdfs: [] };
+        const mediaData = snapshot.val() || { images: [], videos: [], pdfs: [], office: [] };
         setMedia(mediaData);
       });
 
@@ -505,11 +497,7 @@ function CoursePage() {
     setAnswers([]); // مسح قائمة الإجابات
     setIsEditMode(false); // تصفير وضع التحرير
   };
-  {
-    currentUserRole === "admin" && (
-      <button onClick={handleAddCourse}>إضافة دورة</button>
-    );
-  }
+  // Redundant block removed
 
   const [editingMedia, setEditingMedia] = useState({ id: null, type: null, expDate: "" });
 
