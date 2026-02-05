@@ -515,3 +515,4 @@ const SubCourseDetailPage = () => {
 };
 
 export default SubCourseDetailPage;
+
