@@ -269,6 +269,13 @@ const SubCourseDetailPage = () => {
   const today = new Date();
 
   if (subCourse?.media) {
+    const convertOfficeUrl = (url) => {
+      if (!url) return url;
+      let newUrl = url;
+      newUrl = newUrl.replace('dl=0', 'dl=1');
+      return newUrl;
+    };
+
     const imageKeys = Object.keys(subCourse.media.images || {});
     imageKeys.forEach((key) => {
       const item = subCourse.media.images[key];
@@ -307,6 +314,21 @@ const SubCourseDetailPage = () => {
         });
       }
     });
+
+    // دعم ملفات Office
+    const officeKeys = Object.keys(subCourse.media.office || {});
+    officeKeys.forEach((key) => {
+      const item = subCourse.media.office[key];
+      if (!item.expDate || new Date(item.expDate) > today) {
+        mediaItems.push({
+          id: key,
+          url: convertOfficeUrl(item.url),
+          type: "office",
+          officeType: item.type,
+          expDate: item.expDate || null,
+        });
+      }
+    });
   }
 
   const currentMedia = mediaItems[currentMediaIndex];
@@ -333,7 +355,7 @@ const SubCourseDetailPage = () => {
                   <img
                     src={convertDropboxLink(currentMedia.url)}
                     alt="Course Media"
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "100%", height: "800px", objectFit: "contain" }}
                   />
                 </div>
               )}
@@ -342,7 +364,7 @@ const SubCourseDetailPage = () => {
                   <video
                     key={currentMedia.id}
                     controls
-                    style={{ width: "100%", height: "auto" }}
+                    style={{ width: "100%", height: "800px", objectFit: "contain" }}
                   >
                     <source
                       src={convertDropboxLink(currentMedia.url)}
@@ -358,8 +380,22 @@ const SubCourseDetailPage = () => {
                     <iframe
                       src={`https://docs.google.com/viewer?url=${encodeURIComponent(currentMedia.url)}&embedded=true`}
                       width="100%"
-                      height="600px"
+                      height="800px"
+                      style={{ minHeight: "800px", maxHeight: "800px", border: 0 }}
                       title="PDF Viewer"
+                    />
+                  </div>
+                </div>
+              )}
+              {currentMedia.type === "office" && (
+                <div className="media-item">
+                  <div className="pdf-container">
+                    <iframe
+                      src={`https://docs.google.com/gview?url=${encodeURIComponent(currentMedia.url)}&embedded=true`}
+                      width="100%"
+                      height="800px"
+                      style={{ minHeight: "800px", maxHeight: "800px", border: 0 }}
+                      title="Office Viewer"
                     />
                   </div>
                 </div>
