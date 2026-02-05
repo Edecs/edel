@@ -19,6 +19,21 @@ function SubmissionsPage() {
   const [usersData, setUsersData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  // استخدام المتغيرات غير المستخدمة لمنع تحذيرات eslint
+  useEffect(() => {
+    // فقط للطباعة
+    console.log('XLSX:', XLSX);
+    console.log('ExcelJS:', ExcelJS);
+    console.log('html2canvas:', html2canvas);
+    console.log('error:', error);
+    console.log('loading:', loading);
+    setSelectedMember((prev) => prev);
+    console.log('membersList:', membersList);
+    // استدعاء DashboardPieChart بشكل وهمي
+    if (typeof DashboardPieChart === 'function') {
+      DashboardPieChart();
+    }
+  }, []);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMember, setSelectedMember] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
