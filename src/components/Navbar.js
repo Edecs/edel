@@ -11,6 +11,10 @@ import { ref, get } from "firebase/database";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./Navbar.css"; // تأكد من استيراد ملف CSS
+import changePasswordIcon from "../photos/change-password-icon.svg";
+
+
+
 
 const Navbar = ({ onSidebarToggle }) => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -19,6 +23,40 @@ const Navbar = ({ onSidebarToggle }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState(null);
+
+  // Change password modal state (copied from Sidebar)
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const closeModal = () => {
+    setShowPasswordModal(false);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setError("");
+  };
+
+  // Dummy handler for password change (replace with real logic if needed)
+  const handleChangePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setError("All fields are required.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("New passwords do not match.");
+      return;
+    }
+    // Add real password change logic here
+    setShowPasswordModal(false);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setError("");
+    alert("Password changed (dummy handler)");
+  };
 
   const getCurrentUser = () => {
     return new Promise((resolve, reject) => {
@@ -106,7 +144,6 @@ const Navbar = ({ onSidebarToggle }) => {
         <Link to="/welcome" className="navbar-link">
           <HomeIcon className="navbar-icon" />
         </Link>
-
         <button
           onClick={handleNotificationClick}
           className="notification-button"
@@ -116,12 +153,51 @@ const Navbar = ({ onSidebarToggle }) => {
             <span className="notification-count">{totalUnreadCount}</span>
           )}
         </button>
-
+        <button
+          className="change-password-navbar-btn"
+          title="Change Password"
+          onClick={() => setShowPasswordModal(true)}
+        >
+          <img
+            src={changePasswordIcon}
+            alt="Change Password"
+            className="navbar-icon"
+            style={{ filter: "invert(1)" }}
+          />
+        </button>
         <button onClick={handleLogout} className="logout-button">
           <LogoutIcon className="navbar-icon" />
         </button>
         {showNotifications && <NotificationPopup onClose={handleClosePopup} />}
       </div>
+      {showPasswordModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Change Password</h3>
+            <input
+              type="password"
+              placeholder="Current Password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Confirm New Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            {error && <p className="error">{error}</p>}
+            <button onClick={handleChangePassword}>Change Password</button>
+            <button onClick={closeModal}>Cancel</button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
