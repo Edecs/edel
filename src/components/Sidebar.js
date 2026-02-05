@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ReactComponent as HomeIcon } from "../photos/icons8-home.svg";
@@ -37,19 +37,19 @@ function Sidebar({ isOpen, onClose }) {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const sidebarElement = document.querySelector(".sidebar");
-      if (sidebarElement && !sidebarElement.contains(event.target)) {
-        if (onClose) onClose();
-      }
-    };
+  const handleClickOutside = useCallback((event) => {
+    const sidebarElement = document.querySelector(".sidebar");
+    if (sidebarElement && !sidebarElement.contains(event.target)) {
+      if (onClose) onClose();
+    }
+  }, [onClose]);
 
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
+  }, [handleClickOutside]);
 
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
