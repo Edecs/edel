@@ -354,7 +354,7 @@ function CoursePage() {
       images: newImageUrl ? [{ url: convertLastNumber(newImageUrl), id: Date.now(), expDate: newImageExpDate }] : [],
       videos: newVideoUrl ? [{ url: convertLastNumber(newVideoUrl), id: Date.now() + 100000, expDate: newVideoExpDate }] : [],
       pdfs: newPdfUrl ? [{ url: convertLastNumber(newPdfUrl), id: Date.now() + 200000, expDate: newPdfExpDate }] : [],
-      office: newOfficeUrl ? [{ url: convertLastNumber(newOfficeUrl), id: Date.now() + 300000, expDate: newOfficeExpDate, type: newOfficeType }] : [],
+      office: newOfficeUrl && newOfficeType !== "excel" ? [{ url: convertLastNumber(newOfficeUrl), id: Date.now() + 300000, expDate: newOfficeExpDate, type: newOfficeType }] : [],
     };
 
     if (
@@ -867,26 +867,17 @@ function CoursePage() {
                             let googleViewerUrl = canEmbed
                               ? `https://docs.google.com/gview?url=${encodeURIComponent(mediaItem.url)}&embedded=true`
                               : null;
-                            const isExcel = false;
                             return (
                               <div key={mediaItem.id} className="media-item1">
                                 <div className="office-link-container">
                                   {canEmbed ? (
-                                    <>
-                                      <iframe
-                                        src={googleViewerUrl}
-                                        width="100%"
-                                        height="400px"
-                                        style={{ minHeight: "400px", maxHeight: "400px", border: 0 }}
-                                        title="Office Viewer"
-                                        onError={(e) => {
-                                          e.target.style.display = 'none';
-                                          const msg = document.getElementById(`excel-fallback-${mediaItem.id}`);
-                                          if (msg) msg.style.display = 'block';
-                                        }}
-                                      />
-
-                                    </>
+                                    <iframe
+                                      src={googleViewerUrl}
+                                      width="100%"
+                                      height="400px"
+                                      style={{ minHeight: "400px", maxHeight: "400px", border: 0 }}
+                                      title="Office Viewer"
+                                    />
                                   ) : (
                                     <a href={mediaItem.url} target="_blank" rel="noopener noreferrer">
                                       {mediaItem.type === "word" && "📄 Word File"}
@@ -1110,4 +1101,3 @@ function CoursePage() {
 }
 
 export default CoursePage;
-
