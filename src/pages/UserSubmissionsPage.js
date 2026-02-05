@@ -6,7 +6,6 @@ import "./UserSubmissionsPage.css";
 
 const UserSubmissionsPage = () => {
   const [submissions, setSubmissions] = useState([]);
-  const [user, setUser] = useState(null); // لتمثيل المستخدم الحالي
   const [userName, setUserName] = useState(""); // لتمثيل اسم المستخدم
   const navigate = useNavigate(); // تهيئة useNavigate
   const [loading, setLoading] = useState(true);
@@ -15,14 +14,10 @@ const UserSubmissionsPage = () => {
     const auth = getAuth(); // تهيئة Firebase Auth
     const authStateListener = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        setUser(currentUser);
         fetchUserName(currentUser.email); // جلب اسم المستخدم بناءً على البريد الإلكتروني
         fetchUserSubmissions(currentUser.email); // أو استخدم currentUser.uid إذا كنت تستخدم ID المستخدم
-      } else {
-        setUser(null); // إذا لم يكن هناك مستخدم مسجل دخول
       }
     });
-
     // تنظيف الدالة عند التدمير
     return () => authStateListener();
   }, []);
