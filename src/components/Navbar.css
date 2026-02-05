@@ -1,3 +1,19 @@
+/* زر تغيير كلمة المرور في النافبار */
+.change-password-navbar-btn {
+  background-color: #094d50;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+.change-password-navbar-btn:hover {
+  background-color: #0b5e5e;
+}
 .navbar {
   background-color: #094d50; /* اللون الأساسي للـ Navbar */
   padding: 7px 20px; /* المسافة حول محتوى الـ Navbar */
