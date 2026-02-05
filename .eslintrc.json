@@ -1,4 +1,5 @@
 {
+  "extends": ["react-app", "plugin:react-hooks/recommended"],
   "rules": {
     "no-unused-vars": "off",
     "react-hooks/exhaustive-deps": "off"
