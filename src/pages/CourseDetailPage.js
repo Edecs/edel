@@ -10,6 +10,7 @@ const CourseDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userAccess, setUserAccess] = useState({});
+  // eslint-disable-next-line no-unused-vars
   const [subCourseExpirations, setSubCourseExpirations] = useState({});
 
   const fetchCourseDetails = useCallback(async () => {
@@ -53,7 +54,7 @@ const CourseDetailPage = () => {
           }
         });
 
-        setSubCourseExpirations(expirations);
+        // setSubCourseExpirations(expirations);
       } else {
         setUserAccess({});
       }
