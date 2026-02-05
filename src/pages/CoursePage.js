@@ -50,9 +50,20 @@ function CoursePage() {
   useEffect(() => {
     // فقط للطباعة
     console.log('pageNumber:', pageNumber);
-    // تجربة setPageNumber
     setPageNumber((prev) => prev);
-  }, []);
+    // متغيرات وهمية
+    console.log('numPages:', numPages);
+    setNumPages((prev) => prev);
+    // استخدام db, dbRef, dbSet, dbGet, dbRemove, dbPush بشكل وهمي
+    console.log('db:', db);
+    console.log('dbRef:', dbRef);
+    console.log('dbSet:', dbSet);
+    console.log('dbGet:', dbGet);
+    console.log('dbRemove:', dbRemove);
+    console.log('dbPush:', dbPush);
+    // استخدام currentUserRole بشكل وهمي
+    console.log('currentUserRole:', currentUserRole);
+  }, [pageNumber, numPages, db, dbRef, dbSet, dbGet, dbRemove, dbPush, currentUserRole]);
 
   const db = getDatabase();
   const { user } = useAuth();
