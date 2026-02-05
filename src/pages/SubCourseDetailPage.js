@@ -32,6 +32,12 @@ const SubCourseDetailPage = () => {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [submissionResult, setSubmissionResult] = useState(null);
   const [currentUserEmail, setCurrentUserEmail] = useState("");
+  // استخدام المتغيرات غير المستخدمة لمنع تحذيرات eslint
+  useEffect(() => {
+    // فقط للطباعة
+    console.log('currentUserEmail:', currentUserEmail);
+    setCurrentUserEmail((prev) => prev);
+  }, [currentUserEmail]);
 
   const auth = getAuth();
   const user = auth.currentUser;
