@@ -65,7 +65,7 @@ function CoursePage() {
     console.log('currentUserRole:', currentUserRole);
   }, [pageNumber, numPages, db, dbRef, dbSet, dbGet, dbRemove, dbPush, currentUserRole]);
 
-  const db = getDatabase();
+  // استخدم db من import فقط ولا تعرّف db محليًا هنا
   const { user } = useAuth();
 
   // Helper to get user info for logs
