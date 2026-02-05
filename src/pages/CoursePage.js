@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  getDatabase,
   ref,
   onValue,
   set,
@@ -63,7 +62,7 @@ function CoursePage() {
     console.log('dbPush:', dbPush);
     // استخدام currentUserRole بشكل وهمي
     console.log('currentUserRole:', currentUserRole);
-  }, [pageNumber, numPages, db, dbRef, dbSet, dbGet, dbRemove, dbPush, currentUserRole]);
+  }, [pageNumber, numPages, currentUserRole]);
 
   // استخدم db من import فقط ولا تعرّف db محليًا هنا
   const { user } = useAuth();
@@ -117,7 +116,7 @@ function CoursePage() {
         }
       });
     }
-  }, [db]);
+  }, []);
 
   useEffect(() => {
     const coursesRef = ref(db, "courses/mainCourses");
@@ -133,7 +132,7 @@ function CoursePage() {
     });
 
     return () => unsubscribe();
-  }, [db]);
+  }, []);
 
   useEffect(() => {
     if (selectedCourse) {
@@ -159,7 +158,7 @@ function CoursePage() {
 
       return () => unsubscribe();
     }
-  }, [db, selectedCourse]);
+  }, [selectedCourse]);
 
   useEffect(() => {
     if (selectedCourse && selectedSubCourse) {
@@ -181,7 +180,7 @@ function CoursePage() {
 
       return () => unsubscribeQuestions();
     }
-  }, [db, selectedCourse, selectedSubCourse]);
+  }, [selectedCourse, selectedSubCourse]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   // دالة لتحرير السؤال
   const handleEditQuestion = (question) => {
@@ -480,7 +479,7 @@ function CoursePage() {
 
       return () => unsubscribe();
     }
-  }, [db, selectedCourse, selectedSubCourse]);
+  }, [selectedCourse, selectedSubCourse]);
 
   // دالة لتنسيق التاريخ والوقت
   const formatExpDate = (expDate) => {
