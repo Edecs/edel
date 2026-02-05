@@ -156,13 +156,7 @@ const WelcomePage = () => {
                 className="course-card"
               >
                 {course.thumbnail ? (
-                  <a
-                    href={course.thumbnail}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img src={course.thumbnail} alt={course.name} />
-                  </a>
+                  <img src={course.thumbnail} alt={course.name} />
                 ) : (
                   <div
                     className="default-image"
