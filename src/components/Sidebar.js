@@ -1,6 +1,7 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { getAuth, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { ReactComponent as HomeIcon } from "../photos/icons8-home.svg";
 import { ReactComponent as UserSubmissionsPageIcon } from "../photos/test-svgrepo-com.svg";
 
@@ -15,11 +16,24 @@ import { ReactComponent as DepartmentIcon } from "../photos/open-data-square.svg
 import { ReactComponent as EmailFormIcon } from "../photos/email-essential-letter-svgrepo-com.svg"; // تأكد من وجود أيقونة للقسم
 import { ReactComponent as BulkUserUpload } from "../photos/upload-svgrepo-com.svg"; // تأكد من وجود أيقونة للقسم
 import { ReactComponent as LogsIcon } from "../photos/log-list.svg";
+import changePasswordIcon from "../photos/change-password-icon.svg";
 import "./Sidebar.css";
 
 function Sidebar({ isOpen, onClose }) {
   const { isAdmin, isSuperAdmin, logout } = useAuth();
   const navigate = useNavigate();
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const closeModal = () => {
+    setShowPasswordModal(false);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setError("");
+  };
 
   const handleLogout = async () => {
     try {
@@ -37,6 +51,35 @@ function Sidebar({ isOpen, onClose }) {
     }
   };
 
+  const handleChangePassword = async () => {
+    if (!currentPassword) {
+      setError("Current password is required");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    if (newPassword.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    try {
+      const auth = getAuth();
+      const credential = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
+      await reauthenticateWithCredential(auth.currentUser, credential);
+      await updatePassword(auth.currentUser, newPassword);
+      setError("");
+      setShowPasswordModal(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      alert("Password changed successfully");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleClickOutside = useCallback((event) => {
     const sidebarElement = document.querySelector(".sidebar");
     if (sidebarElement && !sidebarElement.contains(event.target)) {
@@ -44,6 +87,7 @@ function Sidebar({ isOpen, onClose }) {
     }
   }, [onClose]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -52,8 +96,9 @@ function Sidebar({ isOpen, onClose }) {
   }, [handleClickOutside]);
 
   return (
-    <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
-      <ul>
+    <>
+      <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
+        <ul>
         <li>
           <Link to="/welcome" onClick={onClose} title="Home">
             <HomeIcon className="sidebar-icon" />
@@ -155,8 +200,42 @@ function Sidebar({ isOpen, onClose }) {
             </li>
           </>
         )}
+        <li>
+          <button onClick={() => setShowPasswordModal(true)} className="sidebar-button" title="Change Password">
+            <img src={changePasswordIcon} alt="Change Password" className="sidebar-icon" />
+          </button>
+        </li>
       </ul>
     </div>
+    {showPasswordModal && (
+      <div className="modal-overlay" onClick={closeModal}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <h3>Change Password</h3>
+          <input
+            type="password"
+            placeholder="Current Password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="New Password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Confirm New Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          {error && <p className="error">{error}</p>}
+          <button onClick={handleChangePassword}>Change Password</button>
+          <button onClick={closeModal}>Cancel</button>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
 
