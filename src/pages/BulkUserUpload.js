@@ -146,7 +146,7 @@ function BulkUserUpload() {
             });
           } else {
             // إنشاء المستخدم الجديد إذا لم يكن موجودًا
-            const newUser = await createUserWithEmailAndPassword(
+            await createUserWithEmailAndPassword(
               auth,
               emailLowerCase,
               password
