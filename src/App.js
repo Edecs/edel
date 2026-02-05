@@ -62,6 +62,7 @@ const App = () => {
     }
   }, [user, timeoutDuration]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const startWarningCountdown = () => {
     setCountdown(warningDuration / 1000); // بدء العد التنازلي
     setIsModalOpen(true);
