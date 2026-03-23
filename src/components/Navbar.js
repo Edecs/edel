@@ -9,7 +9,7 @@ import NotificationPopup from "./NotificationPopup";
 import { useAuth } from "../context/AuthContext";
 import { ref, get } from "firebase/database";
 import { db } from "../firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import "./Navbar.css"; // تأكد من استيراد ملف CSS
 import changePasswordIcon from "../photos/change-password-icon.svg";
 
@@ -41,21 +41,32 @@ const Navbar = ({ onSidebarToggle }) => {
 
   // Dummy handler for password change (replace with real logic if needed)
   const handleChangePassword = async () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setError("All fields are required.");
+    if (!currentPassword) {
+      setError("Current password is required");
       return;
     }
     if (newPassword !== confirmPassword) {
-      setError("New passwords do not match.");
+      setError("Passwords do not match");
       return;
     }
-    // Add real password change logic here
-    setShowPasswordModal(false);
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setError("");
-    alert("Password changed (dummy handler)");
+    if (newPassword.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    try {
+      const auth = getAuth();
+      const credential = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
+      await reauthenticateWithCredential(auth.currentUser, credential);
+      await updatePassword(auth.currentUser, newPassword);
+      setError("");
+      setShowPasswordModal(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      alert("Password changed successfully");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const getCurrentUser = () => {
