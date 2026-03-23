@@ -83,8 +83,8 @@ function BulkUserUpload() {
   };
 
   const handleFileUpload = async () => {
-    if (!csvFile) {
-      alert("Please select a CSV file.");
+    if (csvData.length === 0) {
+      alert("No users to upload.");
       return;
     }
 
@@ -241,6 +241,30 @@ function BulkUserUpload() {
     setSelectedUsers([]); // إعادة تعيين المستخدمين المحددين
   };
 
+  const downloadTemplate = () => {
+    const templateData = [
+      {
+        email: "user@example.com",
+        name: "User Name",
+        password: "password123",
+        role: "user",
+        department: "Department Name",
+        site: "Site Name",
+      },
+    ];
+
+    const csv = Papa.unparse(templateData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "users_template.csv");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="bulk-upload-page">
       <h2>Upload Users in Bulk</h2>
@@ -257,9 +281,7 @@ function BulkUserUpload() {
       >
         Drag and Drop CSV File Here
       </div>
-      <button onClick={handleFileUpload} disabled={!csvFile}>
-        Upload Users
-      </button>
+      <button onClick={downloadTemplate}>Download Template</button>
       <button onClick={addNewUserRow}>Add New User</button>
       {uploadStatus && <p>{uploadStatus}</p>}
 
@@ -368,6 +390,10 @@ function BulkUserUpload() {
           >
             Delete Selected Users
           </button>
+          <button onClick={handleFileUpload} disabled={csvData.length === 0}>
+            Upload to Firebase
+          </button>
+          <button onClick={downloadTemplate}>Download Template</button>
         </div>
       )}
 
