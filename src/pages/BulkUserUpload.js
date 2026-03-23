@@ -349,8 +349,8 @@ function BulkUserUpload() {
                       }
                     >
                       <option value="">Select Department</option>
-                      {departments.map((department) => (
-                        <option key={department.name} value={department.name}>
+                      {departments.map((department, deptIndex) => (
+                        <option key={deptIndex} value={department.name}>
                           {department.name}
                         </option>
                       ))}
@@ -364,8 +364,8 @@ function BulkUserUpload() {
                       }
                     >
                       <option value="">Select Site</option>
-                      {sites.map((site) => (
-                        <option key={site.name} value={site.name}>
+                      {sites.map((site, siteIndex) => (
+                        <option key={siteIndex} value={site.name}>
                           {site.name}
                         </option>
                       ))}
