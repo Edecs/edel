@@ -238,6 +238,8 @@ function AdminPage() {
       detailMessage = `تم تعيين الصلاحيات للمستخدمين (${usersStr}) على الدورات الفرعية (${subCoursesStr})`;
     } else if (eventType === "TOGGLE_MODERATOR" && extra.targetEmail) {
       detailMessage = `تم تغيير حالة المشرف للمستخدم (${extra.targetEmail}) إلى ${extra.newValue ? "مشرف" : "ليس مشرف"}`;
+    } else if (eventType === "DELETE_USER" && extra.targetEmail) {
+      detailMessage = `تم حذف المستخدم (${extra.targetEmail})`;
     }
     const logEntry = {
       userName,
@@ -442,6 +444,33 @@ function AdminPage() {
       }));
     } catch (err) {
       console.error("Error toggling moderator:", err);
+    }
+  };
+
+  const handleDeleteUser = async (email) => {
+    if (!window.confirm(`هل أنت متأكد من حذف المستخدم ${email}؟`)) {
+      return;
+    }
+
+    try {
+      const sanitized = email.replace(/\./g, ",");
+      
+      // حذف من roles و users
+      const roleRef = dbRef(db, `roles/${sanitized}`);
+      const userRef = dbRef(db, `users/${sanitized}`);
+      
+      await remove(roleRef);
+      await remove(userRef);
+      
+      await addLog("DELETE_USER", { targetEmail: email });
+      
+      // تحديث البيانات وإلغاء تحديد المستخدم
+      await fetchData();
+      setSelectedUser(null);
+      alert(`تم حذف المستخدم ${email} بنجاح`);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert("حدث خطأ أثناء حذف المستخدم");
     }
   };
 
@@ -655,14 +684,22 @@ function AdminPage() {
                   {roles[selectedUser.email.replace(/\./g, ",")]?.role || ""}
                 </p>
                 {currentUserRole === "SuperAdmin" && selectedUser && (
-                  <button
-                    className="make-moderator-btn"
-                    onClick={() => handleMakeModerator(selectedUser.email)}
-                  >
-                    {roles[selectedUser.email.replace(/\./g, ",")]?.moderator
-                      ? "Remove Moderator"
-                      : "Make Moderator"}
-                  </button>
+                  <div className="admin-buttons-group">
+                    <button
+                      className="make-moderator-btn"
+                      onClick={() => handleMakeModerator(selectedUser.email)}
+                    >
+                      {roles[selectedUser.email.replace(/\./g, ",")]?.moderator
+                        ? "Remove Moderator"
+                        : "Make Moderator"}
+                    </button>
+                    <button
+                      className="delete-user-btn"
+                      onClick={() => handleDeleteUser(selectedUser.email)}
+                    >
+                      Delete User
+                    </button>
+                  </div>
                 )}
 
                 <h3>Sub-course Access</h3>
