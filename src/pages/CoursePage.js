@@ -250,13 +250,17 @@ function CoursePage() {
   };
 
   const handleAddCourse = () => {
-    // Function to convert last number from 0 to 1 in URLs
+    // Function to convert Dropbox dl=0 to dl=1 and last number from 0 to 1
     const convertLastNumber = (url) => {
       if (!url) return url;
-      // تحويل آخر رقم من 0 إلى 1 في أي رابط
-      return url.replace(/(\d+)(?=\D*$)/, (match) => {
+      let newUrl = url;
+      // تحويل dl=0 إلى dl=1 في روابط Dropbox
+      newUrl = newUrl.replace('dl=0', 'dl=1');
+      // تحويل آخر رقم من 0 إلى 1 في أي رابط (لو موجود)
+      newUrl = newUrl.replace(/(\d+)(?=\D*$)/, (match) => {
         return match.replace(/0$/, '1');
       });
+      return newUrl;
     };
     const courseRef = ref(db, `courses/mainCourses/${newCourseName}`);
     set(courseRef, {
@@ -858,28 +862,53 @@ function CoursePage() {
                         media.office
                           .sort((a, b) => a.id - b.id)
                           .map((mediaItem) => {
-                            // استخدم Google Docs Viewer إذا كان الرابط http/https
+                            // استخدم Google Docs Viewer للوثائق والعروض التقديمية
                             let canEmbed = mediaItem.url.startsWith('http://') || mediaItem.url.startsWith('https://');
-                            let googleViewerUrl = canEmbed
-                              ? `https://docs.google.com/gview?url=${encodeURIComponent(mediaItem.url)}&embedded=true`
-                              : null;
+                            let viewerUrl = null;
+                            if (canEmbed) {
+                              if (mediaItem.type === "ppt") {
+                                // استخدم Microsoft Office Online لملفات PowerPoint لدعم الملفات الكبيرة
+                                viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(mediaItem.url)}`;
+                              } else {
+                                // Google Docs للوثائق الأخرى
+                                viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(mediaItem.url)}&embedded=true`;
+                              }
+                            }
                             return (
                               <div key={mediaItem.id} className="media-item1">
                                 <div className="office-link-container">
                                   {canEmbed ? (
-                                    <iframe
-                                      src={googleViewerUrl}
-                                      width="100%"
-                                      height="400px"
-                                      style={{ minHeight: "400px", maxHeight: "400px", border: 0 }}
-                                      title="Office Viewer"
-                                    />
+                                    <>
+                                      <iframe
+                                        src={viewerUrl}
+                                        width="100%"
+                                        height="400px"
+                                        style={{ minHeight: "400px", maxHeight: "400px", border: 0 }}
+                                        title="Office Viewer"
+                                        onError={(e) => {
+                                          // في حالة فشل التحميل، أظهر رابط التنزيل
+                                          e.target.style.display = 'none';
+                                          const link = e.target.parentNode.querySelector('.fallback-link');
+                                          if (link) link.style.display = 'block';
+                                        }}
+                                      />
+                                    </>
                                   ) : (
                                     <a href={mediaItem.url} target="_blank" rel="noopener noreferrer">
                                       {mediaItem.type === "word" && "📄 Word File"}
                                       {mediaItem.type === "ppt" && "📊 PowerPoint File"}
                                     </a>
                                   )}
+                                  {/* رابط احتياطي في حالة فشل الـ iframe */}
+                                  <a
+                                    href={mediaItem.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="fallback-link"
+                                    style={{ display: 'none', color: '#007bff', textDecoration: 'underline', marginTop: '10px' }}
+                                  >
+                                    {mediaItem.type === "ppt" ? "📊 فتح ملف PowerPoint (في حالة عدم ظهور المعاينة)" : "📄 فتح الملف"}
+                                  </a>
                                   <div style={{ fontSize: '0.95em', color: '#555', margin: '6px 0' }}>
                                     <span>تاريخ الانتهاء: {formatExpDate(mediaItem.expDate)}</span>
                                   </div>
