@@ -32,9 +32,8 @@ const SubCourseDetailPage = () => {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [submissionResult, setSubmissionResult] = useState(null);
   const [currentUserEmail, setCurrentUserEmail] = useState("");
-  // استخدام المتغيرات غير المستخدمة لمنع تحذيرات eslint
+  const [iframeLoading, setIframeLoading] = useState(false);
   useEffect(() => {
-    // فقط للطباعة
     console.log('currentUserEmail:', currentUserEmail);
     setCurrentUserEmail((prev) => prev);
   }, [currentUserEmail]);
@@ -266,10 +265,6 @@ const SubCourseDetailPage = () => {
     return link;
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!subCourse) return <p>Sub-course not found.</p>;
-
   // Prepare media items
   const mediaItems = [];
   const today = new Date();
@@ -321,7 +316,6 @@ const SubCourseDetailPage = () => {
       }
     });
 
-    // دعم ملفات Office
     const officeKeys = Object.keys(subCourse.media.office || {});
     officeKeys.forEach((key) => {
       const item = subCourse.media.office[key];
@@ -342,6 +336,20 @@ const SubCourseDetailPage = () => {
     ? Object.values(subCourse.questions)[currentQuestionIndex]
     : null;
 
+  useEffect(() => {
+    if (currentMedia && (currentMedia.type === "pdf" || currentMedia.type === "office")) {
+      setIframeLoading(true);
+      const timer = setTimeout(() => setIframeLoading(false), 5000);
+      return () => clearTimeout(timer);
+    } else {
+      setIframeLoading(false);
+    }
+  }, [currentMedia]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!subCourse) return <p>Sub-course not found.</p>;
+
   const answeredQuestionsCount = userAnswers.filter(
     (answer) => answer !== undefined
   ).length;
@@ -355,7 +363,7 @@ const SubCourseDetailPage = () => {
         <p>{subCourse.description}</p>
         <div className="media-container">
           {currentMedia && (
-            <div className="media-content">
+            <div className="media-content" style={{ position: 'relative' }}>
               {currentMedia.type === "image" && (
                 <div className="media-item">
                   <img
@@ -389,6 +397,7 @@ const SubCourseDetailPage = () => {
                       height="800px"
                       style={{ minHeight: "800px", maxHeight: "800px", border: 0 }}
                       title="PDF Viewer"
+                      onLoad={() => setIframeLoading(false)}
                     />
                   </div>
                 </div>
@@ -397,11 +406,16 @@ const SubCourseDetailPage = () => {
                 <div className="media-item">
                   <div className="pdf-container">
                     <iframe
-                      src={`https://docs.google.com/gview?url=${encodeURIComponent(currentMedia.url)}&embedded=true`}
+                      src={
+                        currentMedia.officeType === "ppt"
+                          ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(convertDropboxLink(currentMedia.url))}`
+                          : `https://docs.google.com/gview?url=${encodeURIComponent(convertDropboxLink(currentMedia.url))}&embedded=true`
+                      }
                       width="100%"
                       height="800px"
                       style={{ minHeight: "800px", maxHeight: "800px", border: 0 }}
-                      title="Office Viewer"
+                      title={`Office Viewer - ${currentMedia.officeType}`}
+                      onLoad={() => setIframeLoading(false)}
                     />
                   </div>
                 </div>
