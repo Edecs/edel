@@ -257,10 +257,18 @@ const SubCourseDetailPage = () => {
   };
 
   const convertDropboxLink = (link) => {
-    if (link.includes("dropbox.com")) {
-      return link
-        .replace("www.dropbox.com", "dl.dropboxusercontent.com")
-        .replace("?dl=1", "");
+    try {
+      const url = new URL(link);
+      if (url.hostname.endsWith("dropbox.com")) {
+        url.hostname = "dl.dropboxusercontent.com";
+        if (url.searchParams.has("dl")) {
+          url.searchParams.set("dl", "1");
+        }
+        url.searchParams.delete("cloud_editor");
+        return url.toString();
+      }
+    } catch (error) {
+      return link;
     }
     return link;
   };
@@ -407,9 +415,9 @@ const SubCourseDetailPage = () => {
                   <div className="pdf-container">
                     <iframe
                       src={
-                        currentMedia.officeType === "ppt"
+                        currentMedia.officeType && currentMedia.officeType.toLowerCase().includes("ppt")
                           ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(convertDropboxLink(currentMedia.url))}`
-                          : `https://docs.google.com/gview?url=${encodeURIComponent(convertDropboxLink(currentMedia.url))}&embedded=true`
+                          : `https://docs.google.com/viewer?url=${encodeURIComponent(convertDropboxLink(currentMedia.url))}&embedded=true`
                       }
                       width="100%"
                       height="800px"
