@@ -502,6 +502,24 @@ function CoursePage() {
     }
   };
 
+  // دالة لتحويل روابط Dropbox إلى روابط مباشرة
+  const convertDropboxLink = (link) => {
+    try {
+      const url = new URL(link);
+      if (url.hostname.endsWith("dropbox.com")) {
+        url.hostname = "dl.dropboxusercontent.com";
+        if (url.searchParams.has("dl")) {
+          url.searchParams.set("dl", "1");
+        }
+        url.searchParams.delete("cloud_editor");
+        return url.toString();
+      }
+    } catch (error) {
+      return link;
+    }
+    return link;
+  };
+
   // Rest of your JSX...
   // تأكد من أن دالة clearPopupFields مكتوبة بشكل صحيح
   const clearPopupFields = () => {
@@ -868,10 +886,10 @@ function CoursePage() {
                             if (canEmbed) {
                               if (mediaItem.type === "ppt") {
                                 // استخدم Microsoft Office Online لملفات PowerPoint لدعم الملفات الكبيرة
-                                viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(mediaItem.url)}`;
+                                viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(convertDropboxLink(mediaItem.url))}`;
                               } else {
                                 // Google Docs للوثائق الأخرى
-                                viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(mediaItem.url)}&embedded=true`;
+                                viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(convertDropboxLink(mediaItem.url))}&embedded=true`;
                               }
                             }
                             return (
@@ -930,7 +948,7 @@ function CoursePage() {
                           .map((mediaItem) => (
                             <div key={mediaItem.id} className="media-item1">
                               <img
-                                src={mediaItem.url}
+                                src={convertDropboxLink(mediaItem.url)}
                                 alt={`Media ${mediaItem.id}`}
                               />
                               <div style={{ fontSize: '0.95em', color: '#555', margin: '6px 0' }}>
@@ -969,7 +987,7 @@ function CoursePage() {
                           .sort((a, b) => a.id - b.id)
                           .map((mediaItem) => (
                             <div key={mediaItem.id} className="media-item1">
-                              <video src={mediaItem.url} controls />
+                              <video src={convertDropboxLink(mediaItem.url)} controls />
                               <div style={{ fontSize: '0.95em', color: '#555', margin: '6px 0' }}>
                                 <span>تاريخ الانتهاء: {formatExpDate(mediaItem.expDate)}</span>
                               </div>
@@ -1006,7 +1024,7 @@ function CoursePage() {
                           .sort((a, b) => a.id - b.id)
                           .map((mediaItem) => {
                             // تحويل رابط Dropbox إلى رابط Google Docs Viewer
-                            const dropboxUrl = mediaItem.url;
+                            const dropboxUrl = convertDropboxLink(mediaItem.url);
                             const googleViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(dropboxUrl)}&embedded=true`;
                             return (
                               <div key={mediaItem.id} className="media-item1">
