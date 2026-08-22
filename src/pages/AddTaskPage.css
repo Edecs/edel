@@ -1,0 +1,307 @@
+.add-task-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-top: 0px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-task-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-task-container label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 15px;
+}
+.dd {
+  margin-top: 30px;
+}
+.add-task-container input[type="text"],
+.add-task-container input[type="email"],
+.add-task-container textarea {
+  margin-top: 40px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border 0.3s ease;
+}
+
+.add-task-container textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.add-task-container .search-container {
+  display: flex;
+  justify-content: space-between; /* توزيع المساحة بين الحقول */
+  width: 50%; /* تأكد من أن الحاوية تأخذ 100% من عرض الصفحة */
+}
+
+.add-task-container .search-container > div {
+  flex: 1; /* كل عنصر سيأخذ حصة متساوية من المساحة */
+  margin-right: 10px; /* إضافة مسافة بين الحقول */
+}
+
+.add-task-container .search-container > div:last-child {
+  margin-right: 0; /* إزالة المسافة من العنصر الأخير */
+}
+
+.add-task-container .search-container input {
+  width: 100%; /* تأكد من أن الحقول تأخذ 100% من عرضها */
+}
+
+.add-task-container button[type="submit"] {
+  width: 20%;
+  text-align: center;
+  margin: auto;
+  padding: 12px 20px;
+  background-color: #094d50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.add-task-container button[type="submit"] :hover {
+  background-color: #118288;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-task-container button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.add-task-container .error {
+  color: #ff4d4f;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.add-task-container .success {
+  color: #28a745;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .add-task-container {
+    padding: 15px;
+  }
+
+  .add-task-container button[type="submit"] {
+    font-size: 14px;
+  }
+}
+.add-task-container .search-container {
+  display: flex;
+  justify-content: space-between; /* توزيع المساحة بين الحقول */
+  width: 100%; /* تأكد من أن الحاوية تأخذ 100% من عرض الصفحة */
+}
+
+.add-task-container .search-field {
+  flex: 0 0 48%; /* كل حقل يأخذ 48% من العرض مع ترك مسافة بسيطة */
+  margin-right: 2%; /* إضافة مسافة بين الحقول */
+}
+
+.add-task-container .search-field:last-child {
+  margin-right: 0; /* إزالة المسافة من العنصر الأخير */
+}
+.remove-button {
+  background-color: transparent; /* خلفية شفافة */
+  border: none; /* إزالة الحدود */
+  color: rgb(0, 0, 0); /* لون النص */
+  font-size: 18px; /* حجم الخط */
+  cursor: pointer; /* تغيير شكل المؤشر عند المرور فوق الزر */
+  padding: 0; /* إزالة الحشوة */
+  margin-left: 10px; /* إضافة مسافة بين الزر والنص */
+}
+
+.add-task-container.remove-button:hover {
+  color: rgb(0, 0, 0); /* تغيير لون النص عند المرور */
+  transform: scale(1.1); /* زيادة حجم الزر قليلاً */
+  transition: color 0.3s, transform 0.3s; /* إضافة تأثير انتقال */
+}
+input#message {
+  margin-top: 40px;
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box; /* لضمان أن padding يحسب داخل العرض */
+  transition: border-color 0.3s ease; /* تأثير انتقالي عند التفاعل مع الحقل */
+}
+
+input#message:focus {
+  border-color: #4caf50; /* تغيير اللون عند التركيز */
+  outline: none; /* إزالة الإطار الأزرق الافتراضي */
+}
+/* Styles for the user selection section */
+.user-selection {
+  background-color: #f9f9f9; /* لون خلفية خفيف */
+  border: 1px solid #ccc; /* حدود خفيفة حول الحاوية */
+  border-radius: 8px; /* زوايا مدورة */
+  padding: 20px; /* مساحة داخلية */
+  max-width: 400px; /* عرض أقصى للحاوية */
+  margin: 20px auto; /* توسيط الحاوية */
+}
+
+/* Styles for the label */
+.user-selection label {
+  color: #094d50; /* لون النص */
+  display: block; /* جعل النص يشغل السطر بالكامل */
+}
+
+/* Styles for the list */
+.user-selection ul {
+  list-style-type: none; /* إزالة النقاط من القائمة */
+  padding: 0; /* إزالة المساحة داخل القائمة */
+  margin: 0; /* إزالة المسافة الخارجية للقائمة */
+}
+
+/* Styles for each list item */
+.user-selection li {
+  display: flex; /* استخدام flexbox لترتيب العناصر */
+  align-items: center; /* توسيط العناصر عمودياً */
+  padding: 10px; /* مساحة داخلية لكل عنصر */
+  border: 1px solid #ccc; /* حدود خفيفة حول العناصر */
+  border-radius: 4px; /* زوايا مدورة للعناصر */
+  background-color: #ffffff; /* خلفية بيضاء للعناصر */
+  transition: background-color 0.3s; /* تأثير سلس عند تغيير الخلفية */
+}
+
+/* Hover effect for list items */
+.user-selection li:hover {
+  background-color: #e1f5fe; /* لون خلفية عند التحويم */
+}
+
+/* Styles for the checkbox */
+.user-selection input[type="checkbox"] {
+  margin-right: 10px; /* مساحة بين مربع الاختيار والنص */
+  cursor: pointer; /* تغيير شكل المؤشر عند المرور */
+}
+
+/* Optional: Styles for the checked state */
+.user-selection input[type="checkbox"]:checked + label {
+  color: #0e6d72; /* تغيير لون النص إذا كان محددًا */
+}
+/* General styles for the user selection */
+.user-selection {
+  background-color: #f4f4f4; /* لون خلفية خفيف */
+  border: 1px solid #ddd; /* حدود خفيفة حول الحاوية */
+  border-radius: 8px; /* زوايا مدورة للحاوية */
+  padding: 15px; /* مساحة داخلية للحاوية */
+  margin-top: 20px; /* مساحة فوق الحاوية */
+}
+
+/* Styles for the checkbox input */
+.user-selection input[type="checkbox"] {
+  accent-color: #0e6d72; /* تغيير لون مربع الاختيار */
+  width: 20px; /* عرض مربع الاختيار */
+  height: 20px; /* ارتفاع مربع الاختيار */
+  margin-right: 10px; /* مساحة بين مربع الاختيار والنص */
+  cursor: pointer; /* تغيير شكل المؤشر عند المرور */
+  transition: transform 0.2s; /* تأثير سلس عند التغيير */
+}
+
+/* Styles for the checkbox label */
+.user-selection label {
+  font-size: 16px; /* حجم خط label */
+  color: #333; /* لون النص */
+}
+
+/* Styles for list items in user selection */
+.user-selection ul {
+  list-style: none; /* إزالة النقاط من القائمة */
+  padding: 0; /* إزالة المساحة داخل القائمة */
+}
+
+/* Styles for each list item */
+.user-selection li {
+  display: flex; /* استخدام flexbox لترتيب العناصر */
+  align-items: center; /* توسيط العناصر عمودياً */
+  padding: 10px; /* مساحة داخلية لكل عنصر */
+  border-bottom: 1px solid #ddd; /* حدود أسفل كل عنصر */
+}
+
+/* Hover effect for list items */
+.user-selection li:hover {
+  background-color: #e1f5fe; /* لون خلفية عند التحويم */
+}
+
+/* Optional: Styles for checked state */
+.user-selection input[type="checkbox"]:checked + label {
+  color: #0e6d72; /* تغيير لون النص عند التحديد */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .user-selection {
+    padding: 10px; /* تقليل المساحة الداخلية على الشاشات الصغيرة */
+  }
+  .user-selection input[type="checkbox"] {
+    width: 18px; /* تقليل حجم مربع الاختيار على الشاشات الصغيرة */
+    height: 18px; /* تقليل ارتفاع مربع الاختيار */
+  }
+  .user-selection label {
+    font-size: 14px; /* تقليل حجم خط label على الشاشات الصغيرة */
+  }
+}
+.assigned-users {
+  margin: 20px 0;
+
+  h3 {
+    font-size: 1.5em;
+    color: #094d50;
+  }
+
+  ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+    margin: auto;
+
+    li {
+      max-width: 400px;
+      display: flex; /* Use flexbox to align items */
+      justify-content: space-between; /* Space between user name and button */
+      align-items: center; /* Center items vertically */
+      padding: 10px;
+      margin: auto;
+      background-color: #f9f9f9; /* Light background for list items */
+      border: 1px solid #ddd; /* Light border for definition */
+      border-radius: 5px; /* Rounded corners */
+      transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+      &:hover {
+        background-color: #e0f7fa; /* Change background on hover */
+      }
+
+      .remove-button {
+        background-color: #d9534f; /* Bootstrap danger color */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #c9302c; /* Darker shade on hover */
+        }
+      }
+    }
+  }
+}

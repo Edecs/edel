@@ -1,0 +1,145 @@
+﻿{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "users": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      "$userKey": {
+        ".read": "auth != null && (auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',') === $userKey || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+        ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+      }
+    },
+
+    "roles": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      "$emailKey": {
+        ".read": "auth != null && (auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',') === $emailKey || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+        ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+      }
+    },
+
+    "courses": {
+      "mainCourses": {
+        ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+        "$courseId": {
+          ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin' || root.child('roles').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('courses').child($courseId).exists())",
+          ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin' || (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' && ((!data.exists() && newData.child('department').val() === root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('department').val()) || (data.exists() && data.child('department').val() === root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('department').val()))))"
+        }
+      }
+    },
+
+    "mainCourses": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+    },
+
+    "subCourses": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+    },
+
+    "sites": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+    },
+
+    "departments": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+    },
+
+    "tasks": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      "$taskId": {
+        ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin' || data.child('createdBy').val() === auth.token.email || data.child('assigneeKeys').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).exists())",
+        ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin' || (!data.exists() && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')) || (data.exists() && (data.child('createdBy').val() === auth.token.email || data.child('assigneeKeys').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).exists())))"
+      }
+    },
+
+    "userTasks": {
+      "$emailKey": {
+        ".read": "auth != null && (auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',') === $emailKey || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+        "$taskId": {
+          ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin' || auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',') === $emailKey || root.child('archivedTasks').child($taskId).exists() || root.child('tasks').child($taskId).child('assigneeKeys').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).exists())"
+        }
+      }
+    },
+
+    "archivedTasks": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      "$taskId": {
+        ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin' || newData.child('createdBy').val() === auth.token.email || newData.child('assigneeKeys').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).exists())"
+      }
+    },
+
+    "notifications": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      "$notificationId": {
+        ".write": "auth != null"
+      }
+    },
+
+    "userNotifications": {
+      "$emailKey": {
+        ".read": "auth != null && (auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',') === $emailKey || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+        "$id": {
+          ".write": "auth != null && (auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',') === $emailKey || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin' || !data.exists())"
+        }
+      }
+    },
+
+    "deptNotifications": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      "$dept": {
+        ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin' || (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' && root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('department').val().toLowerCase() === $dept))",
+        "$id": {
+          ".write": "auth != null"
+        }
+      }
+    },
+
+    "submissions": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+      }
+    },
+
+    "logs": {
+      ".read": "auth != null && root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin'",
+      ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+    },
+
+    "emails": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      ".write": false
+    },
+
+    "projects": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+    },
+
+    "feedback": {
+      ".read": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "events": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+    },
+
+    "disabledUsers": {
+      "$emailKey": {
+        ".read": "auth != null && (auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',') === $emailKey || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')",
+        ".write": "auth != null && (root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'admin' || root.child('users').child(auth.token.email.toLowerCase().replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',').replace('.', ',')).child('role').val().toLowerCase() === 'superadmin')"
+      }
+    }
+  }
+}

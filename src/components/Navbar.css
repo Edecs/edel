@@ -1,0 +1,126 @@
+/* زر تغيير كلمة المرور في النافبار */
+.change-password-navbar-btn {
+  background-color: #094d50;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+.change-password-navbar-btn:hover {
+  background-color: #0b5e5e;
+}
+.navbar {
+  background-color: #094d50; /* اللون الأساسي للـ Navbar */
+  padding: 7px 20px; /* المسافة حول محتوى الـ Navbar */
+  position: fixed; /* لتثبيت الـ Navbar في أعلى الصفحة */
+  top: 0; /* وضعه في أعلى الصفحة */
+  width: calc(100% - 300px); /* عرض Navbar بدون التأثير على Sidebar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف للـ Navbar */
+  box-sizing: border-box; /* يشمل الـ padding و border ضمن العرض الكلي */
+  display: flex; /* لعرض العناصر بشكل أفقي */
+  align-items: center; /* لتوسيط العناصر عموديًا */
+  justify-content: flex-start; /* لجعل العناصر تبدأ من اليسار */
+  z-index: 1000; /* لضمان ظهور شريط التنقل فوق العناصر الأخرى */
+  height: 60px; /* تحديد ارتفاع الـ Navbar */
+  overflow: hidden; /* منع التمرير الخارجي */
+}
+
+/* تصميم الشعار في الـ Navbar */
+.navbar-logo {
+  display: flex; /* لعرض الشعار بشكل أفقي */
+  align-items: center; /* لتوسيط الشعار عموديًا */
+}
+
+/* هنا نستخدم margin-left: auto لترحيل الأيقونات ناحية اليمين */
+.navbar-buttons {
+  display: flex; /* لعرض الأزرار بشكل أفقي */
+  align-items: center; /* لتوسيع الأزرار عموديًا */
+  list-style: none; /* إزالة نقاط القائمة */
+  margin-left: auto; /* لترحيل الأزرار إلى الناحية اليمنى */
+  padding-left: 0px; /* إزالة الحشو الافتراضي */
+}
+
+.navbar-buttons li {
+  margin-left: 20px; /* المسافة بين الأزرار */
+}
+
+.navbar-link {
+  background-color: #094d50; /* لون الخلفية الأساسي للزر */
+  color: #fff; /* لون النص للزر */
+  border: none; /* إزالة الحدود */
+  padding: 5px 11px; /* إضافة مساحة حول النص */
+  border-radius: 4px; /* حواف دائرية للزر */
+  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
+  transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
+}
+
+.navbar-link:hover {
+  background-color: #0b5e5e; /* تغيير لون الخلفية عند hover */
+}
+
+.navbar-buttons button {
+  background-color: #094d50; /* لون الخلفية الأساسي للزر */
+  color: #fff; /* لون النص للزر */
+  border: none; /* إزالة الحدود */
+  padding: 10px; /* إضافة مساحة حول النص */
+  border-radius: 4px; /* حواف دائرية للزر */
+  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
+  transition: background-color 0.3s ease; /* تأثير التحويل عند hover */
+  display: flex; /* لجعل الأيقونة والنص يظهران بشكل أفقي */
+  align-items: center; /* لتوسيع الأزرار عموديًا */
+}
+
+/* تأثير hover على الأزرار */
+.navbar-buttons button:hover {
+  background-color: #0b5e5e; /* تغيير لون الخلفية عند hover */
+}
+
+.navbar-icon {
+  width: 24px; /* ضبط حجم الأيقونة لتتناسب مع حجم الزر */
+  height: 24px; /* ضبط حجم الأيقونة لتتناسب مع حجم الزر */
+}
+
+.custom-icon {
+  width: 24px; /* عرض الأيقونة */
+  height: 24px; /* ارتفاع الأيقونة */
+}
+
+.notification-button {
+  position: relative; /* وضع نسبي لتمكين تحديد الموقع للعدّاد */
+}
+
+.notification-count {
+  position: absolute; /* وضع العدّاد في موقع محدد */
+  top: -5px; /* المسافة من الأعلى */
+  right: -5px; /* المسافة من اليمين */
+  background-color: red; /* لون الخلفية للعدّاد */
+  color: white; /* لون النص للعدّاد */
+  border-radius: 50%; /* جعل العدّاد دائري */
+  padding: 2px 6px; /* إضافة مساحة حول النص */
+  font-size: 12px; /* حجم الخط للعدّاد */
+}
+.menu-btn {
+  background-color: transparent; /* خلفية شفافة */
+  border: none; /* إزالة الحدود */
+  cursor: pointer; /* تغيير مؤشر الفأرة عند التمرير فوق الزر */
+  padding: 5px; /* إضافة مسافة داخلية */
+  display: flex; /* لعرض الأيقونة بشكل أفقي */
+  align-items: center; /* لتوسيط الأيقونة عموديًا */
+  width: 40px; /* تحديد عرض الزر */
+  height: 40px; /* تحديد ارتفاع الزر */
+}
+
+.menu-btn .navbar-icon {
+  width: 800px; /* ضبط عرض الأيقونة حسب التصميم المطلوب */
+  height: 800px; /* ضبط ارتفاع الأيقونة حسب التصميم المطلوب */
+}
+
+.menu-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* لون الخلفية عند hover */
+  border-radius: 4px; /* حواف دائرية عند hover */
+}

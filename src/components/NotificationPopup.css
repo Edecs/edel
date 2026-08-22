@@ -1,0 +1,105 @@
+/* src/components/NotificationPopup.css */
+
+.notification-popup {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  width: 450px; /* Increased width */
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px; /* Softer corners */
+  padding: 20px; /* Increased padding */
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transition: all 0.3s ease;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+.notification-popup .close-button {
+  background: #ffffff; /* Button background color */
+  color: rgb(0, 0, 0); /* Button text color */
+  border: none; /* No borders */
+  border-radius: 75%; /* Circular shape */
+  width: 30px; /* Increased size */
+  height: 30px; /* Increased height */
+  cursor: pointer; /* Pointer cursor */
+  font-size: 14px; /* Increased font size */
+  text-align: center; /* Centered text */
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  transition: background 0.3s; /* Transition effect */
+  position: absolute; /* Position it within the popup */
+  top: 10px; /* Position from the top */
+  right: 10px; /* Position from the right */
+}
+
+.notification-popup .close-button:hover {
+  background: #f0f0f0; /* Change color on hover */
+}
+
+.notifications-list {
+  max-height: 400px;
+  overflow-y: auto; /* Enable scrolling vertically */
+  margin-top: 10px; /* Spacing above the notifications */
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+.notification-item {
+  border-bottom: 1px solid #ddd;
+  padding: 12px; /* Increased padding */
+  align-items: center; /* Center items vertically */
+  background-color: #f9f9f9; /* Light gray background */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 10px; /* Space between notifications */
+  transition: background-color 0.2s; /* Smooth background color transition */
+  word-wrap: break-word; /* Prevent text overflow */
+}
+
+.notification-item:hover {
+  background-color: #f1f1f1; /* Change background on hover */
+}
+
+.notification-item img {
+  max-width: 50px; /* Max width for images */
+  border-radius: 5px; /* Rounded corners for images */
+  margin-right: 15px; /* Space between image and text */
+}
+
+.notification-item p {
+  flex-grow: 1; /* Allow paragraph to grow */
+  margin: 0; /* Remove default margin */
+  font-size: 14px; /* Font size */
+  color: #333; /* Text color */
+}
+
+.notification-item .date {
+  font-size: 12px; /* Smaller font size for the date */
+  color: #888; /* Gray color for the date */
+  margin-top: 5px; /* Space above the date */
+}
+
+.mark-as-read-button {
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text */
+  border: none; /* No borders */
+  padding: 5px 10px; /* Padding */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor */
+  font-size: 12px; /* Font size */
+  transition: background 0.2s; /* Background transition */
+}
+
+.mark-as-read-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.error-message {
+  color: red; /* Red color for error messages */
+  font-size: 14px; /* Font size */
+}
+
+.loading-message {
+  font-size: 14px; /* Font size for loading message */
+  color: #666; /* Gray color */
+}

@@ -1,0 +1,223 @@
+.sidebar {
+  border-radius: 18px;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  width: 68px;
+  height: calc(100% - 64px);
+  background-color: #ffffff;
+  color: #094d50;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(-100%);
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #094d50 #f1f1f1;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f1f1f1;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #094d50;
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #063538;
+}
+
+.sidebar.open {
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar.closed {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.sidebar h2 {
+  display: none;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 24px 0 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.sidebar ul li {
+  width: 48px;
+  height: 48px;
+  margin: 0 0 10px;
+  padding: 0;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sidebar ul li:last-child {
+  margin-bottom: 0;
+}
+
+.sidebar ul li:hover {
+  background-color: rgba(66, 68, 70, 0.25);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar ul li a,
+.sidebar ul li .sidebar-button {
+  color: #000000;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.sidebar ul li a:focus,
+.sidebar ul li .sidebar-button:focus {
+  outline: none;
+  background-color: rgba(66, 68, 70, 0.25);
+}
+
+.sidebar-icon,
+.sidebar ul li a .sidebar-icon,
+.sidebar ul li .sidebar-button .sidebar-icon {
+  width: 28px !important;
+  height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  fill: #000000;
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+  transition: transform 0.2s ease, fill 0.3s ease;
+}
+
+.sidebar ul li a:hover .sidebar-icon,
+.sidebar ul li .sidebar-button:hover .sidebar-icon {
+  transform: scale(1.12);
+}
+
+.main-content {
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.open + .main-content {
+  margin-left: 80px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 72px;
+  }
+
+  .sidebar ul li {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 72px;
+  }
+
+  .sidebar ul li {
+    width: 48px;
+    height: 48px;
+  }
+
+  .sidebar-icon,
+  .sidebar ul li a .sidebar-icon,
+  .sidebar ul li .sidebar-button .sidebar-icon {
+    width: 26px !important;
+    height: 26px !important;
+    max-width: 26px !important;
+    max-height: 26px !important;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-bottom: 15px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-content button {
+  margin: 5px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-content button:first-of-type {
+  background: #094d50;
+  color: white;
+}
+
+.modal-content button:last-of-type {
+  background: #ccc;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}

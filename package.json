@@ -1,0 +1,52 @@
+{
+  "name": "react-firebase-template",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^5.15.11",
+    "exceljs": "^4.4.0",
+    "firebase": "^9.22.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "papaparse": "^5.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-modal": "^3.16.1",
+    "react-router-dom": "^6.26.1",
+    "react-scripts": "^5.0.1",
+    "recharts": "^2.15.2",
+    "sass": "^1.79.4",
+    "uuid": "^9.0.1",
+    "xlsx": "^0.18.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "clear-cache": "pnpm clear-cache"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-react-app": "^7.0.1",
+    "source-map-loader": "^5.0.0"
+  }
+}

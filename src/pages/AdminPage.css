@@ -1,0 +1,691 @@
+.admin-page {
+  margin-top: 45px !important;
+
+  font-family: "Arial", sans-serif;
+  color: #333;
+  padding: 20px;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.admin-header {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #343a40;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 34%; /* ضبط المسافة بين العناصر */
+}
+.popup-container {
+  position: relative; /* يضمن أن الزر يستند إلى حدود الحاوية */
+}
+.user-list4:empty::before {
+  content: "لا يوجد مستخدمون متاحون";
+  display: block;
+  text-align: center;
+  color: #999;
+  padding: 10px;
+}
+.subcourses-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.subcourses-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+input.error {
+  border-color: red;
+  background-color: #ffebeb;
+}
+
+.wa {
+  position: absolute;
+  top: 10px; /* المسافة من الأعلى */
+  right: 10px; /* المسافة من اليمين */
+  background-color: transparent; /* اختياري: يمكن تعديل خلفية الزر */
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+/* تنسيق عام لحقل إدخال التاريخ */
+input[type="datetime-local"] {
+  background-color: #f8f9fa; /* لون خلفية فاتح */
+  border: 2px solid #007bff; /* إطار أزرق */
+  border-radius: 8px; /* تدوير الحواف */
+  padding: 8px 12px;
+  font-size: 16px;
+  color: #333; /* لون النص */
+  outline: none;
+  transition: 0.3s ease-in-out;
+}
+
+/* تأثير عند التركيز على الحقل */
+input[type="datetime-local"]:focus {
+  border-color: #0056b3; /* لون أزرق غامق عند التركيز */
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* ظل ناعم */
+}
+
+/* تنسيق مخصص للحاوية */
+.timer-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* مسافة بين العناصر */
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+}
+
+/* تنسيق مخصص للنص بجوار الإدخال */
+.timer-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+}
+
+.navigate-to-course-management-btn,
+.refresh-data-btn {
+  margin-right: 10px;
+  background-color: #107f85;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: 2px solid #107f85;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  margin: 10px 0; /* إضافة هامش لتجنب التداخل في الشاشات الصغيرة */
+}
+.addus {
+  margin-top: 20px !important;
+  text-align: center;
+  width: 90px;
+  margin: auto;
+  display: flex;
+  justify-content: center; /* توسيط أفقي */
+  align-items: center; /* توسيط عمودي */
+  background-color: #ffffff !important; /* لون الخلفية للأزرار */
+  color: #094d50 !important; /* لون النص */
+  border: 1px solid #094d509a !important; /* تحديد لون الحدود وسماكتها */
+  border-radius: 4px; /* زوايا مدورة */
+  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
+}
+
+.addus:hover {
+  background-color: #094d50 !important; /* تغيير لون الخلفية عند التحويم */
+  color: #ffffff !important; /* تغيير لون النص عند التحويم */
+  transform: translateY(-2px); /* رفع خفيف عند التحويم */
+}
+
+.admin-page .main-content {
+  margin: auto;
+  display: flex;
+  gap: 6%; /* تحديد المسافة بين العناصر */
+  flex-wrap: wrap; /* لضمان استجابة التخطيط في الأجهزة الصغيرة */
+}
+.subcourses-container {
+  border-radius: 10px;
+  max-height: 200px; /* تحديد الطول الأقصى */
+  overflow-y: auto; /* لإضافة شريط تمرير عمودي إذا كانت المحتويات تتجاوز الطول المحدد */
+  border: 1px solid #ccc; /* يمكنك إضافة حدود لتحسين العرض */
+  padding: 10px; /* إضافة مساحة داخلية */
+  margin-bottom: 5px;
+  background-color: #f9f9f9; /* يمكنك تغيير الخلفية حسب الحاجة */
+}
+
+.sup {
+  margin-bottom: 10px; /* يمكنك تغيير القيمة حسب المسافة التي تريدها */
+}
+
+.admin-page .user-list4 {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.admin-page .user-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.admin-page .user-item:hover {
+  background-color: #f0f0f0;
+}
+.admin-page .user-details h2 {
+  margin-top: 80px;
+  font-size: 22px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.admin-page .user-list4 h2 {
+  margin-top: 80px;
+  font-size: 22px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.admin-page .user-details p {
+  margin: 10px 0;
+}
+
+.admin-page .user-list4,
+.admin-page .user-details {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 47%; /* عرض كل قسم بنسبة 47% ليظهروا بجانب بعضهم */
+  max-height: 800px; /* الطول الأقصى للقسم */
+  overflow-y: auto; /* إضافة شريط تمرير عمودي إذا تجاوز المحتوى الطول المحدد */
+}
+
+.admin-page .user-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-wrap: wrap; /* لجعل الأزرار تلتف في الشاشات الصغيرة */
+}
+
+.admin-page .user-actions button {
+  height: 60px;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.admin-page .user-actions button:hover {
+  background-color: #c9302c;
+}
+
+.admin-page .search-bar {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.admin-page input[type="text"] {
+  width: 100%; /* يأخذ عرض كامل الحاوية */
+  padding: 12px; /* مساحة داخلية */
+  margin: 10px 0; /* مسافة أعلى وأسفل */
+  border: 1px solid #ccc; /* لون الحدود */
+  border-radius: 4px; /* زوايا مدورة */
+  font-size: 16px; /* حجم الخط */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* تأثير الانتقال عند التركيز */
+}
+
+/* Focus Effect */
+.admin-page input[type="text"]:focus {
+  border-color: #0ea1a8; /* تغيير لون الحدود عند التركيز */
+  outline: none; /* إزالة التحديد الافتراضي */
+  box-shadow: 0 0 5px #0ea1a8; /* تأثير ظل حول العنصر عند التركيز */
+}
+
+/* Placeholder Styles */
+.admin-page input[type="text"]::placeholder {
+  color: #999; /* لون النص في عنصر المكان المخصص */
+  opacity: 1; /* زيادة الوضوح */
+}
+.open-popup-btn,
+.admin-page button {
+  padding: 12px 18px; /* زيادة المساحة لجعل الزر أكثر راحة */
+  background-color: #ffffff !important; /* لون الخلفية للأزرار */
+  color: #094d50 !important; /* لون النص */
+  border: 1px solid #094d509a !important; /* تحديد لون الحدود وسماكتها */
+  border-radius: 4px; /* زوايا مدورة */
+  cursor: pointer; /* شكل المؤشر عند المرور على الزر */
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s; /* إضافة تأثيرات انتقالية */
+  &:hover {
+    background-color: #094d50 !important; /* تغيير لون الخلفية عند التحويم */
+    color: #ffffff !important; /* تغيير لون النص عند التحويم */
+    transform: translateY(-2px); /* رفع خفيف عند التحويم */
+  }
+
+  /* تأثير عند الضغط على الزر */
+  &:active {
+    transform: translateY(1px); /* تأثير ضغط عند الضغط */
+  }
+}
+.admin-page .search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin-top: 20px; /* تعديل المسافة للأعلى */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.admin-page .search-input:focus {
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: #0ea1a8;
+}
+
+.admin-page .search-button {
+  background-color: #107f85;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.admin-page .search-button:hover {
+  background-color: #0b595e;
+}
+
+/* تنسيق قسم عرض الدورات */
+.course-list {
+  margin-top: 20px; /* مساحة علوية للقائمة */
+  padding: 0; /* إزالة مساحة داخلية */
+  list-style-type: none; /* إزالة النقاط من القائمة */
+}
+
+.courses-container {
+  margin-top: 20px; /* هامش أعلى */
+  padding: 20px; /* حشوة داخلية للصندوق */
+  background-color: #fff; /* لون خلفية الصندوق */
+  border-radius: 8px; /* زوايا مستديرة للصندوق */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل للصندوق */
+  max-width: 800px; /* عرض أقصى للصندوق */
+}
+
+.course-row {
+  border: 1px solid #ccc; /* حدود خفيفة */
+  border-radius: 5px; /* زوايا مستديرة */
+  padding: 15px; /* حشوة داخلية */
+  margin: 10px 0; /* هامش عمودي */
+  background-color: #f9f9f9; /* لون خلفية فاتح */
+  transition: background-color 0.3s; /* تأثير تغيير اللون */
+}
+
+.course-row:hover {
+  background-color: #e6f7ff; /* تغيير لون الخلفية عند التحويم */
+}
+
+h4 {
+  font-size: 18px; /* حجم خط عنوان الدورات */
+  margin-bottom: 10px; /* هامش أسفل العنوان */
+}
+
+.sub-course {
+  border: #107f85 1px;
+  display: flex; /* استخدام التخطيط المرن */
+  align-items: center; /* محاذاة العناصر في المنتصف */
+  margin: 5px 0; /* هامش عمودي بين الدورات الفرعية */
+}
+
+input[type="checkbox"] {
+  margin-right: 10px; /* مساحة بين الصندوق والنص */
+  transform: scale(1.2); /* تكبير صندوق الاختيار */
+}
+
+span {
+  font-size: 16px; /* حجم خط النص */
+  color: #333; /* لون النص */
+}
+
+/* تنسيق للطاولة الخاصة بالدورات */
+.courses-table {
+  margin-top: 10px; /* هامش أعلى */
+}
+
+h2,
+h3,
+h4 {
+  color: #333;
+  margin-bottom: 10px;
+}
+h3 {
+  margin-top: 60px;
+  margin-bottom: 30px;
+  color: #094d50;
+}
+h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+input[type="text"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+  border-color: #0ea1a8;
+  outline: none;
+  box-shadow: 0 0 5px #0ea1a8;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+/* Admin Page Styles */
+.admin-page {
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* Popup Modal Styling */
+.admin-page .popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 450px;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.admin-page .popup-content h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #1a535c;
+  text-align: center;
+  font-weight: 600;
+}
+
+.admin-page .popup-content input,
+.admin-page .popup-content select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #d4d4d4;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.admin-page .popup-content button {
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.admin-page .popup-content .add-user-btn {
+  background-color: #1a535c;
+}
+
+.admin-page .popup-content .add-user-btn:hover {
+  background-color: #14434a;
+}
+
+/* Close Button Styling */
+.admin-page .popup-content .close-popup-btn {
+  background-color: #bcbcbc; /* Background color for the button */
+  color: rgb(0, 0, 0); /* Text color */
+  padding: 8px 12px; /* Padding for button */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer on hover */
+  position: absolute; /* Absolute positioning */
+  top: 10px; /* 10px from the top */
+  right: 10px; /* 10px from the right */
+  transition: transform 0.3s; /* Smooth scaling on hover */
+}
+
+/* Hover effect for the button */
+.admin-page .popup-content .close-popup-btn:hover {
+  transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+/* Open Popup Button */
+.admin-page .open-popup-btn {
+  background-color: #1a535c;
+  color: #ffffff;
+  padding: 10px 25px;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.admin-page .open-popup-btn:hover {
+  background-color: #ffffff;
+  color: #1a535c;
+  border-color: #1a535c;
+}
+
+/* Responsive Adjustments for Smaller Screens */
+@media (max-width: 600px) {
+  .admin-page .popup {
+    width: 95%;
+    max-width: 400px;
+  }
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.assign-subcourses-btn {
+  margin-left: 10px; /* المسافة بين الزرارين */
+}
+.select-all-btn {
+  margin-right: 10px; /* المسافة بين الزرارين */
+}
+
+.modal-close-btn1 {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close-btn1:hover {
+  color: red;
+}
+.subcourse-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 1000; /* تأكد من ظهور النافذة فوق باقي المحتويات */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* عند كثرة المحتوى تظهر شريط تمرير */
+  max-height: 80vh; /* لا تتجاوز النافذة 80% من ارتفاع الشاشة */
+}
+
+.subcourse-modal h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.assign-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.assign-tab-btn {
+  flex: 1;
+  border: 1px solid #094d50;
+  background: #fff;
+  color: #094d50;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.assign-tab-btn.active {
+  background: #094d50;
+  color: #fff;
+}
+
+.assign-hint {
+  color: #555;
+  font-size: 0.92rem;
+  margin-bottom: 12px;
+}
+
+.assign-tab-panel {
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.subcourse-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* مسافة بين العناصر */
+}
+
+.timer-input {
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.access-checkbox {
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+.subcourse-label {
+  flex: 1;
+  word-wrap: break-word; /* كسر الكلمات الطويلة */
+}
+
+.modal-buttons1 {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal-apply-btn1,
+.modal-cancel-btn1 {
+  padding: 8px 16px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-apply-btn1 {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.modal-apply-btn1:hover {
+  background-color: #218838;
+}
+
+.modal-cancel-btn1 {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.modal-cancel-btn1:hover {
+  background-color: #c82333;
+}
+/* تحسين تنسيق الصفحة عند تصغير الشاشة */
+@media (max-width: 768px) {
+  .admin-page .main-content {
+    display: block; /* جعل المحتوى يعرض بشكل عمودي في الشاشات الصغيرة */
+    gap: 0; /* إزالة الفجوة بين العناصر */
+  }
+
+  .admin-page .user-list4,
+  .admin-page .user-details {
+    width: 100%; /* عرض المحتويات بنسبة 100% */
+    max-height: none; /* إزالة الحد الأقصى للطول */
+  }
+
+  /* تحسين الأزرار في الشاشات الصغيرة */
+  .admin-page .user-actions button {
+    width: 100%; /* جعل الأزرار تأخذ العرض الكامل في الشاشات الصغيرة */
+    margin: 5px 0; /* إضافة هامش بين الأزرار */
+  }
+
+  /* تعديل حواف الحقول */
+  .admin-page input[type="text"],
+  .admin-page input[type="password"],
+  .admin-page select {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+  }
+
+  .admin-page .popup,
+  .subcourse-modal {
+    width: 90%;
+    max-width: 100%; /* عرض النافذة بالكامل */
+    padding: 15px;
+  }
+
+  /* تحسين قائمة الدورات */
+  .course-list,
+  .courses-container {
+    width: 100%;
+    padding: 15px;
+  }
+
+  /* تنسيق خاص للأزرار في الشاشات الصغيرة */
+  .open-popup-btn,
+  .addus,
+  .assign-subcourses-btn,
+  .select-all-btn {
+    width: 100%; /* جعل الأزرار عرضها 100% في الشاشات الصغيرة */
+    padding: 15px;
+  }
+
+  /* تحسين عرض الحقول والحقول الزمنية */
+  input[type="datetime-local"] {
+    width: 100%;
+  }
+
+  /* تخصيص التنسيق الخاص بالحاويات الصغيرة */
+  .subcourses-container {
+    max-height: 200px; /* الحفاظ على الارتفاع المحدد */
+    padding: 10px;
+  }
+}

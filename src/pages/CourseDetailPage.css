@@ -1,0 +1,137 @@
+/* General container styling */
+.course-detail-container {
+  width: 100%;
+  margin: 40px auto;
+  background-color: #f8f9fa; /* Light background for better readability */
+  border: 1px solid #ddd; /* Light border for separation */
+  border-radius: 8px; /* Rounded corners for a softer look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Loading and error messages styling */
+.course-detail-container p {
+  text-align: center;
+  font-size: 18px;
+}
+
+.error-message {
+  color: #d9534f; /* Red color for error message */
+  background-color: #f2dede; /* Light red background */
+  padding: 10px;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
+}
+
+/* Course title styling */
+.course-title {
+  font-size: 28px;
+  color: #094d50; /* Darker color to make the title stand out */
+  margin-bottom: 20px;
+  text-align: center; /* Center the title for a balanced look */
+  border-bottom: 2px solid #0e6d72; /* Accent line under the title */
+  padding-bottom: 10px;
+}
+
+/* Sub-course list styling */
+.sub-course-list {
+  list-style: none; /* Remove default list styling */
+  padding: 0;
+  margin: 20px 0;
+}
+
+.sub-course-item {
+  text-align: center;
+  margin-bottom: 20px;
+  background-color: #ffffff; /* White background for each item */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effect */
+  display: flex;
+  justify-content: space-between; /* Align items properly */
+  align-items: center;
+}
+
+.sub-course-item:hover {
+  transform: translateY(-2px); /* Slightly raise the item on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+}
+.sub-course-item {
+  cursor: pointer;
+}
+
+.sub-course-item a span {
+  text-align: center;
+  margin: auto;
+  text-decoration: none;
+  color: #0e6d72;
+}
+
+.sub-course-item a:hover {
+  color: #007bff;
+}
+
+.no-access {
+  background-color: #f9f9f9; /* Greyed out background for no access */
+  color: #999; /* Light grey text */
+  cursor: not-allowed; /* Change cursor to indicate non-clickable */
+}
+
+/* No sub-courses message styling */
+.no-sub-courses {
+  color: #777;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-title {
+    font-size: 24px;
+  }
+
+  .sub-course-item {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    text-align: center;
+  }
+}
+.sub-course-item {
+  display: flex;
+  justify-content: space-between; /* توزيع العناصر بالتساوي */
+  align-items: center;
+  padding: 15px;
+  background-color: #ffffff; /* خلفية بيضاء */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sub-course-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sub-course-item a {
+  display: flex;
+  justify-content: space-between; /* محاذاة الاسم والتوقيت */
+  align-items: center;
+  width: 100%; /* يأخذ المساحة الكاملة */
+  text-decoration: none;
+  color: #0e6d72;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sub-course-item a:hover {
+  color: #007bff;
+}
+
+.sub-course-timer {
+  font-size: 16px;
+  color: #d9534f; /* لون أحمر للعد التنازلي */
+  font-weight: bold;
+  margin-left: 10px;
+  background-color: #f2dede; /* خلفية خفيفة للوضوح */
+  padding: 5px 10px;
+  border-radius: 4px;
+}

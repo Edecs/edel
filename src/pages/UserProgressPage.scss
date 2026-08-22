@@ -1,0 +1,119 @@
+.user-progress-page {
+  margin:auto;
+width:95%;
+
+
+
+  input {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    width: 90%;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+  }
+
+  button {
+    margin-top:20px;
+    margin-bottom:10px;
+margin-left: 5%;
+    padding: 10px 20px;
+    background-color: #094d50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0f7277;
+    }
+  }
+
+  .data-sections {
+    margin-top: 20px;
+
+    details {
+      border-radius: 4px;
+      margin: auto;
+      width: 90%;
+      color: #fff;
+      border-radius: 5px;
+
+      summary {
+        margin-top: 60px;
+        border: 1px solid #094d50;
+        background-color: #ffffff;
+        color: #094d50;
+        padding: 30px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+
+        &:focus,
+        &:active {
+          outline: none; 
+        }
+      }
+
+      &[open] summary {
+        background-color: #094d50;
+        color: #ffffff;
+      }
+
+      table.custom-table {
+        border-radius: 4px;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+        border: 1px solid #ddd;
+
+        th,
+        td {
+          border-radius: 4px;
+
+          padding: 10px;
+          text-align: left;
+        }
+
+        img {
+          max-width: 100px;
+        }
+
+        thead {
+          background-color: #094d50;
+          color: #fff;
+
+          th {
+            color: #e0f7fa;
+            font-weight: normal;
+            font-size: 1em;
+            border-bottom: 2px solid #ddd;
+          }
+        }
+
+        tbody {
+          tr {
+            &:nth-child(even) {
+              background-color: #f4f4f4;
+            }
+
+            &:hover {
+              background-color: #e0f7fa;
+            }
+
+            td {
+              padding: 10px;
+              border-bottom: 1px solid #ddd;
+              font-size: 0.9em;
+              color: #333;
+            }
+          }
+        }
+      }
+    }
+  }
+}
