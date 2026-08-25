@@ -101,6 +101,72 @@ function AdminPage() {
       setUsers(Object.values(usersData));
       setDepartments(departmentsData);
       setCourses(coursesData);
+
+      // Keep certificate Authorized Signatory in sync with current moderators
+      try {
+        const syncUpdates = {};
+        const moderatorEntries = Object.entries(rolesData).filter(
+          ([, roleRow]) =>
+            roleRow?.moderator === true || roleRow?.moderator === "true"
+        );
+
+        const applyMods = (hrOnly) => {
+          moderatorEntries.forEach(([emailKey, roleRow]) => {
+            const userRow = usersSnapshot.exists()
+              ? usersSnapshot.val()[emailKey]
+              : null;
+            const displayName = String(
+              userRow?.name || roleRow.email || emailKey.replace(/,/g, ".")
+            ).trim();
+            if (!displayName) return;
+
+            const dept = String(userRow?.department || "")
+              .trim()
+              .toLowerCase();
+            const isHr =
+              dept.includes("hr") ||
+              dept.includes("human") ||
+              dept.includes("موارد");
+            if (hrOnly !== isHr) return;
+
+            Object.entries(coursesData).forEach(([courseId, course]) => {
+              const courseDept = String(course.department || "")
+                .trim()
+                .toLowerCase();
+              const shouldApply =
+                isHr || !dept || courseDept === dept || courseDept === "";
+              if (!shouldApply) return;
+              const current = String(
+                syncUpdates[`courses/mainCourses/${courseId}/moderatorName`] ??
+                  course.moderatorName ??
+                  ""
+              ).trim();
+              if (
+                !current ||
+                current === "Department Head" ||
+                current === "رئيس القسم" ||
+                isHr
+              ) {
+                syncUpdates[`courses/mainCourses/${courseId}/moderatorName`] =
+                  displayName;
+              }
+            });
+          });
+        };
+        applyMods(false);
+        applyMods(true);
+
+        if (Object.keys(syncUpdates).length > 0) {
+          await update(dbRef(db), syncUpdates);
+          Object.entries(syncUpdates).forEach(([path, name]) => {
+            const id = path.split("/")[2];
+            if (coursesData[id]) coursesData[id].moderatorName = name;
+          });
+          setCourses({ ...coursesData });
+        }
+      } catch (syncErr) {
+        console.warn("Moderator → certificate sync skipped:", syncErr);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -619,15 +685,19 @@ function AdminPage() {
         },
       }));
 
-      // Sync certificate signatory name onto main courses of this user's department
+      // Sync certificate Authorized Signatory onto main courses
       const userSnap = await get(dbRef(db, `users/${sanitized}`));
       const userData = userSnap.exists() ? userSnap.val() : {};
       const displayName = (userData.name || email || "").trim();
       const dept = String(userData.department || "")
         .trim()
         .toLowerCase();
+      const isHr =
+        dept.includes("hr") ||
+        dept.includes("human") ||
+        dept.includes("موارد");
 
-      if (displayName && dept) {
+      if (displayName) {
         const coursesSnap = await get(dbRef(db, "courses/mainCourses"));
         if (coursesSnap.exists()) {
           const all = coursesSnap.val();
@@ -636,15 +706,18 @@ function AdminPage() {
             const courseDept = String(course.department || "")
               .trim()
               .toLowerCase();
-            if (courseDept === dept) {
-              if (makingModerator) {
-                updates[`courses/mainCourses/${courseId}/moderatorName`] =
-                  displayName;
-              } else if (
-                String(course.moderatorName || "").trim() === displayName
-              ) {
-                updates[`courses/mainCourses/${courseId}/moderatorName`] = "";
-              }
+            const matchesDept = !dept || courseDept === dept || courseDept === "";
+            const shouldTouch = isHr || matchesDept;
+
+            if (!shouldTouch) return;
+
+            if (makingModerator) {
+              updates[`courses/mainCourses/${courseId}/moderatorName`] =
+                displayName;
+            } else if (
+              String(course.moderatorName || "").trim() === displayName
+            ) {
+              updates[`courses/mainCourses/${courseId}/moderatorName`] = "";
             }
           });
           if (Object.keys(updates).length > 0) {
