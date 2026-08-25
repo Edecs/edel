@@ -102,7 +102,10 @@ const CertificatePage = () => {
         if (mainSnap.exists()) {
           const main = mainSnap.val();
           setDepartment(main.department || t("certificate.ourDepartment"));
-          setModeratorName(main.moderatorName || "");
+          setModeratorName(
+            (main.moderatorName || "").trim() ||
+              t("certificate.signatoryFallback")
+          );
           return;
         }
       }
@@ -112,7 +115,7 @@ const CertificatePage = () => {
       const user = auth.currentUser;
       if (!user) {
         setDepartment(t("certificate.ourDepartment"));
-        setModeratorName("");
+        setModeratorName(t("certificate.signatoryFallback"));
         return;
       }
       const safeEmail = user.email.replace(/\./g, ",");
@@ -124,17 +127,20 @@ const CertificatePage = () => {
           if (snap.exists() && snap.val().subCourses?.[subCourseId]) {
             const main = snap.val();
             setDepartment(main.department || t("certificate.ourDepartment"));
-            setModeratorName(main.moderatorName || "");
+            setModeratorName(
+              (main.moderatorName || "").trim() ||
+                t("certificate.signatoryFallback")
+            );
             return;
           }
         }
       }
       setDepartment(t("certificate.ourDepartment"));
-      setModeratorName("");
+      setModeratorName(t("certificate.signatoryFallback"));
     } catch (e) {
       console.error("Error fetching department:", e);
       setDepartment(t("certificate.ourDepartment"));
-      setModeratorName("");
+      setModeratorName(t("certificate.signatoryFallback"));
     }
   };
 

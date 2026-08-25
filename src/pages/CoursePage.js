@@ -120,6 +120,14 @@ function CoursePage() {
         );
 
   useEffect(() => {
+    if (!selectedCourse) return;
+    const course = mainCourses.find((c) => c.id === selectedCourse);
+    if (course) {
+      setModeratorName(course.moderatorName || "");
+    }
+  }, [selectedCourse, mainCourses]);
+
+  useEffect(() => {
     if (selectedCourse) {
       const subCoursesRef = ref(
         db,
@@ -258,6 +266,29 @@ function CoursePage() {
     setNewCourseName("");
     setThumbnail("");
     setModeratorName("");
+  };
+
+  const handleSaveModeratorName = async () => {
+    if (!selectedCourse) {
+      alert(t("courses.selectAMainCourse"));
+      return;
+    }
+    try {
+      await set(
+        ref(db, `courses/mainCourses/${selectedCourse}/moderatorName`),
+        (moderatorName || "").trim()
+      );
+      await addLog(
+        t("courses.logSaveModerator", {
+          name: moderatorName || "-",
+          course: selectedCourse,
+        })
+      );
+      alert(t("courses.moderatorSaved"));
+    } catch (e) {
+      console.error(e);
+      alert(t("courses.moderatorSaveError"));
+    }
   };
 
   const handleAddSubCourse = () => {
@@ -576,6 +607,14 @@ function CoursePage() {
                   <div className="button-container">
                     <button className="cinter" onClick={handleAddCourse}>
                       {t("courses.addCourse")}
+                    </button>
+                    <button
+                      className="cinter"
+                      onClick={handleSaveModeratorName}
+                      disabled={!selectedCourse}
+                      type="button"
+                    >
+                      {t("courses.saveModeratorName")}
                     </button>
                   </div>
                 </div>

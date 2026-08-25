@@ -600,25 +600,67 @@ function AdminPage() {
     try {
       const sanitized = email.replace(/\./g, ",");
       const roleRef = dbRef(db, `roles/${sanitized}`);
-      // نقرأ البيانات الحالية
       const snap = await get(roleRef);
       const data = snap.exists() ? snap.val() : {};
       const isMod = data.moderator === true;
+      const makingModerator = !isMod;
 
-      // نحدّث الحقل moderator
-      await update(roleRef, { moderator: !isMod });
-      await addLog("TOGGLE_MODERATOR", { targetEmail: email, newValue: !isMod });
+      await update(roleRef, { moderator: makingModerator });
+      await addLog("TOGGLE_MODERATOR", {
+        targetEmail: email,
+        newValue: makingModerator,
+      });
 
-      // نحدّث الستيت محليًا
       setRoles((prev) => ({
         ...prev,
         [sanitized]: {
           ...prev[sanitized],
-          moderator: !isMod,
+          moderator: makingModerator,
         },
       }));
+
+      // Sync certificate signatory name onto main courses of this user's department
+      const userSnap = await get(dbRef(db, `users/${sanitized}`));
+      const userData = userSnap.exists() ? userSnap.val() : {};
+      const displayName = (userData.name || email || "").trim();
+      const dept = String(userData.department || "")
+        .trim()
+        .toLowerCase();
+
+      if (displayName && dept) {
+        const coursesSnap = await get(dbRef(db, "courses/mainCourses"));
+        if (coursesSnap.exists()) {
+          const all = coursesSnap.val();
+          const updates = {};
+          Object.entries(all).forEach(([courseId, course]) => {
+            const courseDept = String(course.department || "")
+              .trim()
+              .toLowerCase();
+            if (courseDept === dept) {
+              if (makingModerator) {
+                updates[`courses/mainCourses/${courseId}/moderatorName`] =
+                  displayName;
+              } else if (
+                String(course.moderatorName || "").trim() === displayName
+              ) {
+                updates[`courses/mainCourses/${courseId}/moderatorName`] = "";
+              }
+            }
+          });
+          if (Object.keys(updates).length > 0) {
+            await update(dbRef(db), updates);
+          }
+        }
+      }
+
+      alert(
+        makingModerator
+          ? t("admin.moderatorEnabled", { name: displayName || email })
+          : t("admin.moderatorDisabled", { name: displayName || email })
+      );
     } catch (err) {
       console.error("Error toggling moderator:", err);
+      alert(t("admin.permissionsUpdateError"));
     }
   };
 
