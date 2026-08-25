@@ -35,6 +35,8 @@ const SubCourseDetailPage = () => {
   const [submissionResult, setSubmissionResult] = useState(null);
   const [iframeLoading, setIframeLoading] = useState(false);
   const [authUser, setAuthUser] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [autoCompleted, setAutoCompleted] = useState(false);
 
   useEffect(() => {
     const getCurrentUser = () =>
@@ -164,14 +166,16 @@ const SubCourseDetailPage = () => {
 
   useEffect(() => {
     if (loading || !subCourse) return;
-    if (mediaItems.length === 0) {
+    // No media + has exam → jump to exam. No questions → stay on learn (complete course).
+    if (mediaItems.length === 0 && totalQuestions > 0) {
       setPhase("exam");
     }
-  }, [loading, subCourse, mediaItems.length]);
+  }, [loading, subCourse, mediaItems.length, totalQuestions]);
 
   const currentMedia = mediaItems[currentMediaIndex];
-  const currentQuestion = subCourse?.questions
-    ? Object.values(subCourse.questions)[currentQuestionIndex]
+  const hasExam = totalQuestions > 0;
+  const currentQuestion = hasExam
+    ? Object.values(subCourse?.questions || {})[currentQuestionIndex]
     : null;
 
   useEffect(() => {
@@ -218,7 +222,9 @@ const SubCourseDetailPage = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (options = {}) => {
+    const { forcePass = false } = options;
+    if (submitting) return;
     if (!userName) {
       alert(t("exam.userNameNotLoaded"));
       return;
@@ -228,14 +234,15 @@ const SubCourseDetailPage = () => {
       return;
     }
 
+    setSubmitting(true);
     const endTime = new Date();
-    const totalTime = (endTime - startTime) / 1000;
+    const totalTime = (endTime - (startTime || endTime)) / 1000;
     let correctCount = 0;
 
-    if (subCourse?.questions) {
+    if (!forcePass && subCourse?.questions) {
       Object.values(subCourse.questions).forEach((question, index) => {
         const userAnswer = userAnswers[index];
-        const correctAnswers = question.answers
+        const correctAnswers = (question.answers || [])
           .filter((answer) => answer.correct)
           .map((answer) => answer.text);
         if (correctAnswers.includes(userAnswer)) {
@@ -244,10 +251,10 @@ const SubCourseDetailPage = () => {
       });
     }
 
-    const percentageSuccess =
-      totalQuestions > 0
-        ? ((correctCount / totalQuestions) * 100).toFixed(2)
-        : "0.00";
+    // No questions (or explicit complete-without-exam) = automatic pass
+    const percentageSuccess = forcePass || totalQuestions === 0
+      ? "100.00"
+      : ((correctCount / totalQuestions) * 100).toFixed(2);
 
     const submissionData = {
       email: authUser.email,
@@ -256,11 +263,12 @@ const SubCourseDetailPage = () => {
       courseId: subCourseId,
       mainCourseId:
         new URLSearchParams(window.location.search).get("mainCourseId") || null,
-      startTime: startTime.toISOString(),
+      startTime: (startTime || endTime).toISOString(),
       endTime: endTime.toISOString(),
       totalTime,
       percentageSuccess,
-      userAnswers,
+      userAnswers: forcePass || totalQuestions === 0 ? [] : userAnswers,
+      noExam: forcePass || totalQuestions === 0,
     };
 
     try {
@@ -311,8 +319,40 @@ const SubCourseDetailPage = () => {
     } catch (err) {
       console.error("Error submitting data:", err);
       alert(t("exam.failedToSubmit"));
+    } finally {
+      setSubmitting(false);
     }
   };
+
+  const handleCompleteWithoutExam = () => handleSubmit({ forcePass: true });
+
+  // If course has no questions and no media, auto-complete as pass once ready
+  useEffect(() => {
+    if (
+      loading ||
+      !subCourse ||
+      !authUser ||
+      !userName ||
+      autoCompleted ||
+      submitting
+    ) {
+      return;
+    }
+    if (mediaItems.length === 0 && totalQuestions === 0) {
+      setAutoCompleted(true);
+      handleSubmit({ forcePass: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    loading,
+    subCourse,
+    authUser,
+    userName,
+    mediaItems.length,
+    totalQuestions,
+    autoCompleted,
+    submitting,
+  ]);
 
   if (loading) {
     return (
@@ -423,7 +463,9 @@ const SubCourseDetailPage = () => {
             <span
               className={`scd-step ${phase === "learn" ? "active" : "done"}`}
             />
-            <span className={`scd-step ${phase === "exam" ? "active" : ""}`} />
+            {hasExam && (
+              <span className={`scd-step ${phase === "exam" ? "active" : ""}`} />
+            )}
           </div>
         </header>
 
@@ -479,22 +521,41 @@ const SubCourseDetailPage = () => {
                 </div>
               </>
             ) : (
-              <p className="scd-empty-media">{t("exam.noMedia")}</p>
+              <p className="scd-empty-media">
+                {hasExam ? t("exam.noMedia") : t("exam.noExamContent")}
+              </p>
             )}
 
             <div className="scd-phase-actions">
-              <button
-                type="button"
-                className="scd-primary-btn"
-                onClick={() => setPhase("exam")}
-              >
-                {t("exam.startExam")}
-              </button>
+              {hasExam ? (
+                <button
+                  type="button"
+                  className="scd-primary-btn"
+                  onClick={() => setPhase("exam")}
+                  disabled={submitting}
+                >
+                  {t("exam.startExam")}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="scd-primary-btn"
+                  onClick={handleCompleteWithoutExam}
+                  disabled={submitting}
+                >
+                  {submitting ? t("exam.completing") : t("exam.completeCourse")}
+                </button>
+              )}
             </div>
+            {!hasExam && (
+              <p className="scd-progress-text" style={{ textAlign: "center" }}>
+                {t("exam.noQuestionsPassHint")}
+              </p>
+            )}
           </section>
         )}
 
-        {phase === "exam" && (
+        {phase === "exam" && hasExam && (
           <section className="scd-exam" aria-label={t("exam.phaseExam")}>
             {mediaItems.length > 0 && (
               <button
@@ -594,10 +655,14 @@ const SubCourseDetailPage = () => {
                   <button
                     type="button"
                     className="scd-primary-btn submit-button"
-                    onClick={handleSubmit}
-                    disabled={answeredQuestionsCount < totalQuestions}
+                    onClick={() => handleSubmit()}
+                    disabled={
+                      submitting || answeredQuestionsCount < totalQuestions
+                    }
                   >
-                    {t("exam.submitAnswers")}
+                    {submitting
+                      ? t("exam.completing")
+                      : t("exam.submitAnswers")}
                   </button>
                 </div>
               </>

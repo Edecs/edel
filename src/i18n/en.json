@@ -194,7 +194,11 @@
     "questionProgress": "Question {current} of {total}",
     "answeredOf": "Answered {answered} of {total}",
     "noMedia": "No media for this course. You can start the exam.",
-    "noQuestions": "No questions available for this course."
+    "noQuestions": "No questions available for this course.",
+    "noQuestionsPassHint": "This course has no exam. Complete it to pass automatically.",
+    "completeCourse": "Complete course",
+    "completing": "Completing...",
+    "noExamContent": "No media or exam for this course. Completing as passed..."
   },
   "userSubmissions": {
     "title": "My Submissions",
@@ -348,6 +352,14 @@
     "selectUsersAndSubCourses": "Please select users and sub-courses!",
     "permissionsUpdated": "Permissions updated successfully!",
     "permissionsUpdateError": "An error occurred while updating permissions.",
+    "assigning": "Assigning permissions...",
+    "assignProgress": "Assigning {current}/{total} — {email}",
+    "assignSummary": "Done: {success} succeeded, {failed} failed (of {total}).",
+    "creatingUser": "Creating user...",
+    "userCreatedSuccess": "User {email} created successfully.",
+    "userCreateError": "Failed to create user: {error}",
+    "fillAllUserFields": "Please fill name, email, and password.",
+    "mainCourseNotFound": "Main course not found for {sub}",
     "confirmDeleteUser": "Are you sure you want to delete user {email}?",
     "userDeletedSuccess": "User {email} removed from the app (login blocked). Auth account may remain until deleted on Blaze/Admin SDK.",
     "userDeleteError": "An error occurred while deleting the user",
@@ -390,7 +402,18 @@
     "siteOrDepartmentMissing": "Site or Department is missing",
     "errorReadingCsv": "Error reading CSV file.",
     "processedUsers": "Processed {processed}/{total} users.",
-    "failedUpload": "Failed to upload users."
+    "failedUpload": "Failed to upload users.",
+    "uploading": "Uploading...",
+    "uploadingProgress": "Uploading {current}/{total} — {email}",
+    "summaryResult": "Finished: {created} created, {updated} updated, {failed} failed (of {total}).",
+    "summaryCreated": "Created: {count}",
+    "summaryUpdated": "Updated (already existed): {count}",
+    "summaryFailed": "Failed: {count}",
+    "statusCreated": "Created",
+    "statusUpdated": "Updated",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required (min 6 characters)",
+    "unknownError": "Unknown error"
   },
   "sites": {
     "title": "Site Management",

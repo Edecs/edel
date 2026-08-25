@@ -194,7 +194,11 @@
     "questionProgress": "سؤال {current} من {total}",
     "answeredOf": "تم الإجابة على {answered} من {total}",
     "noMedia": "لا توجد وسائط لهذه الدورة. يمكنك بدء الامتحان.",
-    "noQuestions": "لا توجد أسئلة لهذه الدورة."
+    "noQuestions": "لا توجد أسئلة لهذه الدورة.",
+    "noQuestionsPassHint": "هذه الدورة بدون امتحان. أنهِها للنجاح تلقائيًا.",
+    "completeCourse": "إنهاء الدورة",
+    "completing": "جاري الإكمال...",
+    "noExamContent": "لا توجد وسائط أو امتحان لهذه الدورة. جاري تسجيل النجاح..."
   },
   "userSubmissions": {
     "title": "تسليماتي",
@@ -348,6 +352,14 @@
     "selectUsersAndSubCourses": "يرجى تحديد المستخدمين والدورات الفرعية!",
     "permissionsUpdated": "تم تحديث الصلاحيات بنجاح!",
     "permissionsUpdateError": "حدث خطأ أثناء تحديث الصلاحيات.",
+    "assigning": "جاري تعيين الصلاحيات...",
+    "assignProgress": "جاري التعيين {current}/{total} — {email}",
+    "assignSummary": "انتهى: نجح {success}، فشل {failed} (من {total}).",
+    "creatingUser": "جاري إنشاء المستخدم...",
+    "userCreatedSuccess": "تم إنشاء المستخدم {email} بنجاح.",
+    "userCreateError": "فشل إنشاء المستخدم: {error}",
+    "fillAllUserFields": "يرجى تعبئة الاسم والبريد وكلمة المرور.",
+    "mainCourseNotFound": "لم يُعثر على الكورس الرئيسي لـ {sub}",
     "confirmDeleteUser": "هل أنت متأكد من حذف المستخدم {email}؟",
     "userDeletedSuccess": "تم إزالة المستخدم {email} من التطبيق (تسجيل الدخول محظور). حساب Auth قد يبقى حتى يُحذف عبر Blaze/Admin SDK.",
     "userDeleteError": "حدث خطأ أثناء حذف المستخدم",
@@ -390,7 +402,18 @@
     "siteOrDepartmentMissing": "الموقع أو القسم مفقود",
     "errorReadingCsv": "خطأ في قراءة ملف CSV.",
     "processedUsers": "تمت معالجة {processed}/{total} مستخدمًا.",
-    "failedUpload": "فشل رفع المستخدمين."
+    "failedUpload": "فشل رفع المستخدمين.",
+    "uploading": "جاري الرفع...",
+    "uploadingProgress": "جاري الرفع {current}/{total} — {email}",
+    "summaryResult": "انتهى: إنشاء {created}، تحديث {updated}، فشل {failed} (من {total}).",
+    "summaryCreated": "تم الإنشاء: {count}",
+    "summaryUpdated": "تم التحديث (كان موجودًا): {count}",
+    "summaryFailed": "فشل: {count}",
+    "statusCreated": "تم الإنشاء",
+    "statusUpdated": "تم التحديث",
+    "emailRequired": "البريد مطلوب",
+    "passwordRequired": "كلمة المرور مطلوبة (6 أحرف على الأقل)",
+    "unknownError": "خطأ غير معروف"
   },
   "sites": {
     "title": "إدارة المواقع",

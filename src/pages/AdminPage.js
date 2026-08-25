@@ -46,6 +46,10 @@ function AdminPage() {
   const [employeeEmail, setEmployeeEmail] = useState("");
   const [sites, setSites] = useState([]);
   const [employeeSite, setEmployeeSite] = useState("");
+  const [isAssigning, setIsAssigning] = useState(false);
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [assignProgress, setAssignProgress] = useState("");
+  const [assignResult, setAssignResult] = useState(null);
 
   const auth = getAuth();
 
@@ -211,13 +215,18 @@ function AdminPage() {
 
   const openAssignPopup = (tab = "main") => {
     setAssignTab(tab);
+    setAssignResult(null);
+    setAssignProgress("");
     setIsAssignPopupOpen(true);
   };
 
   const closeAssignPopup = () => {
+    if (isAssigning) return;
     setIsAssignPopupOpen(false);
     setSelectedMainCourses([]);
     setSelectedSubCourses([]);
+    setAssignResult(null);
+    setAssignProgress("");
   };
 
   const toggleMainCourseSelection = (courseId) => {
@@ -229,35 +238,78 @@ function AdminPage() {
   };
 
   const handleBulkAssignMainCourses = async () => {
+    if (isAssigning) return;
     if (selectedUsers.length === 0 || selectedMainCourses.length === 0) {
       alert(t("admin.selectUsersAndCourses"));
       return;
     }
 
+    setIsAssigning(true);
+    setAssignResult(null);
+    const ok = [];
+    const fail = [];
+    const total = selectedUsers.length * selectedMainCourses.length;
+    let done = 0;
+
     try {
       for (const userEmail of selectedUsers) {
         const sanitizedEmail = userEmail.replace(/\./g, ",");
         for (const courseId of selectedMainCourses) {
-          const courseAccessRef = dbRef(
-            db,
-            `roles/${sanitizedEmail}/courses/${courseId}`
+          done += 1;
+          setAssignProgress(
+            t("admin.assignProgress", {
+              current: done,
+              total,
+              email: userEmail,
+            })
           );
-          const snap = await get(courseAccessRef);
-          const existing = snap.exists() ? snap.val() : {};
-          await set(courseAccessRef, { ...existing, hasAccess: true });
+          try {
+            const courseAccessRef = dbRef(
+              db,
+              `roles/${sanitizedEmail}/courses/${courseId}`
+            );
+            const snap = await get(courseAccessRef);
+            const existing = snap.exists() ? snap.val() : {};
+            await set(courseAccessRef, { ...existing, hasAccess: true });
+            ok.push({ email: userEmail, courseId });
+          } catch (itemErr) {
+            console.error("Assign main course failed:", itemErr);
+            fail.push({
+              email: userEmail,
+              courseId,
+              error: itemErr.message || t("admin.permissionsUpdateError"),
+            });
+          }
         }
       }
-      await addLog("BULK_ASSIGN", {
-        users: selectedUsers,
-        subCourses: selectedMainCourses,
-      });
-      await fetchData();
-      alert(t("admin.permissionsUpdated"));
-      setAssignTab("sub");
-      setSelectedMainCourses([]);
+
+      if (ok.length > 0) {
+        await addLog("BULK_ASSIGN", {
+          users: selectedUsers,
+          subCourses: selectedMainCourses,
+        });
+        await fetchData();
+      }
+
+      setAssignResult({ ok, fail });
+      setAssignProgress("");
+      alert(
+        t("admin.assignSummary", {
+          success: ok.length,
+          failed: fail.length,
+          total,
+        })
+      );
+      if (fail.length === 0) {
+        setAssignTab("sub");
+        setSelectedMainCourses([]);
+      }
     } catch (error) {
       console.error("Error assigning main courses:", error);
       alert(t("admin.permissionsUpdateError"));
+    } finally {
+      setIsAssigning(false);
+      setAssignProgress("");
     }
   };
 
@@ -320,95 +372,157 @@ function AdminPage() {
   };
 
   const handleAddUser = async () => {
-    if (newUserEmail && newUserPassword && newUserName) {
-      try {
-        const email = newUserEmail.trim().toLowerCase();
-        await createAuthUserWithoutSessionSwap(firebaseConfig, {
-          email,
-          password: newUserPassword,
-          displayName: newUserName,
-        });
+    if (isCreatingUser) return;
+    if (!(newUserEmail && newUserPassword && newUserName)) {
+      alert(t("admin.fillAllUserFields"));
+      return;
+    }
 
-        const sanitizedEmail = email.replace(/\./g, ",");
-        const roledbRef = dbRef(db, `roles/${sanitizedEmail}`);
-        const usersdbRef = dbRef(db, `users/${sanitizedEmail}`);
+    setIsCreatingUser(true);
+    try {
+      const email = newUserEmail.trim().toLowerCase();
+      await createAuthUserWithoutSessionSwap(firebaseConfig, {
+        email,
+        password: newUserPassword,
+        displayName: newUserName,
+      });
 
-        await set(roledbRef, { role: newUserRole, courses: {}, email });
-        await set(usersdbRef, {
-          email,
-          name: newUserName,
-          role: newUserRole,
-          department: isSuperAdmin
-            ? newUserDepartment
-            : currentUserDepartment || newUserDepartment,
-          site: employeeSite,
-        });
-        await remove(dbRef(db, `disabledUsers/${sanitizedEmail}`)).catch(
-          () => {}
-        );
-        await addLog("ADD_USER", { targetEmail: email });
+      const sanitizedEmail = email.replace(/\./g, ",");
+      const roledbRef = dbRef(db, `roles/${sanitizedEmail}`);
+      const usersdbRef = dbRef(db, `users/${sanitizedEmail}`);
 
-        setNewUserEmail("");
-        setNewUserPassword("");
-        setNewUserName("");
-        setNewUserRole("user");
-        setNewUserDepartment("");
-        setEmployeeSite("");
+      await set(roledbRef, { role: newUserRole, courses: {}, email });
+      await set(usersdbRef, {
+        email,
+        name: newUserName,
+        role: newUserRole,
+        department: isSuperAdmin
+          ? newUserDepartment
+          : currentUserDepartment || newUserDepartment,
+        site: employeeSite,
+      });
+      await remove(dbRef(db, `disabledUsers/${sanitizedEmail}`)).catch(
+        () => {}
+      );
+      await addLog("ADD_USER", { targetEmail: email });
 
-        await fetchData();
-        setIsPopupOpen(false);
-      } catch (error) {
-        console.error("Error adding user:", error);
-        alert(error.message || t("admin.permissionsUpdateError"));
-      }
+      setNewUserEmail("");
+      setNewUserPassword("");
+      setNewUserName("");
+      setNewUserRole("user");
+      setNewUserDepartment("");
+      setEmployeeSite("");
+
+      await fetchData();
+      setIsPopupOpen(false);
+      alert(t("admin.userCreatedSuccess", { email }));
+    } catch (error) {
+      console.error("Error adding user:", error);
+      alert(
+        t("admin.userCreateError", {
+          error: error.message || t("admin.permissionsUpdateError"),
+        })
+      );
+    } finally {
+      setIsCreatingUser(false);
     }
   };
 
   const handleBulkAssign = async () => {
+    if (isAssigning) return;
     if (selectedUsers.length === 0 || selectedSubCourses.length === 0) {
       alert(t("admin.selectUsersAndSubCourses"));
       return;
     }
 
-    const updates = {};
+    setIsAssigning(true);
+    setAssignResult(null);
+    const ok = [];
+    const fail = [];
+    const pairs = [];
 
     selectedUsers.forEach((userEmail) => {
       const sanitizedEmail = userEmail.replace(/\./g, ",");
-
       selectedSubCourses.forEach((subCourseId) => {
-        // ✅ إيجاد الـ mainCourseId لهذا الـ subCourseId
         let mainCourseId = null;
         Object.entries(courses).forEach(([courseId, course]) => {
           if (course.subCourses && course.subCourses[subCourseId]) {
             mainCourseId = courseId;
           }
         });
-
         if (!mainCourseId) {
-          console.error(`❌ لم يتم العثور على كورس رئيسي لـ ${subCourseId}`);
+          fail.push({
+            email: userEmail,
+            courseId: subCourseId,
+            error: t("admin.mainCourseNotFound", { sub: subCourseId }),
+          });
           return;
         }
-
-        const expirationTime = expirationTimes[subCourseId] || null;
-
-        updates[
-          `roles/${sanitizedEmail}/courses/${mainCourseId}/${subCourseId}`
-        ] = {
-          hasAccess: true,
-          ...(expirationTime ? { expirationTime } : {}),
-        };
+        pairs.push({ userEmail, sanitizedEmail, subCourseId, mainCourseId });
       });
     });
 
+    let done = 0;
+    const total = pairs.length + fail.length;
+
     try {
-      await update(dbRef(db), updates);
-      await addLog("BULK_ASSIGN", { users: selectedUsers, subCourses: selectedSubCourses });
-      alert(t("admin.permissionsUpdated"));
+      for (const pair of pairs) {
+        done += 1;
+        setAssignProgress(
+          t("admin.assignProgress", {
+            current: done,
+            total: Math.max(total, pairs.length),
+            email: pair.userEmail,
+          })
+        );
+        try {
+          const expirationTime = expirationTimes[pair.subCourseId] || null;
+          const path = `roles/${pair.sanitizedEmail}/courses/${pair.mainCourseId}/${pair.subCourseId}`;
+          await update(dbRef(db), {
+            [path]: {
+              hasAccess: true,
+              ...(expirationTime ? { expirationTime } : {}),
+            },
+          });
+          ok.push({
+            email: pair.userEmail,
+            courseId: pair.subCourseId,
+          });
+        } catch (itemErr) {
+          fail.push({
+            email: pair.userEmail,
+            courseId: pair.subCourseId,
+            error: itemErr.message || t("admin.permissionsUpdateError"),
+          });
+        }
+      }
+
+      if (ok.length > 0) {
+        await addLog("BULK_ASSIGN", {
+          users: selectedUsers,
+          subCourses: selectedSubCourses,
+        });
+        await fetchData();
+      }
+
+      setAssignResult({ ok, fail });
+      alert(
+        t("admin.assignSummary", {
+          success: ok.length,
+          failed: fail.length,
+          total: ok.length + fail.length,
+        })
+      );
+      if (fail.length === 0) {
+        closeAssignPopup();
+      }
     } catch (error) {
       console.error("❌ خطأ في حفظ الصلاحيات:", error);
       alert(t("admin.permissionsUpdateError"));
+    } finally {
+      setIsAssigning(false);
+      setAssignProgress("");
     }
-    closeAssignPopup();
   };
 
   const toggleUserSelection = (email) => {
@@ -661,6 +775,35 @@ function AdminPage() {
                 </button>
               </div>
 
+              {isAssigning && (
+                <div className="assign-busy" role="status" aria-live="polite">
+                  <div className="assign-spinner" />
+                  <p>{assignProgress || t("admin.assigning")}</p>
+                </div>
+              )}
+
+              {assignResult && !isAssigning && (
+                <div className="assign-result-box">
+                  <p>
+                    {t("admin.assignSummary", {
+                      success: assignResult.ok.length,
+                      failed: assignResult.fail.length,
+                      total:
+                        assignResult.ok.length + assignResult.fail.length,
+                    })}
+                  </p>
+                  {assignResult.fail.length > 0 && (
+                    <ul className="assign-fail-list">
+                      {assignResult.fail.map((item, idx) => (
+                        <li key={idx}>
+                          {item.email} — {item.courseId}: {item.error}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+
               {assignTab === "main" && (
                 <div className="assign-tab-panel">
                   <p className="assign-hint">{t("admin.selectMainCoursesHint")}</p>
@@ -671,6 +814,7 @@ function AdminPage() {
                         className="access-checkbox"
                         checked={selectedMainCourses.includes(courseId)}
                         onChange={() => toggleMainCourseSelection(courseId)}
+                        disabled={isAssigning}
                       />
                       <label className="subcourse-label">
                         {course.name || courseId}
@@ -681,12 +825,14 @@ function AdminPage() {
                     <button
                       className="modal-apply-btn1"
                       onClick={handleBulkAssignMainCourses}
+                      disabled={isAssigning}
                     >
-                      {t("common.apply")}
+                      {isAssigning ? t("admin.assigning") : t("common.apply")}
                     </button>
                     <button
                       className="modal-cancel-btn1"
                       onClick={closeAssignPopup}
+                      disabled={isAssigning}
                     >
                       {t("common.cancel")}
                     </button>
@@ -782,12 +928,14 @@ function AdminPage() {
                     <button
                       className="modal-apply-btn1"
                       onClick={handleBulkAssign}
+                      disabled={isAssigning}
                     >
-                      {t("common.apply")}
+                      {isAssigning ? t("admin.assigning") : t("common.apply")}
                     </button>
                     <button
                       className="modal-cancel-btn1"
                       onClick={closeAssignPopup}
+                      disabled={isAssigning}
                     >
                       {t("common.cancel")}
                     </button>
@@ -991,8 +1139,12 @@ function AdminPage() {
               </select>
             )}
 
-            <button className="addus" onClick={handleAddUser}>
-              {t("common.add")}
+            <button
+              className="addus"
+              onClick={handleAddUser}
+              disabled={isCreatingUser}
+            >
+              {isCreatingUser ? t("admin.creatingUser") : t("common.add")}
             </button>
           </div>
         )}{" "}

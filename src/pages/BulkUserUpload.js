@@ -16,6 +16,9 @@ function BulkUserUpload() {
   const [departments, setDepartments] = useState([]);
   const [errors, setErrors] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [progress, setProgress] = useState({ current: 0, total: 0, email: "" });
+  const [resultSummary, setResultSummary] = useState(null);
 
   const auth = getAuth();
 
@@ -81,6 +84,7 @@ function BulkUserUpload() {
   };
 
   const handleFileUpload = async () => {
+    if (isUploading) return;
     if (csvData.length === 0) {
       alert(t("bulkUpload.noUsersToUpload"));
       return;
@@ -91,16 +95,53 @@ function BulkUserUpload() {
     const updatedUsers = [];
     const errorList = [];
 
-    try {
-      for (let user of users) {
-        const { email, name, password, role, department, site } = user;
+    setIsUploading(true);
+    setErrors([]);
+    setUploadedUsers([]);
+    setResultSummary(null);
+    setProgress({ current: 0, total: users.length, email: "" });
+    setUploadStatus(t("bulkUpload.uploadingProgress", { current: 0, total: users.length }));
 
-        if (!site || !department) {
-          errorList.push({ email, error: t("bulkUpload.siteOrDepartmentMissing") });
+    try {
+      for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        const { email, name, password, role, department, site } = user;
+        const emailLabel = email || t("common.unknown");
+
+        setProgress({ current: i + 1, total: users.length, email: emailLabel });
+        setUploadStatus(
+          t("bulkUpload.uploadingProgress", {
+            current: i + 1,
+            total: users.length,
+            email: emailLabel,
+          })
+        );
+
+        if (!email || !String(email).trim()) {
+          errorList.push({
+            email: emailLabel,
+            error: t("bulkUpload.emailRequired"),
+          });
           continue;
         }
 
-        const emailLowerCase = email.toLowerCase();
+        if (!site || !department) {
+          errorList.push({
+            email: emailLabel,
+            error: t("bulkUpload.siteOrDepartmentMissing"),
+          });
+          continue;
+        }
+
+        if (!password || String(password).length < 6) {
+          errorList.push({
+            email: emailLabel,
+            error: t("bulkUpload.passwordRequired"),
+          });
+          continue;
+        }
+
+        const emailLowerCase = String(email).trim().toLowerCase();
 
         try {
           const signInMethods = await fetchSignInMethodsForEmail(
@@ -137,6 +178,7 @@ function BulkUserUpload() {
               role,
               department,
               site,
+              status: "updated",
             });
           } else {
             await createAuthUserWithoutSessionSwap(firebaseConfig, {
@@ -170,25 +212,41 @@ function BulkUserUpload() {
               role,
               department,
               site,
+              status: "created",
             });
           }
         } catch (userError) {
           console.error(`Error processing user ${email}:`, userError);
-          errorList.push({ email, error: userError.message });
+          errorList.push({
+            email: emailLabel,
+            error: userError.message || t("bulkUpload.unknownError"),
+          });
         }
       }
 
-      setUploadedUsers([...addedUsers, ...updatedUsers]);
+      const ok = [...addedUsers, ...updatedUsers];
+      setUploadedUsers(ok);
       setErrors(errorList);
+      setResultSummary({
+        total: users.length,
+        created: addedUsers.length,
+        updated: updatedUsers.length,
+        failed: errorList.length,
+      });
       setUploadStatus(
-        t("bulkUpload.processedUsers", {
-          processed: addedUsers.length + updatedUsers.length,
+        t("bulkUpload.summaryResult", {
+          created: addedUsers.length,
+          updated: updatedUsers.length,
+          failed: errorList.length,
           total: users.length,
         })
       );
     } catch (error) {
       console.error("Error uploading users:", error);
       setUploadStatus(t("bulkUpload.failedUpload"));
+    } finally {
+      setIsUploading(false);
+      setProgress({ current: 0, total: 0, email: "" });
     }
   };
 
@@ -213,9 +271,6 @@ function BulkUserUpload() {
     ]);
   };
 
-  const calculatePercentage = (processed, total) => {
-    return Math.round((processed / total) * 100);
-  };
   const handleCheckboxChange = (index) => {
     setSelectedUsers((prevSelected) => {
       if (prevSelected.includes(index)) {
@@ -275,9 +330,52 @@ function BulkUserUpload() {
       >
         {t("bulkUpload.dragDropCsv")}
       </div>
-      <button onClick={downloadTemplate}>{t("bulkUpload.downloadTemplate")}</button>
-      <button onClick={addNewUserRow}>{t("bulkUpload.addNewUser")}</button>
-      {uploadStatus && <p>{uploadStatus}</p>}
+      <button onClick={downloadTemplate} disabled={isUploading}>
+        {t("bulkUpload.downloadTemplate")}
+      </button>
+      <button onClick={addNewUserRow} disabled={isUploading}>
+        {t("bulkUpload.addNewUser")}
+      </button>
+      {isUploading && (
+        <div className="bulk-upload-progress" role="status" aria-live="polite">
+          <div className="bulk-upload-spinner" />
+          <p>
+            {t("bulkUpload.uploadingProgress", {
+              current: progress.current,
+              total: progress.total,
+              email: progress.email || "",
+            })}
+          </p>
+          <div className="bulk-progress-track">
+            <div
+              className="bulk-progress-fill"
+              style={{
+                width: `${
+                  progress.total
+                    ? Math.round((progress.current / progress.total) * 100)
+                    : 0
+                }%`,
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {uploadStatus && !isUploading && (
+        <p className="bulk-upload-status">{uploadStatus}</p>
+      )}
+      {resultSummary && !isUploading && (
+        <div className="bulk-result-summary">
+          <p>
+            {t("bulkUpload.summaryCreated", { count: resultSummary.created })}
+          </p>
+          <p>
+            {t("bulkUpload.summaryUpdated", { count: resultSummary.updated })}
+          </p>
+          <p className={resultSummary.failed ? "bulk-fail-text" : ""}>
+            {t("bulkUpload.summaryFailed", { count: resultSummary.failed })}
+          </p>
+        </div>
+      )}
 
       {/* عرض البيانات من الـ CSV قبل رفعها */}
       {csvData.length > 0 && (
@@ -380,14 +478,21 @@ function BulkUserUpload() {
           </table>
           <button
             onClick={handleDeleteSelectedUsers}
-            disabled={selectedUsers.length === 0}
+            disabled={selectedUsers.length === 0 || isUploading}
           >
             {t("bulkUpload.deleteSelected")}
           </button>
-          <button onClick={handleFileUpload} disabled={csvData.length === 0}>
-            {t("bulkUpload.uploadToFirebase")}
+          <button
+            onClick={handleFileUpload}
+            disabled={csvData.length === 0 || isUploading}
+          >
+            {isUploading
+              ? t("bulkUpload.uploading")
+              : t("bulkUpload.uploadToFirebase")}
           </button>
-          <button onClick={downloadTemplate}>{t("bulkUpload.downloadTemplate")}</button>
+          <button onClick={downloadTemplate} disabled={isUploading}>
+            {t("bulkUpload.downloadTemplate")}
+          </button>
         </div>
       )}
 
@@ -411,22 +516,18 @@ function BulkUserUpload() {
           <ul>
             {uploadedUsers.map((user, index) => (
               <li key={index}>
-                <strong>{t("bulkUpload.nameStrong")}</strong> {user.name} | <strong>{t("bulkUpload.emailStrong")}</strong>{" "}
-                {user.email} | <strong>{t("bulkUpload.roleStrong")}</strong> {user.role} |{" "}
-                <strong>{t("bulkUpload.departmentStrong")}</strong> {user.department || t("common.notAvailable")} |{" "}
-                <strong>{t("bulkUpload.siteStrong")}</strong> {user.site || t("common.unknown")} |{" "}
-                <strong>{t("bulkUpload.percentageProcessed")}</strong>{" "}
-                <span className="progress-bar">
-                  <span
-                    style={{
-                      width: `${calculatePercentage(
-                        index + 1,
-                        uploadedUsers.length
-                      )}%`,
-                    }}
-                  ></span>
-                </span>
-                {calculatePercentage(index + 1, uploadedUsers.length)}%
+                <strong>
+                  {user.status === "updated"
+                    ? t("bulkUpload.statusUpdated")
+                    : t("bulkUpload.statusCreated")}
+                </strong>{" "}
+                | <strong>{t("bulkUpload.nameStrong")}</strong> {user.name} |{" "}
+                <strong>{t("bulkUpload.emailStrong")}</strong> {user.email} |{" "}
+                <strong>{t("bulkUpload.roleStrong")}</strong> {user.role} |{" "}
+                <strong>{t("bulkUpload.departmentStrong")}</strong>{" "}
+                {user.department || t("common.notAvailable")} |{" "}
+                <strong>{t("bulkUpload.siteStrong")}</strong>{" "}
+                {user.site || t("common.unknown")}
               </li>
             ))}
           </ul>
